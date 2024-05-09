@@ -19,18 +19,24 @@
 - Send quote approval requests.
 - Monitor the process from request submission to customer acceptance of the quote.
 - Update and manage payment and order cancellation policies.
-
 ### Design Staff
 - Send 3D design drafts to customers.
 - Receive feedback and approve design drafts from customers.
-
 ### Production Staff:
 - Receive Orders: Production staff should receive finalized orders with approved designs.
 - Manage Inventory: They should be able to check inventory levels for required materials and components.
 - Schedule Production: Production staff should schedule production tasks based on order priorities and available resources.
 - Update Order Status: They should update the status of orders as they progress through various production stages.
 - Quality Control: Production staff should perform quality checks at different stages of production to ensure the final product meets standards.
-
+### Manager:
+- Approve quotes from salespersons.
+- Manage and approve processes in the processing order.
+### Amin:
+- Manage customer and staff information.
+- Update information on applicable gold and gemstone prices.
+- Manage design templates and cost standards.
+- Display reports and statistics on business activities and processing order processes.
+- 
  ## Functional Requirement
  Phần mềm quản lý việc đặt gia công trang sức của khách hàng cho công ty gia công trang sức
  - Trang chủ giới thiệu công ty, bộ sưu tập trang sức, mẫu thiết kế, blog chia sẽ, …
