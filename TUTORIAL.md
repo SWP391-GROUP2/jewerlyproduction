@@ -8,7 +8,7 @@
 - Thêm file:
   + Thêm đúng 1 file đó: git add <tên file>
   + Thêm hết: git add.
-- git commit -u "msg": ghi chú đang làm cái gì (thay msg bằng chú thích)
+- git commit -m "msg": ghi chú đang làm cái gì (thay msg bằng chú thích)
 - git remote add origin https://github.com/MinhCurus/SWP391-Group2.git : trỏ url cần push code (default)
 - git push -u origin master: đẩy code vào nhánh master (nhánh thay đổi đc)
 - git pull: lấy code về, đồng bộ với code cũ
