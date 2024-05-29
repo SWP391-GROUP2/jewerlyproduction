@@ -1,4 +1,4 @@
-﻿namespace JewelryProduction.API.Model
+﻿namespace JewelryProduction.API.Model.LoginModel
 {
     public class LoginRequest
     {

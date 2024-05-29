@@ -4,7 +4,7 @@
 
 namespace JewelryProduction.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("v1/api/user")]
     [ApiController]
     public class UserController : ControllerBase
     {
