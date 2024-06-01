@@ -4570,19 +4570,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Minh Hung\\.nuget\\packages\\": {}
+    "C:\\Users\\tranq\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Minh Hung\\source\\SWP\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj",
+      "projectUniqueName": "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj",
       "projectName": "JewelryProduction.Core",
-      "projectPath": "C:\\Users\\Minh Hung\\source\\SWP\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj",
-      "packagesPath": "C:\\Users\\Minh Hung\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Minh Hung\\source\\SWP\\JewelryProduction\\JewelryProduction.Core\\obj\\",
+      "projectPath": "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj",
+      "packagesPath": "C:\\Users\\tranq\\.nuget\\packages\\",
+      "outputPath": "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction.Core\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Minh Hung\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\tranq\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4590,6 +4590,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -4666,7 +4667,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.206/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
