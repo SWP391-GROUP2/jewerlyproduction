@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\acer\\Desktop\\Project\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj": {}
+    "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj": {}
   },
   "projects": {
-    "C:\\Users\\acer\\Desktop\\Project\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj": {
+    "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\acer\\Desktop\\Project\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj",
+        "projectUniqueName": "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj",
         "projectName": "JewelryProduction.Core",
-        "projectPath": "C:\\Users\\acer\\Desktop\\Project\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj",
-        "packagesPath": "C:\\Users\\acer\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\acer\\Desktop\\Project\\JewelryProduction\\JewelryProduction.Core\\obj\\",
+        "projectPath": "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj",
+        "packagesPath": "C:\\Users\\tranq\\.nuget\\packages\\",
+        "outputPath": "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction.Core\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\acer\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\tranq\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
