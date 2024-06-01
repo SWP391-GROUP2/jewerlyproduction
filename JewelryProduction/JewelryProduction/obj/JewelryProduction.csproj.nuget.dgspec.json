@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\acer\\Desktop\\Project\\JewelryProduction\\JewelryProduction\\JewelryProduction.csproj": {}
+    "C:\\Users\\acer\\Desktop\\Project_\\JewelryProduction\\JewelryProduction\\JewelryProduction.csproj": {}
   },
   "projects": {
-    "C:\\Users\\acer\\Desktop\\Project\\JewelryProduction\\JewelryProduction\\JewelryProduction.csproj": {
+    "C:\\Users\\acer\\Desktop\\Project_\\JewelryProduction\\JewelryProduction\\JewelryProduction.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\acer\\Desktop\\Project\\JewelryProduction\\JewelryProduction\\JewelryProduction.csproj",
+        "projectUniqueName": "C:\\Users\\acer\\Desktop\\Project_\\JewelryProduction\\JewelryProduction\\JewelryProduction.csproj",
         "projectName": "JewelryProduction",
-        "projectPath": "C:\\Users\\acer\\Desktop\\Project\\JewelryProduction\\JewelryProduction\\JewelryProduction.csproj",
+        "projectPath": "C:\\Users\\acer\\Desktop\\Project_\\JewelryProduction\\JewelryProduction\\JewelryProduction.csproj",
         "packagesPath": "C:\\Users\\acer\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\acer\\Desktop\\Project\\JewelryProduction\\JewelryProduction\\obj\\",
+        "outputPath": "C:\\Users\\acer\\Desktop\\Project_\\JewelryProduction\\JewelryProduction\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\acer\\AppData\\Roaming\\NuGet\\NuGet.Config",
