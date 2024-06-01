@@ -1,0 +1,108 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Minh Hung\\source\\SWP\\JewelryProduction\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{26A46890-1809-47F1-9C8F-46DF8007D9D8}|JewelryProduction.Core\\JewelryProduction.Core.csproj|c:\\users\\minh hung\\source\\swp\\jewelryproduction\\jewelryproduction.core\\dbcontext\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{26A46890-1809-47F1-9C8F-46DF8007D9D8}|JewelryProduction.Core\\JewelryProduction.Core.csproj|solutionrelative:jewelryproduction.core\\dbcontext\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26A46890-1809-47F1-9C8F-46DF8007D9D8}|JewelryProduction.Core\\JewelryProduction.Core.csproj|c:\\users\\minh hung\\source\\swp\\jewelryproduction\\jewelryproduction.core\\dbcontext\\jewelryproductioncontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{26A46890-1809-47F1-9C8F-46DF8007D9D8}|JewelryProduction.Core\\JewelryProduction.Core.csproj|solutionrelative:jewelryproduction.core\\dbcontext\\jewelryproductioncontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26A46890-1809-47F1-9C8F-46DF8007D9D8}|JewelryProduction.Core\\JewelryProduction.Core.csproj|c:\\users\\minh hung\\source\\swp\\jewelryproduction\\jewelryproduction.core\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{26A46890-1809-47F1-9C8F-46DF8007D9D8}|JewelryProduction.Core\\JewelryProduction.Core.csproj|solutionrelative:jewelryproduction.core\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F8E8411B-1D6E-4C7E-B7C7-3C70992163DD}|JewelryProduction\\JewelryProduction.csproj|c:\\users\\minh hung\\source\\swp\\jewelryproduction\\jewelryproduction\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F8E8411B-1D6E-4C7E-B7C7-3C70992163DD}|JewelryProduction\\JewelryProduction.csproj|solutionrelative:jewelryproduction\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F8E8411B-1D6E-4C7E-B7C7-3C70992163DD}|JewelryProduction\\JewelryProduction.csproj|c:\\users\\minh hung\\source\\swp\\jewelryproduction\\jewelryproduction\\controllers\\signincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F8E8411B-1D6E-4C7E-B7C7-3C70992163DD}|JewelryProduction\\JewelryProduction.csproj|solutionrelative:jewelryproduction\\controllers\\signincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\Minh Hung\\source\\SWP\\JewelryProduction\\JewelryProduction.Core\\Entities\\User.cs",
+              "RelativeDocumentMoniker": "JewelryProduction.Core\\Entities\\User.cs",
+              "ToolTip": "C:\\Users\\Minh Hung\\source\\SWP\\JewelryProduction\\JewelryProduction.Core\\Entities\\User.cs",
+              "RelativeToolTip": "JewelryProduction.Core\\Entities\\User.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-01T05:49:24.367Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "JewelryProductionContext.cs",
+              "DocumentMoniker": "C:\\Users\\Minh Hung\\source\\SWP\\JewelryProduction\\JewelryProduction.Core\\DbContext\\JewelryProductionContext.cs",
+              "RelativeDocumentMoniker": "JewelryProduction.Core\\DbContext\\JewelryProductionContext.cs",
+              "ToolTip": "C:\\Users\\Minh Hung\\source\\SWP\\JewelryProduction\\JewelryProduction.Core\\DbContext\\JewelryProductionContext.cs",
+              "RelativeToolTip": "JewelryProduction.Core\\DbContext\\JewelryProductionContext.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAA5AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-01T05:47:59.812Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ApplicationDBContext.cs",
+              "DocumentMoniker": "C:\\Users\\Minh Hung\\source\\SWP\\JewelryProduction\\JewelryProduction.Core\\DbContext\\ApplicationDBContext.cs",
+              "RelativeDocumentMoniker": "JewelryProduction.Core\\DbContext\\ApplicationDBContext.cs",
+              "ToolTip": "C:\\Users\\Minh Hung\\source\\SWP\\JewelryProduction\\JewelryProduction.Core\\DbContext\\ApplicationDBContext.cs",
+              "RelativeToolTip": "JewelryProduction.Core\\DbContext\\ApplicationDBContext.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-01T04:06:07.041Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Minh Hung\\source\\SWP\\JewelryProduction\\JewelryProduction\\Program.cs",
+              "RelativeDocumentMoniker": "JewelryProduction\\Program.cs",
+              "ToolTip": "C:\\Users\\Minh Hung\\source\\SWP\\JewelryProduction\\JewelryProduction\\Program.cs",
+              "RelativeToolTip": "JewelryProduction\\Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAABkAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-01T03:59:33.673Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "SignInController.cs",
+              "DocumentMoniker": "C:\\Users\\Minh Hung\\source\\SWP\\JewelryProduction\\JewelryProduction\\Controllers\\SignInController.cs",
+              "RelativeDocumentMoniker": "JewelryProduction\\Controllers\\SignInController.cs",
+              "ToolTip": "C:\\Users\\Minh Hung\\source\\SWP\\JewelryProduction\\JewelryProduction\\Controllers\\SignInController.cs",
+              "RelativeToolTip": "JewelryProduction\\Controllers\\SignInController.cs",
+              "ViewState": "AQIAACsAAAAAAAAAAAAQwDkAAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-01T03:57:06.098Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

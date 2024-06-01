@@ -1,0 +1,15 @@
+C:\Users\Minh Hung\source\SWP\JewelryProduction\JewelryProduction.Core\bin\Debug\net8.0\JewelryProduction.Core.deps.json
+C:\Users\Minh Hung\source\SWP\JewelryProduction\JewelryProduction.Core\bin\Debug\net8.0\JewelryProduction.Core.runtimeconfig.json
+C:\Users\Minh Hung\source\SWP\JewelryProduction\JewelryProduction.Core\bin\Debug\net8.0\JewelryProduction.Core.dll
+C:\Users\Minh Hung\source\SWP\JewelryProduction\JewelryProduction.Core\bin\Debug\net8.0\JewelryProduction.Core.pdb
+C:\Users\Minh Hung\source\SWP\JewelryProduction\JewelryProduction.Core\obj\Debug\net8.0\JewelryProduction.Core.csproj.AssemblyReference.cache
+C:\Users\Minh Hung\source\SWP\JewelryProduction\JewelryProduction.Core\obj\Debug\net8.0\JewelryProduction.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Minh Hung\source\SWP\JewelryProduction\JewelryProduction.Core\obj\Debug\net8.0\JewelryProduction.Core.AssemblyInfoInputs.cache
+C:\Users\Minh Hung\source\SWP\JewelryProduction\JewelryProduction.Core\obj\Debug\net8.0\JewelryProduction.Core.AssemblyInfo.cs
+C:\Users\Minh Hung\source\SWP\JewelryProduction\JewelryProduction.Core\obj\Debug\net8.0\JewelryProduction.Core.csproj.CoreCompileInputs.cache
+C:\Users\Minh Hung\source\SWP\JewelryProduction\JewelryProduction.Core\obj\Debug\net8.0\JewelryProduction.Core.sourcelink.json
+C:\Users\Minh Hung\source\SWP\JewelryProduction\JewelryProduction.Core\obj\Debug\net8.0\JewelryProduction.Core.dll
+C:\Users\Minh Hung\source\SWP\JewelryProduction\JewelryProduction.Core\obj\Debug\net8.0\refint\JewelryProduction.Core.dll
+C:\Users\Minh Hung\source\SWP\JewelryProduction\JewelryProduction.Core\obj\Debug\net8.0\JewelryProduction.Core.pdb
+C:\Users\Minh Hung\source\SWP\JewelryProduction\JewelryProduction.Core\obj\Debug\net8.0\JewelryProduction.Core.genruntimeconfig.cache
+C:\Users\Minh Hung\source\SWP\JewelryProduction\JewelryProduction.Core\obj\Debug\net8.0\ref\JewelryProduction.Core.dll

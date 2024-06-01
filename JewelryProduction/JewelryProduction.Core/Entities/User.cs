@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 
 namespace JewelryProduction;
 
-public partial class User
+public partial class User : IdentityUser
 {
     public string UserId { get; set; } = null!;
 
