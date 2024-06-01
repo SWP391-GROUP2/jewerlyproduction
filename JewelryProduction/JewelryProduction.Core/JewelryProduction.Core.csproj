@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <Folder Include="Servies\" />
-    <Folder Include="Repositories\" />
   </ItemGroup>
 
 </Project>
