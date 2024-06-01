@@ -144,3 +144,7 @@ C:\Users\Minh Hung\source\SWP\JewelryProduction\JewelryProduction\obj\Debug\net8
 C:\Users\Minh Hung\source\SWP\JewelryProduction\JewelryProduction\obj\Debug\net8.0\JewelryProduction.pdb
 C:\Users\Minh Hung\source\SWP\JewelryProduction\JewelryProduction\obj\Debug\net8.0\JewelryProduction.genruntimeconfig.cache
 C:\Users\Minh Hung\source\SWP\JewelryProduction\JewelryProduction\obj\Debug\net8.0\ref\JewelryProduction.dll
+C:\Users\Minh Hung\source\SWP\JewelryProduction\JewelryProduction\bin\Debug\net8.0\Microsoft.AspNetCore.Authorization.dll
+C:\Users\Minh Hung\source\SWP\JewelryProduction\JewelryProduction\bin\Debug\net8.0\Microsoft.AspNetCore.Metadata.dll
+C:\Users\Minh Hung\source\SWP\JewelryProduction\JewelryProduction\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\Minh Hung\source\SWP\JewelryProduction\JewelryProduction\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll

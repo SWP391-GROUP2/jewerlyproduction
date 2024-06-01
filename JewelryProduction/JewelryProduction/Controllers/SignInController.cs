@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using JewelryProduction.Core;
+using JewelryProduction.Core.Interface;
 
 namespace JewelryProduction.Controllers
 {
@@ -11,34 +13,32 @@ namespace JewelryProduction.Controllers
     {
         private readonly SignInManager<User> signInManager = sm;
         private readonly UserManager<User> userManager = um;
+        private readonly IUserService _userService;
+
+        public SignInController(SignInManager<User> signInManager, UserManager<User> userManager, IUserService userService) : this(signInManager, userManager)
+        {
+            _userService = userService;
+        }
 
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser(User user)
         {
-            string ms = "";
-            IdentityResult result = new IdentityResult();
             try
             {
-                User user_ = new User()
-                {
-                    Name = user.Name,
-                    Email = user.Email,
-                    DateOfBirth = user.DateOfBirth,
-                    PhoneNumber = user.PhoneNumber,
-                    Password = user.Password,
-                };
-                result = await userManager.CreateAsync(user_);
+                var result = await _userService.RegisterUserAsync(user);
+
                 if (!result.Succeeded)
                 {
                     return BadRequest(result);
                 }
-                ms = "Register successfully";
+
+                return Ok(new { ms = "Register successfully", result });
             }
             catch (Exception ex)
             {
+                // Log the exception (ex) as needed
                 return BadRequest("Something went wrong. Please try again");
             }
-            return Ok(new { ms = ms, result = result });
         }
         [HttpGet("logout"), Authorize]
         public async Task<ActionResult> LogoutUser()
