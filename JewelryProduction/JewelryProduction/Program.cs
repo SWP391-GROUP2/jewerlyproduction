@@ -1,4 +1,10 @@
 
+using JewelryProduction.Core;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+
 namespace JewelryProduction
 {
     public class Program
@@ -14,6 +20,15 @@ namespace JewelryProduction
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddDbContext<JewelryProductionContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
+
+            builder.Services.AddAuthorization();
+            builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+                .AddEntityFrameworkStores<JewelryProductionContext>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -22,6 +37,7 @@ namespace JewelryProduction
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.MapIdentityApi<IdentityUser>();
 
             app.UseAuthorization();
 
