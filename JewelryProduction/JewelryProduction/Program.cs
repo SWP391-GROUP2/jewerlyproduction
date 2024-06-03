@@ -29,6 +29,18 @@ namespace JewelryProduction
             builder.Services.AddIdentityApiEndpoints<IdentityUser>()
                 .AddEntityFrameworkStores<JewelryProductionContext>();
 
+            // Add CORS services
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                    policy =>
+                    {
+                        policy.WithOrigins("http://localhost:3000") // Frontend URL
+                              .AllowAnyHeader()
+                              .AllowAnyMethod();
+                    });
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -38,6 +50,9 @@ namespace JewelryProduction
                 app.UseSwaggerUI();
             }
             app.MapIdentityApi<IdentityUser>();
+
+            // Use CORS
+            app.UseCors("AllowSpecificOrigin");
 
             app.UseAuthorization();
 
