@@ -4089,11 +4089,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\acer\\Desktop\\Project_\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj",
+      "projectUniqueName": "C:\\Users\\acer\\Desktop\\FINALTEST\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj",
       "projectName": "JewelryProduction.Core",
-      "projectPath": "C:\\Users\\acer\\Desktop\\Project_\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj",
+      "projectPath": "C:\\Users\\acer\\Desktop\\FINALTEST\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj",
       "packagesPath": "C:\\Users\\acer\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\acer\\Desktop\\Project_\\JewelryProduction\\JewelryProduction.Core\\obj\\",
+      "outputPath": "C:\\Users\\acer\\Desktop\\FINALTEST\\JewelryProduction\\JewelryProduction.Core\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\acer\\AppData\\Roaming\\NuGet\\NuGet.Config",
