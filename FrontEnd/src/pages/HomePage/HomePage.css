@@ -1,0 +1,23 @@
+/* src/components/HomePage/HomePage.css */
+.home-page {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Bao phủ toàn bộ chiều cao của cửa sổ */
+  width: 100vw; /* Bao phủ toàn bộ chiều rộng của cửa sổ */
+  background-color: aliceblue;
+  background-size: cover;
+  background-position: center;
+  padding-bottom: 50px; /* Khoảng cách phía dưới để tránh footer che phủ nội dung */
+  overflow-y: auto;
+}
+
+.Slideshow {
+  width: 100%; /* Đảm bảo Slideshow không vượt quá chiều rộng của nội dung cha */
+  max-height: 380px; /* Đặt chiều cao tối đa cho Slideshow, có thể điều chỉnh tùy ý */
+  margin: 0 auto; /* Canh giữa Slideshow */
+  position: fixed; /* Đặt vị trí cố định */
+  top: 120px; /* Đặt dưới Header, giá trị này phải bằng với chiều cao của Header */
+}

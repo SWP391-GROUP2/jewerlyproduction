@@ -1,0 +1,10 @@
+.footer {
+  position: fixed; /* Đảm bảo footer luôn nằm ở dưới cùng của trang */
+  bottom: 0; /* Đặt footer ở phía dưới của trang */
+  width: 100%; /* Chiều rộng bằng 100% của trang */
+  background-color: #ffffff; /* Màu nền của footer */
+  color: rgb(80, 80, 80); /* Màu chữ trong footer */
+  padding: 20px; /* Khoảng cách giữa nội dung và viền footer */
+  text-align: center; /* Căn giữa nội dung trong footer */
+  border: 1px solid #ccc; /* Tùy chọn, để dễ nhìn hơn */
+}
