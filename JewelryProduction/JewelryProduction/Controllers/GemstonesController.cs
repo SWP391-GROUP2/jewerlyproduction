@@ -95,7 +95,7 @@ namespace JewelryProduction.Controllers
             }
             catch (DbUpdateException)
             {
-                if (GemstoneExists(gemstone.GemstoneId))
+                if (GemstoneExists(gemstoneDTO.GemstoneId))
                 {
                     return Conflict();
                 }
@@ -105,7 +105,7 @@ namespace JewelryProduction.Controllers
                 }
             }
 
-            return CreatedAtAction("GetGemstone", new { id = gemstone.GemstoneId }, gemstone);
+            return CreatedAtAction("GetGemstone", new { id = gemstoneDTO.GemstoneId }, gemstoneDTO);
         }
 
         // DELETE: api/Gemstones/5
