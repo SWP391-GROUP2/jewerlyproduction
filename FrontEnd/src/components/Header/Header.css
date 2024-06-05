@@ -1,0 +1,85 @@
+.header {
+  display: flex;
+  justify-content: space-between; /* Đẩy logo và các button về hai phía */
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #edeeeb;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed; /* Cố định header lên trên đầu trang */
+  top: 0;
+  left: 0;
+  width: 100%; /* Chiều rộng bằng với chiều ngang của trang */
+  z-index: 1000; /* Đảm bảo header luôn nằm trên các phần tử khác */
+  height: 60px; /* Đặt chiều cao cố định cho header */
+}
+
+.logo a {
+  text-decoration: none;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.profile-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 30px;
+}
+
+.button {
+  position: relative;
+  overflow: hidden;
+  height: 3rem;
+  padding: 0 2rem;
+  border-radius: 5px;
+  background: #3d3a4e;
+  background-size: 400%;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.button-content {
+  position: relative;
+  z-index: 1;
+}
+
+.button:hover::before {
+  transform: scaleX(1);
+}
+
+.button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  width: 100%;
+  height: inherit;
+  border-radius: inherit;
+  background: linear-gradient(
+    82.3deg,
+    rgba(150, 93, 233, 1) 10.8%,
+    rgba(99, 88, 238, 1) 94.3%
+  );
+  transition: all 0.475s;
+}
+
+.profile-button:hover {
+  opacity: 0.8;
+}
+
+.logo-image {
+  width: 50px; /* Điều chỉnh chiều rộng của logo */
+  height: auto; /* Giữ tỷ lệ khung hình */
+}
