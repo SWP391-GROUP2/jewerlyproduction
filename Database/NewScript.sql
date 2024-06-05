@@ -249,8 +249,8 @@ GO
 CREATE TABLE [dbo].[User](
 	[userID] [nvarchar](50) NOT NULL,
 	[name] [nvarchar](50) NOT NULL,
-	[dateOfBirth] [date] NOT NULL,
-	[phoneNumber] Decimal(18,0) NOT NULL,
+	[dateOfBirth] [date],
+	[phoneNumber] [nvarchar](50) NOT NULL,
 	[email] [nvarchar](50) NOT NULL,
 	[password] [nvarchar](200) NOT NULL,
 	[roleID] [nvarchar](50) NOT NULL,
