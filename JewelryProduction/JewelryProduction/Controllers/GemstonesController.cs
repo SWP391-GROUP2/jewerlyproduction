@@ -40,14 +40,19 @@ namespace JewelryProduction.Controllers
         // PUT: api/Gemstones/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutGemstone(string id, Gemstone gemstone)
+        public async Task<IActionResult> PutGemstone(string id, GemstoneDTO gemStoneDTO)
         {
-            if (id != gemstone.GemstoneId)
+            if (id != gemStoneDTO.GemstoneId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(gemstone).State = EntityState.Modified;
+            var updateGem = await _context.Gemstones.FindAsync(id);
+            updateGem.GemstoneId = gemStoneDTO.GemstoneId;
+            updateGem.Name = gemStoneDTO.Name;
+            updateGem.CaratWeight = gemStoneDTO.CaratWeight;
+            updateGem.Color = gemStoneDTO.Color;
+            updateGem.CustomizeRequestD = gemStoneDTO.CustomizeRequestD;
 
             try
             {
@@ -82,12 +87,6 @@ namespace JewelryProduction.Controllers
                 Color = gemstoneDTO.Color,
                 CustomizeRequestD = gemstoneDTO.CustomizeRequestD,
 
-
-
-
-
-
-
             };
             try
             {
@@ -95,7 +94,7 @@ namespace JewelryProduction.Controllers
             }
             catch (DbUpdateException)
             {
-                if (GemstoneExists(gemstone.GemstoneId))
+                if (GemstoneExists(gemStone.GemstoneId))
                 {
                     return Conflict();
                 }
@@ -105,7 +104,7 @@ namespace JewelryProduction.Controllers
                 }
             }
 
-            return CreatedAtAction("GetGemstone", new { id = gemstone.GemstoneId }, gemstone);
+            return CreatedAtAction("GetGemstone", new { id = gemStone.GemstoneId }, gemStone);
         }
 
         // DELETE: api/Gemstones/5

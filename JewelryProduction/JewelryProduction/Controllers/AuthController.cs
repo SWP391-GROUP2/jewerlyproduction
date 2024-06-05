@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using JewelryProduction.Core;
 using JewelryProduction.Core.DTO;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Extensions.Configuration;
-using System.Text;
 using System.IdentityModel.Tokens.Jwt;
-using JewelryProduction.Core;
+using System.Security.Claims;
+using System.Text;
 
 namespace JewelryProduction.Controllers
 {

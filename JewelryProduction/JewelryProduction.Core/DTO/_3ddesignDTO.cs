@@ -1,6 +1,6 @@
 ﻿namespace JewelryProduction.Core.DTO
 {
-    public class _3ddesignDTO
+    public class _3ddesign
     {
         public string _3dDesignId { get; set; } = null!;
 
