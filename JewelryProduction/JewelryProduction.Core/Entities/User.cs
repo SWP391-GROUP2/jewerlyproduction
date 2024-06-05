@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JewelryProduction.Core.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace JewelryProduction;
@@ -19,7 +20,7 @@ public partial class User
 
     public string RoleId { get; set; } = null!;
 
-    public virtual ICollection<CustomerRequestDTO> CustomerRequests { get; set; } = new List<CustomerRequestDTO>();
+    public virtual ICollection<CustomerRequest> CustomerRequests { get; set; } = new List<CustomerRequest>();
 
     public virtual ICollection<Message> MessageCustomers { get; set; } = new List<Message>();
 

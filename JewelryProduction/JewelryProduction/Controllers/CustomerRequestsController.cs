@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using JewelryProduction;
 using JewelryProduction.Core;
+using JewelryProduction.Core.Entities;
 using JewelryProduction.Core.DTO;
 using Humanizer;
 using System.Drawing;
@@ -28,14 +29,14 @@ namespace JewelryProduction.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CustomerRequest>>> GetCustomerRequests()
         {
-            return await _context.CustomerRequests.ToListAsync();
+            return await _context.CustomerRequest.ToListAsync();
         }
 
         // GET: api/CustomerRequests/5
         [HttpGet("{id}")]
         public async Task<ActionResult<CustomerRequest>> GetCustomerRequest(string id)
         {
-            var customerRequest = await _context.CustomerRequests.FindAsync(id);
+            var customerRequest = await _context.CustomerRequest.FindAsync(id);
 
             if (customerRequest == null)
             {
@@ -54,7 +55,7 @@ namespace JewelryProduction.Controllers
             {
                 return BadRequest();
             }
-            var updateRequest = await _context.CustomerRequests.FindAsync(id);
+            var updateRequest = await _context.CustomerRequest.FindAsync(id);
             updateRequest.CustomizeRequestId = customerRequestDTO.CustomizeRequestId;
             updateRequest.GoldId = customerRequestDTO.GoldId;
             updateRequest.CustomerId = customerRequestDTO.CustomerId;
@@ -97,7 +98,7 @@ namespace JewelryProduction.Controllers
                 Size = customerRequestDTO.Size,
                 Quantity = customerRequestDTO.Quantity
             };
-            _context.CustomerRequests.Add(customerRequest);
+            _context.CustomerRequest.Add(customerRequest);
             try
             {
                 await _context.SaveChangesAsync();
@@ -121,13 +122,13 @@ namespace JewelryProduction.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomerRequest(string id)
         {
-            var customerRequest = await _context.CustomerRequests.FindAsync(id);
+            var customerRequest = await _context.CustomerRequest.FindAsync(id);
             if (customerRequest == null)
             {
                 return NotFound();
             }
 
-            _context.CustomerRequests.Remove(customerRequest);
+            _context.CustomerRequest.Remove(customerRequest);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -135,7 +136,7 @@ namespace JewelryProduction.Controllers
 
         private bool CustomerRequestExists(string id)
         {
-            return _context.CustomerRequests.Any(e => e.CustomizeRequestId == id);
+            return _context.CustomerRequest.Any(e => e.CustomizeRequestId == id);
         }
     }
 }

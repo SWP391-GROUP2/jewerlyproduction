@@ -1,6 +1,8 @@
-﻿namespace JewelryProduction;
+﻿using JewelryProduction.Core.Entities;
 
-public partial class CustomerRequestDTO
+namespace JewelryProduction;
+
+public  class CustomerRequest
 {
     public string CustomizeRequestId { get; set; } = null!;
 

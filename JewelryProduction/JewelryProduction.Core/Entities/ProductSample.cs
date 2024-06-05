@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JewelryProduction.Core.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace JewelryProduction;
