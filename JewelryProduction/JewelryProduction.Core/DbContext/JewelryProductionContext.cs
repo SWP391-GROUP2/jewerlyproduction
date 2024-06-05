@@ -410,7 +410,7 @@ public partial class JewelryProductionContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("password");
             entity.Property(e => e.PhoneNumber)
-                .HasColumnType("decimal(18, 0)")
+                .HasMaxLength(50)
                 .HasColumnName("phoneNumber");
             entity.Property(e => e.RoleId)
                 .HasMaxLength(50)
