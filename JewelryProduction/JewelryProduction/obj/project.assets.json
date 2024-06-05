@@ -8282,19 +8282,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\tranq\\.nuget\\packages\\": {}
+    "C:\\Users\\Minh Hung\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction\\JewelryProduction.csproj",
+      "projectUniqueName": "C:\\Users\\Minh Hung\\source\\swp\\JewelryProduction\\JewelryProduction\\JewelryProduction.csproj",
       "projectName": "JewelryProduction",
-      "projectPath": "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction\\JewelryProduction.csproj",
-      "packagesPath": "C:\\Users\\tranq\\.nuget\\packages\\",
-      "outputPath": "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction\\obj\\",
+      "projectPath": "C:\\Users\\Minh Hung\\source\\swp\\JewelryProduction\\JewelryProduction\\JewelryProduction.csproj",
+      "packagesPath": "C:\\Users\\Minh Hung\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Minh Hung\\source\\swp\\JewelryProduction\\JewelryProduction\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\tranq\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Minh Hung\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -8302,15 +8302,14 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj": {
-              "projectPath": "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj"
+            "C:\\Users\\Minh Hung\\source\\swp\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj": {
+              "projectPath": "C:\\Users\\Minh Hung\\source\\swp\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj"
             }
           }
         }
@@ -8394,7 +8393,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.206/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

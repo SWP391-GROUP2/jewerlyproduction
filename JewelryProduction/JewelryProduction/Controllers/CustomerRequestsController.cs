@@ -9,6 +9,7 @@ using JewelryProduction;
 using JewelryProduction.Core;
 using JewelryProduction.Core.DTO;
 using Humanizer;
+using System.Drawing;
 
 namespace JewelryProduction.Controllers
 {
@@ -47,14 +48,20 @@ namespace JewelryProduction.Controllers
         // PUT: api/CustomerRequests/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCustomerRequest(string id, CustomerRequest customerRequest)
+        public async Task<IActionResult> PutCustomerRequest(string id, CustomerRequestDTO customerRequestDTO)
         {
-            if (id != customerRequest.CustomizeRequestId)
+            if (id != customerRequestDTO.CustomizeRequestId)
             {
                 return BadRequest();
             }
-
-            _context.Entry(customerRequest).State = EntityState.Modified;
+            var updateRequest = await _context.CustomerRequests.FindAsync(id);
+            updateRequest.CustomizeRequestId = customerRequestDTO.CustomizeRequestId;
+            updateRequest.GoldId = customerRequestDTO.GoldId;
+            updateRequest.CustomerId = customerRequestDTO.CustomerId;
+            updateRequest.Type = customerRequestDTO.Type;
+            updateRequest.Style = customerRequestDTO.Style;
+            updateRequest.Size = customerRequestDTO.Size;
+            updateRequest.Quantity = customerRequestDTO.Quantity;
 
             try
             {
@@ -88,7 +95,7 @@ namespace JewelryProduction.Controllers
                 Type = customerRequestDTO.Type,
                 Style = customerRequestDTO.Style,
                 Size = customerRequestDTO.Size,
-                Quantity = dto.Quantity
+                Quantity = customerRequestDTO.Quantity
             };
             _context.CustomerRequests.Add(customerRequest);
             try

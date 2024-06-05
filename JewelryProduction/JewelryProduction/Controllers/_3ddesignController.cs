@@ -1,5 +1,7 @@
 ﻿using JewelryProduction.Core;
+using JewelryProduction.Core.;
 using JewelryProduction.Core.DTO;
+using JewelryProduction.Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

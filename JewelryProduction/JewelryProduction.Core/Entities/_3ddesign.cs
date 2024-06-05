@@ -1,4 +1,4 @@
-﻿namespace JewelryProduction;
+﻿namespace JewelryProduction.Core.Entities;
 
 public partial class _3ddesign
 {
