@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace JewelryProduction;
+﻿namespace JewelryProduction;
 
 public partial class PaymentMethod
 {
+
     public string PaymentMethodId { get; set; } = null!;
 
     public string PaymentMethodName { get; set; } = null!;
