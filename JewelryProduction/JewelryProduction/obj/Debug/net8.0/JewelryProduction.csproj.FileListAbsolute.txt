@@ -294,11 +294,3 @@ C:\Users\acer\Desktop\FINALTEST\JewelryProduction\JewelryProduction\obj\Debug\ne
 C:\Users\acer\Desktop\FINALTEST\JewelryProduction\JewelryProduction\obj\Debug\net8.0\JewelryProduction.pdb
 C:\Users\acer\Desktop\FINALTEST\JewelryProduction\JewelryProduction\obj\Debug\net8.0\JewelryProduction.genruntimeconfig.cache
 C:\Users\acer\Desktop\FINALTEST\JewelryProduction\JewelryProduction\obj\Debug\net8.0\ref\JewelryProduction.dll
-D:\SWP391_Project\JewelryProduction\JewelryProduction\obj\Debug\net8.0\JewelryProduction.csproj.AssemblyReference.cache
-D:\SWP391_Project\JewelryProduction\JewelryProduction\obj\Debug\net8.0\JewelryProduction.GeneratedMSBuildEditorConfig.editorconfig
-D:\SWP391_Project\JewelryProduction\JewelryProduction\obj\Debug\net8.0\JewelryProduction.AssemblyInfoInputs.cache
-D:\SWP391_Project\JewelryProduction\JewelryProduction\obj\Debug\net8.0\JewelryProduction.AssemblyInfo.cs
-D:\SWP391_Project\JewelryProduction\JewelryProduction\obj\Debug\net8.0\JewelryProduction.csproj.CoreCompileInputs.cache
-D:\SWP391_Project\JewelryProduction\JewelryProduction\obj\Debug\net8.0\JewelryProduction.MvcApplicationPartsAssemblyInfo.cs
-D:\SWP391_Project\JewelryProduction\JewelryProduction\obj\Debug\net8.0\JewelryProduction.MvcApplicationPartsAssemblyInfo.cache
-D:\SWP391_Project\JewelryProduction\JewelryProduction\obj\Debug\net8.0\JewelryProduction.sourcelink.json

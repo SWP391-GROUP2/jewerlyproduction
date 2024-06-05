@@ -48,7 +48,6 @@ namespace JewelryProduction.Controllers
             }
 
             var updateGem = await _context.Gemstones.FindAsync(id);
-            updateGem.GemstoneId = gemStoneDTO.GemstoneId;
             updateGem.Name = gemStoneDTO.Name;
             updateGem.CaratWeight = gemStoneDTO.CaratWeight;
             updateGem.Color = gemStoneDTO.Color;

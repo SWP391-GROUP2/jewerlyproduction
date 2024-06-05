@@ -40,14 +40,17 @@ namespace JewelryProduction.Controllers
         // PUT: api/Golds/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutGold(string id, Gold gold)
+        public async Task<IActionResult> PutGold(string id, GoldDTO goldDTO)
         {
-            if (id != gold.GoldId)
+            if (id != goldDTO.GoldId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(gold).State = EntityState.Modified;
+            var updateGold = await _context.Golds.FindAsync(id);
+            updateGold.GoldType = goldDTO.GoldType;
+            updateGold.Weight = goldDTO.Weight;
+            updateGold.PricePerGram = goldDTO.PricePerGram;
 
             try
             {
@@ -71,14 +74,14 @@ namespace JewelryProduction.Controllers
         // POST: api/Golds
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Gold>> PostGold(GoldDTO golddto)
+        public async Task<ActionResult<Gold>> PostGold(GoldDTO goldDTO)
         {
             Gold gold = new Gold
             {
-                GoldId = golddto.GoldId,
-                GoldType = golddto.GoldType,
-                Weight = golddto.Weight,
-                PricePerGram = golddto.PricePerGram,
+                GoldId = goldDTO.GoldId,
+                GoldType = goldDTO.GoldType,
+                Weight = goldDTO.Weight,
+                PricePerGram = goldDTO.PricePerGram,
             };
             try
             {
@@ -86,7 +89,7 @@ namespace JewelryProduction.Controllers
             }
             catch (DbUpdateException)
             {
-                if (GoldExists(golddto.GoldId))
+                if (GoldExists(gold.GoldId))
                 {
                     return Conflict();
                 }
@@ -96,7 +99,7 @@ namespace JewelryProduction.Controllers
                 }
             }
 
-            return CreatedAtAction("GetGold", new { id = golddto.GoldId }, golddto);
+            return CreatedAtAction("GetGold", new { id = gold.GoldId }, gold);
         }
 
         // DELETE: api/Golds/5
