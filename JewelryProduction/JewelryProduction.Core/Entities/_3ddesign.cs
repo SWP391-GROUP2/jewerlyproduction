@@ -14,7 +14,7 @@ public partial class _3ddesign
 
     public string DesignStaffId { get; set; } = null!;
 
-    public virtual CustomerRequest? CustomizeRequest { get; set; }
+    public virtual CustomerRequestDTO? CustomizeRequest { get; set; }
 
     public virtual User DesignStaff { get; set; } = null!;
 

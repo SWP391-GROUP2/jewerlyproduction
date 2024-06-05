@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace JewelryProduction;
+﻿namespace JewelryProduction;
 
 public partial class Gold
 {
@@ -13,7 +10,7 @@ public partial class Gold
 
     public decimal PricePerGram { get; set; }
 
-    public virtual CustomerRequest? CustomerRequest { get; set; }
+    public virtual CustomerRequestDTO? CustomerRequest { get; set; }
 
     public virtual ProductSample? ProductSample { get; set; }
 }

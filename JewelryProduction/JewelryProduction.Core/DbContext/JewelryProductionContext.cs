@@ -19,7 +19,7 @@ public partial class JewelryProductionContext : DbContext
 
     public virtual DbSet<Collection> Collections { get; set; }
 
-    public virtual DbSet<CustomerRequest> CustomerRequests { get; set; }
+    public virtual DbSet<CustomerRequestDTO> CustomerRequests { get; set; }
 
     public virtual DbSet<Gemstone> Gemstones { get; set; }
 
@@ -108,7 +108,7 @@ public partial class JewelryProductionContext : DbContext
                     });
         });
 
-        modelBuilder.Entity<CustomerRequest>(entity =>
+        modelBuilder.Entity<CustomerRequestDTO>(entity =>
         {
             entity.HasKey(e => e.CustomizeRequestId);
 
@@ -142,7 +142,7 @@ public partial class JewelryProductionContext : DbContext
                 .HasConstraintName("FK_CustomerRequest_User");
 
             entity.HasOne(d => d.Gold).WithOne(p => p.CustomerRequest)
-                .HasForeignKey<CustomerRequest>(d => d.GoldId)
+                .HasForeignKey<CustomerRequestDTO>(d => d.GoldId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CustomerRequest_Gold");
         });

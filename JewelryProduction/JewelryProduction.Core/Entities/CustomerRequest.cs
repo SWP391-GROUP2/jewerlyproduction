@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace JewelryProduction;
 
-namespace JewelryProduction;
-
-public partial class CustomerRequest
+public partial class CustomerRequestDTO
 {
     public string CustomizeRequestId { get; set; } = null!;
 

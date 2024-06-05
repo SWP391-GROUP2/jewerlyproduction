@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace JewelryProduction;
+﻿namespace JewelryProduction;
 
 public partial class Gemstone
 {
@@ -18,14 +15,14 @@ public partial class Gemstone
     public string Clarity { get; set; } = null!;
 
     public decimal PricePerCarat { get; set; }
-    
+
     public string ProductSampleId { get; set; } = null!;
 
     public string CustomizeRequestD { get; set; } = null!;
 
     public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
 
-    public virtual CustomerRequest CustomizeRequestDNavigation { get; set; } = null!;
+    public virtual CustomerRequestDTO CustomizeRequestDNavigation { get; set; } = null!;
 
     public virtual ProductSample ProductSample { get; set; } = null!;
 }

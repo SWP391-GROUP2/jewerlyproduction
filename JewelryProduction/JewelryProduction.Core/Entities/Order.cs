@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace JewelryProduction;
+﻿namespace JewelryProduction;
 
 public partial class Order
 {
@@ -31,7 +28,7 @@ public partial class Order
 
     public virtual User Customer { get; set; } = null!;
 
-    public virtual CustomerRequest? CustomizeRequest { get; set; }
+    public virtual CustomerRequestDTO? CustomizeRequest { get; set; }
 
     public virtual Insurance? Insurance { get; set; }
 
