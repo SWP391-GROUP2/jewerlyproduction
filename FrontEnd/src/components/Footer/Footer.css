@@ -1,0 +1,36 @@
+.footer {
+  background-color: #333;
+  color: #fff;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 20px 0;
+  width: 100%;
+  margin-bottom: -50px;
+  margin-top: 23px;
+}
+
+.footer-section {
+  text-align: center;
+  max-width: 300px; /* Ensures sections don't stretch too wide */
+}
+
+.footer-section h4 {
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.footer-section p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.social-media a {
+  color: #fff;
+  margin: 0 10px;
+  text-decoration: none;
+}
+
+.social-media a:hover {
+  text-decoration: underline;
+}

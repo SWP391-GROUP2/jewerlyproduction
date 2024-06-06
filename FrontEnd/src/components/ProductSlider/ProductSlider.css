@@ -1,0 +1,5 @@
+.product-slider {
+  display: flex;
+  overflow-x: auto; /* Cho phép cuộn nếu các sản phẩm vượt quá chiều rộng */
+  padding: 20px;
+}

@@ -1,0 +1,78 @@
+.carousel-container {
+  position: relative;
+  width: 80%;
+  margin: auto;
+  overflow: hidden;
+}
+
+.carousel {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+}
+
+.carousel-inner {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  width: calc(100% * 5 / 3); /* Adjust according to the number of products */
+}
+
+.carousel-item {
+  position: relative;
+  min-width: calc(
+    100% / 3
+  ); /* Each item takes one-third of the carousel's width */
+  box-sizing: border-box;
+  padding: 10px; /* Space inside the border */
+  margin: 0 5px; /* Space between items */
+  border: 1px solid #ccc; /* Border around each product */
+  border-radius: 10px; /* Optional: rounded corners */
+  background-color: #f9f9f9; /* Background color for each item */
+  overflow: hidden; /* Ensure the content doesn't overflow */
+}
+
+.product-image {
+  width: 100%;
+  height: auto;
+  max-height: 300px; /* Adjust to your preferred max height */
+  object-fit: cover; /* Ensure images cover the box without stretching */
+  border-radius: 10px; /* Match the border radius of the item */
+}
+
+.product-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+  color: white;
+  padding: 10px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  text-align: center;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.carousel-item:hover .product-overlay {
+  opacity: 1;
+}
+
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.left-arrow {
+  left: 0;
+}
+
+.right-arrow {
+  right: 0;
+}

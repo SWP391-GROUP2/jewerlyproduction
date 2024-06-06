@@ -1,0 +1,63 @@
+.slideshow {
+  position: relative;
+  width: 100%; /* Đảm bảo chiều rộng của Slideshow bằng với chiều rộng của trang */
+  max-height: 380px; /* Giảm chiều cao tối đa */
+  margin: auto;
+  overflow: hidden;
+  border: 1px solid #ccc; /* Tùy chọn, để dễ nhìn hơn */
+}
+
+.slideshow-inner {
+  display: flex;
+  transition: transform 1s ease-in-out;
+  will-change: transform;
+  width: 100%;
+}
+
+.slide {
+  min-width: 100%;
+  box-sizing: border-box; /* Đảm bảo padding được tính trong width */
+}
+
+img {
+  display: block;
+  margin: auto;
+  max-height: 380px; /* Giảm chiều cao tối đa của hình ảnh */
+  width: auto; /* Giữ nguyên tỷ lệ khung hình của hình ảnh */
+}
+
+.prev,
+.next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: 40px; /* Điều chỉnh chiều rộng theo ý bạn */
+  height: 40px; /* Điều chỉnh chiều cao để phù hợp với chiều rộng cho hình dạng tròn */
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  border: none;
+  background-color: rgba(66, 66, 66, 0.5);
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%; /* Làm cho nút tròn */
+  transform: translateY(-50%);
+  opacity: 0.5; /* Làm cho nút hơi trong suốt */
+  transition: background-color 0.3s, opacity 0.3s; /* Chuyển đổi mượt mà cho hiệu ứng hover */
+}
+
+.prev {
+  left: 10px; /* Điều chỉnh vị trí mong muốn */
+}
+
+.next {
+  right: 10px; /* Điều chỉnh vị trí mong muốn */
+}
+
+.prev:hover,
+.next:hover {
+  background-color: rgba(36, 36, 36, 0.8);
+  opacity: 1; /* Độ mờ hoàn toàn khi hover */
+}

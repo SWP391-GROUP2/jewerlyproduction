@@ -1,0 +1,59 @@
+.navbar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  padding: 8px 7%;
+  overflow: hidden;
+
+  top: 60px; /* Đặt dưới Header, giá trị này phải bằng với chiều cao của Header */
+  left: 0;
+  z-index: 999; /* Đảm bảo Navbar nằm dưới Header nhưng trên các thành phần khác */
+}
+
+.logo {
+  width: 160px;
+  cursor: pointer;
+}
+ul {
+  flex: 1;
+  list-style: none;
+  text-align: center;
+}
+ul li {
+  display: inline-block;
+  margin: 10px 20px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.01s, color 0.01s; /* Hiệu ứng chuyển màu mượt */
+}
+
+ul li:hover {
+  background-color: #242424; /* Màu nền khi di chuột vào */
+  color: #fff; /* Màu chữ khi di chuột vào */
+  border-radius: 7px;
+}
+.search-box {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  padding: 0px 10px;
+  border-radius: 50px;
+  border: 1px solid #242424; /* Thêm viền */
+}
+.search-box input {
+  padding: 6px;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  color: #242424;
+  font-size: 18px;
+}
+.search-box input::placeholder {
+  color: #242424;
+}
+.search-box img {
+  width: 20px;
+  cursor: pointer;
+}
