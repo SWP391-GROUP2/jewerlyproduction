@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace JewelryProduction;
+﻿namespace JewelryProduction;
 
 public partial class User
 {
@@ -9,9 +6,9 @@ public partial class User
 
     public string Name { get; set; } = null!;
 
-    public DateOnly DateOfBirth { get; set; }
+    public DateOnly? DateOfBirth { get; set; }
 
-    public decimal PhoneNumber { get; set; }
+    public string PhoneNumber { get; set; }
 
     public string Email { get; set; } = null!;
 
@@ -19,7 +16,7 @@ public partial class User
 
     public string RoleId { get; set; } = null!;
 
-    public virtual ICollection<CustomerRequestDTO> CustomerRequests { get; set; } = new List<CustomerRequestDTO>();
+    public virtual ICollection<CustomerRequest> CustomerRequests { get; set; } = new List<CustomerRequest>();
 
     public virtual ICollection<Message> MessageCustomers { get; set; } = new List<Message>();
 

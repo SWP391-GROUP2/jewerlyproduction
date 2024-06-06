@@ -28,7 +28,7 @@ public partial class Order
 
     public virtual User Customer { get; set; } = null!;
 
-    public virtual CustomerRequestDTO? CustomizeRequest { get; set; }
+    public virtual CustomerRequest? CustomizeRequest { get; set; }
 
     public virtual Insurance? Insurance { get; set; }
 

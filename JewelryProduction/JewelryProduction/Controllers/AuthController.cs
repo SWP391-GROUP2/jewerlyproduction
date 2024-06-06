@@ -21,19 +21,19 @@ namespace JewelryProduction.Controllers
             _context = context;
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(UserDTO userDTO)
+        [HttpPost("register/customer")]
+        public async Task<IActionResult> UserRegister(CustomerRegisterDTO userDTO)
         {
             string passwordHash
                 = BCrypt.Net.BCrypt.HashPassword(userDTO.Password);
             User user = new User
             {
                 UserId = Guid.NewGuid().ToString(),
-                Name = "Default Name",
+                Name = userDTO.Name,
                 Password = passwordHash,
                 Email = userDTO.Email,
-                DateOfBirth = DateOnly.FromDateTime(DateTime.MinValue),
-                PhoneNumber = 0,
+                DateOfBirth = null,
+                PhoneNumber = userDTO.PhoneNumber,
                 RoleId = "1",
             };
 
@@ -43,8 +43,30 @@ namespace JewelryProduction.Controllers
             return Ok(user);
         }
 
+        [HttpPost("register/staff")]
+        public async Task<IActionResult> AddStaff(StaffRegisterDTO userDTO)
+        {
+            string passwordHash
+                = BCrypt.Net.BCrypt.HashPassword(userDTO.Password);
+            User user = new User
+            {
+                UserId = Guid.NewGuid().ToString(),
+                Name = userDTO.Name,
+                Password = passwordHash,
+                Email = userDTO.Email,
+                DateOfBirth = null,
+                PhoneNumber = userDTO.PhoneNumber,
+                RoleId = userDTO.RoleId,
+            };
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(user);
+        }
+
         [HttpPost("login")]
-        public async Task<IActionResult> Login(UserDTO userDTO)
+        public async Task<IActionResult> Login(LoginDTO userDTO)
         {
             var user = _context.Users
                 .FirstOrDefault(u => u.Email == userDTO.Email);

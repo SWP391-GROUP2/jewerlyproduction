@@ -1,6 +1,6 @@
 ﻿namespace JewelryProduction;
 
-public partial class CustomerRequestDTO
+public partial class CustomerRequest
 {
     public string CustomizeRequestId { get; set; } = null!;
 

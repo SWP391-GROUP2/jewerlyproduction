@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace JewelryProduction.Core;
 
@@ -19,7 +17,7 @@ public partial class JewelryProductionContext : DbContext
 
     public virtual DbSet<Collection> Collections { get; set; }
 
-    public virtual DbSet<CustomerRequestDTO> CustomerRequests { get; set; }
+    public virtual DbSet<CustomerRequest> CustomerRequests { get; set; }
 
     public virtual DbSet<Gemstone> Gemstones { get; set; }
 
@@ -108,7 +106,7 @@ public partial class JewelryProductionContext : DbContext
                     });
         });
 
-        modelBuilder.Entity<CustomerRequestDTO>(entity =>
+        modelBuilder.Entity<CustomerRequest>(entity =>
         {
             entity.HasKey(e => e.CustomizeRequestId);
 
@@ -142,7 +140,7 @@ public partial class JewelryProductionContext : DbContext
                 .HasConstraintName("FK_CustomerRequest_User");
 
             entity.HasOne(d => d.Gold).WithOne(p => p.CustomerRequest)
-                .HasForeignKey<CustomerRequestDTO>(d => d.GoldId)
+                .HasForeignKey<CustomerRequest>(d => d.GoldId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CustomerRequest_Gold");
         });
@@ -410,7 +408,7 @@ public partial class JewelryProductionContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("password");
             entity.Property(e => e.PhoneNumber)
-                .HasColumnType("decimal(18, 0)")
+                .HasMaxLength(50)
                 .HasColumnName("phoneNumber");
             entity.Property(e => e.RoleId)
                 .HasMaxLength(50)

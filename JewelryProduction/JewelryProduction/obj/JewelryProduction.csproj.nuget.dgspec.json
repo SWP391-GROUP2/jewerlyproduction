@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction\\JewelryProduction.csproj": {}
+    "D:\\JPOS\\JewelryProduction\\JewelryProduction\\JewelryProduction.csproj": {}
   },
   "projects": {
-    "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj": {
+    "D:\\JPOS\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj",
+        "projectUniqueName": "D:\\JPOS\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj",
         "projectName": "JewelryProduction.Core",
-        "projectPath": "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj",
+        "projectPath": "D:\\JPOS\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj",
         "packagesPath": "C:\\Users\\tranq\\.nuget\\packages\\",
-        "outputPath": "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction.Core\\obj\\",
+        "outputPath": "D:\\JPOS\\JewelryProduction\\JewelryProduction.Core\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\tranq\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -103,14 +103,14 @@
         }
       }
     },
-    "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction\\JewelryProduction.csproj": {
+    "D:\\JPOS\\JewelryProduction\\JewelryProduction\\JewelryProduction.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction\\JewelryProduction.csproj",
+        "projectUniqueName": "D:\\JPOS\\JewelryProduction\\JewelryProduction\\JewelryProduction.csproj",
         "projectName": "JewelryProduction",
-        "projectPath": "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction\\JewelryProduction.csproj",
+        "projectPath": "D:\\JPOS\\JewelryProduction\\JewelryProduction\\JewelryProduction.csproj",
         "packagesPath": "C:\\Users\\tranq\\.nuget\\packages\\",
-        "outputPath": "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction\\obj\\",
+        "outputPath": "D:\\JPOS\\JewelryProduction\\JewelryProduction\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\tranq\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -128,8 +128,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj": {
-                "projectPath": "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj"
+              "D:\\JPOS\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj": {
+                "projectPath": "D:\\JPOS\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj"
               }
             }
           }

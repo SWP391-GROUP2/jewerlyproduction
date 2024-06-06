@@ -22,7 +22,7 @@ public partial class Gemstone
 
     public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
 
-    public virtual CustomerRequestDTO CustomizeRequestDNavigation { get; set; } = null!;
+    public virtual CustomerRequest CustomizeRequestDNavigation { get; set; } = null!;
 
     public virtual ProductSample ProductSample { get; set; } = null!;
 }

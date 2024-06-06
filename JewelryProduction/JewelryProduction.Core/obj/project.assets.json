@@ -4089,11 +4089,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj",
+      "projectUniqueName": "D:\\JPOS\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj",
       "projectName": "JewelryProduction.Core",
-      "projectPath": "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj",
+      "projectPath": "D:\\JPOS\\JewelryProduction\\JewelryProduction.Core\\JewelryProduction.Core.csproj",
       "packagesPath": "C:\\Users\\tranq\\.nuget\\packages\\",
-      "outputPath": "D:\\SWP391_Project\\JewelryProduction\\JewelryProduction.Core\\obj\\",
+      "outputPath": "D:\\JPOS\\JewelryProduction\\JewelryProduction.Core\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\tranq\\AppData\\Roaming\\NuGet\\NuGet.Config",

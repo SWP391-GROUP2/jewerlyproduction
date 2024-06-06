@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using JewelryProduction.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using JewelryProduction;
-using JewelryProduction.Core;
-using JewelryProduction.Core.DTO;
-using Humanizer;
 
 namespace JewelryProduction.Controllers
 {
@@ -47,14 +39,21 @@ namespace JewelryProduction.Controllers
         // PUT: api/CustomerRequests/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCustomerRequest(string id, CustomerRequest customerRequest)
+        public async Task<IActionResult> PutCustomerRequest(string id, CustomerRequest customerRequestDTO)
         {
-            if (id != customerRequest.CustomizeRequestId)
+            if (id != customerRequestDTO.CustomizeRequestId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(customerRequest).State = EntityState.Modified;
+            var updateCusReq = await _context.CustomerRequests.FindAsync(id);
+            updateCusReq.CustomizeRequestId = customerRequestDTO.CustomizeRequestId;
+            updateCusReq.GoldId = customerRequestDTO.GoldId;
+            updateCusReq.CustomerId = customerRequestDTO.CustomerId;
+            updateCusReq.Type = customerRequestDTO.Type;
+            updateCusReq.Style = customerRequestDTO.Style;
+            updateCusReq.Size = customerRequestDTO.Size;
+            updateCusReq.Quantity = customerRequestDTO.Quantity;
 
             try
             {
@@ -78,7 +77,7 @@ namespace JewelryProduction.Controllers
         // POST: api/CustomerRequests
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<CustomerRequest>> PostCustomerRequest(CustomerRequestDTO customerRequestDTO)
+        public async Task<ActionResult<CustomerRequest>> PostCustomerRequest(CustomerRequest customerRequestDTO)
         {
             var customerRequest = new CustomerRequest
             {
@@ -88,7 +87,7 @@ namespace JewelryProduction.Controllers
                 Type = customerRequestDTO.Type,
                 Style = customerRequestDTO.Style,
                 Size = customerRequestDTO.Size,
-                Quantity = dto.Quantity
+                Quantity = customerRequestDTO.Quantity,
             };
             _context.CustomerRequests.Add(customerRequest);
             try
