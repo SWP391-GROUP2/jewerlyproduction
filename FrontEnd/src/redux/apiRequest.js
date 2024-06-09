@@ -33,13 +33,6 @@ export const registerUser = async (user, dispatch, navigate) => {
 
 export const logOut = async (dispatch, navigate) => {
   dispatch(logOutStart());
-  try {
-    // Handle log out logic here
-    dispatch(logOutSuccess());
-    navigate("/login");
-  } catch (err) {
-    dispatch(logOutFalsed());
-  }
 };
 
 export const loginWithGoogle = async (credential, dispatch, navigate) => {
