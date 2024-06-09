@@ -18,6 +18,6 @@
 
         public string ProductSampleId { get; set; } = null!;
 
-        public string CustomizeRequestD { get; set; } = null!;
+        public string CustomizeRequestId { get; set; } = null!;
     }
 }

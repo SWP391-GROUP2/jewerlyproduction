@@ -40,18 +40,22 @@ namespace JewelryProduction.Controllers
         // PUT: api/Gemstones/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutGemstone(string id, GemstoneDTO gemStoneDTO)
+        public async Task<IActionResult> PutGemstone(string id, GemstoneDTO gemstoneDTO)
         {
-            if (id != gemStoneDTO.GemstoneId)
+            if (id != gemstoneDTO.GemstoneId)
             {
                 return BadRequest();
             }
 
             var updateGem = await _context.Gemstones.FindAsync(id);
-            updateGem.Name = gemStoneDTO.Name;
-            updateGem.CaratWeight = gemStoneDTO.CaratWeight;
-            updateGem.Color = gemStoneDTO.Color;
-            updateGem.CustomizeRequestD = gemStoneDTO.CustomizeRequestD;
+            updateGem.Name = gemstoneDTO.Name;
+            updateGem.Color = gemstoneDTO.Color;
+            updateGem.CaratWeight = gemstoneDTO.CaratWeight;
+            updateGem.Cut = gemstoneDTO.Cut;
+            updateGem.Clarity = gemstoneDTO.Clarity;
+            updateGem.PricePerCarat = gemstoneDTO.PricePerCarat;
+            updateGem.ProductSampleId = gemstoneDTO.ProductSampleId;
+            updateGem.CustomizeRequestId = gemstoneDTO.CustomizeRequestId;
 
             try
             {
@@ -78,13 +82,17 @@ namespace JewelryProduction.Controllers
         public async Task<ActionResult<Gemstone>> PostGemstone(GemstoneDTO gemstoneDTO)
         {
 
-            Gemstone gemStone = new Gemstone
+            Gemstone gemstone = new Gemstone
             {
                 GemstoneId = gemstoneDTO.GemstoneId,
                 Name = gemstoneDTO.Name,
-                CaratWeight = gemstoneDTO.CaratWeight,
                 Color = gemstoneDTO.Color,
-                CustomizeRequestD = gemstoneDTO.CustomizeRequestD,
+                CaratWeight = gemstoneDTO.CaratWeight,
+                Cut = gemstoneDTO.Cut,
+                Clarity = gemstoneDTO.Clarity,
+                PricePerCarat = gemstoneDTO.PricePerCarat,
+                ProductSampleId = gemstoneDTO.ProductSampleId,
+                CustomizeRequestId = gemstoneDTO.CustomizeRequestId,
 
             };
             try
@@ -93,7 +101,7 @@ namespace JewelryProduction.Controllers
             }
             catch (DbUpdateException)
             {
-                if (GemstoneExists(gemStone.GemstoneId))
+                if (GemstoneExists(gemstone.GemstoneId))
                 {
                     return Conflict();
                 }
@@ -103,7 +111,7 @@ namespace JewelryProduction.Controllers
                 }
             }
 
-            return CreatedAtAction("GetGemstone", new { id = gemStone.GemstoneId }, gemStone);
+            return CreatedAtAction("GetGemstone", new { id = gemstone.GemstoneId }, gemstone);
         }
 
         // DELETE: api/Gemstones/5

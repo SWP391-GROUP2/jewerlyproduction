@@ -18,11 +18,11 @@ public partial class Gemstone
 
     public string ProductSampleId { get; set; } = null!;
 
-    public string CustomizeRequestD { get; set; } = null!;
+    public string CustomizeRequestId { get; set; } = null!;
 
     public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
 
-    public virtual CustomerRequest CustomizeRequestDNavigation { get; set; } = null!;
+    public virtual CustomerRequest CustomizeRequestIdNavigation { get; set; } = null!;
 
     public virtual ProductSample ProductSample { get; set; } = null!;
 }
