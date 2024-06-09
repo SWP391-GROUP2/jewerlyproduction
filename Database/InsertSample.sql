@@ -1,4 +1,4 @@
-INSERT INTO ProductSamples (productSampleID, productName, description, type, style, size, price, goldID)
+INSERT INTO ProductSample (productSampleID, productName, description, type, style, size, price, goldID)
 VALUES
     ('PS001', 'Golden Necklace', 'A beautiful 18k gold necklace with a pendant', 'Necklace', 'Chain', 18.0, 500.00, 'G001'),
     ('PS002', 'Silver Earrings', 'Stylish sterling silver earrings with a modern design', 'Earrings', 'Stud', NULL, 30.00, NULL),

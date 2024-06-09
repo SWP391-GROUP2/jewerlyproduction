@@ -37,6 +37,31 @@ namespace JewelryProduction.Controllers
             return productSample;
         }
 
+        // GET: api/ProductSamples/5
+        [HttpGet("FilterInSearch")]
+        public async Task<ActionResult<IEnumerable<ProductSample>>> GetFilter(string type, string style, string sortPrice) // Filter in search
+        {
+            // check whether type or style is null
+            var productSamples = _context.ProductSamples.AsQueryable();
+            if (type is null)
+                productSamples = productSamples.Where(p => p.Type == type);
+            else if (style is null)
+                productSamples = productSamples.Where(p => p.Style == style);
+            else
+                productSamples = productSamples.Where(p => p.Type == type && p.Style == style);
+
+            // Check the sort in price.
+            if (sortPrice is null) sortPrice = "asc";
+
+            productSamples = sortPrice.ToLower() == "asc" ? productSamples.OrderBy(p => p.Price) : productSamples.OrderByDescending(p => p.Price);
+            var result = await productSamples.ToListAsync();
+            return Ok(result);
+        }
+
+
+
+
+
         // PUT: api/ProductSamples/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
