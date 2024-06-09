@@ -6,7 +6,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FaHome } from "react-icons/fa";
 import { IoReturnDownBack } from "react-icons/io5";
 import { useDispatch } from "react-redux";
-import { loginUser } from "../../redux/apiRequest";
+import { loginUser, loginWithGoogle } from "../../redux/apiRequest";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 
 //./auth/userinfo.email
@@ -87,33 +87,34 @@ function LoginForm() {
               <Link to="/foget"> Forget password ? </Link>
             </div>
             <button type="submit">Log In</button>
+
+            <div className="register-link">
+              <p>continue with</p>
+            </div>
+
+            <GoogleLogin
+              onSuccess={onGoogleSuccess}
+              onError={onGoogleFailure}
+              useOneTap
+              render={(renderProps) => (
+                <button
+                  type="button"
+                  className="google-button"
+                  onClick={renderProps.onClick}
+                  disabled={renderProps.disabled}
+                >
+                  <FcGoogle className="icon" />
+                  Google
+                </button>
+              )}
+            />
+
+            <div className="register-link">
+              <p>
+                Have you got any account ? <Link to="/register">Register</Link>
+              </p>
+            </div>
           </form>
-          <div className="register-link">
-            <p>continue with</p>
-          </div>
-
-          <GoogleLogin
-            onSuccess={onGoogleSuccess}
-            onError={onGoogleFailure}
-            useOneTap
-            render={(renderProps) => (
-              <button
-                type="button"
-                className="google-button"
-                onClick={renderProps.onClick}
-                disabled={renderProps.disabled}
-              >
-                <FcGoogle className="icon" />
-                Google
-              </button>
-            )}
-          />
-
-          <div className="register-link">
-            <p>
-              Have you got any account ? <Link to="/register">Register</Link>
-            </p>
-          </div>
         </div>
       </GoogleOAuthProvider>
     </>
