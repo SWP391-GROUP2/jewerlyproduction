@@ -33,4 +33,27 @@ export const registerUser = async (user, dispatch, navigate) => {
 
 export const logOut = async (dispatch, navigate) => {
   dispatch(logOutStart());
+  try {
+    // Handle log out logic here
+    dispatch(logOutSuccess());
+    navigate("/login");
+  } catch (err) {
+    dispatch(logOutFalsed());
+  }
+};
+
+export const loginWithGoogle = async (credential, dispatch, navigate) => {
+  dispatch(loginStart());
+  try {
+    const res = await axios.post(
+      "http://localhost:5066/api/Auth/google-login",
+      {
+        credential,
+      }
+    );
+    dispatch(loginSuccess(res.data));
+    navigate("/");
+  } catch (err) {
+    dispatch(loginFalsed());
+  }
 };
