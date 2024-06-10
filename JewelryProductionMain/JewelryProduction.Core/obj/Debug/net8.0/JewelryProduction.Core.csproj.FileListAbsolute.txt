@@ -1,0 +1,14 @@
+C:\Project_\JewelryProduction\JewelryProduction.Core\bin\Debug\net8.0\JewelryProduction.Core.deps.json
+C:\Project_\JewelryProduction\JewelryProduction.Core\bin\Debug\net8.0\JewelryProduction.Core.runtimeconfig.json
+C:\Project_\JewelryProduction\JewelryProduction.Core\bin\Debug\net8.0\JewelryProduction.Core.dll
+C:\Project_\JewelryProduction\JewelryProduction.Core\bin\Debug\net8.0\JewelryProduction.Core.pdb
+C:\Project_\JewelryProduction\JewelryProduction.Core\obj\Debug\net8.0\JewelryProduction.Core.csproj.AssemblyReference.cache
+C:\Project_\JewelryProduction\JewelryProduction.Core\obj\Debug\net8.0\JewelryProduction.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Project_\JewelryProduction\JewelryProduction.Core\obj\Debug\net8.0\JewelryProduction.Core.AssemblyInfoInputs.cache
+C:\Project_\JewelryProduction\JewelryProduction.Core\obj\Debug\net8.0\JewelryProduction.Core.AssemblyInfo.cs
+C:\Project_\JewelryProduction\JewelryProduction.Core\obj\Debug\net8.0\JewelryProduction.Core.csproj.CoreCompileInputs.cache
+C:\Project_\JewelryProduction\JewelryProduction.Core\obj\Debug\net8.0\JewelryProduction.Core.dll
+C:\Project_\JewelryProduction\JewelryProduction.Core\obj\Debug\net8.0\refint\JewelryProduction.Core.dll
+C:\Project_\JewelryProduction\JewelryProduction.Core\obj\Debug\net8.0\JewelryProduction.Core.pdb
+C:\Project_\JewelryProduction\JewelryProduction.Core\obj\Debug\net8.0\JewelryProduction.Core.genruntimeconfig.cache
+C:\Project_\JewelryProduction\JewelryProduction.Core\obj\Debug\net8.0\ref\JewelryProduction.Core.dll
