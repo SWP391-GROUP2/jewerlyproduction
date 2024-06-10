@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace JewelryProduction;
+﻿namespace JewelryProduction;
 
 public partial class ProductSample
 {
@@ -9,7 +6,7 @@ public partial class ProductSample
 
     public string ProductName { get; set; } = null!;
 
-    public string Description { get; set; } = null!;
+    public string Image { get; set; } = null!;
 
     public string Type { get; set; } = null!;
 

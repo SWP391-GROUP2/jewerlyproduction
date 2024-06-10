@@ -352,7 +352,7 @@ public partial class JewelryProductionContext : DbContext
             entity.Property(e => e.ProductSampleId)
                 .HasMaxLength(50)
                 .HasColumnName("productSampleID");
-            entity.Property(e => e.Description)
+            entity.Property(e => e.Image)
                 .HasMaxLength(100)
                 .HasColumnName("description");
             entity.Property(e => e.GoldId)

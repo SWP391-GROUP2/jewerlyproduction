@@ -1,5 +1,5 @@
-﻿using JewelryProduction.Core;
-using JewelryProduction.Core.DTO;
+﻿using JewelryProduction.DbContext;
+using JewelryProduction.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -78,7 +78,7 @@ namespace JewelryProduction.Controllers
             updateProduct.Size = productSampleDTO.Size;
             updateProduct.Price = productSampleDTO.Price;
             updateProduct.GoldId = productSampleDTO.GoldId;
-
+            //chua update hinh anh duoc
             try
             {
                 await _context.SaveChangesAsync();
@@ -103,6 +103,7 @@ namespace JewelryProduction.Controllers
         [HttpPost]
         public async Task<ActionResult<ProductSample>> PostProductSample(ProductSampleDTO productSampleDTO)
         {
+
             var productSample = new ProductSample
             {
                 ProductSampleId = productSampleDTO.ProductSampleId,

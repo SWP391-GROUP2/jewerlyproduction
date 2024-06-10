@@ -1,6 +1,7 @@
 ﻿namespace JewelryProduction.Core.Interfaces
 {
-    public interface ICategoryService
+    public interface ICollectionRepository
     {
+
     }
 }
