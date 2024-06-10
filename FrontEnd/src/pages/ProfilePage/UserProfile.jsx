@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./UserProfile.css";
 import { Link, useNavigate } from "react-router-dom";
 import { MdDriveFileRenameOutline } from "react-icons/md";
@@ -6,14 +6,20 @@ import { FaHome } from "react-icons/fa";
 import { IoReturnDownBack } from "react-icons/io5";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../../redux/apiRequest";
+import { jwtDecode } from "jwt-decode";
+
+
+
 
 function UserProfile() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
+  const [birthday, setBirthday] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -21,7 +27,7 @@ function UserProfile() {
       name: name,
       phone: phone,
       email: email,
-      password: password,
+      birthday: birthday,
     };
     registerUser(newUser, dispatch, navigate);
   };
@@ -67,22 +73,25 @@ function UserProfile() {
             <MdDriveFileRenameOutline className="icon" />
           </div>
           <div className="input-box">
-            <input
-              type="password"
-              placeholder="Password"
-              required
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <MdDriveFileRenameOutline className="icon" />
+        <input
+          type="date" // Thay đổi type thành "date" để nhập ngày sinh
+          placeholder="Date of Birth" // Thay đổi placeholder thành "Date of Birth"
+          required
+          onChange={(e) => setBirthday(e.target.value)} // Sửa sự kiện onChange để cập nhật giá trị ngày sinh
+          />
+          <MdDriveFileRenameOutline className="icon" /> {/* Icon có thể giữ nguyên hoặc thay đổi tùy ý */}
           </div>
+
+
+          
+
+          <button type="submit">Save Profile</button>
 
           <div className="register-link">
             <p>
               <Link to="/resetpassword">Change Password</Link>
-            </p>
+            </p>  
           </div>
-
-          <button type="submit">Save Profile</button>
         </form>
       </div>
     </>
