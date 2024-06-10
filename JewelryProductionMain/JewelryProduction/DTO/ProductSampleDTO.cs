@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿namespace JewelryProduction.DTO
 
-namespace JewelryProduction.Core.DTO
 {
     public class ProductSampleDTO
     {

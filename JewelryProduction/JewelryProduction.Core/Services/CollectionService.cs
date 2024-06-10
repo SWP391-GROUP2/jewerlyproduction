@@ -1,6 +1,7 @@
 ﻿namespace JewelryProduction.Core.Services
 {
-    public class CategoryService
+    public class CollectionService
     {
+
     }
 }

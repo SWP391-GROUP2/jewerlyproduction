@@ -1,4 +1,4 @@
-﻿namespace JewelryProduction.Core.DTO
+﻿namespace JewelryProduction.DTO
 {
     public class GemstoneDTO
     {

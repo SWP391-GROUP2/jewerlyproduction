@@ -159,9 +159,9 @@ public partial class JewelryProductionContext : DbContext
             entity.Property(e => e.Color)
                 .HasMaxLength(50)
                 .HasColumnName("color");
-            entity.Property(e => e.CustomizeRequestD)
+            entity.Property(e => e.CustomizeRequestId)
                 .HasMaxLength(50)
-                .HasColumnName("customizeRequestD");
+                .HasColumnName("customizeRequestId");
             entity.Property(e => e.Cut)
                 .HasMaxLength(50)
                 .HasColumnName("cut");
@@ -175,8 +175,8 @@ public partial class JewelryProductionContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("productSampleID");
 
-            entity.HasOne(d => d.CustomizeRequestDNavigation).WithMany(p => p.Gemstones)
-                .HasForeignKey(d => d.CustomizeRequestD)
+            entity.HasOne(d => d.CustomizeRequestIdNavigation).WithMany(p => p.Gemstones)
+                .HasForeignKey(d => d.CustomizeRequestId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Gemstone_CustomerRequest");
 
@@ -352,7 +352,7 @@ public partial class JewelryProductionContext : DbContext
             entity.Property(e => e.ProductSampleId)
                 .HasMaxLength(50)
                 .HasColumnName("productSampleID");
-            entity.Property(e => e.Description)
+            entity.Property(e => e.Image)
                 .HasMaxLength(100)
                 .HasColumnName("description");
             entity.Property(e => e.GoldId)
