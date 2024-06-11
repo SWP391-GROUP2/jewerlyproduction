@@ -90,12 +90,20 @@ function LoginForm() {
               <p>continue with</p>
             </div>
             <GoogleLogin
-              onSuccess={(credentialResponse) => {
-                console.log(credentialResponse);
-              }}
-              onError={() => {
-                console.log("Login Failed");
-              }}
+              onSuccess={onGoogleSuccess}
+              onError={onGoogleFailure}
+              useOneTap
+              render={(renderProps) => (
+                <button
+                  type="button"
+                  className="google-button"
+                  onClick={renderProps.onClick}
+                  disabled={renderProps.disabled}
+                >
+                  <FcGoogle className="icon" />
+                  Google
+                </button>
+              )}
             />
 
             <div className="register-link">
