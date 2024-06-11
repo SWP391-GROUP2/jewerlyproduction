@@ -1,0 +1,85 @@
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 250px;
+    padding: 20px;
+    border-right: 1px solid #ccc;
+    background-color: #fff;
+    transition: width 0.3s;
+    overflow: hidden;
+  }
+  
+  .sidebar.closed {
+    width: 50px;
+    padding: 10px;
+    left: -60px; /* Đẩy sidebar ra khỏi màn hình khi đóng */
+  }
+  
+  .sidebar .toggle-button {
+    position: absolute;
+    top: 50%; 
+    right: -20px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    margin: 0;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+  }
+  
+  .sidebar .toggle-button:hover {
+    background-color: #0056b3;
+  }
+  
+  h2, h3 {
+    margin: 0 0 10px;
+  }
+  
+  .category-list,
+  .filter-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .category-list li,
+  .filter-list li {
+    padding: 8px;
+    cursor: pointer;
+    margin-bottom: 5px;
+    border-radius: 3px;
+    transition: background-color 0.3s;
+  }
+  
+  .category-list li:hover,
+  .filter-list li:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .category-list li.active {
+    background-color: #ddd;
+    font-weight: bold;
+  }
+  
+  .sort-section {
+    margin-bottom: 20px;
+  }
+  
+  .sort-section label,
+  .filter-list label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .sort-section input[type="radio"],
+  .filter-list input[type="radio"] {
+    margin-right: 10px;
+  }
+  

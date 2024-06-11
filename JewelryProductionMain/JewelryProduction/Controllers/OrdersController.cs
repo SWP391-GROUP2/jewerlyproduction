@@ -131,7 +131,7 @@ namespace JewelryProduction.Controllers
         }
 
     // DELETE: api/Orders/5
-    [HttpDelete("{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrder(string id)
         {
             var order = await _context.Orders.FindAsync(id);
@@ -145,18 +145,17 @@ namespace JewelryProduction.Controllers
 
             return NoContent();
         }
-            public decimal CalculateProductCost(decimal PricePerGram, double GoldWeight, decimal PricePerCarat, double CaratWeight)
-            {
-                decimal productCost = ((PricePerGram * (decimal)GoldWeight + PricePerCarat *(decimal)CaratWeight) *0.4M)*0.1M;
-                return productCost;
-            }
+        public decimal CalculateProductCost(decimal PricePerGram, double GoldWeight, decimal PricePerCarat, double CaratWeight)
+        {
+            decimal productCost = ((PricePerGram * (decimal)GoldWeight + PricePerCarat * (decimal)CaratWeight) * 0.4M) * 0.1M;
+            return productCost;
+        }
         public decimal GetDeposit(decimal productCost)
         {
             decimal deposit = productCost * 0.3M;
             return deposit;
         }
         
-
         private bool OrderExists(string id)
         {
             return _context.Orders.Any(e => e.OrderId == id);

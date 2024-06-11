@@ -7,8 +7,8 @@ namespace JewelryProduction;
 public partial class AppUser : IdentityUser
 {
     public string Name { get; set; } = null!;
-
-    public DateOnly DateOfBirth { get; set; }
+    public DateOnly? DateOfBirth { get; set; } = null!;
+    public string? Avatar { get; set; } = null!;
 
     public ICollection<CustomerRequest> CustomerRequests { get; set; } = new List<CustomerRequest>();
 
