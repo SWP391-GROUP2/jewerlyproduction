@@ -3,6 +3,7 @@ using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace JewelryProduction.Controllers
 {
@@ -120,9 +121,17 @@ namespace JewelryProduction.Controllers
 
             return CreatedAtAction("GetOrder", new { id = order.OrderId }, order);
         }
+        [HttpPost]
+        public IActionResult PostProductPrice([FromBody] OrderDTO orderDTO, GoldDTO goldDTO, GemstoneDTO gemstoneDTO )
+        {
+            decimal totalPrice = CalculateProductCost(goldDTO.PricePerGram,goldDTO.Weight,gemstoneDTO.PricePerCarat, gemstoneDTO.CaratWeight);
 
-        // DELETE: api/Orders/5
-        [HttpDelete("{id}")]
+            // Return a 201 Created response with the updated product price
+            return CreatedAtAction(nameof(PostProductPrice), new { id = orderDTO.OrderId }, totalPrice);
+        }
+
+    // DELETE: api/Orders/5
+    [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrder(string id)
         {
             var order = await _context.Orders.FindAsync(id);
@@ -136,6 +145,17 @@ namespace JewelryProduction.Controllers
 
             return NoContent();
         }
+            public decimal CalculateProductCost(decimal PricePerGram, double GoldWeight, decimal PricePerCarat, double CaratWeight)
+            {
+                decimal productCost = ((PricePerGram * (decimal)GoldWeight + PricePerCarat *(decimal)CaratWeight) *0.4M)*0.1M;
+                return productCost;
+            }
+        public decimal GetDeposit(decimal productCost)
+        {
+            decimal deposit = productCost * 0.3M;
+            return deposit;
+        }
+        
 
         private bool OrderExists(string id)
         {
