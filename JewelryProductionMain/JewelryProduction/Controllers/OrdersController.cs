@@ -3,6 +3,7 @@ using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace JewelryProduction.Controllers
 {
@@ -121,16 +122,15 @@ namespace JewelryProduction.Controllers
             return CreatedAtAction("GetOrder", new { id = order.OrderId }, order);
         }
         [HttpPost]
-        public IActionResult PostProductPrice([FromBody] OrderDTO orderDTO, GoldDTO goldDTO, GemstoneDTO gemstoneDTO)
+        public IActionResult PostProductPrice([FromBody] OrderDTO orderDTO, GoldDTO goldDTO, GemstoneDTO gemstoneDTO )
         {
-            decimal totalPrice = CalculateProductCost(goldDTO.PricePerGram, goldDTO.Weight, gemstoneDTO.PricePerCarat, gemstoneDTO.CaratWeight);
+            decimal totalPrice = CalculateProductCost(goldDTO.PricePerGram,goldDTO.Weight,gemstoneDTO.PricePerCarat, gemstoneDTO.CaratWeight);
 
             // Return a 201 Created response with the updated product price
             return CreatedAtAction(nameof(PostProductPrice), new { id = orderDTO.OrderId }, totalPrice);
         }
 
-
-        // DELETE: api/Orders/5
+    // DELETE: api/Orders/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrder(string id)
         {
@@ -155,7 +155,7 @@ namespace JewelryProduction.Controllers
             decimal deposit = productCost * 0.3M;
             return deposit;
         }
-
+        
         private bool OrderExists(string id)
         {
             return _context.Orders.Any(e => e.OrderId == id);
