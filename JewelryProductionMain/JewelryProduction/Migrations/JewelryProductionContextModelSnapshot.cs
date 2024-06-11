@@ -50,11 +50,16 @@ namespace JewelryProduction.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("Avatar")
+                        .HasMaxLength(350)
+                        .HasColumnType("nvarchar(350)")
+                        .HasColumnName("Avatar");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly>("DateOfBirth")
+                    b.Property<DateOnly?>("DateOfBirth")
                         .HasColumnType("date")
                         .HasColumnName("DateOfBirth");
 
@@ -602,37 +607,37 @@ namespace JewelryProduction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f311a639-dd8e-42ac-a186-852814665fd8",
+                            Id = "5a492e8e-1924-4050-bfb6-1a24accf6b19",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "dcc6d883-4e9d-4e31-9c4d-092a1ac087a6",
+                            Id = "29f3b3c9-9da1-4c27-ae04-7c289bc1ae13",
                             Name = "SaleStaff",
                             NormalizedName = "SALESTAFF"
                         },
                         new
                         {
-                            Id = "59ecfcf7-0a3f-414c-96a8-59d4dc093a77",
+                            Id = "cf0c5094-32de-452d-a052-e8f0d5458dd5",
                             Name = "ProductionStaff",
                             NormalizedName = "PRODUCTIONSTAFF"
                         },
                         new
                         {
-                            Id = "dbdf96d8-1eac-4699-b6b7-9184d66abc70",
+                            Id = "a96c25c3-7053-432b-a833-cfeabfa2e8e5",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "474fa355-e709-4357-b41c-048a76591c57",
+                            Id = "b78abc78-6d4f-4f9e-a1cc-29778e4ba7aa",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "95cc25e2-3abf-4fed-8dce-f7529bcf472f",
+                            Id = "f5206c52-8c75-47d5-9f44-7e2ac32ae0d2",
                             Name = "DesignStaff",
                             NormalizedName = "DESIGNSTAFF"
                         });
