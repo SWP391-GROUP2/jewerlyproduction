@@ -40,10 +40,10 @@ namespace JewelryProduction
             // Add JWT Authentication
             builder.Services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = 
+                options.DefaultAuthenticateScheme =
                 options.DefaultChallengeScheme =
-                options.DefaultForbidScheme = 
-                options.DefaultScheme = 
+                options.DefaultForbidScheme =
+                options.DefaultScheme =
                 options.DefaultSignInScheme =
                 options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
             })
@@ -60,9 +60,14 @@ namespace JewelryProduction
                         ValidAudience = builder.Configuration["JWT:Audience"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
                     };
+                })
+                .AddGoogle(googleOptions =>
+                {
+                    googleOptions.ClientId = builder.Configuration["Google:ClientId"];
+                    googleOptions.ClientSecret = builder.Configuration["Google:ClientSecret"];
                 });
 
-            builder.Services.AddScoped<ITokenService,TokenService>();
+            builder.Services.AddScoped<ITokenService, TokenService>();
 
             builder.Services.AddSwaggerGen(option =>
             {
@@ -96,7 +101,8 @@ namespace JewelryProduction
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
-            {https://localhost:7194/swagger/index.html
+            {
+            https://localhost:7194/swagger/index.html
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
