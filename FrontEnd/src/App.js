@@ -12,6 +12,7 @@ import FogetPassword from "./pages/FogetPassword/FogetPassword";
 import UserProfile from "./pages/ProfilePage/UserProfile";
 import ProductPage from "./pages/ProductPage/ProductPage";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
+import ProductDetailsPage from "./pages/ProductDetailsPage/ProductDetailsPage";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/product" element={<ProductPage />} />
         <Route path="/resetpassword" element={<ResetPassword />} />
         <Route path="/" element={<Navigate to="/home" />} />
+        <Route path="/productdetails" element={<ProductDetailsPage />} />
       </Routes>
     </Router>
   );
