@@ -6,6 +6,7 @@
         public string ProductSampleId { get; set; } = null!;
 
         public string ProductName { get; set; } = null!;
+        public string Description { get; set; } = null!;
 
         public string Type { get; set; } = null!;
 
@@ -17,7 +18,7 @@
 
         public string GoldId { get; set; } = null!;
 
-        public IFormFile Image { get; set; }
+
 
     }
 }

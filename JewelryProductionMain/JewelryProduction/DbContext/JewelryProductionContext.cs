@@ -42,7 +42,7 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=DR4CE;Initial Catalog=JewelryProduction;Persist Security Info=True;User ID=sa;Password=12345;Trust Server Certificate=True");
+        => optionsBuilder.UseSqlServer("Data Source=TONBOOK\\SQLEXPRESS;Initial Catalog=JewelryProduction;Persist Security Info=True;User ID=sa;Password=12345;Trust Server Certificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -168,7 +168,7 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
                 .HasColumnName("color");
             entity.Property(e => e.CustomizeRequestId)
                 .HasMaxLength(50)
-                .HasColumnName("customizeRequestD");
+                .HasColumnName("customizeRequestID");
             entity.Property(e => e.Cut)
                 .HasMaxLength(50)
                 .HasColumnName("cut");
@@ -187,7 +187,7 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Gemstone_Category");
 
-            entity.HasOne(d => d.CustomizeRequestDNavigation).WithMany(p => p.Gemstones)
+            entity.HasOne(d => d.CustomizeRequestIdNavigation).WithMany(p => p.Gemstones)
                 .HasForeignKey(d => d.CustomizeRequestId)
                 .HasConstraintName("FK_Gemstone_CustomerRequest");
 
@@ -360,7 +360,7 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
             entity.Property(e => e.ProductSampleId)
                 .HasMaxLength(50)
                 .HasColumnName("productSampleID");
-            entity.Property(e => e.Image)
+            entity.Property(e => e.Description)
                 .HasMaxLength(200)
                 .HasColumnName("image");
             entity.Property(e => e.GoldId)

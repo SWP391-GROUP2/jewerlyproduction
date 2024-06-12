@@ -353,7 +353,7 @@ namespace JewelryProduction.Migrations
                     clarity = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     pricePerCarat = table.Column<decimal>(type: "money", nullable: false),
                     productSampleID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    customizeRequestD = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    customizeRequestID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     categoryID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
                 },
                 constraints: table =>
@@ -367,7 +367,7 @@ namespace JewelryProduction.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Gemstone_CustomerRequest",
-                        column: x => x.customizeRequestD,
+                        column: x => x.customizeRequestID,
                         principalTable: "CustomerRequest",
                         principalColumn: "customizeRequestID");
                     table.ForeignKey(
@@ -458,12 +458,12 @@ namespace JewelryProduction.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "29f3b3c9-9da1-4c27-ae04-7c289bc1ae13", null, "SaleStaff", "SALESTAFF" },
-                    { "5a492e8e-1924-4050-bfb6-1a24accf6b19", null, "Admin", "ADMIN" },
-                    { "a96c25c3-7053-432b-a833-cfeabfa2e8e5", null, "Manager", "MANAGER" },
-                    { "b78abc78-6d4f-4f9e-a1cc-29778e4ba7aa", null, "Customer", "CUSTOMER" },
-                    { "cf0c5094-32de-452d-a052-e8f0d5458dd5", null, "ProductionStaff", "PRODUCTIONSTAFF" },
-                    { "f5206c52-8c75-47d5-9f44-7e2ac32ae0d2", null, "DesignStaff", "DESIGNSTAFF" }
+                    { "3e89fefd-92ee-47f4-8c60-9032e4c1763a", null, "Customer", "CUSTOMER" },
+                    { "5632cc54-5922-4fa0-be20-01b5cd2494ad", null, "ProductionStaff", "PRODUCTIONSTAFF" },
+                    { "625427df-026f-4f7a-bcc0-70c24e29342b", null, "Admin", "ADMIN" },
+                    { "72c85d2e-a83d-4733-a511-27f2daed4089", null, "Manager", "MANAGER" },
+                    { "8d6a73ce-caaa-44d8-a321-dc6aa0f4e98b", null, "DesignStaff", "DESIGNSTAFF" },
+                    { "dc7fa991-b015-4627-a84d-b83ae1cd872d", null, "SaleStaff", "SALESTAFF" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -529,9 +529,9 @@ namespace JewelryProduction.Migrations
                 column: "categoryID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Gemstone_customizeRequestD",
+                name: "IX_Gemstone_customizeRequestID",
                 table: "Gemstone",
-                column: "customizeRequestD");
+                column: "customizeRequestID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Gemstone_productSampleID",
