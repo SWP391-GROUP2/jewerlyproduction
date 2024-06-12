@@ -50,11 +50,16 @@ namespace JewelryProduction.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("Avatar")
+                        .HasMaxLength(350)
+                        .HasColumnType("nvarchar(350)")
+                        .HasColumnName("Avatar");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly>("DateOfBirth")
+                    b.Property<DateOnly?>("DateOfBirth")
                         .HasColumnType("date")
                         .HasColumnName("DateOfBirth");
 
@@ -244,7 +249,7 @@ namespace JewelryProduction.Migrations
                     b.Property<string>("CustomizeRequestId")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
-                        .HasColumnName("customizeRequestD");
+                        .HasColumnName("customizeRequestID");
 
                     b.Property<string>("Cut")
                         .IsRequired()
@@ -482,17 +487,17 @@ namespace JewelryProduction.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("productSampleID");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasColumnName("image");
+
                     b.Property<string>("GoldId")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("goldID");
-
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .HasColumnName("image");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("money")
@@ -602,37 +607,37 @@ namespace JewelryProduction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f311a639-dd8e-42ac-a186-852814665fd8",
+                            Id = "625427df-026f-4f7a-bcc0-70c24e29342b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "dcc6d883-4e9d-4e31-9c4d-092a1ac087a6",
+                            Id = "dc7fa991-b015-4627-a84d-b83ae1cd872d",
                             Name = "SaleStaff",
                             NormalizedName = "SALESTAFF"
                         },
                         new
                         {
-                            Id = "59ecfcf7-0a3f-414c-96a8-59d4dc093a77",
+                            Id = "5632cc54-5922-4fa0-be20-01b5cd2494ad",
                             Name = "ProductionStaff",
                             NormalizedName = "PRODUCTIONSTAFF"
                         },
                         new
                         {
-                            Id = "dbdf96d8-1eac-4699-b6b7-9184d66abc70",
+                            Id = "72c85d2e-a83d-4733-a511-27f2daed4089",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "474fa355-e709-4357-b41c-048a76591c57",
+                            Id = "3e89fefd-92ee-47f4-8c60-9032e4c1763a",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "95cc25e2-3abf-4fed-8dce-f7529bcf472f",
+                            Id = "8d6a73ce-caaa-44d8-a321-dc6aa0f4e98b",
                             Name = "DesignStaff",
                             NormalizedName = "DESIGNSTAFF"
                         });
@@ -786,7 +791,7 @@ namespace JewelryProduction.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("FK_Gemstone_Category");
 
-                    b.HasOne("JewelryProduction.CustomerRequest", "CustomizeRequestDNavigation")
+                    b.HasOne("JewelryProduction.CustomerRequest", "CustomizeRequestIdNavigation")
                         .WithMany("Gemstones")
                         .HasForeignKey("CustomizeRequestId")
                         .HasConstraintName("FK_Gemstone_CustomerRequest");
@@ -798,7 +803,7 @@ namespace JewelryProduction.Migrations
 
                     b.Navigation("Category");
 
-                    b.Navigation("CustomizeRequestDNavigation");
+                    b.Navigation("CustomizeRequestIdNavigation");
 
                     b.Navigation("ProductSample");
                 });

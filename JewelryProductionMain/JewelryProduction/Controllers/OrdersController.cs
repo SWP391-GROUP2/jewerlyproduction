@@ -120,6 +120,7 @@ namespace JewelryProduction.Controllers
 
             return CreatedAtAction("GetOrder", new { id = order.OrderId }, order);
         }
+        
         [HttpPost("updateprice")]
         public async Task<IActionResult> PostProductPrice([FromBody] OrderPriceRequest request)
         {
@@ -132,13 +133,12 @@ namespace JewelryProduction.Controllers
                 request.Gold.PricePerGram,
                 request.Gold.Weight,
                 request.Gemstone.PricePerCarat,
-                request.Gemstone.CaratWeight);
-
+                request.Gemstone.CaratWeight
+                );
             order.TotalPrice = totalPrice;
             await _context.SaveChangesAsync();
             return Ok(order);
         }
-
 
         // DELETE: api/Orders/5
         [HttpDelete("{id}")]

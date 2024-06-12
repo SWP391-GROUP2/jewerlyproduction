@@ -27,7 +27,7 @@ public partial class Gemstone
 
     public Category? Category { get; set; }
 
-    public CustomerRequest? CustomizeRequestDNavigation { get; set; }
+    public CustomerRequest? CustomizeRequestIdNavigation { get; set; }
 
     public ProductSample? ProductSample { get; set; }
 }

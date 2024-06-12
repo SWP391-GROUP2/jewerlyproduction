@@ -73,6 +73,7 @@ namespace JewelryProduction.Controllers
             }
             var updateProduct = await _context.ProductSamples.FindAsync(id);
             updateProduct.ProductName = productSampleDTO.ProductName;
+            updateProduct.Description = productSampleDTO.Description;
             updateProduct.Type = productSampleDTO.Type;
             updateProduct.Style = productSampleDTO.Style;
             updateProduct.Size = productSampleDTO.Size;
@@ -108,6 +109,7 @@ namespace JewelryProduction.Controllers
             {
                 ProductSampleId = productSampleDTO.ProductSampleId,
                 ProductName = productSampleDTO.ProductName,
+                Description = productSampleDTO.Description,
                 Type = productSampleDTO.Type,
                 Style = productSampleDTO.Style,
                 Size = productSampleDTO.Size,
@@ -115,52 +117,6 @@ namespace JewelryProduction.Controllers
                 GoldId = productSampleDTO.GoldId,
             };
             _context.ProductSamples.Add(productSample);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (ProductSampleExists(productSample.ProductSampleId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetProductSample", new { id = productSample.ProductSampleId }, productSample);
-        }
-
-        [HttpPost("uploadwithfile")]
-        public async Task<ActionResult<ProductSample>> PostWithImages(ProductSampleDTO productSampleDTO)
-        {
-
-            var productSample = new ProductSample
-            {
-                ProductSampleId = productSampleDTO.ProductSampleId,
-                ProductName = productSampleDTO.ProductName,
-                Type = productSampleDTO.Type,
-                Style = productSampleDTO.Style,
-                Size = productSampleDTO.Size,
-                Price = productSampleDTO.Price,
-                GoldId = productSampleDTO.GoldId,
-            };
-            _context.ProductSamples.Add(productSample);
-            //with picture
-            if (productSampleDTO.Image.Length > 0)
-            {
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", productSampleDTO.Image.FileName);
-                using (var stream = System.IO.File.Create(path))
-                {
-                    await productSampleDTO.Image.CopyToAsync(stream);
-                }
-                productSample.Image = "/images" + productSampleDTO.Image.FileName;
-            }
-            else
-                productSample.Image = "";
             try
             {
                 await _context.SaveChangesAsync();

@@ -168,7 +168,7 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
                 .HasColumnName("color");
             entity.Property(e => e.CustomizeRequestId)
                 .HasMaxLength(50)
-                .HasColumnName("customizeRequestD");
+                .HasColumnName("customizeRequestID");
             entity.Property(e => e.Cut)
                 .HasMaxLength(50)
                 .HasColumnName("cut");
@@ -187,7 +187,7 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Gemstone_Category");
 
-            entity.HasOne(d => d.CustomizeRequestDNavigation).WithMany(p => p.Gemstones)
+            entity.HasOne(d => d.CustomizeRequestIdNavigation).WithMany(p => p.Gemstones)
                 .HasForeignKey(d => d.CustomizeRequestId)
                 .HasConstraintName("FK_Gemstone_CustomerRequest");
 
@@ -360,7 +360,7 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
             entity.Property(e => e.ProductSampleId)
                 .HasMaxLength(50)
                 .HasColumnName("productSampleID");
-            entity.Property(e => e.Image)
+            entity.Property(e => e.Description)
                 .HasMaxLength(200)
                 .HasColumnName("image");
             entity.Property(e => e.GoldId)
@@ -394,6 +394,9 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .HasColumnName("Name");
+            entity.Property(e => e.Avatar)
+                .HasMaxLength(350)
+                .HasColumnName("Avatar");
         });
 
         modelBuilder.Entity<_3ddesign>(entity =>
