@@ -142,6 +142,33 @@ namespace JewelryProduction.Controllers
             await _signInManager.SignOutAsync();
             return Ok("Logout Successful");
         }
+        [HttpPost("deactivate-user")]
+        public async Task<IActionResult> DeactivateUser([FromQuery] string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return BadRequest("User ID must be provided.");
+            }
+
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            user.LockoutEnabled = true;
+            user.LockoutEnd = DateTime.MaxValue;
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                return Ok("User successfully banned.");
+            }
+
+            // Log the specific errors if needed
+            var errorMessages = string.Join(", ", result.Errors.Select(e => e.Description));
+            return BadRequest($"Failed to ban user: {errorMessages}");
+        }
 
 
     }
