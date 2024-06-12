@@ -17,3 +17,5 @@ INSERT INTO [User] (UserID, Name, DateOfBirth, PhoneNumber, Email, Password, Rol
 ('U004', N'Phạm Thị D', '1994-04-04', N'4567890123', 'phamthid@gmail.com', 'passwordD456', '4'),
 ('U005', N'Hoàng Văn E', '1995-05-05', N'5678901234', 'hoangvane@gmail.com', 'passwordE567', '5'),
 ('U006', N'Vũ Thị F', '1996-06-06', N'6789012345', 'vuthif@gmail.com', 'passwordF678', '6');
+
+SELECT * FROM [dbo].[User]
