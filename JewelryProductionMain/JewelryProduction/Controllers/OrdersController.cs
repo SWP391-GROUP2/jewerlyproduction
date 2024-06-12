@@ -121,12 +121,16 @@ namespace JewelryProduction.Controllers
             return CreatedAtAction("GetOrder", new { id = order.OrderId }, order);
         }
         [HttpPost]
-        public IActionResult PostProductPrice([FromBody] OrderDTO orderDTO, GoldDTO goldDTO, GemstoneDTO gemstoneDTO)
+        public IActionResult PostProductPrice([FromBody] OrderPriceRequest request)
         {
-            decimal totalPrice = CalculateProductCost(goldDTO.PricePerGram, goldDTO.Weight, gemstoneDTO.PricePerCarat, gemstoneDTO.CaratWeight);
+            decimal totalPrice = CalculateProductCost(
+                request.Gold.PricePerGram,
+                request.Gold.Weight,
+                request.Gemstone.PricePerCarat,
+                request.Gemstone.CaratWeight);
 
             // Return a 201 Created response with the updated product price
-            return CreatedAtAction(nameof(PostProductPrice), new { id = orderDTO.OrderId }, totalPrice);
+            return CreatedAtAction(nameof(PostProductPrice), new { id = request.Order.OrderId }, totalPrice);
         }
 
 
@@ -145,12 +149,12 @@ namespace JewelryProduction.Controllers
 
             return NoContent();
         }
-        public decimal CalculateProductCost(decimal PricePerGram, double GoldWeight, decimal PricePerCarat, double CaratWeight)
+        private decimal CalculateProductCost(decimal PricePerGram, double GoldWeight, decimal PricePerCarat, double CaratWeight)
         {
             decimal productCost = ((PricePerGram * (decimal)GoldWeight + PricePerCarat * (decimal)CaratWeight) * 0.4M) * 0.1M;
             return productCost;
         }
-        public decimal GetDeposit(decimal productCost)
+        private decimal GetDeposit(decimal productCost)
         {
             decimal deposit = productCost * 0.3M;
             return deposit;
