@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\acer\\Desktop\\Test\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj": {}
+    "D:\\JPOS\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj": {}
   },
   "projects": {
-    "C:\\Users\\acer\\Desktop\\Test\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj": {
+    "D:\\JPOS\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\acer\\Desktop\\Test\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj",
+        "projectUniqueName": "D:\\JPOS\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj",
         "projectName": "JewelryProduction",
-        "projectPath": "C:\\Users\\acer\\Desktop\\Test\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj",
-        "packagesPath": "C:\\Users\\acer\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\acer\\Desktop\\Test\\JewelryProductionMain\\JewelryProduction\\obj\\",
+        "projectPath": "D:\\JPOS\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj",
+        "packagesPath": "C:\\Users\\tranq\\.nuget\\packages\\",
+        "outputPath": "D:\\JPOS\\JewelryProductionMain\\JewelryProduction\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\acer\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\tranq\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
