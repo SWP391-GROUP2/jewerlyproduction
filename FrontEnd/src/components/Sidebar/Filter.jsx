@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios"; // Import axios
+import axios from "axios";
 import "./Filter.css";
 
 const Sidebar = () => {
@@ -7,7 +7,7 @@ const Sidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [sortOption, setSortOption] = useState("");
   const [selectedFilters, setSelectedFilters] = useState({});
-  const [products, setProducts] = useState([]); // Khai báo state để lưu trữ các sản phẩm
+  const [products, setProducts] = useState([]);
 
   const categories = ["Ring", "Bracelet", "Necklace", "Earrings"];
 
@@ -18,31 +18,31 @@ const Sidebar = () => {
     Earrings: ["Stud", "Jacket", "Ear Spike"],
   };
 
-  // Hàm để gọi API
   const fetchProducts = async () => {
-    let query = `category=${selectedCategory}`;
-    if (sortOption) {
-      query += `&sort=${sortOption}`;
-    }
-    if (selectedFilters[selectedCategory]) {
-      query += `&filter=${selectedFilters[selectedCategory]}`;
+    let query = "";
+    if (selectedCategory) {
+      query += `category=${selectedCategory}`;
+      if (sortOption) {
+        query += `&sort=${sortOption}`;
+      }
+      if (selectedFilters[selectedCategory]) {
+        query += `&filter=${selectedFilters[selectedCategory]}`;
+      }
     }
 
     try {
-      const response = await axios.get(
-        `https://api.example.com/products?${query}`
-      );
+      const url = query
+        ? `https://api.example.com/products?${query}`
+        : `https://api.example.com/products`;
+      const response = await axios.get(url);
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
     }
   };
 
-  // Gọi API khi selectedCategory, sortOption hoặc selectedFilters thay đổi
   useEffect(() => {
-    if (selectedCategory) {
-      fetchProducts();
-    }
+    fetchProducts();
   }, [selectedCategory, sortOption, selectedFilters]);
 
   const handleCategoryClick = (category) => {
@@ -134,23 +134,97 @@ const Sidebar = () => {
         )}
       </div>
       <div className="products">
-        <h2>Products</h2>
-        {products.length === 0 ? (
-          <p>No products found</p>
-        ) : (
-          <ul>
-            {products.map((product) => (
-              <li key={product.id}>
-                <h3>{product.name}</h3>
-                <p>{product.description}</p>
-                <p>${product.price}</p>
-              </li>
-            ))}
-          </ul>
-        )}
+        <div className="product-card">
+          <img
+            src={
+              "https://cdn.pnj.io/images/detailed/202/sp-gnpfxmw000273-nhan-vang-trang-14k-dinh-ngoc-trai-freshwater-pnj-1.png"
+            }
+            alt="Freshwater Ring"
+            className="product-image"
+          />
+          <h3 className="product-name">Freshwater Ring</h3>
+          <p className="product-price">$ 300</p>
+        </div>
+        <div className="product-card">
+          <img
+            src={
+              "https://cdn.pnj.io/images/detailed/202/sp-gnpfxmw000273-nhan-vang-trang-14k-dinh-ngoc-trai-freshwater-pnj-1.png"
+            }
+            alt="Freshwater Ring"
+            className="product-image"
+          />
+          <h3 className="product-name">Freshwater Ring</h3>
+          <p className="product-price">$ 300</p>
+        </div>
+        <div className="product-card">
+          <img
+            src={
+              "https://cdn.pnj.io/images/detailed/202/sp-gnpfxmw000273-nhan-vang-trang-14k-dinh-ngoc-trai-freshwater-pnj-1.png"
+            }
+            alt="Freshwater Ring"
+            className="product-image"
+          />
+          <h3 className="product-name">Freshwater Ring</h3>
+          <p className="product-price">$ 300</p>
+        </div>
+        <div className="product-card">
+          <img
+            src={
+              "https://cdn.pnj.io/images/detailed/202/sp-gnpfxmw000273-nhan-vang-trang-14k-dinh-ngoc-trai-freshwater-pnj-1.png"
+            }
+            alt="Freshwater Ring"
+            className="product-image"
+          />
+          <h3 className="product-name">Freshwater Ring</h3>
+          <p className="product-price">$ 300</p>
+        </div>
+        <div className="product-card">
+          <img
+            src={
+              "https://cdn.pnj.io/images/detailed/202/sp-gnpfxmw000273-nhan-vang-trang-14k-dinh-ngoc-trai-freshwater-pnj-1.png"
+            }
+            alt="Freshwater Ring"
+            className="product-image"
+          />
+          <h3 className="product-name">Freshwater Ring</h3>
+          <p className="product-price">$ 300</p>
+        </div>
+        <div className="product-card">
+          <img
+            src={
+              "https://cdn.pnj.io/images/detailed/202/sp-gnpfxmw000273-nhan-vang-trang-14k-dinh-ngoc-trai-freshwater-pnj-1.png"
+            }
+            alt="Freshwater Ring"
+            className="product-image"
+          />
+          <h3 className="product-name">Freshwater Ring</h3>
+          <p className="product-price">$ 300</p>
+        </div>
+        <div className="product-card">
+          <img
+            src={
+              "https://cdn.pnj.io/images/detailed/202/sp-gnpfxmw000273-nhan-vang-trang-14k-dinh-ngoc-trai-freshwater-pnj-1.png"
+            }
+            alt="Freshwater Ring"
+            className="product-image"
+          />
+          <h3 className="product-name">Freshwater Ring</h3>
+          <p className="product-price">$ 300</p>
+        </div>
+        <div className="product-card">
+          <img
+            src={
+              "https://cdn.pnj.io/images/detailed/202/sp-gnpfxmw000273-nhan-vang-trang-14k-dinh-ngoc-trai-freshwater-pnj-1.png"
+            }
+            alt="Freshwater Ring"
+            className="product-image"
+          />
+          <h3 className="product-name">Freshwater Ring</h3>
+          <p className="product-price">$ 300</p>
+        </div>
       </div>
     </div>
   );
 };
 
-export default Sidebar; // Xuất thành phần Sidebar để sử dụng ở nơi khác
+export default Sidebar;

@@ -34,3 +34,15 @@ INSERT INTO Category (categoryID,categoryName,description)
 VALUES
 ('2','Ruby','Ruby 100% natural')
 
+INSERT INTO 3dDesign (3dDesignID, designName, Image, customizeRequestID, productSampleID, designStaffID)
+VALUES 
+    ('D3D001', 'Rotating White Gold Ring', 'FullRotatingWhiteGoldRingUnisexKimNM89', NULL, 'PS001', 'DS001'),
+    ('D3D002', 'Garnet Jewelry', 'GarnetJewelrySeMDG9', 'NULL', 'PS002', 'DS001'),
+    ('D3D003', 'Opal Pendant Necklace', 'OpalPendantNecklaceDC10', 'NULL', 'PS003', 'DS001');
+    ('D3D004', 'Changing Blue Sapphire', 'PendantwithColor-ChangingBlueSapphireMDS23', 'NULL', 'PS004', 'DS001'),
+    ('D3D005', 'Rose Gold Diamond Necklace', 'RoseGoldDiamondNecklaceDC09', 'NULL', 'PS005', 'DS001'),
+    ('D3D006', 'Ruby Butterfly Wing Earrings', 'RubyButterflyWingEarringsNaturalGemstoneBTR4', 'NULL', 'DS001', 'DS006');
+    ('D3D007', 'Translucent Sapphire Pendant', 'TranslucentSapphirePendantMDS18', 'NULL', 'PS007', 'DS001');
+    ('D3D008', 'Unisex Emerald Ring', 'UnisexEmeraldRingNWE7', 'NULL', 'PS008', 'DS001');
+    ('D3D009', 'Yellow Gold Sapphire Earrings', 'YellowGoldSapphireEarringsBTS18', 'NULL', 'PS009', 'DS001');
+
