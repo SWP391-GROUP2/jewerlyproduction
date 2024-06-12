@@ -78,7 +78,6 @@ function LoginForm() {
               />
               <FaLock className="icon" />
             </div>
-
             <div className="remember-forgot">
               <label>
                 <input type="checkbox" />
@@ -87,11 +86,9 @@ function LoginForm() {
               <Link to="/foget"> Forget password ? </Link>
             </div>
             <button type="submit">Log In</button>
-
             <div className="register-link">
               <p>continue with</p>
             </div>
-
             <GoogleLogin
               onSuccess={onGoogleSuccess}
               onError={onGoogleFailure}

@@ -1,15 +1,16 @@
 .home-page {
-  text-align: center;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   min-height: 100vh; /* Bao phủ toàn bộ chiều cao của cửa sổ */
   width: 100vw; /* Bao phủ toàn bộ chiều rộng của cửa sổ */
   background-color: aliceblue;
   background-size: cover;
   background-position: center;
   padding-bottom: 50px; /* Khoảng cách phía dưới để tránh footer che phủ nội dung */
+}
+
+.Head {
+  width: 100%;
 }
 
 .Slideshow {
@@ -19,9 +20,17 @@
   top: 120px; /* Đặt dưới Header, giá trị này phải bằng với chiều cao của Header */
 }
 
-.content {
-  margin: 20px;
-}
-.Head {
+.main-content {
+  display: flex;
+  flex-grow: 1; /* Đảm bảo phần main-content chiếm hết không gian còn lại giữa Header và Footer */
   width: 100%;
+}
+
+.Sidebar {
+  flex: 0 0 250px; /* Đặt chiều rộng cố định cho Sidebar */
+}
+
+.content {
+  flex-grow: 1;
+  margin: 20px;
 }

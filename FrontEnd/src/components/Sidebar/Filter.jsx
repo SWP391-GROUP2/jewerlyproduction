@@ -1,26 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // Import axios
-import './UserProfile.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios"; // Import axios
+import "./Filter.css";
 
 const Sidebar = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [sortOption, setSortOption] = useState('');
+  const [sortOption, setSortOption] = useState("");
   const [selectedFilters, setSelectedFilters] = useState({});
   const [products, setProducts] = useState([]); // Khai báo state để lưu trữ các sản phẩm
 
-  const categories = [
-    'Ring',
-    'Bracelet',
-    'Necklace',
-    'Earrings'
-  ];
+  const categories = ["Ring", "Bracelet", "Necklace", "Earrings"];
 
   const filters = {
-    'Ring': ['Solitaire', 'Three Stone', 'Pave'],
-    'Bracelet': ['Chain', 'Pearl', 'Bar'],
-    'Necklace': ['Chain', 'Pearl', 'Station', 'Initial'],
-    'Earrings': ['Stud', 'Jacket', 'Ear Spike']
+    Ring: ["Solitaire", "Three Stone", "Pave"],
+    Bracelet: ["Chain", "Pearl", "Bar"],
+    Necklace: ["Chain", "Pearl", "Station", "Initial"],
+    Earrings: ["Stud", "Jacket", "Ear Spike"],
   };
 
   // Hàm để gọi API
@@ -34,10 +29,12 @@ const Sidebar = () => {
     }
 
     try {
-      const response = await axios.get(`https://api.example.com/products?${query}`);
+      const response = await axios.get(
+        `https://api.example.com/products?${query}`
+      );
       setProducts(response.data);
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error("Error fetching products:", error);
     }
   };
 
@@ -69,9 +66,9 @@ const Sidebar = () => {
 
   return (
     <div className="container">
-      <div className={`sidebar ${isSidebarOpen ? 'open' : 'closed'}`}>
+      <div className={`sidebar ${isSidebarOpen ? "open" : "closed"}`}>
         <button onClick={toggleSidebar} className="toggle-button">
-          {isSidebarOpen ? '<<' : '>>'}
+          {isSidebarOpen ? "<<" : ">>"}
         </button>
         {isSidebarOpen && (
           <>
@@ -82,7 +79,7 @@ const Sidebar = () => {
                   type="radio"
                   name="sort"
                   value="asc"
-                  checked={sortOption === 'asc'}
+                  checked={sortOption === "asc"}
                   onChange={handleSortChange}
                 />
                 Sort in Ascending Order
@@ -92,7 +89,7 @@ const Sidebar = () => {
                   type="radio"
                   name="sort"
                   value="desc"
-                  checked={sortOption === 'desc'}
+                  checked={sortOption === "desc"}
                   onChange={handleSortChange}
                 />
                 Sort in Descending Order
@@ -100,11 +97,11 @@ const Sidebar = () => {
             </div>
             <h2>Type</h2>
             <ul className="category-list">
-              {categories.map(category => (
-                <li 
-                  key={category} 
+              {categories.map((category) => (
+                <li
+                  key={category}
                   onClick={() => handleCategoryClick(category)}
-                  className={selectedCategory === category ? 'active' : ''}
+                  className={selectedCategory === category ? "active" : ""}
                 >
                   {category}
                 </li>
@@ -114,7 +111,7 @@ const Sidebar = () => {
               <div className="filters">
                 <h3>Style of {selectedCategory}</h3>
                 <ul className="filter-list">
-                  {filters[selectedCategory].map(filter => (
+                  {filters[selectedCategory].map((filter) => (
                     <li key={filter}>
                       <label>
                         <input
@@ -122,7 +119,9 @@ const Sidebar = () => {
                           name={`filter-${selectedCategory}`}
                           value={filter}
                           checked={selectedFilters[selectedCategory] === filter}
-                          onChange={() => handleFilterChange(selectedCategory, filter)}
+                          onChange={() =>
+                            handleFilterChange(selectedCategory, filter)
+                          }
                         />
                         {filter}
                       </label>
@@ -140,7 +139,7 @@ const Sidebar = () => {
           <p>No products found</p>
         ) : (
           <ul>
-            {products.map(product => (
+            {products.map((product) => (
               <li key={product.id}>
                 <h3>{product.name}</h3>
                 <p>{product.description}</p>
