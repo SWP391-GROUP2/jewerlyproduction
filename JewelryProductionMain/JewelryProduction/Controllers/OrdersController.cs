@@ -120,17 +120,23 @@ namespace JewelryProduction.Controllers
 
             return CreatedAtAction("GetOrder", new { id = order.OrderId }, order);
         }
-        [HttpPost]
-        public IActionResult PostProductPrice([FromBody] OrderPriceRequest request)
+        [HttpPost("updateprice")]
+        public async Task<IActionResult> PostProductPrice([FromBody] OrderPriceRequest request)
         {
+            var order = await _context.Orders.FindAsync(request.Order.OrderId);
+            if (order == null)
+            {
+                return NotFound($"Order with ID {request.Order.OrderId} not found.");
+            }
             decimal totalPrice = CalculateProductCost(
                 request.Gold.PricePerGram,
                 request.Gold.Weight,
                 request.Gemstone.PricePerCarat,
                 request.Gemstone.CaratWeight);
 
-            // Return a 201 Created response with the updated product price
-            return CreatedAtAction(nameof(PostProductPrice), new { id = request.Order.OrderId }, totalPrice);
+            order.TotalPrice = totalPrice;
+            await _context.SaveChangesAsync();
+            return Ok(order);
         }
 
 
