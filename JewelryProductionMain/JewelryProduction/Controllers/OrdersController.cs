@@ -121,13 +121,24 @@ namespace JewelryProduction.Controllers
 
             return CreatedAtAction("GetOrder", new { id = order.OrderId }, order);
         }
-        [HttpPost]
-        public IActionResult PostProductPrice([FromBody] OrderDTO orderDTO, GoldDTO goldDTO, GemstoneDTO gemstoneDTO )
+        
+        [HttpPost("updateprice")]
+        public async Task<IActionResult> PostProductPrice([FromBody] OrderPriceRequest request)
         {
-            decimal totalPrice = CalculateProductCost(goldDTO.PricePerGram,goldDTO.Weight,gemstoneDTO.PricePerCarat, gemstoneDTO.CaratWeight);
-
-            // Return a 201 Created response with the updated product price
-            return CreatedAtAction(nameof(PostProductPrice), new { id = orderDTO.OrderId }, totalPrice);
+            var order = await _context.Orders.FindAsync(request.Order.OrderId);
+            if (order == null)
+            {
+                return NotFound($"Order with ID {request.Order.OrderId} not found.");
+            }
+            decimal totalPrice = CalculateProductCost(
+                request.Gold.PricePerGram,
+                request.Gold.Weight,
+                request.Gemstone.PricePerCarat,
+                request.Gemstone.CaratWeight
+                );
+            order.TotalPrice = totalPrice;
+            await _context.SaveChangesAsync();
+            return Ok(order);
         }
 
     // DELETE: api/Orders/5
@@ -145,12 +156,12 @@ namespace JewelryProduction.Controllers
 
             return NoContent();
         }
-        public decimal CalculateProductCost(decimal PricePerGram, double GoldWeight, decimal PricePerCarat, double CaratWeight)
+        private decimal CalculateProductCost(decimal PricePerGram, double GoldWeight, decimal PricePerCarat, double CaratWeight)
         {
             decimal productCost = ((PricePerGram * (decimal)GoldWeight + PricePerCarat * (decimal)CaratWeight) * 0.4M) * 0.1M;
             return productCost;
         }
-        public decimal GetDeposit(decimal productCost)
+        private decimal GetDeposit(decimal productCost)
         {
             decimal deposit = productCost * 0.3M;
             return deposit;
