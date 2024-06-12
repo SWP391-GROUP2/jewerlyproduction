@@ -4,6 +4,7 @@ import "./ProductPage.css"; // Bạn có thể tạo và tùy chỉnh CSS cho Ho
 import Navbar from "../../components/Navbar/navbar";
 import Slideshow from "../../components/Slideshow/Slideshow";
 import Footer from "../../components/Footer/Footer";
+import Sidebar from "../../components/Sidebar/Filter";
 
 function ProductPage() {
   return (
@@ -15,6 +16,10 @@ function ProductPage() {
 
       <div className="Slideshow">
         <Slideshow interval={10000} />
+      </div>
+
+      <div className="main-content">
+        <Sidebar className="Sidebar" />
       </div>
 
       <Footer />
