@@ -249,7 +249,7 @@ namespace JewelryProduction.Migrations
                     b.Property<string>("CustomizeRequestId")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
-                        .HasColumnName("customizeRequestD");
+                        .HasColumnName("customizeRequestID");
 
                     b.Property<string>("Cut")
                         .IsRequired()
@@ -487,17 +487,17 @@ namespace JewelryProduction.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("productSampleID");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasColumnName("image");
+
                     b.Property<string>("GoldId")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("goldID");
-
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .HasColumnName("image");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("money")
@@ -607,37 +607,37 @@ namespace JewelryProduction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "5a492e8e-1924-4050-bfb6-1a24accf6b19",
+                            Id = "625427df-026f-4f7a-bcc0-70c24e29342b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "29f3b3c9-9da1-4c27-ae04-7c289bc1ae13",
+                            Id = "dc7fa991-b015-4627-a84d-b83ae1cd872d",
                             Name = "SaleStaff",
                             NormalizedName = "SALESTAFF"
                         },
                         new
                         {
-                            Id = "cf0c5094-32de-452d-a052-e8f0d5458dd5",
+                            Id = "5632cc54-5922-4fa0-be20-01b5cd2494ad",
                             Name = "ProductionStaff",
                             NormalizedName = "PRODUCTIONSTAFF"
                         },
                         new
                         {
-                            Id = "a96c25c3-7053-432b-a833-cfeabfa2e8e5",
+                            Id = "72c85d2e-a83d-4733-a511-27f2daed4089",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "b78abc78-6d4f-4f9e-a1cc-29778e4ba7aa",
+                            Id = "3e89fefd-92ee-47f4-8c60-9032e4c1763a",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "f5206c52-8c75-47d5-9f44-7e2ac32ae0d2",
+                            Id = "8d6a73ce-caaa-44d8-a321-dc6aa0f4e98b",
                             Name = "DesignStaff",
                             NormalizedName = "DESIGNSTAFF"
                         });
@@ -791,7 +791,7 @@ namespace JewelryProduction.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("FK_Gemstone_Category");
 
-                    b.HasOne("JewelryProduction.CustomerRequest", "CustomizeRequestDNavigation")
+                    b.HasOne("JewelryProduction.CustomerRequest", "CustomizeRequestIdNavigation")
                         .WithMany("Gemstones")
                         .HasForeignKey("CustomizeRequestId")
                         .HasConstraintName("FK_Gemstone_CustomerRequest");
@@ -803,7 +803,7 @@ namespace JewelryProduction.Migrations
 
                     b.Navigation("Category");
 
-                    b.Navigation("CustomizeRequestDNavigation");
+                    b.Navigation("CustomizeRequestIdNavigation");
 
                     b.Navigation("ProductSample");
                 });
