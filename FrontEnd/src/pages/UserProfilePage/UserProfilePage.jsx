@@ -1,11 +1,11 @@
 import React from "react";
 import Header from "../../components/Header/Header";
-import "./ProductDetailsPage.css";
+import "./UserProfilePage.css"; // Bạn có thể tạo và tùy chỉnh CSS cho HomePage nếu cần
 import Navbar from "../../components/Navbar/navbar";
-import ProductDetails from "../ProductDetails/ProductDetails";
 import Footer from "../../components/Footer/Footer";
+import ProfilePage from "../../pages/ProfilePage/UserProfile";
 
-function ProductDetailsPage() {
+function UserProfilePage() {
   return (
     <div className="home-page">
       <div className="Head">
@@ -14,12 +14,14 @@ function ProductDetailsPage() {
       </div>
 
       <div>
-        <ProductDetails />
-      </div>
+            <ProfilePage/>
+        </div>
+
+      
 
       <Footer />
     </div>
   );
 }
 
-export default ProductDetailsPage;
+export default UserProfilePage;

@@ -13,6 +13,9 @@ function Navbar() {
         <Link to="/product">
           <li>Sample Product</li>
         </Link>
+        <Link to="/gemstone">
+          <li>Gemstones</li>
+        </Link>
         <li>Customize Request</li>
         <li>Gold Price</li>
         <li>Blog</li>
