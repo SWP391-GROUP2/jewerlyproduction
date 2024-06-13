@@ -1,0 +1,47 @@
+.home-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Đảm bảo chiều cao tối thiểu là 100vh */
+  width: 100vw; /* Chiều rộng toàn màn hình */
+  background-color: aliceblue;
+  background-size: cover;
+  background-position: center;
+  padding-bottom: 50px; /* Khoảng cách để footer không che nội dung */
+}
+
+.Head {
+  width: 100%;
+}
+
+.Slideshow {
+  width: 100%; /* Ensure the Slideshow does not exceed the width of its parent */
+  max-height: 380px; /* Set the maximum height for the Slideshow, adjust as needed */
+  margin: 0 auto; /* Center the Slideshow */
+  top: 120px; /* Place it below the Header, adjust this value to match the height of the Header */
+}
+
+.main-content {
+  display: flex;
+  flex-grow: 1; /* Đảm bảo main-content chiếm hết không gian còn lại */
+  width: 100%;
+}
+
+.Sidebar {
+  flex: 0 0 250px; /* Fixed width for the Sidebar */
+  position: sticky;
+  top: 0; /* Stick the Sidebar to the top of its parent container */
+  max-height: calc(
+    100vh - 380px - 50px
+  ); /* Adjust height to account for the slideshow and footer */
+  overflow-y: auto; /* Allow the Sidebar content to scroll */
+}
+
+.content {
+  flex-grow: 1;
+  margin: 20px;
+}
+
+.footer {
+  flex-shrink: 0; /* Đảm bảo footer không bị co lại */
+  width: 100%;
+}
