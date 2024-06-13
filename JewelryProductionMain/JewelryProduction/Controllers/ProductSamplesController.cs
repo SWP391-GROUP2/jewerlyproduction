@@ -88,6 +88,18 @@ namespace JewelryProduction.Controllers
             return Ok(result);
         }
 
+        [HttpGet("Search")]
+        public async Task<ActionResult<IEnumerable<ProductSample>>> Search(string name)
+        {
+            List<ProductSample> _products = await _context.ProductSamples.ToListAsync();
+            var products = _products.Where(p => p.ProductName.Contains(name, System.StringComparison.OrdinalIgnoreCase));
+            if (products.Any())
+            {
+                return Ok(products);
+            }
+            return NotFound();
+        }
+
 
 
 
