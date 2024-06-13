@@ -93,5 +93,48 @@ namespace JewelryProduction.Controllers
             var products = await _orderService.GetAllPaging(request);
             return Ok(products);
         }
+        [HttpGet("compare-order-total-price")]
+        public async Task<IActionResult> CompareOrderStats(int year)
+        {
+            // Group orders by year and calculate total price and number of orders for each year
+            var ordersByYear = await _context.Orders
+                .GroupBy(o => o.OrderDate.Year)
+                .Select(g => new
+                {
+                    Year = g.Key,
+                    TotalPrice = g.Sum(o => o.TotalPrice),
+                    NumberOfOrders = g.Count()
+                })
+                .ToListAsync();
+
+            // Get the total price and number of orders for the specific year
+            var currentYearStats = ordersByYear.FirstOrDefault(o => o.Year == year);
+
+            var currentYearTotalPrice = currentYearStats?.TotalPrice ?? 0;
+            var currentYearOrderCount = currentYearStats?.NumberOfOrders ?? 0;
+
+            // Prepare the result comparing the specific year to all other years
+            var comparisons = ordersByYear
+                .Where(o => o.Year != year)
+                .Select(o => new
+                {
+                    Year = o.Year,
+                    TotalPrice = o.TotalPrice,
+                    NumberOfOrders = o.NumberOfOrders,
+                    TotalPriceDifference = currentYearTotalPrice - o.TotalPrice,
+                    OrderCountDifference = currentYearOrderCount - o.NumberOfOrders
+                })
+                .ToList();
+
+            var result = new
+            {
+                CurrentYear = year,
+                CurrentYearTotalPrice = currentYearTotalPrice,
+                CurrentYearOrderCount = currentYearOrderCount,
+                Comparisons = comparisons
+            };
+
+            return Ok(result);
+        }
     }
 }

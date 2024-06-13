@@ -2,6 +2,7 @@
 using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
 using JewelryProduction.Interface;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Drawing.Printing;
 
@@ -55,6 +56,7 @@ namespace JewelryProduction.Services
             return pagedResult;
 
         }
+        
     }
    
 }
