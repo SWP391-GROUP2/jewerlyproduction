@@ -20,6 +20,9 @@ function ProductPage() {
 
       <div className="main-content">
         <Sidebar className="Sidebar" />
+        <div className="content">
+          {/* Các sản phẩm sẽ được hiển thị ở đây */}
+        </div>
       </div>
 
       <Footer />
