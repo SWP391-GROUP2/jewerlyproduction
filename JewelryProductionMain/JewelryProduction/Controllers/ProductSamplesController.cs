@@ -18,9 +18,24 @@ namespace JewelryProduction.Controllers
 
         // GET: api/ProductSamples
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductSample>>> GetProductSamples()
+        public async Task<ActionResult<IEnumerable<ProductSampleDTO>>> GetProductSamplesWithGoldType()
         {
-            return await _context.ProductSamples.ToListAsync();
+            var result = await _context.ProductSamples
+                .Include(ps => ps.Gold)
+                .Select(ps => new ProductSampleDTO
+                {
+                    ProductSampleId = ps.ProductSampleId,
+                    ProductName = ps.ProductName,
+                    Description = ps.Description,
+                    Type = ps.Type,
+                    Style = ps.Style,
+                    Size = ps.Size,
+                    Price = ps.Price,
+                    GoldType = _context.Golds.Where(g => g.GoldId.Equals(ps.GoldId)).Select(g => g.GoldType).FirstOrDefault()
+                })
+                .ToListAsync();
+
+            return Ok(result);
         }
 
         // GET: api/ProductSamples/5

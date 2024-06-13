@@ -18,7 +18,7 @@
 
         public string GoldId { get; set; } = null!;
 
-
+        public string GoldType { get; set; } = null!;
 
     }
 }
