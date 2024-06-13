@@ -9,11 +9,10 @@ import LoginForm from "./components/LoginForm/LoginForm";
 import Register from "./components/Register/Register";
 import HomePage from "./pages/HomePage/HomePage";
 import FogetPassword from "./pages/FogetPassword/FogetPassword";
-import UserProfile from "./pages/ProfilePage/UserProfile";
+import UserProfilePage from "./pages/UserProfilePage/UserProfilePage";
 import ProductPage from "./pages/ProductPage/ProductPage";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import ProductDetailsPage from "./pages/ProductDetailsPage/ProductDetailsPage";
-import GemstonePage from "./pages/GemstonePage/GemstonePage";
 
 function App() {
   return (
@@ -23,8 +22,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/foget" element={<FogetPassword />} />
-        <Route path="/profile" element={<UserProfile />} />
-        <Route path="/gemstone" element={<GemstonePage />} />
+        <Route path="/profile" element={<UserProfilePage />} />
         <Route path="/product" element={<ProductPage />} />
         <Route path="/resetpassword" element={<ResetPassword />} />
         <Route path="/" element={<Navigate to="/home" />} />

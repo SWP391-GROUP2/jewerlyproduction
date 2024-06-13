@@ -26,61 +26,62 @@ function UserProfile() {
     };
     registerUser(newUser, dispatch, navigate);
   };
+  
   return (
     <>
       <Link to="/">
-        <button className="home-button">
+        <button className="btn-home">
           <FaHome />
           <IoReturnDownBack />
         </button>
       </Link>
-      <div className="wrapper">
+      <div className="user-profile-wrapper">
         <form onSubmit={handleRegister}>
-          <h1>User Profile</h1>
+          <h1 className="user-profile-title">User Profile</h1>
 
-          <div className="input-box">
+          <div className="user-profile-input-box">
             <input
               type="text"
               placeholder="Your Name"
               required
               onChange={(e) => setName(e.target.value)}
             />
-            <MdDriveFileRenameOutline className="icon" />
+            <MdDriveFileRenameOutline className="user-profile-icon" />
           </div>
 
-          <div className="input-box">
+          <div className="user-profile-input-box">
             <input
               type="text"
               placeholder="Phone Number"
               required
               onChange={(e) => setPhone(e.target.value)}
             />
-            <MdDriveFileRenameOutline className="icon" />
+            <MdDriveFileRenameOutline className="user-profile-icon" />
           </div>
 
-          <div className="input-box">
+          <div className="user-profile-input-box">
             <input
               type="text"
               placeholder="email@domain.com"
               required
               onChange={(e) => setEmail(e.target.value)}
             />
-            <MdDriveFileRenameOutline className="icon" />
+            <MdDriveFileRenameOutline className="user-profile-icon" />
           </div>
-          <div className="input-box">
+          
+          <div className="user-profile-input-box">
             <input
-              type="date" // Thay đổi type thành "date" để nhập ngày sinh
-              placeholder="Date of Birth" // Thay đổi placeholder thành "Date of Birth"
+              type="date"
+              placeholder="Date of Birth"
               required
-              onChange={(e) => setBirthday(e.target.value)} // Sửa sự kiện onChange để cập nhật giá trị ngày sinh
+              onChange={(e) => setBirthday(e.target.value)}
             />
-            <MdDriveFileRenameOutline className="icon" />{" "}
-            {/* Icon có thể giữ nguyên hoặc thay đổi tùy ý */}
+            <MdDriveFileRenameOutline className="user-profile-icon" />
           </div>
 
-          <button type="submit">Save Profile</button>
+          <button type="submit" className="btn-submit">Save Profile</button>
 
-          <div className="register-link">
+          <div className="user-profile-link">
             <p>
               <Link to="/resetpassword">Change Password</Link>
             </p>

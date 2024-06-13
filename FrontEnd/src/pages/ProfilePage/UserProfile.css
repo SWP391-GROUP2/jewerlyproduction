@@ -1,96 +1,54 @@
-.wrapper {
-  width: 420px;
-  background: transparent;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+.user-profile-wrapper {
+  width: 500px;
+  background: #fff;
+  border: 2px solid rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(30px);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  color: #fff;
+  color: #000;
   border-radius: 10px;
   padding: 30px 40px;
+  margin: 50px auto;
 }
 
-.wrapper h1 {
+.user-profile-title {
   font-size: 36px;
   text-align: center;
+  color: #000;
 }
 
-.wrapper .input-box {
+.user-profile-input-box {
   position: relative;
   width: 100%;
   height: 50px;
-
   margin: 30px 0;
 }
 
-.input-box input {
+.user-profile-input-box input {
   width: 100%;
   height: 100%;
   background: transparent;
   outline: none;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(0, 0, 0, 0.2);
   border-radius: 40px;
   font-size: 16px;
-  color: #fff;
+  color: #000;
   padding: 20px 45px 20px 20px;
 }
 
-.input-box input::placeholder {
-  color: #fff;
+.user-profile-input-box input::placeholder {
+  color: #000;
 }
 
-.input-box .icon {
+.user-profile-icon {
   position: absolute;
-  right: px;
+  right: 15px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 16px;
+  color: #000;
 }
 
-.remember-forgot label input {
-  accent-color: #fff;
-  margin-right: 4px;
-}
-
-.remember-forgot a {
-  color: #fff;
-  text-decoration: none;
-}
-
-.remember-forgot a:hover {
-  text-decoration: underline;
-}
-
-.wrapper button {
-  width: 100%;
-  height: 45px;
-  background: #fff;
-  border: none;
-  outline: none;
-  border-radius: 40px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  font-size: 16px;
-  color: #333;
-  font-weight: 700;
-}
-
-.wrapper .register-link {
-  font-size: 14.5px;
-  text-align: center;
-  margin: 20px 0 15px;
-}
-
-.register-link p a {
-  color: #fff;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.register-link p a:hover {
-  text-decoration: underline;
-}
-
-.home-button {
+.btn-home {
   position: absolute;
   top: 10px;
   left: 10px;
@@ -98,8 +56,40 @@
   border: none;
   cursor: pointer;
   font-size: 24px;
+  color: #000;
 }
 
-.home-button:hover {
+.btn-home:hover {
   color: #007bff;
+}
+
+.btn-submit {
+  width: 100%;
+  height: 45px;
+  background: #000;
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 16px;
+  color: #fff;
+  font-weight: 700;
+}
+
+.user-profile-link {
+  font-size: 14.5px;
+  text-align: center;
+  margin: 20px 0 15px;
+  color: #000;
+}
+
+.user-profile-link p a {
+  color: #000;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.user-profile-link p a:hover {
+  text-decoration: underline;
 }
