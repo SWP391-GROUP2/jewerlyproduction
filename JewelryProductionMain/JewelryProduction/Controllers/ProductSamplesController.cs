@@ -31,7 +31,8 @@ namespace JewelryProduction.Controllers
                     Style = ps.Style,
                     Size = ps.Size,
                     Price = ps.Price,
-                    GoldType = _context.Golds.Where(g => g.GoldId.Equals(ps.GoldId)).Select(g => g.GoldType).FirstOrDefault()
+                    GoldType = _context.Golds.Where(g => g.GoldId.Equals(ps.GoldId)).Select(g => g.GoldType).FirstOrDefault(),
+                    Image = _context._3ddesigns.Where(i => i.ProductSampleId.Equals(ps.ProductSampleId)).Select(i => i.Image).FirstOrDefault()
                 })
                 .ToListAsync();
 
@@ -57,7 +58,21 @@ namespace JewelryProduction.Controllers
         public async Task<ActionResult<IEnumerable<ProductSample>>> GetFilter(string type, string style, string sortPrice) // Filter in search
         {
             // check whether type or style is null
-            var productSamples = _context.ProductSamples.AsQueryable();
+            var productSamples = _context.ProductSamples
+                .Include(ps => ps.Gold)
+                .Select(ps => new ProductSampleDTO
+                {
+                    ProductSampleId = ps.ProductSampleId,
+                    ProductName = ps.ProductName,
+                    Description = ps.Description,
+                    Type = ps.Type,
+                    Style = ps.Style,
+                    Size = ps.Size,
+                    Price = ps.Price,
+                    GoldType = _context.Golds.Where(g => g.GoldId.Equals(ps.GoldId)).Select(g => g.GoldType).FirstOrDefault(),
+                    Image = _context._3ddesigns.Where(i => i.ProductSampleId.Equals(ps.ProductSampleId)).Select(i => i.Image).FirstOrDefault()
+                })
+                .AsQueryable(); ;
             if (type is null)
                 productSamples = productSamples.Where(p => p.Type == type);
             else if (style is null)
