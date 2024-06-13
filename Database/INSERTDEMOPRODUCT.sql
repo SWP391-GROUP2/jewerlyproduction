@@ -11,6 +11,7 @@ VALUES
 ('G007', 'Gold 14k', 70.70, 38000000), 
 ('G008', 'Italy Gold', 90.90, 50000000);
 
+
 INSERT INTO ProductSample (productSampleID, productName, description, type, style, size, price, goldID)
 VALUES
     ('PS001', 'Golden Necklace', 'A beautiful 18k gold necklace with a pendant', 'Necklace', 'Chain', 18.0, 500000000.00, 'G001'),
@@ -30,7 +31,19 @@ VALUES
 ('GS004', 'Diamond Shine', 'White', 1.8, 'Princess', 'IF', 5000000, 'PS004', NULL, 2), ('GS005', 'Topaz Spark', 'Yellow', 1.3, 'Cushion', 'VVS2', 1300000, 'PS005', NULL, 2), ('GS006', 'Amethyst Dusk', 'Purple', 2.1, 'Marquise', 'VS1', 1100000, 'PS006', NULL, 2), ('GS007', 'Garnet Flame', 'Dark Red', 1.4, 'Heart', 'SI2', 950000, 'PS007', NULL, 2), 
 ('GS008', 'Opal Dream', 'Multicolor', 1.7, 'Pear', 'VVS1', 1800000, 'PS008', NULL, 2), ('GS009', 'Aquamarine Wave', 'Light Blue', 2.3, 'Asscher', 'VS2', 2100000, 'PS009', NULL, 2), ('GS010', 'Peridot Glow', 'Olive Green', 1.6, 'Radiant', 'SI1', 1200000, 'PS009', NULL, 2);
 
+SELECT * FROM Gemstone
+
+
 INSERT INTO Category (categoryID,categoryName,description)
 VALUES
 ('2','Ruby','Ruby 100% natural')
+
+SELECT Gold.GoldType
+FROM Gold
+INNER JOIN ProductSample ON Gold.goldid = ProductSample .goldid
+WHERE ProductSample .goldid = 'G001';
+
+
+
+
 

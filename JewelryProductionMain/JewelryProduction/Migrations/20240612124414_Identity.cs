@@ -134,7 +134,7 @@ namespace JewelryProduction.Migrations
                 {
                     productSampleID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     productName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    image = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     style = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     size = table.Column<double>(type: "float", nullable: true),
@@ -458,12 +458,12 @@ namespace JewelryProduction.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "3e89fefd-92ee-47f4-8c60-9032e4c1763a", null, "Customer", "CUSTOMER" },
-                    { "5632cc54-5922-4fa0-be20-01b5cd2494ad", null, "ProductionStaff", "PRODUCTIONSTAFF" },
-                    { "625427df-026f-4f7a-bcc0-70c24e29342b", null, "Admin", "ADMIN" },
-                    { "72c85d2e-a83d-4733-a511-27f2daed4089", null, "Manager", "MANAGER" },
-                    { "8d6a73ce-caaa-44d8-a321-dc6aa0f4e98b", null, "DesignStaff", "DESIGNSTAFF" },
-                    { "dc7fa991-b015-4627-a84d-b83ae1cd872d", null, "SaleStaff", "SALESTAFF" }
+                    { "24dbfd2c-9ec0-4a63-b197-cf0422412480", null, "Admin", "ADMIN" },
+                    { "3c670de1-b2b7-4cd0-a419-b35cc87e6e70", null, "Manager", "MANAGER" },
+                    { "60e02272-bafd-40cf-ab97-8ea3f059c59c", null, "SaleStaff", "SALESTAFF" },
+                    { "8fd6eb26-eaf0-49aa-8420-7317fd0431b3", null, "DesignStaff", "DESIGNSTAFF" },
+                    { "98eaefff-cecb-43ca-b0b8-a22e6cb367eb", null, "Customer", "CUSTOMER" },
+                    { "ad40532a-5881-4a86-a6e9-0398936224dc", null, "ProductionStaff", "PRODUCTIONSTAFF" }
                 });
 
             migrationBuilder.CreateIndex(

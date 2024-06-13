@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JewelryProduction.Migrations
 {
     [DbContext(typeof(JewelryProductionContext))]
-    [Migration("20240612080726_Identity")]
+    [Migration("20240612124414_Identity")]
     partial class Identity
     {
         /// <inheritdoc />
@@ -494,7 +494,7 @@ namespace JewelryProduction.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)")
-                        .HasColumnName("image");
+                        .HasColumnName("description");
 
                     b.Property<string>("GoldId")
                         .IsRequired()
@@ -610,37 +610,37 @@ namespace JewelryProduction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "625427df-026f-4f7a-bcc0-70c24e29342b",
+                            Id = "24dbfd2c-9ec0-4a63-b197-cf0422412480",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "dc7fa991-b015-4627-a84d-b83ae1cd872d",
+                            Id = "60e02272-bafd-40cf-ab97-8ea3f059c59c",
                             Name = "SaleStaff",
                             NormalizedName = "SALESTAFF"
                         },
                         new
                         {
-                            Id = "5632cc54-5922-4fa0-be20-01b5cd2494ad",
+                            Id = "ad40532a-5881-4a86-a6e9-0398936224dc",
                             Name = "ProductionStaff",
                             NormalizedName = "PRODUCTIONSTAFF"
                         },
                         new
                         {
-                            Id = "72c85d2e-a83d-4733-a511-27f2daed4089",
+                            Id = "3c670de1-b2b7-4cd0-a419-b35cc87e6e70",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "3e89fefd-92ee-47f4-8c60-9032e4c1763a",
+                            Id = "98eaefff-cecb-43ca-b0b8-a22e6cb367eb",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "8d6a73ce-caaa-44d8-a321-dc6aa0f4e98b",
+                            Id = "8fd6eb26-eaf0-49aa-8420-7317fd0431b3",
                             Name = "DesignStaff",
                             NormalizedName = "DESIGNSTAFF"
                         });

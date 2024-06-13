@@ -1,5 +1,4 @@
-﻿
-using JewelryProduction.DbContext;
+﻿using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,11 +10,63 @@ namespace JewelryProduction.Controllers
     public class GoldsController : ControllerBase
     {
         private readonly JewelryProductionContext _context;
-
+        private static readonly HttpClient client = new HttpClient();
         public GoldsController(JewelryProductionContext context)
         {
             _context = context;
         }
+
+        [HttpGet("GoldAPI")]
+        public async Task<IActionResult> GetBTMCPrice()
+        {
+            string url = "https://webtygia.com/api/vang?bgheader=b53e3e";
+            HttpResponseMessage response = await client.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadAsStringAsync();
+                return Ok(data);
+            }
+            else
+            {
+                return StatusCode((int)response.StatusCode, response.ReasonPhrase);
+            }
+        }
+        //public async Task<IActionResult> GetGoldPrice()
+        //{
+        //    // Lấy token JWT
+        //    var client = new RestClient(_tokenUrl);
+        //    var tokenRequest = new RestRequest()
+        //        .AddHeader("Authorization", $"Bearer {_apiKey}");
+
+        //    var tokenResponse = await client.ExecuteAsync(tokenRequest, Method.Get);
+
+        //    if (!tokenResponse.IsSuccessful)
+        //    {
+        //        return StatusCode((int)tokenResponse.StatusCode, tokenResponse.StatusDescription);
+        //    }
+
+        //    // Giả định phản hồi token có định dạng { "results": "token_value" }
+        //    var tokenResult = JsonSerializer.Deserialize<DTO.TokenResponse>(tokenResponse.Content);
+        //    var token = tokenResult.results;
+
+        //    // Sử dụng token JWT để yêu cầu dữ liệu giá vàng
+        //    var goldClient = new RestClient(_goldPriceUrl);
+        //    var goldRequest = new RestRequest()
+        //        .AddHeader("Authorization", $"Bearer {token}");
+
+        //    var goldResponse = await goldClient.ExecuteAsync(goldRequest, Method.Get);
+
+        //    if (goldResponse.IsSuccessful)
+        //    {
+        //        return Ok(goldResponse.Content);
+        //    }
+        //    else
+        //    {
+        //        return StatusCode((int)goldResponse.StatusCode, goldResponse.StatusDescription);
+        //    }
+        //}
+
 
         // GET: api/Golds
         [HttpGet]
