@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = JewelryProduction.Core
-build_property.ProjectDir = C:\Project_\JewelryProduction\JewelryProduction.Core\
+build_property.ProjectDir = D:\BE swp\SWP391-Group2\JewelryProductionMain\JewelryProduction.Core\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

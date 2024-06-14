@@ -178,6 +178,9 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
             entity.Property(e => e.PricePerCarat)
                 .HasColumnType("money")
                 .HasColumnName("pricePerCarat");
+            entity.Property(e => e.Image)
+                .HasMaxLength(350)
+                .HasColumnName("Image");
             entity.Property(e => e.ProductSampleId)
                 .HasMaxLength(50)
                 .HasColumnName("productSampleID");
