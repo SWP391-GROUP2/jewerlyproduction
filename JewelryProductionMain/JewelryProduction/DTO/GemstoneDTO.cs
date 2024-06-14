@@ -16,6 +16,8 @@
 
         public decimal PricePerCarat { get; set; }
 
+        public string Image {  get; set; } = null!;
+
         public string ProductSampleId { get; set; } = null!;
 
         public string CustomizeRequestId { get; set; } = null!;
