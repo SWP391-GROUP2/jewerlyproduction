@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JewelryProduction.Migrations
 {
     [DbContext(typeof(JewelryProductionContext))]
-    [Migration("20240612080726_Identity")]
+    [Migration("20240613075528_Identity")]
     partial class Identity
     {
         /// <inheritdoc />
@@ -260,6 +260,12 @@ namespace JewelryProduction.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("cut");
 
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasMaxLength(350)
+                        .HasColumnType("nvarchar(350)")
+                        .HasColumnName("Image");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -494,7 +500,7 @@ namespace JewelryProduction.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)")
-                        .HasColumnName("image");
+                        .HasColumnName("Description");
 
                     b.Property<string>("GoldId")
                         .IsRequired()
@@ -610,37 +616,37 @@ namespace JewelryProduction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "625427df-026f-4f7a-bcc0-70c24e29342b",
+                            Id = "ce01b746-323d-44ba-af2d-353a3529dbdf",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "dc7fa991-b015-4627-a84d-b83ae1cd872d",
+                            Id = "98d261c0-ea65-40e4-9f53-f0aa9dc00a13",
                             Name = "SaleStaff",
                             NormalizedName = "SALESTAFF"
                         },
                         new
                         {
-                            Id = "5632cc54-5922-4fa0-be20-01b5cd2494ad",
+                            Id = "f252d6fe-6469-4f66-b632-d0d1fc392752",
                             Name = "ProductionStaff",
                             NormalizedName = "PRODUCTIONSTAFF"
                         },
                         new
                         {
-                            Id = "72c85d2e-a83d-4733-a511-27f2daed4089",
+                            Id = "4226b9e1-15a5-4eb7-8bc7-5ea173561e94",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "3e89fefd-92ee-47f4-8c60-9032e4c1763a",
+                            Id = "61d0d417-0bd3-4542-a0b6-a75932f18f96",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "8d6a73ce-caaa-44d8-a321-dc6aa0f4e98b",
+                            Id = "874e4182-ce44-4c8c-851d-7276987dc536",
                             Name = "DesignStaff",
                             NormalizedName = "DESIGNSTAFF"
                         });

@@ -134,7 +134,7 @@ namespace JewelryProduction.Migrations
                 {
                     productSampleID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     productName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    image = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     style = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     size = table.Column<double>(type: "float", nullable: true),
@@ -352,6 +352,7 @@ namespace JewelryProduction.Migrations
                     cut = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     clarity = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     pricePerCarat = table.Column<decimal>(type: "money", nullable: false),
+                    Image = table.Column<string>(type: "nvarchar(350)", maxLength: 350, nullable: false),
                     productSampleID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     customizeRequestID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     categoryID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
@@ -458,12 +459,12 @@ namespace JewelryProduction.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "3e89fefd-92ee-47f4-8c60-9032e4c1763a", null, "Customer", "CUSTOMER" },
-                    { "5632cc54-5922-4fa0-be20-01b5cd2494ad", null, "ProductionStaff", "PRODUCTIONSTAFF" },
-                    { "625427df-026f-4f7a-bcc0-70c24e29342b", null, "Admin", "ADMIN" },
-                    { "72c85d2e-a83d-4733-a511-27f2daed4089", null, "Manager", "MANAGER" },
-                    { "8d6a73ce-caaa-44d8-a321-dc6aa0f4e98b", null, "DesignStaff", "DESIGNSTAFF" },
-                    { "dc7fa991-b015-4627-a84d-b83ae1cd872d", null, "SaleStaff", "SALESTAFF" }
+                    { "4226b9e1-15a5-4eb7-8bc7-5ea173561e94", null, "Manager", "MANAGER" },
+                    { "61d0d417-0bd3-4542-a0b6-a75932f18f96", null, "Customer", "CUSTOMER" },
+                    { "874e4182-ce44-4c8c-851d-7276987dc536", null, "DesignStaff", "DESIGNSTAFF" },
+                    { "98d261c0-ea65-40e4-9f53-f0aa9dc00a13", null, "SaleStaff", "SALESTAFF" },
+                    { "ce01b746-323d-44ba-af2d-353a3529dbdf", null, "Admin", "ADMIN" },
+                    { "f252d6fe-6469-4f66-b632-d0d1fc392752", null, "ProductionStaff", "PRODUCTIONSTAFF" }
                 });
 
             migrationBuilder.CreateIndex(

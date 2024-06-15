@@ -19,6 +19,8 @@ public partial class Gemstone
 
     public decimal PricePerCarat { get; set; }
 
+    public string Image {  get; set; } = null!;
+
     public string? ProductSampleId { get; set; }
 
     public string? CustomizeRequestId { get; set; }
