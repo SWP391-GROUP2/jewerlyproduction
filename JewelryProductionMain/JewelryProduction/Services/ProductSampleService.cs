@@ -16,7 +16,10 @@ namespace JewelryProduction.Services
         }
         public async Task<List<ProductSample>> GetRecommendedSamples(CustomerRequestDTO chosenSample)
         {
-            var allSamples = await _context.ProductSamples.ToListAsync();
+            var allSamples = await _context.ProductSamples
+             .Include(ps => ps.Gemstones)
+             .ToListAsync();
+
             var recommendedSamples = allSamples
                 .Select(sample => new
                 {
@@ -41,7 +44,10 @@ namespace JewelryProduction.Services
             if (sample1.Type == sample2.Type) similarity += 1;
             if (sample1.Style == sample2.Style) similarity += 1;
             if (sample1.Size == sample2.Size) similarity += 1;
-            if (sample1.GoldType == sample2.Gold.GoldType) similarity += 1;
+            if (sample2.Gold != null && sample1.GoldType == sample2.Gold.GoldType)
+            {
+                similarity += 1;
+            }
             if (gemstones == sample2.Gemstones) similarity += 1;
             if (sample1.GemstoneName != null && sample1.GemstoneName.Any())
             {
