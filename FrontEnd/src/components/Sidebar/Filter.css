@@ -122,8 +122,8 @@ h3 {
 }
 
 .product-image {
-  width: 100%; /* Kích thước mới của ảnh */
-  height: auto;
+  width: 280px; /* Kích thước mới của ảnh */
+  height: 184px;
   border-radius: 5px;
   transition: transform 0.3s ease; /* Thêm hiệu ứng khi hover */
 }
