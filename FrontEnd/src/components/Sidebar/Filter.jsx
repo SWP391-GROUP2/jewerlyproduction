@@ -21,19 +21,19 @@ const Sidebar = () => {
   const fetchProducts = async () => {
     let query = "";
     if (selectedCategory) {
-      query += `category=${selectedCategory}`;
+      query += `type=${selectedCategory}`;
       if (sortOption) {
-        query += `&sort=${sortOption}`;
+        query += `&sortPrice=${sortOption}`;
       }
       if (selectedFilters[selectedCategory]) {
-        query += `&filter=${selectedFilters[selectedCategory]}`;
+        query += `&style=${selectedFilters[selectedCategory]}`;
       }
     }
 
     try {
       const url = query
-        ? `https://api.example.com/products?${query}`
-        : `https://api.example.com/products`;
+        ? `https://localhost:7194/api/ProductSamples/FilterInSearch?${query}`
+        : `https://localhost:7194/api/ProductSamples`;
       const response = await axios.get(url);
       setProducts(response.data);
     } catch (error) {
@@ -134,94 +134,25 @@ const Sidebar = () => {
         )}
       </div>
       <div className="products">
-        <div className="product-card">
-          <img
-            src={
-              "https://cdn.pnj.io/images/detailed/202/sp-gnpfxmw000273-nhan-vang-trang-14k-dinh-ngoc-trai-freshwater-pnj-1.png"
-            }
-            alt="Freshwater Ring"
-            className="product-image"
-          />
-          <h3 className="product-name">Freshwater Ring</h3>
-          <p className="product-price">$ 300</p>
-        </div>
-        <div className="product-card">
-          <img
-            src={
-              "https://cdn.pnj.io/images/detailed/202/sp-gnpfxmw000273-nhan-vang-trang-14k-dinh-ngoc-trai-freshwater-pnj-1.png"
-            }
-            alt="Freshwater Ring"
-            className="product-image"
-          />
-          <h3 className="product-name">Freshwater Ring</h3>
-          <p className="product-price">$ 300</p>
-        </div>
-        <div className="product-card">
-          <img
-            src={
-              "https://cdn.pnj.io/images/detailed/202/sp-gnpfxmw000273-nhan-vang-trang-14k-dinh-ngoc-trai-freshwater-pnj-1.png"
-            }
-            alt="Freshwater Ring"
-            className="product-image"
-          />
-          <h3 className="product-name">Freshwater Ring</h3>
-          <p className="product-price">$ 300</p>
-        </div>
-        <div className="product-card">
-          <img
-            src={
-              "https://cdn.pnj.io/images/detailed/202/sp-gnpfxmw000273-nhan-vang-trang-14k-dinh-ngoc-trai-freshwater-pnj-1.png"
-            }
-            alt="Freshwater Ring"
-            className="product-image"
-          />
-          <h3 className="product-name">Freshwater Ring</h3>
-          <p className="product-price">$ 300</p>
-        </div>
-        <div className="product-card">
-          <img
-            src={
-              "https://cdn.pnj.io/images/detailed/202/sp-gnpfxmw000273-nhan-vang-trang-14k-dinh-ngoc-trai-freshwater-pnj-1.png"
-            }
-            alt="Freshwater Ring"
-            className="product-image"
-          />
-          <h3 className="product-name">Freshwater Ring</h3>
-          <p className="product-price">$ 300</p>
-        </div>
-        <div className="product-card">
-          <img
-            src={
-              "https://cdn.pnj.io/images/detailed/202/sp-gnpfxmw000273-nhan-vang-trang-14k-dinh-ngoc-trai-freshwater-pnj-1.png"
-            }
-            alt="Freshwater Ring"
-            className="product-image"
-          />
-          <h3 className="product-name">Freshwater Ring</h3>
-          <p className="product-price">$ 300</p>
-        </div>
-        <div className="product-card">
-          <img
-            src={
-              "https://cdn.pnj.io/images/detailed/202/sp-gnpfxmw000273-nhan-vang-trang-14k-dinh-ngoc-trai-freshwater-pnj-1.png"
-            }
-            alt="Freshwater Ring"
-            className="product-image"
-          />
-          <h3 className="product-name">Freshwater Ring</h3>
-          <p className="product-price">$ 300</p>
-        </div>
-        <div className="product-card">
-          <img
-            src={
-              "https://cdn.pnj.io/images/detailed/202/sp-gnpfxmw000273-nhan-vang-trang-14k-dinh-ngoc-trai-freshwater-pnj-1.png"
-            }
-            alt="Freshwater Ring"
-            className="product-image"
-          />
-          <h3 className="product-name">Freshwater Ring</h3>
-          <p className="product-price">$ 300</p>
-        </div>
+        {products.length === 0 ? (
+          <p>No products found</p>
+        ) : (
+          <ul>
+            {products.map((product) => (
+              <div className="product-card" key={product.productSampleId}>
+                <img
+                  src={require(`../Assets/${product.image}.png`)}
+                  alt={product.productName}
+                  className="product-image"
+                />
+                <h3 className="product-name">{product.productName}</h3>
+                <p className="product-price">
+                  {parseInt(product.price).toLocaleString()} VND
+                </p>
+              </div>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
