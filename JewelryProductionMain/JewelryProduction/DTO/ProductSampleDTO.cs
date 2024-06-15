@@ -17,6 +17,7 @@
         public decimal Price { get; set; }
 
         public string GoldId { get; set; } = null!;
+        public List<string> GemstoneId { get; set; } = new List<string>();
 
 
 

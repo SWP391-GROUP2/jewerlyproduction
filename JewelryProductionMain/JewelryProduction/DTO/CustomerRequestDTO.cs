@@ -4,7 +4,6 @@
     {
         public string CustomizeRequestId { get; set; } = null!;
 
-        public string GoldId { get; set; } = null!;
 
         public string CustomerId { get; set; } = null!;
 
@@ -15,5 +14,7 @@
         public double? Size { get; set; }
 
         public decimal Quantity { get; set; }
+        public string GoldType { get; set; } = null!;
+        public List<string> GemstoneName { get; set; } = new List<string>();
     }
 }
