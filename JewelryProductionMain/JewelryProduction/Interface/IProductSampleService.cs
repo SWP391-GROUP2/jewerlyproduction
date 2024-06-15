@@ -4,6 +4,6 @@ namespace JewelryProduction.Interface
 {
     public interface IProductSampleService
     {
-        Task<List<ProductSample>> GetRecommendedSamples(ProductSampleDTO chosenSample);
+        Task<List<ProductSample>> GetRecommendedSamples(CustomerRequestDTO chosenSample);
     }
 }

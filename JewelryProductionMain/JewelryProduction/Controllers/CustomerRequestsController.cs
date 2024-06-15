@@ -174,7 +174,6 @@ namespace JewelryProduction.Controllers
                 {
                     Type = ps.Type,
                     Style = ps.Style,
-                    Size = ps.Size,
                     Quantity = 1, // Default quantity, adjust as necessary
                     GemstoneName = ps.Gemstones.Select(g => g.Name).ToList(),
                     GoldType = ps.Gold.GoldType,

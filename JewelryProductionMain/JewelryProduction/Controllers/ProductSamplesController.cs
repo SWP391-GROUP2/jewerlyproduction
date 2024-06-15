@@ -1,5 +1,6 @@
 ﻿using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
+using JewelryProduction.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,10 +11,12 @@ namespace JewelryProduction.Controllers
     public class ProductSamplesController : ControllerBase
     {
         private readonly JewelryProductionContext _context;
+        private readonly IProductSampleService _productSampleService;
 
-        public ProductSamplesController(JewelryProductionContext context)
+        public ProductSamplesController(JewelryProductionContext context, IProductSampleService productSampleService)
         {
             _context = context;
+            _productSampleService = productSampleService;
         }
 
         // GET: api/ProductSamples
@@ -150,6 +153,12 @@ namespace JewelryProduction.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+        [HttpPost("getrecommend")]
+        public async Task<IActionResult> GetRecommendations([FromBody] CustomerRequestDTO chosenSample)
+        {
+            var recommendations = await _productSampleService.GetRecommendedSamples(chosenSample);
+            return Ok(recommendations);
         }
 
         private bool ProductSampleExists(string id)

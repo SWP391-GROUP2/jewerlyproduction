@@ -18,6 +18,7 @@ namespace JewelryProduction
 
             // Add services to the container.
             builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IProductSampleService, ProductSampleService>();
             builder.Services.AddControllers()
                 .AddJsonOptions(options =>
                 {
