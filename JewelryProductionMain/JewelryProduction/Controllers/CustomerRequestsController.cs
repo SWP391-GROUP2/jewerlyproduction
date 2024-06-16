@@ -92,6 +92,21 @@ namespace JewelryProduction.Controllers
 
             return NoContent();
         }
+        [HttpGet("customize-form-template")]
+        public ActionResult<CustomerRequestDTO> GetCustomizeFormTemplate([FromQuery] string type)
+        {
+            if (string.IsNullOrEmpty(type))
+            {
+                return BadRequest("Type must be provided.");
+            }
+
+            var template = new CustomerRequestDTO
+            {
+                Type = type
+            };
+
+            return Ok(template);
+        }
 
         // POST: api/CustomerRequests
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
