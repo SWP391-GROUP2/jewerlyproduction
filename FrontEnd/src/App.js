@@ -13,6 +13,8 @@ import UserProfilePage from "./pages/UserProfilePage/UserProfilePage";
 import ProductPage from "./pages/ProductPage/ProductPage";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import ProductDetailsPage from "./pages/ProductDetailsPage/ProductDetailsPage";
+import GemstonePage from "./pages/GemstonePage/GemstonePage";
+import GoldPage from "./pages/GoldPage/GoldPage";
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
         <Route path="/foget" element={<FogetPassword />} />
         <Route path="/profile" element={<UserProfilePage />} />
         <Route path="/product" element={<ProductPage />} />
+        <Route path="/gemstone" element={<GemstonePage />} />
+        <Route path="/gold" element={<GoldPage />} />
         <Route path="/resetpassword" element={<ResetPassword />} />
         <Route path="/" element={<Navigate to="/home" />} />
         <Route path="/productdetails" element={<ProductDetailsPage />} />
