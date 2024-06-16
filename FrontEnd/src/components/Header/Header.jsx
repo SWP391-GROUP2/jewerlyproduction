@@ -16,13 +16,8 @@ function Header() {
   };
   return (
     <header className="header">
-      <div className="a-aboutus">
-        <p>
-          <Link to="/">About Us</Link>
-        </p>
-      </div>
       <div className="logo">
-        <Link to="/">
+        <Link to="/home">
           <img src={logoImage} alt="Logo" className="logo-image" />
         </Link>
       </div>

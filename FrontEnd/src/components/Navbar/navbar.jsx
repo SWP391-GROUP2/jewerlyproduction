@@ -20,7 +20,7 @@ function Navbar() {
       {/* {user ? (
         <> */}
       <ul>
-        <Link to="/">
+        <Link to="/home">
           <li>Home Page</li>
         </Link>
         <Link to="/product">
@@ -34,7 +34,7 @@ function Navbar() {
             <option value="" disabled>
               Customize Request
             </option>
-            <option value="/">Ring</option>
+            <option value="/customize">Ring</option>
             <option value="/">Bracelet</option>
             <option value="/">Necklace</option>
             <option value="/">Earrings</option>

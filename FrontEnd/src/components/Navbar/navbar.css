@@ -20,6 +20,7 @@ ul {
   flex: 1;
   list-style: none;
   text-align: center;
+  margin-right: 175px;
 }
 
 ul li {
