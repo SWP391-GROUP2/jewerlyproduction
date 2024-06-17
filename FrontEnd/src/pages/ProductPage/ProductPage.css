@@ -24,6 +24,7 @@
   display: flex;
   flex-grow: 1; /* Đảm bảo main-content chiếm hết không gian còn lại */
   width: 100%;
+  margin-bottom: -40px;
 }
 
 .Sidebar {

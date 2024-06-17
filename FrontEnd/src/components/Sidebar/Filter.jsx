@@ -32,8 +32,8 @@ const Sidebar = () => {
 
     try {
       const url = query
-        ? `https://localhost:7194/api/ProductSamples/FilterInSearch?${query}`
-        : `https://localhost:7194/api/ProductSamples`;
+        ? `http://localhost:5266/api/ProductSamples/FilterInSearch?${query}`
+        : `http://localhost:5266/api/ProductSamples`;
       const response = await axios.get(url);
       setProducts(response.data);
     } catch (error) {
