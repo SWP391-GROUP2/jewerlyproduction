@@ -1,7 +1,9 @@
 ﻿using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Xml;
 
 namespace JewelryProduction.Controllers
 {
@@ -16,22 +18,7 @@ namespace JewelryProduction.Controllers
             _context = context;
         }
 
-        [HttpGet("GoldAPI")]
-        public async Task<IActionResult> GetBTMCPrice()
-        {
-            string url = "https://webtygia.com/api/vang?bgheader=b53e3e";
-            HttpResponseMessage response = await client.GetAsync(url);
 
-            if (response.IsSuccessStatusCode)
-            {
-                var data = await response.Content.ReadAsStringAsync();
-                return Ok(data);
-            }
-            else
-            {
-                return StatusCode((int)response.StatusCode, response.ReasonPhrase);
-            }
-        }
         //public async Task<IActionResult> GetGoldPrice()
         //{
         //    // Lấy token JWT
@@ -75,7 +62,7 @@ namespace JewelryProduction.Controllers
             return await _context.Golds.ToListAsync();
         }
 
-        // GET: api/Golds/5
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Gold>> GetGold(string id)
         {
@@ -89,8 +76,7 @@ namespace JewelryProduction.Controllers
             return gold;
         }
 
-        // PUT: api/Golds/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutGold(string id, GoldDTO goldDTO)
         {
@@ -123,8 +109,81 @@ namespace JewelryProduction.Controllers
             return NoContent();
         }
 
-        // POST: api/Golds
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("RefreshAPI")]
+        public async Task<IActionResult> Refresh()
+        {
+
+            string connectionString = "Data Source=TONBOOK\\SQLEXPRESS;Initial Catalog=JewelryProduction;Persist Security Info=True;User ID=sa;Password=12345;Trust Server Certificate=True";
+
+            // URL của tệp XML hoặc nguồn dữ liệu XML
+            string URL_API = @"https://sjc.com.vn/xml/tygiavang.xml";
+
+            try
+            {
+                // Tạo đối tượng XmlDocument và tải dữ liệu từ URL_API
+                XmlDocument xml = new XmlDocument();
+                xml.Load(URL_API);
+
+                // Lấy thông tin cập nhật và đơn vị từ XML
+                var updated = DateTime.Parse(xml.SelectSingleNode("/root/ratelist").Attributes["updated"].InnerText).ToString("yyyy-MM-dd HH:mm:ss");
+                var unit = xml.SelectSingleNode("/root/ratelist").Attributes["unit"].InnerText;
+
+                // Kết nối đến cơ sở dữ liệu SQL Server
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    // Lấy danh sách các thành phố từ XML
+                    var listNode = xml.SelectNodes("/root/ratelist/city");
+                    foreach (XmlNode node in listNode)
+                    {
+                        var nameCity = node.Attributes["name"].InnerText;
+                        var childNodeItem = node.ChildNodes;
+                        if (childNodeItem.Count > 0)
+                        {
+                            foreach (XmlNode childNode in childNodeItem)
+                            {
+                                var buy = childNode.Attributes["buy"].InnerText;
+                                var sell = childNode.Attributes["sell"].InnerText;
+                                var type = childNode.Attributes["type"].InnerText;
+
+                                // Chuẩn bị câu lệnh INSERT INTO
+                                string insertQuery = "INSERT INTO Gold (goldType, pricePerGram)  VALUES (@goldType, @pricePerGram)";
+
+                                // Tạo đối tượng SqlCommand và thiết lập các tham số
+                                using (SqlCommand command = new SqlCommand(insertQuery, connection))
+                                {
+                                    //command.Parameters.AddWithValue("@name", nameCity);
+                                    command.Parameters.AddWithValue("@goldType", type);
+                                    //command.Parameters.AddWithValue("@buy", double.Parse(buy));
+                                    command.Parameters.AddWithValue("@pricePerGram", double.Parse(sell));
+                                    //command.Parameters.AddWithValue("@updated", updated);
+                                    //command.Parameters.AddWithValue("@unit", unit);
+
+                                    // Thực thi câu lệnh INSERT INTO
+                                    command.ExecuteNonQuery();
+                                }
+                            }
+                        }
+                    }
+
+                    // Đóng kết nối sau khi hoàn thành
+                    connection.Close();
+                }
+
+                // Hiển thị thông tin cập nhật và đơn vị (nếu cần)
+                Console.WriteLine($"Đơn vị: {unit}");
+                Console.WriteLine($"Thời gian cập nhật: {updated}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi xảy ra: {ex.Message}");
+
+            }
+            return NoContent();
+
+        }
+
         [HttpPost]
         public async Task<ActionResult<Gold>> PostGold(GoldDTO goldDTO)
         {
@@ -154,7 +213,7 @@ namespace JewelryProduction.Controllers
             return CreatedAtAction("GetGold", new { id = gold.GoldId }, gold);
         }
 
-        // DELETE: api/Golds/5
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGold(string id)
         {
