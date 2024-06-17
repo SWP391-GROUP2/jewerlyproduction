@@ -15,7 +15,7 @@ export const loginUser = async (user, dispatch, navigate) => {
   dispatch(loginStart());
   try {
     const res = await axios.post(
-      "https://localhost:7194/api/Account/login",
+      "http://localhost:5266/api/Account/login",
       user
     );
     dispatch(loginSuccess(res.data));
@@ -29,7 +29,7 @@ export const registerUser = async (user, dispatch, navigate) => {
   dispatch(registerStart());
   try {
     await axios.post(
-      "https://localhost:7194/api/Account/register/customer",
+      "http://localhost:5266/api/Account/register/customer",
       user
     );
     dispatch(registerSuccess());
@@ -42,7 +42,7 @@ export const registerUser = async (user, dispatch, navigate) => {
 export const logOut = async (dispatch, navigate) => {
   dispatch(logOutStart());
   try {
-    await axios.post("https://localhost:7194/api/Account/logout");
+    await axios.post("http://localhost:5266/api/Account/logout");
     dispatch(logOutSuccess());
     navigate("/login");
   } catch (err) {
@@ -53,13 +53,18 @@ export const logOut = async (dispatch, navigate) => {
 export const loginWithGoogle = async (credential, dispatch, navigate) => {
   dispatch(loginStart());
   try {
-    const res = await axios.post(
-      "https://localhost:7194/api/GoogleAuth/google-login",
-      credential
-    );
+    const res = await axios.post("http://localhost:5266/api/GoogleAuth/google-login", 
+      { Token: credential },
+      {
+          headers: {
+              'Content-Type': 'application/json'
+          }
+      }
+  );; 
     dispatch(loginSuccess(res.data));
     navigate("/");
   } catch (err) {
+    console.error("Google login Failed", err);
     dispatch(loginFalsed());
   }
 };
