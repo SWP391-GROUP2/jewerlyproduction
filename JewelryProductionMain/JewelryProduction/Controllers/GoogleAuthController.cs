@@ -24,7 +24,7 @@ namespace JewelryProduction.Controllers
         [HttpPost("google-login")]
         public async Task<IActionResult> GoogleLogin([FromBody] GoogleUserLoginDTO googleLoginDTO)
         {
-            var payload = await GoogleJsonWebSignature.ValidateAsync(googleLoginDTO.IdToken, new GoogleJsonWebSignature.ValidationSettings());
+            var payload = await GoogleJsonWebSignature.ValidateAsync(googleLoginDTO.Token, new GoogleJsonWebSignature.ValidationSettings());
             if (payload == null)
                 return BadRequest("Invalid Id Token");
 
