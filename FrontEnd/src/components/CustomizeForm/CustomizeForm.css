@@ -57,7 +57,7 @@
 .options-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 20px;
   width: 100%; /* Ensure the grid takes full width */
   justify-content: center; /* Center the grid content */
 }
@@ -119,4 +119,14 @@
   color: white;
   border: none;
   cursor: pointer;
+}
+.option-box img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+.option-box p {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: bold;
 }

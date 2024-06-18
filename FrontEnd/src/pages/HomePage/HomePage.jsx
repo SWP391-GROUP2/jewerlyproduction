@@ -8,7 +8,6 @@ import Image1 from "../../components/Assets/p1.png";
 import Image2 from "../../components/Assets/p2.png";
 import ImageButtons from "../../components/ImageButtons/ImageButtons";
 import La from "../../components/Assets/l1.png";
-import HotProductsCarousel from "../../components/HotProductsCarousel/HotProductsCarousel";
 
 function HomePage() {
   return (
@@ -36,7 +35,13 @@ function HomePage() {
       <img src={La} alt="" className="l1" />
       <h2 className="h2">Jewelry Style</h2>
       <ImageButtons />
-      <HotProductsCarousel />
+      <img
+        src={
+          "https://file.hstatic.net/200000103143/file/1640_x_250_1_92795b1e4d2148c399d851f7dce7c7b7.gif"
+        }
+        alt=""
+        className="l1"
+      />
       <Footer />
     </div>
   );
