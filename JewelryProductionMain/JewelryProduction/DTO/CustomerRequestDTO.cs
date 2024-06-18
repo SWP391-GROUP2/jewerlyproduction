@@ -15,6 +15,7 @@
 
         public decimal Quantity { get; set; }
         public string GoldType { get; set; } = null!;
+        public string Status { get; set; } = null!;
         public List<string> GemstoneName { get; set; } = new List<string>();
     }
 }

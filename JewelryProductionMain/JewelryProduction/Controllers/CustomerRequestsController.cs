@@ -1,4 +1,5 @@
 ﻿
+using JewelryProduction.Common;
 using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
 using Microsoft.AspNetCore.Mvc;
@@ -71,6 +72,7 @@ namespace JewelryProduction.Controllers
             updateCusReq.Style = customerRequestDTO.Style;
             updateCusReq.Size = customerRequestDTO.Size;
             updateCusReq.Quantity = customerRequestDTO.Quantity;
+            updateCusReq.Status = customerRequestDTO.Status;
             updateCusReq.Gemstones = gemstones;
             updateCusReq.Gold = gold;
 
@@ -128,9 +130,11 @@ namespace JewelryProduction.Controllers
             {
                 return BadRequest("Gold type not found.");
             }
+            var uniqueId = await IdGenerator.GenerateUniqueId<CustomerRequest>(_context, "REQ", 3);
+
             var customerRequest = new CustomerRequest
             {
-                CustomizeRequestId = customerRequestDTO.CustomizeRequestId,
+                CustomizeRequestId = uniqueId,
                 GoldId = gold.GoldId,
                 CustomerId = customerRequestDTO.CustomerId,
                 Type = customerRequestDTO.Type,
@@ -138,7 +142,8 @@ namespace JewelryProduction.Controllers
                 Size = customerRequestDTO.Size,
                 Quantity = customerRequestDTO.Quantity,
                 Gemstones = gemstones,
-                Gold = gold
+                Gold = gold,
+                Status = "Pending"
             };
             _context.CustomerRequests.Add(customerRequest);
             try

@@ -137,6 +137,9 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
             entity.Property(e => e.Type)
                 .HasMaxLength(50)
                 .HasColumnName("type");
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .HasColumnName("status");
 
             entity.HasOne(d => d.Customer).WithMany(p => p.CustomerRequests)
                 .HasForeignKey(d => d.CustomerId)
@@ -362,7 +365,7 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
                 .HasColumnName("productSampleID");
             entity.Property(e => e.Description)
                 .HasMaxLength(200)
-                .HasColumnName("image");
+                .HasColumnName("Description");
             entity.Property(e => e.GoldId)
                 .HasMaxLength(50)
                 .HasColumnName("goldID");

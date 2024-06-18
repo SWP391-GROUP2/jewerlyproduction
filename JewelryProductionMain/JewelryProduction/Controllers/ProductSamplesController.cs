@@ -1,4 +1,5 @@
-﻿using JewelryProduction.DbContext;
+﻿using JewelryProduction.Common;
+using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
 using JewelryProduction.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -107,10 +108,11 @@ namespace JewelryProduction.Controllers
         [HttpPost]
         public async Task<ActionResult<ProductSample>> PostProductSample(ProductSampleDTO productSampleDTO)
         {
+            var uniqueId = await IdGenerator.GenerateUniqueId<CustomerRequest>(_context, "PS", 3);
 
             var productSample = new ProductSample
             {
-                ProductSampleId = productSampleDTO.ProductSampleId,
+                ProductSampleId = uniqueId,
                 ProductName = productSampleDTO.ProductName,
                 Description = productSampleDTO.Description,
                 Type = productSampleDTO.Type,
