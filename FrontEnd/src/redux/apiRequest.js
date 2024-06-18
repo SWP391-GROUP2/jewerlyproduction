@@ -60,13 +60,18 @@ export const logOut = async (dispatch, navigate) => {
 export const loginWithGoogle = async (credential, dispatch, navigate) => {
   dispatch(loginStart());
   try {
-    const res = await axios.post(
-      "http://localhost:5266/api/GoogleAuth/google-login",
-      credential
-    );
+    const res = await axios.post("http://localhost:5266/api/GoogleAuth/google-login", 
+      { Token: credential },
+      {
+          headers: {
+              'Content-Type': 'application/json'
+          }
+      }
+  );; 
     dispatch(loginSuccess(res.data));
     navigate("/");
   } catch (err) {
+    console.error("Google login Failed", err);
     dispatch(loginFalsed());
   }
 };

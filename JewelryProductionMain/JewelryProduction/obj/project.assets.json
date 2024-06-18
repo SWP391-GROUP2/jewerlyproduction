@@ -8160,6 +8160,7 @@
       "path": "microsoft.netcore.jit/1.0.2",
       "files": [
         ".nupkg.metadata",
+        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "microsoft.netcore.jit.1.0.2.nupkg.sha512",
@@ -8190,7 +8191,8 @@
       "type": "package",
       "path": "microsoft.netcore.portable.compatibility/1.0.1",
       "files": [
-        ".nupkg.metadata",
+        ".nupkg.metadata
+        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/net45/_._",
@@ -8274,6 +8276,7 @@
       "path": "microsoft.netcore.runtime.coreclr/1.0.2",
       "files": [
         ".nupkg.metadata",
+        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "microsoft.netcore.runtime.coreclr.1.0.2.nupkg.sha512",
@@ -13741,24 +13744,22 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ADMIN\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\acer\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\ProjectSWP\\SWP391-Group2\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj",
+      "projectUniqueName": "C:\\Project_\\JewerlyProduction\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj",
       "projectName": "JewelryProduction",
-      "projectPath": "D:\\ProjectSWP\\SWP391-Group2\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj",
-      "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-      "outputPath": "D:\\ProjectSWP\\SWP391-Group2\\JewelryProductionMain\\JewelryProduction\\obj\\",
+      "projectPath": "C:\\Project_\\JewerlyProduction\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj",
+      "packagesPath": "C:\\Users\\acer\\.nuget\\packages\\",
+      "outputPath": "C:\\Project_\\JewerlyProduction\\JewelryProductionMain\\JewelryProduction\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\acer\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

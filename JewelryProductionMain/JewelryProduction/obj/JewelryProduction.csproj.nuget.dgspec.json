@@ -1,24 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\ProjectSWP\\SWP391-Group2\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj": {}
+    "C:\\Project_\\JewerlyProduction\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj": {}
   },
   "projects": {
-    "D:\\ProjectSWP\\SWP391-Group2\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj": {
+    "C:\\Project_\\JewerlyProduction\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\ProjectSWP\\SWP391-Group2\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj",
+        "projectUniqueName": "C:\\Project_\\JewerlyProduction\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj",
         "projectName": "JewelryProduction",
-        "projectPath": "D:\\ProjectSWP\\SWP391-Group2\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj",
-        "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-        "outputPath": "D:\\ProjectSWP\\SWP391-Group2\\JewelryProductionMain\\JewelryProduction\\obj\\",
+        "projectPath": "C:\\Project_\\JewerlyProduction\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj",
+        "packagesPath": "C:\\Users\\acer\\.nuget\\packages\\",
+        "outputPath": "C:\\Project_\\JewerlyProduction\\JewelryProductionMain\\JewelryProduction\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\acer\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
