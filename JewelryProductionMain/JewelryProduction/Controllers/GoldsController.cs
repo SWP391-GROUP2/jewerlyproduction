@@ -1,9 +1,8 @@
 ﻿using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System.Xml;
+using OfficeOpenXml;
 
 namespace JewelryProduction.Controllers
 {
@@ -12,50 +11,11 @@ namespace JewelryProduction.Controllers
     public class GoldsController : ControllerBase
     {
         private readonly JewelryProductionContext _context;
-        private static readonly HttpClient client = new HttpClient();
         public GoldsController(JewelryProductionContext context)
         {
             _context = context;
         }
 
-
-        //public async Task<IActionResult> GetGoldPrice()
-        //{
-        //    // Lấy token JWT
-        //    var client = new RestClient(_tokenUrl);
-        //    var tokenRequest = new RestRequest()
-        //        .AddHeader("Authorization", $"Bearer {_apiKey}");
-
-        //    var tokenResponse = await client.ExecuteAsync(tokenRequest, Method.Get);
-
-        //    if (!tokenResponse.IsSuccessful)
-        //    {
-        //        return StatusCode((int)tokenResponse.StatusCode, tokenResponse.StatusDescription);
-        //    }
-
-        //    // Giả định phản hồi token có định dạng { "results": "token_value" }
-        //    var tokenResult = JsonSerializer.Deserialize<DTO.TokenResponse>(tokenResponse.Content);
-        //    var token = tokenResult.results;
-
-        //    // Sử dụng token JWT để yêu cầu dữ liệu giá vàng
-        //    var goldClient = new RestClient(_goldPriceUrl);
-        //    var goldRequest = new RestRequest()
-        //        .AddHeader("Authorization", $"Bearer {token}");
-
-        //    var goldResponse = await goldClient.ExecuteAsync(goldRequest, Method.Get);
-
-        //    if (goldResponse.IsSuccessful)
-        //    {
-        //        return Ok(goldResponse.Content);
-        //    }
-        //    else
-        //    {
-        //        return StatusCode((int)goldResponse.StatusCode, goldResponse.StatusDescription);
-        //    }
-        //}
-
-
-        // GET: api/Golds
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Gold>>> GetGolds()
         {
@@ -109,80 +69,42 @@ namespace JewelryProduction.Controllers
             return NoContent();
         }
 
-        [HttpPost("RefreshAPI")]
-        public async Task<IActionResult> Refresh()
+        [HttpPut("UpdateGoldPrice")]
+        public async Task<IActionResult> UpdatePricePerGram(IFormFile file)
         {
+            if (file == null || file.Length == 0)
+                return BadRequest("No file uploaded.");
 
-            string connectionString = "Data Source=TONBOOK\\SQLEXPRESS;Initial Catalog=JewelryProduction;Persist Security Info=True;User ID=sa;Password=12345;Trust Server Certificate=True";
-
-            // URL của tệp XML hoặc nguồn dữ liệu XML
-            string URL_API = @"https://sjc.com.vn/xml/tygiavang.xml";
-
-            try
+            using (var stream = new MemoryStream())
             {
-                // Tạo đối tượng XmlDocument và tải dữ liệu từ URL_API
-                XmlDocument xml = new XmlDocument();
-                xml.Load(URL_API);
+                await file.CopyToAsync(stream);
 
-                // Lấy thông tin cập nhật và đơn vị từ XML
-                var updated = DateTime.Parse(xml.SelectSingleNode("/root/ratelist").Attributes["updated"].InnerText).ToString("yyyy-MM-dd HH:mm:ss");
-                var unit = xml.SelectSingleNode("/root/ratelist").Attributes["unit"].InnerText;
-
-                // Kết nối đến cơ sở dữ liệu SQL Server
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                using (var package = new ExcelPackage(stream))
                 {
-                    connection.Open();
+                    var worksheet = package.Workbook.Worksheets[0]; // Assuming data is in the first worksheet
+                    var rowCount = worksheet.Dimension.Rows;
+                    //var rowCount = 9;
 
-                    // Lấy danh sách các thành phố từ XML
-                    var listNode = xml.SelectNodes("/root/ratelist/city");
-                    foreach (XmlNode node in listNode)
+                    for (int row = 2; row <= rowCount; row++) // Assuming the first row is header
                     {
-                        var nameCity = node.Attributes["name"].InnerText;
-                        var childNodeItem = node.ChildNodes;
-                        if (childNodeItem.Count > 0)
+                        var goldType = worksheet.Cells[row, 1].Value.ToString();
+                        var pricePerGram = decimal.Parse(worksheet.Cells[row, 3].Value.ToString());
+
+                        var gold = _context.Golds.FirstOrDefault(g => g.GoldType == goldType);
+                        if (gold != null)
                         {
-                            foreach (XmlNode childNode in childNodeItem)
-                            {
-                                var buy = childNode.Attributes["buy"].InnerText;
-                                var sell = childNode.Attributes["sell"].InnerText;
-                                var type = childNode.Attributes["type"].InnerText;
-
-                                // Chuẩn bị câu lệnh INSERT INTO
-                                string insertQuery = "INSERT INTO Gold (goldType, pricePerGram)  VALUES (@goldType, @pricePerGram)";
-
-                                // Tạo đối tượng SqlCommand và thiết lập các tham số
-                                using (SqlCommand command = new SqlCommand(insertQuery, connection))
-                                {
-                                    //command.Parameters.AddWithValue("@name", nameCity);
-                                    command.Parameters.AddWithValue("@goldType", type);
-                                    //command.Parameters.AddWithValue("@buy", double.Parse(buy));
-                                    command.Parameters.AddWithValue("@pricePerGram", double.Parse(sell));
-                                    //command.Parameters.AddWithValue("@updated", updated);
-                                    //command.Parameters.AddWithValue("@unit", unit);
-
-                                    // Thực thi câu lệnh INSERT INTO
-                                    command.ExecuteNonQuery();
-                                }
-                            }
+                            gold.PricePerGram = pricePerGram;
                         }
                     }
 
-                    // Đóng kết nối sau khi hoàn thành
-                    connection.Close();
+                    await _context.SaveChangesAsync();
                 }
-
-                // Hiển thị thông tin cập nhật và đơn vị (nếu cần)
-                Console.WriteLine($"Đơn vị: {unit}");
-                Console.WriteLine($"Thời gian cập nhật: {updated}");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Lỗi xảy ra: {ex.Message}");
 
-            }
-            return NoContent();
-
+            return Ok("Prices updated successfully.");
         }
+
 
         [HttpPost]
         public async Task<ActionResult<Gold>> PostGold(GoldDTO goldDTO)
