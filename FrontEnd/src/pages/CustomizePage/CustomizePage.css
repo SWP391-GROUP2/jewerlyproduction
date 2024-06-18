@@ -1,0 +1,26 @@
+.home-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensure minimum height is 100vh */
+  width: 100vw; /* Full width of the screen */
+  background-color: white;
+  background-size: cover;
+  background-position: center;
+  padding-bottom: 50px; /* Space to prevent footer from covering content */
+}
+
+.Head {
+  width: 100%;
+}
+
+.content {
+  flex-grow: 1;
+  margin: 20px;
+}
+.navbar {
+  border-bottom: 1px black;
+}
+.footer {
+  flex-shrink: 0; /* Ensure footer does not shrink */
+  width: 100%;
+}

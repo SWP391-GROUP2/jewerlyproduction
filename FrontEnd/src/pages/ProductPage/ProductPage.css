@@ -3,7 +3,7 @@
   flex-direction: column;
   min-height: 100vh; /* Đảm bảo chiều cao tối thiểu là 100vh */
   width: 100vw; /* Chiều rộng toàn màn hình */
-  background-color: aliceblue;
+  background-color: rgb(255, 255, 255);
   background-size: cover;
   background-position: center;
   padding-bottom: 50px; /* Khoảng cách để footer không che nội dung */
@@ -24,6 +24,7 @@
   display: flex;
   flex-grow: 1; /* Đảm bảo main-content chiếm hết không gian còn lại */
   width: 100%;
+  margin-bottom: -40px;
 }
 
 .Sidebar {

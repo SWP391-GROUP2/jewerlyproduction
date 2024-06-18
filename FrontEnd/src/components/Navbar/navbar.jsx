@@ -1,10 +1,12 @@
 import React from "react";
 import "./navbar.css";
 import search_icon from "../Assets/search-b.png";
+import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 function Navbar() {
   const navigate = useNavigate();
+  const user = useSelector((state) => state.auth.Login.currentUser);
 
   const handleChange = (event) => {
     const selectedPage = event.target.value;
@@ -15,8 +17,10 @@ function Navbar() {
 
   return (
     <div className="navbar">
+      {/* {user ? (
+        <> */}
       <ul>
-        <Link to="/">
+        <Link to="/home">
           <li>Home Page</li>
         </Link>
         <Link to="/product">
@@ -30,15 +34,37 @@ function Navbar() {
             <option value="" disabled>
               Customize Request
             </option>
-            <option value="/">Home</option>
-            <option value="/about">About</option>
-            <option value="/contact">Contact</option>
+            <option value="/customize">Ring</option>
+            <option value="/">Bracelet</option>
+            <option value="/">Necklace</option>
+            <option value="/">Earrings</option>
           </select>
         </li>
-        <li>Gold Price</li>
+        <Link to="/gold">
+          <li>Gold Price</li>
+        </Link>
         <li>Blog</li>
       </ul>
-
+      {/* </>
+      ) : (
+        <>
+          <ul>
+            <Link to="/">
+              <li>Home Page</li>
+            </Link>
+            <Link to="/product">
+              <li>Sample Product</li>
+            </Link>
+            <Link to="/gemstone">
+              <li>Gemstones</li>
+            </Link>
+            <Link to="/gold">
+              <li>Gold Price</li>
+            </Link>
+            <li>Blog</li>
+          </ul>
+        </>
+      )} */}
       <div className="search-box">
         <input type="text" placeholder="Search" />
         <img src={search_icon} alt="" />

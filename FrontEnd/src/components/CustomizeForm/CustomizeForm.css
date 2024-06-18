@@ -1,0 +1,122 @@
+.customizer-container {
+  font-family: Arial, sans-serif;
+  color: #333;
+  width: 90%; /* 90% of the page width */
+  max-width: 1200px; /* Maximum width for large screens */
+  margin: 0 auto; /* Center the container */
+  padding: 20px; /* Padding for better spacing */
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.main-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column; /* Ensure vertical stacking */
+  align-items: center; /* Center align items */
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 20px; /* Add margin-bottom for spacing */
+}
+
+.subtitle {
+  font-size: 20px;
+  margin-bottom: 20px; /* Add margin-bottom for spacing */
+}
+
+.customize-options-wrapper {
+  background-color: #f8f3ed;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px; /* Add margin-bottom for spacing */
+  width: 100%; /* Ensure the wrapper takes full width */
+}
+
+.customize-options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%; /* Full width of the container */
+}
+
+.option-section {
+  display: flex;
+  flex-direction: row; /* Align sections horizontally */
+  justify-content: space-between; /* Space out the divs within the section */
+  align-items: flex-start; /* Align items to the start */
+  width: 100%; /* Full width of the section */
+  margin-bottom: 20px; /* Add margin-bottom for spacing */
+}
+
+.option-section > div {
+  flex: 1; /* Ensure divs take equal space */
+  margin: 0 10px; /* Add margin for spacing between divs */
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  width: 100%; /* Ensure the grid takes full width */
+  justify-content: center; /* Center the grid content */
+}
+
+.option-box {
+  width: 100px; /* Increased size for better visibility */
+  height: 100px;
+  background-color: #e0e0e0;
+  border: 1px solid #ccc;
+}
+
+.checkbox-option {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.checkbox-option input {
+  margin-right: 5px;
+}
+
+.create-button {
+  margin-top: 20px;
+  margin-bottom: 20px; /* Add margin-bottom for spacing */
+  padding: 10px 20px;
+  background-color: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.divider {
+  margin: 20px 0; /* Add margin-top and margin-bottom for spacing */
+  height: 1px;
+  background-color: #ccc;
+  width: 100%; /* Ensure the divider takes full width */
+}
+
+.model-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 20px; /* Add margin-top for spacing */
+  margin-bottom: 20px; /* Add margin-bottom for spacing */
+  width: 100%; /* Ensure the gallery takes full width */
+}
+
+.model-preview {
+  width: 100%;
+  height: 100px;
+  background-color: #d3d3d3;
+}
+
+.view-more-button {
+  margin-top: 10px;
+  margin-bottom: 20px; /* Add margin-bottom for spacing */
+  padding: 10px 20px;
+  background-color: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
