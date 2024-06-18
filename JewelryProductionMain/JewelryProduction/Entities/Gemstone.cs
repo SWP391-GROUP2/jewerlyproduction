@@ -8,6 +8,8 @@ public partial class Gemstone
     public string GemstoneId { get; set; } = null!;
 
     public string Name { get; set; } = null!;
+    public string? Shape { get; set; }
+    public double? Size { get; set; }
 
     public string Color { get; set; } = null!;
 
@@ -17,7 +19,7 @@ public partial class Gemstone
 
     public string Clarity { get; set; } = null!;
 
-    public decimal PricePerCarat { get; set; }
+    public decimal Price { get; set; }
 
     public string Image {  get; set; } = null!;
 
