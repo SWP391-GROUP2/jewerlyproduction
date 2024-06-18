@@ -178,12 +178,17 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .HasColumnName("name");
-            entity.Property(e => e.PricePerCarat)
+            entity.Property(e => e.Price)
                 .HasColumnType("money")
-                .HasColumnName("pricePerCarat");
+                .HasColumnName("price");
             entity.Property(e => e.ProductSampleId)
                 .HasMaxLength(50)
                 .HasColumnName("productSampleID");
+            entity.Property(e => e.Shape)
+                .HasMaxLength(50)
+                .HasColumnName("shape");
+            entity.Property(e => e.Size)
+                .HasColumnName("size");
 
             entity.HasOne(d => d.Category).WithMany(p => p.Gemstones)
                 .HasForeignKey(d => d.CategoryId)
