@@ -1,21 +1,25 @@
 import React from "react";
 import Header from "../../components/Header/Header";
-import "./CustomizePage.css"; // Bạn có thể tạo và tùy chỉnh CSS cho HomePage nếu cần
 import Navbar from "../../components/Navbar/navbar";
 import Footer from "../../components/Footer/Footer";
-import CustomizeForm from "../../components/CustomizeForm/CustomizeForm";
+import "./GoldPage.css";
 
-function CustomizePage() {
+function GoldPage() {
   return (
     <div className="home-page">
       <div className="Head">
         <Header />
         <Navbar />
       </div>
-      <CustomizeForm />
+      <iframe
+        frameborder="0"
+        width="99%"
+        height="750px"
+        src="https://webtygia.com/api/vang?bgheader=b53e3e&colorheader=ffffff&padding=5&fontsize=13&hienthi=&"
+      ></iframe>
       <Footer />
     </div>
   );
 }
 
-export default CustomizePage;
+export default GoldPage;
