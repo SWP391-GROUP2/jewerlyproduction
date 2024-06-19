@@ -2,6 +2,7 @@
 using JewelryProduction.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 
 namespace JewelryProduction.Controllers
 {
@@ -10,72 +11,18 @@ namespace JewelryProduction.Controllers
     public class GoldsController : ControllerBase
     {
         private readonly JewelryProductionContext _context;
-        private static readonly HttpClient client = new HttpClient();
         public GoldsController(JewelryProductionContext context)
         {
             _context = context;
         }
 
-        [HttpGet("GoldAPI")]
-        public async Task<IActionResult> GetBTMCPrice()
-        {
-            string url = "https://webtygia.com/api/vang?bgheader=b53e3e";
-            HttpResponseMessage response = await client.GetAsync(url);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var data = await response.Content.ReadAsStringAsync();
-                return Ok(data);
-            }
-            else
-            {
-                return StatusCode((int)response.StatusCode, response.ReasonPhrase);
-            }
-        }
-        //public async Task<IActionResult> GetGoldPrice()
-        //{
-        //    // Lấy token JWT
-        //    var client = new RestClient(_tokenUrl);
-        //    var tokenRequest = new RestRequest()
-        //        .AddHeader("Authorization", $"Bearer {_apiKey}");
-
-        //    var tokenResponse = await client.ExecuteAsync(tokenRequest, Method.Get);
-
-        //    if (!tokenResponse.IsSuccessful)
-        //    {
-        //        return StatusCode((int)tokenResponse.StatusCode, tokenResponse.StatusDescription);
-        //    }
-
-        //    // Giả định phản hồi token có định dạng { "results": "token_value" }
-        //    var tokenResult = JsonSerializer.Deserialize<DTO.TokenResponse>(tokenResponse.Content);
-        //    var token = tokenResult.results;
-
-        //    // Sử dụng token JWT để yêu cầu dữ liệu giá vàng
-        //    var goldClient = new RestClient(_goldPriceUrl);
-        //    var goldRequest = new RestRequest()
-        //        .AddHeader("Authorization", $"Bearer {token}");
-
-        //    var goldResponse = await goldClient.ExecuteAsync(goldRequest, Method.Get);
-
-        //    if (goldResponse.IsSuccessful)
-        //    {
-        //        return Ok(goldResponse.Content);
-        //    }
-        //    else
-        //    {
-        //        return StatusCode((int)goldResponse.StatusCode, goldResponse.StatusDescription);
-        //    }
-        //}
-
-
-        // GET: api/Golds
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Gold>>> GetGolds()
         {
             return await _context.Golds.ToListAsync();
         }
 
-        // GET: api/Golds/5
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Gold>> GetGold(string id)
         {
@@ -89,8 +36,7 @@ namespace JewelryProduction.Controllers
             return gold;
         }
 
-        // PUT: api/Golds/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutGold(string id, GoldDTO goldDTO)
         {
@@ -123,8 +69,43 @@ namespace JewelryProduction.Controllers
             return NoContent();
         }
 
-        // POST: api/Golds
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("UpdateGoldPrice")]
+        public async Task<IActionResult> UpdatePricePerGram(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("No file uploaded.");
+
+            using (var stream = new MemoryStream())
+            {
+                await file.CopyToAsync(stream);
+
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                using (var package = new ExcelPackage(stream))
+                {
+                    var worksheet = package.Workbook.Worksheets[0]; // Assuming data is in the first worksheet
+                    var rowCount = worksheet.Dimension.Rows;
+                    //var rowCount = 9;
+
+                    for (int row = 2; row <= rowCount; row++) // Assuming the first row is header
+                    {
+                        var goldType = worksheet.Cells[row, 1].Value.ToString();
+                        var pricePerGram = decimal.Parse(worksheet.Cells[row, 3].Value.ToString());
+
+                        var gold = _context.Golds.FirstOrDefault(g => g.GoldType == goldType);
+                        if (gold != null)
+                        {
+                            gold.PricePerGram = pricePerGram;
+                        }
+                    }
+
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            return Ok("Prices updated successfully.");
+        }
+
+
         [HttpPost]
         public async Task<ActionResult<Gold>> PostGold(GoldDTO goldDTO)
         {
@@ -154,7 +135,7 @@ namespace JewelryProduction.Controllers
             return CreatedAtAction("GetGold", new { id = gold.GoldId }, gold);
         }
 
-        // DELETE: api/Golds/5
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGold(string id)
         {
