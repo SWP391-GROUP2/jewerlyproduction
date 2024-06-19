@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Thêm useNavigate
 import "./Filter.css";
 
 const Sidebar = () => {
@@ -8,6 +9,7 @@ const Sidebar = () => {
   const [sortOption, setSortOption] = useState("");
   const [selectedFilters, setSelectedFilters] = useState({});
   const [products, setProducts] = useState([]);
+  const navigate = useNavigate(); // Sử dụng hook useNavigate để chuyển hướng
 
   const categories = ["Ring", "Bracelet", "Necklace", "Earrings"];
 
@@ -62,6 +64,10 @@ const Sidebar = () => {
       ...selectedFilters,
       [category]: filter,
     });
+  };
+
+  const navigateToProductDetail = (productId) => {
+    navigate(`/product/${productId}`); // Chuyển hướng đến trang chi tiết sản phẩm
   };
 
   return (
@@ -139,7 +145,11 @@ const Sidebar = () => {
         ) : (
           <ul>
             {products.map((product) => (
-              <div className="product-card" key={product.productSampleId}>
+              <div
+                className="product-card"
+                key={product.productSampleId}
+                onClick={() => navigateToProductDetail(product.productSampleId)} // Chuyển hướng khi nhấp vào sản phẩm
+              >
                 <img
                   src={require(`../Assets/${product.image}.png`)}
                   alt={product.productName}

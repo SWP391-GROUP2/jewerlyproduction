@@ -27,6 +27,8 @@ const routes = [
   { path: "/productdetails", element: <ProductDetailsPage /> },
   { path: "*", element: <NotFound /> },
   { path: "/customize", element: <CustomizePage /> },
+  { path: "/product/:productId", element: <ProductDetailsPage /> }
+
 ];
 
 export default routes;
