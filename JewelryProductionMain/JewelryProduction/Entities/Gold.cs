@@ -2,7 +2,6 @@
 
 public partial class Gold
 {
-    internal object ProductSample;
 
     public string GoldId { get; set; } = null!;
 
