@@ -1,104 +1,151 @@
-/* GemstoneSidebar.css */
+.gemstone-container {
+  display: flex;
+  flex-direction: row;
+  height: 100vh; /* Set container height to viewport height */
+}
 
-.container {
-    display: flex;
-    flex-direction: row;
-    height: 100vh; /* Set container height to viewport height */
-  }
-  
-  .sidebar {
-    width: 250px;
-    background-color: #f8f8f8;
-    padding: 10px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    max-height: 100vh; /* Limit sidebar height to viewport height */
-    overflow-y: auto; /* Enable vertical scrolling */
-  }
-  
-  .sidebar.closed {
-    width: 50px;
-    padding: 10px 5px;
-  }
-  
-  .toggle-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 5px;
-    cursor: pointer;
-    margin-bottom: 10px;
-  }
-  
-  .sort-section {
-    margin-bottom: 20px;
-  }
-  
-  h2,
-  h3 {
-    margin-bottom: 10px;
-  }
-  
-  .gemstone-list,
-  .filter-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .gemstone-list li,
-  .filter-list li {
-    cursor: pointer;
-    margin-bottom: 5px;
-  }
-  
-  .gemstone-list li.active {
-    font-weight: bold;
-    color: #007bff;
-  }
-  
-  .filter-list label,
-  .gemstone-list li {
-    display: flex;
-    align-items: center;
-  }
-  
-  .filter-list input {
-    margin-right: 5px;
-  }
-  
-  .products {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    padding: 10px;
-    flex-grow: 1;
-    overflow-y: auto; /* Enable vertical scrolling */
-  }
-  
-  .product-card {
-    width: 180px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 5px;
-    margin: 5px;
-    text-align: center;
-  }
-  
-  .product-image {
-    max-width: 100%;
-    height: auto;
-    margin-bottom: 5px;
-  }
-  
-  .product-name {
-    font-size: 14px;
-    margin-bottom: 5px;
-  }
-  
-  .product-price {
-    font-size: 12px;
-    color: #555;
-  }
-  
+.gemstone-sidebar {
+  width: 250px; /* Adjusted width */
+  background-color: #f8f8f8;
+  padding: 10px; /* Maintain adequate padding */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  max-height: 100vh; /* Limit sidebar height to viewport height */
+  overflow-y: auto; /* Enable vertical scrolling if needed */
+  border-radius: 10px; /* Add border radius for rounded corners */
+  transition: width 0.3s ease; /* Transition effect for width */
+}
+
+.gemstone-sidebar.closed {
+  width: 50px; /* Smaller width when closed */
+  padding: 5px;
+}
+
+.sidebar-toggle-button {
+  background-color: #000;
+  color: white;
+  border: none;
+  padding: 8px; /* Maintain button padding */
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  outline: none;
+  border-radius: 20px;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-toggle-button:hover {
+  background-color: #333;
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar-toggle-button:active {
+  transform: scale(0.95);
+  box-shadow: none;
+}
+
+.sidebar-title {
+  margin-bottom: 10px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.gemstone-list-container {
+  margin-bottom: 10px;
+  display: flex; /* Enable flexbox */
+  flex-wrap: wrap; /* Wrap items if they exceed width */
+  justify-content: space-between; /* Distribute items evenly between columns */
+}
+
+.gemstone-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  width: 100%; /* Occupy full width of parent container */
+}
+
+.gemstone-list li {
+  cursor: pointer;
+  margin-bottom: 5px;
+  font-size: 14px;
+  text-align: left;
+  width: 45%; /* Set width to 45% for two-column layout */
+}
+
+.gemstone-list li.active {
+  font-weight: bold;
+  color: #007bff;
+}
+
+.gemstone-filters {
+  width: 100%; /* Occupy full width of parent container */
+  margin-bottom: 15px; /* Adjust margin for spacing */
+}
+
+.gemstone-filters h3 {
+  margin-bottom: 5px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.gemstone-filter-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  width: 100%; /* Occupy full width of parent container */
+}
+
+.gemstone-filter-list li {
+  margin-bottom: 5px;
+  font-size: 14px;
+  text-align: center;
+  width: 45%; /* Set width to 45% for two-column layout */
+}
+
+.gemstone-filter-list label {
+  display: flex;
+  align-items: center;
+}
+
+.gemstone-filter-list input {
+  margin-right: 5px;
+}
+
+.gemstone-products {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  padding: 10px;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.gemstone-product-card {
+  width: 180px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+  margin: 5px;
+  text-align: center;
+}
+
+.gemstone-product-image {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 5px;
+}
+
+.gemstone-product-name {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.gemstone-product-price {
+  font-size: 12px;
+  color: #555;
+}
