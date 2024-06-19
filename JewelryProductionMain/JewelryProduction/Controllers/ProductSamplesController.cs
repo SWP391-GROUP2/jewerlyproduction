@@ -95,14 +95,13 @@ namespace JewelryProduction.Controllers
 
             if (type is null && style is not null)
                 productSamples = productSamples.Where(p => p.Style == style);
-            else if (style is null && style is not null)
+            else if (style is null && type is not null)
                 productSamples = productSamples.Where(p => p.Type == type);
-            else if (style is null && style is null)
+            else if (style is not null && style is not null)
             {
-                if (sortPrice is null) sortPrice = "asc";
-            }
-            else
                 productSamples = productSamples.Where(p => p.Type == type && p.Style == style);
+            }
+            if (sortPrice is null) sortPrice = "asc";
             productSamples = sortPrice.ToLower() == "asc" ? productSamples.OrderBy(p => p.Price) : productSamples.OrderByDescending(p => p.Price);
 
             var result = await productSamples.ToListAsync();
