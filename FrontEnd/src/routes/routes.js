@@ -13,6 +13,7 @@ import GoldPage from "../pages/GoldPage/GoldPage";
 import NotFound from "../pages/NotFound/NotFound";
 import CustomizePage from "../pages/CustomizePage/CustomizePage";
 
+
 const routes = [
   { path: "/login", element: <LoginForm /> },
   { path: "/register", element: <Register /> },
@@ -27,7 +28,8 @@ const routes = [
   { path: "/productdetails", element: <ProductDetailsPage /> },
   { path: "*", element: <NotFound /> },
   { path: "/customize", element: <CustomizePage /> },
-  { path: "/product/:productId", element: <ProductDetailsPage /> }
+  { path: "/product/:productId", element: <ProductDetailsPage /> },
+  { path: "gemstonesb", element: <ProductDetailsPage /> }
 
 ];
 
