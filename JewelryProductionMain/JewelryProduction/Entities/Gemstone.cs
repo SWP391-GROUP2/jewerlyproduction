@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace JewelryProduction;
+﻿namespace JewelryProduction;
 
 public partial class Gemstone
 {
@@ -21,7 +18,7 @@ public partial class Gemstone
 
     public decimal Price { get; set; }
 
-    public string Image {  get; set; } = null!;
+    public string Image { get; set; }
 
     public string? ProductSampleId { get; set; }
 
