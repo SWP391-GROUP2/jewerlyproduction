@@ -3,22 +3,20 @@ import { createSlice } from "@reduxjs/toolkit";
 const productSlice = createSlice({
   name: "product",
   initialState: {
-    currentProduct: null,
-    isFetching: false,
-    error: false,
+    autoFill: { currentProduct: null, isFetching: false, error: false },
   },
   reducers: {
     fetchProductStart: (state) => {
-      state.isFetching = true;
+      state.autoFill.isFetching = true;
     },
     fetchProductSuccess: (state, action) => {
-      state.isFetching = false;
-      state.currentProduct = action.payload;
-      state.error = false;
+      state.autoFill.isFetching = false;
+      state.autoFill.currentProduct = action.payload;
+      state.autoFill.error = false;
     },
     fetchProductFailed: (state) => {
-      state.isFetching = false;
-      state.error = true;
+      state.autoFill.isFetching = false;
+      state.autoFill.error = true;
     },
   },
 });

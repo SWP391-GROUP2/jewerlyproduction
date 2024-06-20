@@ -26,79 +26,103 @@ namespace JewelryProduction.Controllers
         }
 
 
-        //POST: api/_3ddesign/5
-        [HttpPost("UploadOnlyImage")]
-        public async Task<IActionResult> Index(IFormFile Image)
+
+        //[HttpPost("UploadOnlyImage")]
+        //public async Task<IActionResult> Index(IFormFile Image)
+        //{
+        //    var file = Image;
+        //    if (file.Length > 0)
+        //    {
+        //        string path = Path.Combine("wwwroot", "images", file.FileName);
+
+        //        // Tạo một FileStream để đọc file
+        //        using (var fs = new FileStream(path, FileMode.Create))
+        //        {
+        //            // Copy dữ liệu từ file đã upload vào FileStream
+        //            await file.CopyToAsync(fs);
+        //        }
+
+        //        //Firebase uploading stuffs
+        //        var auth = new FirebaseAuthClient(new FirebaseAuthConfig
+        //        {
+        //            ApiKey = apiKey,
+        //            AuthDomain = $"jpos-swp391.firebaseapp.com",
+        //            Providers = new FirebaseAuthProvider[] { new EmailProvider() }
+        //        });
+
+        //        var a = await auth.SignInWithEmailAndPasswordAsync(AuthEmail, AuthPassword);
+
+        //        // Cancellation token
+        //        var cancellation = new CancellationTokenSource();
+
+        //        using (var ms = new FileStream(path, FileMode.Open))
+        //        {
+        //            var task = new FirebaseStorage(
+        //                Bucket,
+        //                new FirebaseStorageOptions
+        //                {
+        //                    AuthTokenAsyncFactory = async () => await a.User.GetIdTokenAsync(),
+        //                    ThrowOnCancel = true,
+        //                })
+        //                .Child("images")
+        //                .Child($"{file.FileName}.{Path.GetExtension(file.FileName).Substring(1)}")
+        //                .PutAsync(ms, cancellation.Token);
+        //            task.Progress.ProgressChanged += (s, e) => Console.WriteLine($"Progress: {e.Percentage} %");
+        //            try
+        //            {
+        //                await task;
+        //                return Ok();
+        //            }
+        //            catch (Exception)
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //    }
+        //    return BadRequest();
+        //}
+
+        [HttpGet("DisplayWithImage")]
+        public async Task<ActionResult<IEnumerable<_3ddesign>>> Get_3ddesigns(string id)
         {
-            var file = Image;
-            //FileStream fs;
-            //FileStream ms;
-            if (file.Length > 0)
+            //return await _context._3ddesigns.ToListAsync();
+            var _3ddesign = _context._3ddesigns.FindAsync(id);
+            var file = _3ddesign.Result.Image;
+
+            var auth = new FirebaseAuthClient(new FirebaseAuthConfig
             {
-                //Upload the file to firebase
-                //string foldername = "firebaseFiles";
-                //string path = Path.Combine("wwwroot", $"images", file.FileName);
-                //ms = new FileStream(Path.Combine(path, file.FileName), FileMode.Open);
+                ApiKey = apiKey,
+                AuthDomain = $"jpos-swp391.firebaseapp.com",
+                Providers = new FirebaseAuthProvider[] { new EmailProvider() }
+            });
 
-                string path = Path.Combine("wwwroot", "images", file.FileName);
+            var a = await auth.SignInWithEmailAndPasswordAsync(AuthEmail, AuthPassword);
 
-                // Tạo một FileStream để đọc file
-                using (var fs = new FileStream(path, FileMode.Create))
+            // Cancellation token
+            var cancellation = new CancellationTokenSource();
+
+            var task = new FirebaseStorage(
+                Bucket,
+                new FirebaseStorageOptions
                 {
-                    // Copy dữ liệu từ file đã upload vào FileStream
-                    await file.CopyToAsync(fs);
-                }
+                    AuthTokenAsyncFactory = async () => await a.User.GetIdTokenAsync(),
+                    ThrowOnCancel = true,
+                })
+                .Child("images")
+                .Child(file)
+                .GetDownloadUrlAsync();
+            var imageUrl = await task;
 
-                //Firebase uploading stuffs
-                var auth = new FirebaseAuthClient(new FirebaseAuthConfig
-                {
-                    ApiKey = apiKey,
-                    AuthDomain = $"jpos-swp391.firebaseapp.com",
-                    Providers = new FirebaseAuthProvider[] { new EmailProvider() }
-                });
-
-                var a = await auth.SignInWithEmailAndPasswordAsync(AuthEmail, AuthPassword);
-
-                // Cancellation token
-                var cancellation = new CancellationTokenSource();
-
-                using (var ms = new FileStream(path, FileMode.Open))
-                {
-                    var task = new FirebaseStorage(
-                        Bucket,
-                        new FirebaseStorageOptions
-                        {
-                            AuthTokenAsyncFactory = async () => await a.User.GetIdTokenAsync(),
-                            ThrowOnCancel = true,
-                        })
-                        .Child("images")
-                        .Child($"{file.FileName}.{Path.GetExtension(file.FileName).Substring(1)}")
-                        .PutAsync(ms, cancellation.Token);
-                    task.Progress.ProgressChanged += (s, e) => Console.WriteLine($"Progress: {e.Percentage} %");
-                    try
-                    {
-                        await task;
-                        return Ok();
-                    }
-                    catch (Exception)
-                    {
-                        throw;
-                    }
-                }
+            using (var httpClient = new HttpClient())
+            {
+                var imageBytes = await httpClient.GetByteArrayAsync(imageUrl);
+                return File(imageBytes, "image/png");
             }
-            return BadRequest();
         }
 
 
 
-        // GET: api/_3ddesign
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<_3ddesign>>> Get_3ddesigns()
-        {
-            return await _context._3ddesigns.ToListAsync();
-        }
 
-        // GET: api/_3ddesign/5
         [HttpGet("{id}")]
         public async Task<ActionResult<_3ddesign>> Get_3ddesign(string id)
         {
@@ -112,8 +136,7 @@ namespace JewelryProduction.Controllers
             return _3ddesign;
         }
 
-        // PUT: api/_3ddesign/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Put_3ddesign(string id, _3ddesignDTO _3ddesignDTO)
         {
@@ -147,9 +170,8 @@ namespace JewelryProduction.Controllers
             return NoContent();
         }
 
-        // POST: api/_3ddesign
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("Upload")]
+
+        [HttpPost("UploadWithImage")]
         public async Task<ActionResult<_3ddesign>> Post_3ddesign(_3ddesignDTO _3ddesignDTO)
         {
             var _3ddesign = new _3ddesign
@@ -161,21 +183,56 @@ namespace JewelryProduction.Controllers
                 DesignStaffId = _3ddesignDTO.DesignStaffId,
 
             };
-            //Index(_3ddesignDTO.Image);
-            _3ddesign.Image = "";
+            var file = _3ddesignDTO.Image;
+            if (file.Length > 0)
+            {
+                string path = Path.Combine("wwwroot", "images", file.FileName);
 
+                // Tạo một FileStream để đọc file
+                using (var fs = new FileStream(path, FileMode.Create))
+                {
+                    // Copy dữ liệu từ file đã upload vào FileStream
+                    await file.CopyToAsync(fs);
+                }
 
-            //if (_3ddesignDTO.Image.Length > 0)
-            //{
-            //    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", _3ddesignDTO.Image.FileName);
-            //    using (var stream = System.IO.File.Create(path))
-            //    {
-            //        await _3ddesignDTO.Image.CopyToAsync(stream);
-            //    }
-            //    _3ddesign.Image = "/images" + _3ddesignDTO.Image.FileName;
-            //}
-            //else
-            //    _3ddesign.Image = "";
+                //Firebase uploading stuffs
+                var auth = new FirebaseAuthClient(new FirebaseAuthConfig
+                {
+                    ApiKey = apiKey,
+                    AuthDomain = $"jpos-swp391.firebaseapp.com",
+                    Providers = new FirebaseAuthProvider[] { new EmailProvider() }
+                });
+
+                var a = await auth.SignInWithEmailAndPasswordAsync(AuthEmail, AuthPassword);
+
+                // Cancellation token
+                var cancellation = new CancellationTokenSource();
+
+                using (var ms = new FileStream(path, FileMode.Open))
+                {
+                    var task = new FirebaseStorage(
+                        Bucket,
+                        new FirebaseStorageOptions
+                        {
+                            AuthTokenAsyncFactory = async () => await a.User.GetIdTokenAsync(),
+                            ThrowOnCancel = true,
+                        })
+                        .Child("images")
+                        .Child($"{file.FileName}")
+                        .PutAsync(ms, cancellation.Token);
+                    task.Progress.ProgressChanged += (s, e) => Console.WriteLine($"Progress: {e.Percentage} %");
+                    try
+                    {
+                        await task;
+                        _3ddesign.Image = _3ddesignDTO.Image.FileName;
+                    }
+                    catch (Exception)
+                    {
+                        throw;
+                    }
+                }
+            }
+            else _3ddesign.Image = "";
             _context._3ddesigns.Add(_3ddesign);
             try
             {
@@ -195,21 +252,23 @@ namespace JewelryProduction.Controllers
             return CreatedAtAction("Get_3ddesign", new { id = _3ddesign._3dDesignId }, _3ddesign);
         }
 
-        // DELETE: api/_3ddesign/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete_3ddesign(string id)
-        {
-            var _3ddesign = await _context._3ddesigns.FindAsync(id);
-            if (_3ddesign == null)
-            {
-                return NotFound();
-            }
 
-            _context._3ddesigns.Remove(_3ddesign);
-            await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
+
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> Delete_3ddesign(string id)
+        //{
+        //    var _3ddesign = await _context._3ddesigns.FindAsync(id);
+        //    if (_3ddesign == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    _context._3ddesigns.Remove(_3ddesign);
+        //    await _context.SaveChangesAsync();
+
+        //    return NoContent();
+        //}
 
         private bool _3ddesignExists(string id)
         {

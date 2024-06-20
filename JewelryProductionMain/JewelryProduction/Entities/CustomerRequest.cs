@@ -18,6 +18,7 @@ public partial class CustomerRequest
     public double? Size { get; set; }
 
     public decimal Quantity { get; set; }
+    public string Status { get; set; } = null!;
 
     public AppUser Customer { get; set; } = null!;
 

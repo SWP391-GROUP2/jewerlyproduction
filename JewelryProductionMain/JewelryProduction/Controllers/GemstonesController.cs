@@ -51,9 +51,11 @@ namespace JewelryProduction.Controllers
             updateGem.Name = gemstoneDTO.Name;
             updateGem.Color = gemstoneDTO.Color;
             updateGem.CaratWeight = gemstoneDTO.CaratWeight;
+            updateGem.Shape = gemstoneDTO.Shape;
+            updateGem.Size = gemstoneDTO.Size;
             updateGem.Cut = gemstoneDTO.Cut;
             updateGem.Clarity = gemstoneDTO.Clarity;
-            updateGem.PricePerCarat = gemstoneDTO.PricePerCarat;
+            updateGem.Price = gemstoneDTO.Price;
             updateGem.ProductSampleId = gemstoneDTO.ProductSampleId;
             updateGem.CustomizeRequestId = gemstoneDTO.CustomizeRequestId;
 
@@ -90,7 +92,9 @@ namespace JewelryProduction.Controllers
                 CaratWeight = gemstoneDTO.CaratWeight,
                 Cut = gemstoneDTO.Cut,
                 Clarity = gemstoneDTO.Clarity,
-                PricePerCarat = gemstoneDTO.PricePerCarat,
+                Shape = gemstoneDTO.Shape,
+                Size = gemstoneDTO.Size,
+                Price = gemstoneDTO.Price,
                 ProductSampleId = gemstoneDTO.ProductSampleId,
                 CustomizeRequestId = gemstoneDTO.CustomizeRequestId,
 

@@ -17,11 +17,12 @@
         public decimal Price { get; set; }
 
         public string GoldId { get; set; } = null!;
+        public List<string> GemstoneId { get; set; } = new List<string>();
 
         public string GoldType { get; set; } = null!;
 
-        public string Image { get; set; } = null!;
-        
+        public string Image { get; set; }
+
 
     }
 }

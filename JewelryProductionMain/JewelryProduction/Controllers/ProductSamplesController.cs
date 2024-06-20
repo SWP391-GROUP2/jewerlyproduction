@@ -1,5 +1,7 @@
-﻿using JewelryProduction.DbContext;
+﻿using JewelryProduction.Common;
+using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
+using JewelryProduction.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,10 +12,12 @@ namespace JewelryProduction.Controllers
     public class ProductSamplesController : ControllerBase
     {
         private readonly JewelryProductionContext _context;
+        private readonly IProductSampleService _productSampleService;
 
-        public ProductSamplesController(JewelryProductionContext context)
+        public ProductSamplesController(JewelryProductionContext context, IProductSampleService productSampleService)
         {
             _context = context;
+            _productSampleService = productSampleService;
         }
 
         // GET: api/ProductSamples
@@ -43,12 +47,29 @@ namespace JewelryProduction.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductSample>> GetProductSample(string id)
         {
-            var productSample = await _context.ProductSamples.FindAsync(id);
+            //var productSample = await _context.ProductSamples.FindAsync(id);
 
-            if (productSample == null)
-            {
-                return NotFound();
-            }
+            //if (productSample == null)
+            //{
+            //    return NotFound();
+            //}
+
+            var result = _context.ProductSamples
+                .Include(ps => ps.Gold)
+                .Where(ps => ps.ProductSampleId == id)
+                .Select(ps => new ProductSampleDTO
+                {
+                    ProductSampleId = ps.ProductSampleId,
+                    ProductName = ps.ProductName,
+                    Description = ps.Description,
+                    Type = ps.Type,
+                    Style = ps.Style,
+                    Size = ps.Size,
+                    Price = ps.Price,
+                    GoldType = _context.Golds.Where(g => g.GoldId.Equals(ps.GoldId)).Select(g => g.GoldType).FirstOrDefault(),
+                    Image = _context._3ddesigns.Where(i => i.ProductSampleId.Equals(ps.ProductSampleId)).Select(i => i.Image).FirstOrDefault()
+                })
+                .First();
 
             var gemstone = await _context.Gemstones.Where(g => g.ProductSampleId.Equals(id)).ToListAsync();
 
@@ -57,15 +78,15 @@ namespace JewelryProduction.Controllers
                 productSample = productSample,
                 gemstones = gemstone
             };
-
             return Ok(result);
         }
 
         // GET: api/ProductSamples/5
         [HttpGet("FilterInSearch")]
-        public async Task<ActionResult<IEnumerable<ProductSample>>> GetFilter(string type, string style, string sortPrice) // Filter in search
+        public async Task<ActionResult<IEnumerable<ProductSample>>> GetFilter(string? type, string? style, string? sortPrice) // Filter in search
         {
-            // check whether type or style is null
+
+            //check whether type or style is null
             var productSamples = _context.ProductSamples
                 .Include(ps => ps.Gold)
                 .Select(ps => new ProductSampleDTO
@@ -80,18 +101,19 @@ namespace JewelryProduction.Controllers
                     GoldType = _context.Golds.Where(g => g.GoldId.Equals(ps.GoldId)).Select(g => g.GoldType).FirstOrDefault(),
                     Image = _context._3ddesigns.Where(i => i.ProductSampleId.Equals(ps.ProductSampleId)).Select(i => i.Image).FirstOrDefault()
                 })
-                .AsQueryable(); ;
-            if (type is null)
-                productSamples = productSamples.Where(p => p.Type == type);
-            else if (style is null)
+                .AsQueryable();
+
+            if (type is null && style is not null)
                 productSamples = productSamples.Where(p => p.Style == style);
-            else
+            else if (style is null && type is not null)
+                productSamples = productSamples.Where(p => p.Type == type);
+            else if (style is not null && style is not null)
+            {
                 productSamples = productSamples.Where(p => p.Type == type && p.Style == style);
-
-            // Check the sort in price.
+            }
             if (sortPrice is null) sortPrice = "asc";
-
             productSamples = sortPrice.ToLower() == "asc" ? productSamples.OrderBy(p => p.Price) : productSamples.OrderByDescending(p => p.Price);
+
             var result = await productSamples.ToListAsync();
             return Ok(result);
         }
@@ -154,10 +176,11 @@ namespace JewelryProduction.Controllers
         [HttpPost]
         public async Task<ActionResult<ProductSample>> PostProductSample(ProductSampleDTO productSampleDTO)
         {
+            var uniqueId = await IdGenerator.GenerateUniqueId<CustomerRequest>(_context, "PS", 3);
 
             var productSample = new ProductSample
             {
-                ProductSampleId = productSampleDTO.ProductSampleId,
+                ProductSampleId = uniqueId,
                 ProductName = productSampleDTO.ProductName,
                 Description = productSampleDTO.Description,
                 Type = productSampleDTO.Type,
@@ -200,6 +223,12 @@ namespace JewelryProduction.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+        [HttpPost("getrecommend")]
+        public async Task<IActionResult> GetRecommendations([FromBody] CustomerRequestDTO chosenSample)
+        {
+            var recommendations = await _productSampleService.GetRecommendedSamples(chosenSample);
+            return Ok(recommendations);
         }
 
         private bool ProductSampleExists(string id)
