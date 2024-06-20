@@ -132,7 +132,7 @@ namespace JewelryProduction.Controllers
             decimal totalPrice = CalculateProductCost(
                 request.Gold.PricePerGram,
                 request.Gold.Weight,
-                request.Gemstone.PricePerCarat,
+                request.Gemstone.Price,
                 request.Gemstone.CaratWeight
                 );
             order.TotalPrice = totalPrice;
