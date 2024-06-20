@@ -1,5 +1,7 @@
-﻿using JewelryProduction.DbContext;
+﻿using JewelryProduction.Common;
+using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
+using JewelryProduction.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,10 +12,12 @@ namespace JewelryProduction.Controllers
     public class ProductSamplesController : ControllerBase
     {
         private readonly JewelryProductionContext _context;
+        private readonly IProductSampleService _productSampleService;
 
-        public ProductSamplesController(JewelryProductionContext context)
+        public ProductSamplesController(JewelryProductionContext context, IProductSampleService productSampleService)
         {
             _context = context;
+            _productSampleService = productSampleService;
         }
 
         // GET: api/ProductSamples
@@ -67,7 +71,13 @@ namespace JewelryProduction.Controllers
                 })
                 .First();
 
+            var gemstone = await _context.Gemstones.Where(g => g.ProductSampleId.Equals(id)).ToListAsync();
 
+            var result = new ProductSampleWithGemstone()
+            {
+                productSample = productSample,
+                gemstones = gemstone
+            };
             return Ok(result);
         }
 
@@ -166,10 +176,11 @@ namespace JewelryProduction.Controllers
         [HttpPost]
         public async Task<ActionResult<ProductSample>> PostProductSample(ProductSampleDTO productSampleDTO)
         {
+            var uniqueId = await IdGenerator.GenerateUniqueId<CustomerRequest>(_context, "PS", 3);
 
             var productSample = new ProductSample
             {
-                ProductSampleId = productSampleDTO.ProductSampleId,
+                ProductSampleId = uniqueId,
                 ProductName = productSampleDTO.ProductName,
                 Description = productSampleDTO.Description,
                 Type = productSampleDTO.Type,
@@ -213,10 +224,22 @@ namespace JewelryProduction.Controllers
 
             return NoContent();
         }
+        [HttpPost("getrecommend")]
+        public async Task<IActionResult> GetRecommendations([FromBody] CustomerRequestDTO chosenSample)
+        {
+            var recommendations = await _productSampleService.GetRecommendedSamples(chosenSample);
+            return Ok(recommendations);
+        }
 
         private bool ProductSampleExists(string id)
         {
             return _context.ProductSamples.Any(e => e.ProductSampleId == id);
         }
+    }
+
+    public class ProductSampleWithGemstone()
+    {
+        public ProductSample productSample { get; set; }
+        public List<Gemstone> gemstones { get; set; }
     }
 }
