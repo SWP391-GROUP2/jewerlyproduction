@@ -137,6 +137,9 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
             entity.Property(e => e.Type)
                 .HasMaxLength(50)
                 .HasColumnName("type");
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .HasColumnName("status");
 
             entity.HasOne(d => d.Customer).WithMany(p => p.CustomerRequests)
                 .HasForeignKey(d => d.CustomerId)
@@ -175,15 +178,20 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .HasColumnName("name");
-            entity.Property(e => e.PricePerCarat)
+            entity.Property(e => e.Price)
                 .HasColumnType("money")
-                .HasColumnName("pricePerCarat");
+                .HasColumnName("price");
             entity.Property(e => e.Image)
                 .HasMaxLength(350)
                 .HasColumnName("Image");
             entity.Property(e => e.ProductSampleId)
                 .HasMaxLength(50)
                 .HasColumnName("productSampleID");
+            entity.Property(e => e.Shape)
+                .HasMaxLength(50)
+                .HasColumnName("shape");
+            entity.Property(e => e.Size)
+                .HasColumnName("size");
 
             entity.HasOne(d => d.Category).WithMany(p => p.Gemstones)
                 .HasForeignKey(d => d.CategoryId)
