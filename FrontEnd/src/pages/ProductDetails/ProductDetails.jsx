@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import './ProductDetails.css';
+import React, { useState, useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
+import "./ProductDetails.css";
 import DetailsThumb from "../../components/Thumb/DetailsThumb";
 
 function ProductDetails() {
@@ -28,14 +28,16 @@ function ProductDetails() {
 
   const fetchProduct = async () => {
     try {
-      const response = await fetch(`http://localhost:5266/api/ProductSamples/${productId}`);
+      const response = await fetch(
+        `http://localhost:5266/api/ProductSamples/${productId}`
+      );
       if (!response.ok) {
-        throw new Error('Failed to fetch product');
+        throw new Error("Failed to fetch product");
       }
       const data = await response.json();
       setProduct(data);
     } catch (error) {
-      console.error('Error fetching product:', error);
+      console.error("Error fetching product:", error);
     }
   };
 
@@ -49,7 +51,10 @@ function ProductDetails() {
         <div className="details" key={product.productSampleId}>
           <div className="big-img">
             {/* Hiển thị hình ảnh sản phẩm */}
-            <img src={`../Assets/${product.image}.png`} alt={product.productName} />
+            <img
+              src={require(`../../components/Assets/${product.image}.png`)}
+              alt={product.productName}
+            />
           </div>
 
           <div className="box">
@@ -66,7 +71,11 @@ function ProductDetails() {
 
             {/* Nếu có nhiều hình ảnh, sử dụng DetailsThumb */}
             {product.images && (
-              <DetailsThumb images={product.images} tab={handleTab} myRef={myRef} />
+              <DetailsThumb
+                images={product.images}
+                tab={handleTab}
+                myRef={myRef}
+              />
             )}
 
             <button className="cart">Add to cart</button>

@@ -1,84 +1,87 @@
 .ProductDetails {
-  max-width: 1400px;
+  max-width: 1200px; /* Adjusted for better centering */
   width: 100%;
-  margin: 20px auto 200px; /* Centered with auto left and right margins */
+  margin: 20px auto; /* Removed bottom margin */
   padding: 20px;
-  box-shadow: 0 0 5px #ccc;
-  border-radius: 10px;
-  background-color: white;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* Softer shadow */
+  border-radius: 15px; /* More rounded corners */
+  background-color: #f9f9f9; /* Lighter background color */
 }
 
 .details {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   flex-wrap: wrap;
+  align-items: flex-start;
   padding: 30px 0;
+  gap: 20px; /* Gap between elements */
 }
 
-.big-img,
-.box {
+.big-img {
+  flex: 1 1 45%; /* Flex to ensure better responsiveness */
+  max-width: 600px;
+}
+
+.big-img img {
   width: 100%;
+  max-height: 500px;
+  object-fit: cover;
+  border-radius: 15px; /* More rounded corners */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Soft shadow for image */
+}
+
+.box {
+  flex: 1 1 45%; /* Flex to ensure better responsiveness */
   max-width: 600px;
   min-width: 300px;
   margin: 25px;
 }
 
-.big-img img,
-.thumb img {
-  width: 100%;
-  max-height: 500px;
-  object-fit: cover;
-  border-radius: 10px;
-}
-
 .box .row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 15px;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .box .row h2 {
   text-transform: uppercase;
   letter-spacing: 2px;
+  font-size: 24px;
+  color: #333;
 }
 
 .box .row span {
   color: crimson;
-}
-
-.box .colors button {
-  width: 30px;
-  height: 30px;
-  border: 1px solid #333;
-  outline: none;
-  margin-right: 5px;
-  cursor: pointer;
+  font-size: 20px;
 }
 
 .box p {
-  line-height: 1.5;
+  line-height: 1.6;
   margin: 15px 0;
+  color: #555;
 }
 
 .thumb {
   display: flex;
   cursor: pointer;
-  margin: 10px 0;
+  margin: 20px 0; /* Adjusted margin for spacing */
 }
 
 .thumb img {
-  width: 90px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   object-fit: cover;
   border: 1px solid #ddd;
-  margin-right: 5px;
-  opacity: 0.7;
+  margin-right: 10px; /* Increased space between thumbnails */
+  opacity: 0.6; /* Slightly more transparent */
   border-radius: 10px;
+  transition: all 0.3s ease-in-out; /* Smooth transition */
 }
 
 .thumb img.active {
   opacity: 1;
-  border: 1px solid lightseagreen;
+  border: 2px solid lightseagreen; /* More prominent border */
 }
 
 .box .cart {
@@ -87,9 +90,14 @@
   outline: none;
   border: none;
   cursor: pointer;
-  padding: 10px 25px;
-  margin-top: 15px;
-  border-radius: 10px;
+  padding: 15px 30px; /* Increased padding for better appearance */
+  margin-top: 20px; /* Adjusted margin for spacing */
+  border-radius: 15px; /* More rounded corners */
+  transition: background 0.3s ease-in-out; /* Smooth transition */
+}
+
+.box .cart:hover {
+  background: #555; /* Slightly lighter on hover */
 }
 
 button {
