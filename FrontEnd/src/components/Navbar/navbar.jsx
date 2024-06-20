@@ -46,7 +46,6 @@ function Navbar() {
         <Link to="/gold">
           <li>Gold Price</li>
         </Link>
-        <li>Blog</li>
       </ul>
       {/* </>
       ) : (
@@ -64,7 +63,6 @@ function Navbar() {
             <Link to="/gold">
               <li>Gold Price</li>
             </Link>
-            <li>Blog</li>
           </ul>
         </>
       )} */}
