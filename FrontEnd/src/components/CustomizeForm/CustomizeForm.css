@@ -23,6 +23,7 @@
   display: flex;
   flex-direction: column; /* Ensure vertical stacking */
   align-items: center; /* Center align items */
+  margin-bottom: 10px;
 }
 
 .title {
@@ -128,7 +129,44 @@
   gap: 6px;
 }
 
+.grid-carat-carat {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  gap: 6px;
+}
+
+.grid-size-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  border: 1px solid #dbdbdb;
+  cursor: pointer;
+  background-color: white;
+}
+
+.grid-type-gemstone {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 6px;
+}
+
+.grid-color-carat {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto;
+  gap: 6px;
+}
+
+.grid-clarity-carat {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto;
+  gap: 6px;
+}
+
 .col-size-selected {
+  background-color: #c8363a;
+  border: 1px solid #c8363a;
+  color: #ffffff;
 }
 
 .gemstoneShape img {
@@ -147,14 +185,10 @@
   border-radius: 27px;
   border: 1px solid #dbdbdb;
 }
-.checkbox-option {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
 
-.checkbox-option input {
-  margin-right: 5px;
+.col-shape-selected {
+  background-color: #c8363a;
+  border: 1px solid #c8363a;
 }
 
 .create-button {
@@ -198,13 +232,38 @@
   border: none;
   cursor: pointer;
 }
-.option-box img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 5px;
+
+.tablegemstone {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9;
 }
-.option-box p {
+table {
+  width: 100%;
+  border-collapse: collapse;
   margin-top: 10px;
-  font-size: 16px;
-  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+th {
+  background-color: #f2f2f2;
+  color: #333;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+tbody tr:hover {
+  background-color: #ddd;
 }

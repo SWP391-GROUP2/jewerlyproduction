@@ -4,7 +4,7 @@ import "./GemstonePage.css"; // Bạn có thể tạo và tùy chỉnh CSS cho H
 import Navbar from "../../components/Navbar/navbar";
 import Slideshow from "../../components/Slideshow/Slideshow";
 import Footer from "../../components/Footer/Footer";
-import Sidebar from "../../components/Sidebar/Filter";
+import GemstoneSibar from "../../components/GemstoneSibar/GemstoneSibar";
 
 function GemstonePage() {
   return (
@@ -19,7 +19,7 @@ function GemstonePage() {
       </div>
 
       <div className="main-content">
-        <Sidebar className="Sidebar" />
+        <GemstoneSibar className="Sidebar" />
         <div className="content">
           {/* Các sản phẩm sẽ được hiển thị ở đây */}
         </div>

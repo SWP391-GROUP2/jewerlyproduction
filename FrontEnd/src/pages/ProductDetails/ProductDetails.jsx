@@ -1,140 +1,89 @@
-import React, { useState, useEffect, useRef } from 'react';
-import './ProductDetails.css';
+import React, { useState, useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
+import "./ProductDetails.css";
 import DetailsThumb from "../../components/Thumb/DetailsThumb";
 
 function ProductDetails() {
-  const [products] = useState([
-    {
-      _id: "1",
-      title: "Diamond Ring",
-      src: [
-        "https://cdn.pnj.io/images/detailed/112/gnddddw001592-nhan-kim-cuong-vang-trang-14k-pnj-1.png",
-        "https://cdn.pnj.io/images/detailed/112/gnddddw001592-nhan-kim-cuong-vang-trang-14k-pnj-2.png",
-        "https://cdn.pnj.io/images/detailed/112/gnddddw001592-nhan-kim-cuong-vang-trang-14k-pnj-3.png",
-        "https://cdn.pnj.io/images/detailed/112/gnddddw001592-nhan-kim-cuong-vang-trang-14k-pnj-4.jpg"
-      ],
-      description: "A beautiful diamond ring",
-      content: "High quality diamond ring",
-      price: 2300,
-     
-      
-    }
-  ]);
+  const { productId } = useParams(); // Lấy productId từ URL
+  const [product, setProduct] = useState(null);
   const [index, setIndex] = useState(0);
   const myRef = useRef();
 
   useEffect(() => {
-    myRef.current.children[index].className = "active";
+    fetchProduct();
+  }, [productId]); // Theo dõi thay đổi của productId để fetch dữ liệu mới khi productId thay đổi
+
+  useEffect(() => {
+    if (myRef.current && myRef.current.children.length > 0) {
+      const images = myRef.current.children;
+      for (let i = 0; i < images.length; i++) {
+        if (i === index) {
+          images[i].className = "active";
+        } else {
+          images[i].className = "";
+        }
+      }
+    }
   }, [index]);
+
+  const fetchProduct = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5266/api/ProductSamples/${productId}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch product");
+      }
+      const data = await response.json();
+      setProduct(data);
+    } catch (error) {
+      console.error("Error fetching product:", error);
+    }
+  };
 
   const handleTab = (index) => {
     setIndex(index);
-    const images = myRef.current.children;
-    for (let i = 0; i < images.length; i++) {
-      images[i].className = images[i].className.replace("active", "");
-    }
-    images[index].className = "active";
   };
 
   return (
-    
     <div className="ProductDetails">
-      {products.map((item) => (
-        <div className="details" key={item._id}>
+      {product && (
+        <div className="details" key={product.productSampleId}>
           <div className="big-img">
-            <img src={item.src[index]} alt="" />
+            {/* Hiển thị hình ảnh sản phẩm */}
+            <img
+              src={require(`../../components/Assets/${product.image}.png`)}
+              alt={product.productName}
+            />
           </div>
 
           <div className="box">
             <div className="row">
-              <h2>{item.title}</h2>
-              <span>${item.price}</span>
+              <h2>{product.productName}</h2>
+              <span>{parseInt(product.price).toLocaleString()} VND</span>
             </div>
 
-            <p>{item.description}</p>
-            <p>{item.content}</p>
+            <p>{product.description}</p>
+            <p>Type: {product.type}</p>
+            <p>Style: {product.style}</p>
+            <p>Size: {product.size}</p>
+            <p>Gold Type: {product.goldType}</p>
 
-            <DetailsThumb images={item.src} tab={handleTab} myRef={myRef} />
+            {/* Nếu có nhiều hình ảnh, sử dụng DetailsThumb */}
+            {product.images && (
+              <DetailsThumb
+                images={product.images}
+                tab={handleTab}
+                myRef={myRef}
+              />
+            )}
+
             <button className="cart">Add to cart</button>
           </div>
         </div>
-      ))}
+      )}
     </div>
   );
 }
 
 export default ProductDetails;
-
-
-
-
-// import React, { useState, useEffect, useRef } from 'react';
-// import './ProductDetails.css';
-// import DetailsThumb from "../../components/Thumb/DetailsThumb";
-
-// function ProductDetails() {
-//   const [products, setProducts] = useState([]);
-//   const [index, setIndex] = useState(0);
-//   const myRef = useRef();
-
-//   useEffect(() => {
-//     fetchProducts();
-//   }, []);
-
-//   useEffect(() => {
-//     if (myRef.current && myRef.current.children.length > 0) {
-//       const images = myRef.current.children;
-//       for (let i = 0; i < images.length; i++) {
-//         if (i === index) {
-//           images[i].className = "active";
-//         } else {
-//           images[i].className = "";
-//         }
-//       }
-//     }
-//   }, [index]);
-
-//   const fetchProducts = async () => {
-//     try {
-//       const response = await fetch('https://example.com/api/products');
-//       if (!response.ok) {
-//         throw new Error('Failed to fetch products');
-//       }
-//       const data = await response.json();
-//       setProducts(data);
-//     } catch (error) {
-//       console.error('Error fetching products:', error);
-//     }
-//   };
-
-//   const handleTab = (index) => {
-//     setIndex(index);
-//   };
-
-//   return (
-//     <div className="ProductDetails">
-//       {products.map((item) => (
-//         <div className="details" key={item._id}>
-//           <div className="big-img">
-//             <img src={item.src[index]} alt="" />
-//           </div>
-
-//           <div className="box">
-//             <div className="row">
-//               <h2>{item.title}</h2>
-//               <span>${item.price}</span>
-//             </div>
-
-//             <p>{item.description}</p>
-//             <p>{item.content}</p>
-
-//             <DetailsThumb images={item.src} tab={handleTab} myRef={myRef} />
-//             <button className="cart">Add to cart</button>
-//           </div>
-//         </div>
-//       ))}
-//     </div>
-//   );
-// }
-
-// export default ProductDetails;

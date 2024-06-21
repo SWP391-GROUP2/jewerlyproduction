@@ -71,7 +71,13 @@ namespace JewelryProduction.Controllers
                 })
                 .First();
 
+            var gemstone = await _context.Gemstones.Where(g => g.ProductSampleId.Equals(id)).ToListAsync();
 
+            var result2 = new ProductSampleWithGemstone()
+            {
+                productSample = result,
+                gemstones = gemstone
+            };
             return Ok(result);
         }
 
@@ -229,5 +235,11 @@ namespace JewelryProduction.Controllers
         {
             return _context.ProductSamples.Any(e => e.ProductSampleId == id);
         }
+    }
+
+    public class ProductSampleWithGemstone()
+    {
+        public ProductSampleDTO productSample { get; set; }
+        public List<Gemstone> gemstones { get; set; }
     }
 }
