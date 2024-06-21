@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace JewelryProduction;
+﻿namespace JewelryProduction;
 
 public partial class Gold
 {
+
     public string GoldId { get; set; } = null!;
 
     public string GoldType { get; set; } = null!;

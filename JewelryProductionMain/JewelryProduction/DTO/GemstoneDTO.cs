@@ -18,6 +18,8 @@
 
         public decimal Price { get; set; }
 
+        public IFormFile Image { get; set; }
+
         public string ProductSampleId { get; set; } = null!;
 
         public string CustomizeRequestId { get; set; } = null!;

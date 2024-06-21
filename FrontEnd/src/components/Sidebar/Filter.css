@@ -7,7 +7,7 @@
   width: 250px;
   padding: 20px;
   border-right: 1px solid #3b3b3b;
-  background-color: #fff;
+  background-color: #f8f3ed;
   transition: width 0.3s;
   overflow: hidden;
   position: relative;
@@ -64,10 +64,10 @@ h3 {
 .category-list li:hover,
 .filter-list li:hover {
   background-color: #1f1e1e;
+  color: #fff;
 }
 
 .category-list li.active {
-  background-color: #ddd;
   font-weight: bold;
 }
 
@@ -108,11 +108,11 @@ h3 {
 .product-card {
   background-color: #f9f9f9;
   display: inline-block;
-  border: 1px solid #ccc;
+  border: 1px solid #ffffff;
   border-radius: 5px;
   padding: 10px;
   text-align: center;
-  width: 300px; /* Điều chỉnh kích thước khung cho phù hợp với ảnh */
+  width: 270px; /* Điều chỉnh kích thước khung cho phù hợp với ảnh */
   margin: 10px; /* Khoảng cách giữa các khung */
   transition: transform 0.3s ease; /* Thêm hiệu ứng khi hover */
 }
@@ -122,8 +122,8 @@ h3 {
 }
 
 .product-image {
-  width: 100%; /* Kích thước mới của ảnh */
-  height: auto;
+  width: 248px; /* Kích thước mới của ảnh */
+  height: 213px;
   border-radius: 5px;
   transition: transform 0.3s ease; /* Thêm hiệu ứng khi hover */
 }

@@ -119,7 +119,7 @@ namespace JewelryProduction
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-            https://localhost:7194/swagger/index.html
+            http://localhost:5266/swagger/index.html
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
