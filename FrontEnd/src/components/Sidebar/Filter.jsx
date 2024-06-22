@@ -151,7 +151,7 @@ const Sidebar = () => {
                 onClick={() => navigateToProductDetail(product.productSampleId)} // Chuyển hướng khi nhấp vào sản phẩm
               >
                 <img
-                  src={require(`../Assets/${product.image}.png`)}
+                  src={require(`../Assets/${product.image}.jpg`)}
                   alt={product.productName}
                   className="product-image"
                 />

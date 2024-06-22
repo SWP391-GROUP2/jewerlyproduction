@@ -52,7 +52,7 @@ function ProductDetails() {
           <div className="big-img">
             {/* Hiển thị hình ảnh sản phẩm */}
             <img
-              src={require(`../../components/Assets/${product.image}.png`)}
+              src={require(`../../components/Assets/${product.image}.jpg`)}
               alt={product.productName}
             />
           </div>
