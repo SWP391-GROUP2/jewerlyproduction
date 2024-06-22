@@ -170,7 +170,7 @@ const Sidebar = () => {
             onClick={() => navigateToProductDetail(product.id)}
           >
             <img
-              src={require(`../Assets/${product.image}.png`)}
+              src={require(`../Assets/${product.image}.jpg`)}
               alt={product.name}
               className="gemstone-product-image"
             />
