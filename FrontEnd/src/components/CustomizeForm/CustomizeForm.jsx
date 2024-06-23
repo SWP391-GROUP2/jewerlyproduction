@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./CustomizeForm.css";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function CustomizeForm() {
   const location = useLocation();
@@ -17,12 +17,18 @@ function CustomizeForm() {
   const [gemstoneColor, setGemstoneColor] = useState("all");
   const [gemstoneClarity, setGemstoneClarity] = useState("all");
   const [gemstoneCarat, setGemstoneCarat] = useState("all");
+  const [products, setProducts] = useState([]);
+  const navigate = useNavigate(); // Sử dụng hook useNavigate để chuyển hướng
 
   useEffect(() => {
     if (item) {
       setselectedType(item);
     }
   }, [item]);
+
+  const navigateToProductDetail = (productId) => {
+    navigate(`/product/${productId}`); // Chuyển hướng đến trang chi tiết sản phẩm
+  };
 
   const onClickSelectedShape = (event) => {
     const element = event.currentTarget;
@@ -689,11 +695,35 @@ function CustomizeForm() {
         </form>
 
         <div className="divider"></div>
+
         <div className="model-gallery">
-          <div className="model-preview"></div>
-          <div className="model-preview"></div>
-          <div className="model-preview"></div>
-          <div className="model-preview"></div>
+          <div className="products">
+            {products.length === 0 ? (
+              <p>No products found</p>
+            ) : (
+              <ul>
+                {products.map((product) => (
+                  <div
+                    className="product-card"
+                    key={product.productSampleId}
+                    onClick={() =>
+                      navigateToProductDetail(product.productSampleId)
+                    } // Chuyển hướng khi nhấp vào sản phẩm
+                  >
+                    <img
+                      src={require(`../Assets/${product.image}.jpg`)}
+                      alt={product.productName}
+                      className="product-image"
+                    />
+                    <h3 className="product-name">{product.productName}</h3>
+                    <p className="product-price">
+                      {parseInt(product.price).toLocaleString()} VND
+                    </p>
+                  </div>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
         <button className="view-more-button">View More</button>
       </main>
