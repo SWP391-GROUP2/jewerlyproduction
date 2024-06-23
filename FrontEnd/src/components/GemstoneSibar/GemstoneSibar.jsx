@@ -72,8 +72,8 @@ const Sidebar = () => {
     });
   };
 
-  const navigateToProductDetail = (productId) => {
-    navigate(`/product/${productId}`); // Chuyển hướng đến trang chi tiết sản phẩm
+  const navigateToProductDetail = (gemstoneId) => {
+    navigate(`/gemstone/${gemstoneId}`); // Chuyển hướng đến trang chi tiết sản phẩm
   };
 
   return (
@@ -167,7 +167,7 @@ const Sidebar = () => {
           <div
             className="gemstone-product-card"
             key={product.id}
-            onClick={() => navigateToProductDetail(product.id)}
+            onClick={() => navigateToProductDetail(product.gemstoneId)}
           >
             <img
               src={require(`../Assets/${product.image}.jpg`)}
