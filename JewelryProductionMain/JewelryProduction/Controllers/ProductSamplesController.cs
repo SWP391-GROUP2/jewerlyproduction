@@ -68,6 +68,7 @@ namespace JewelryProduction.Controllers
                     Price = ps.Price,
                     GoldType = _context.Golds.Where(g => g.GoldId.Equals(ps.GoldId)).Select(g => g.GoldType).FirstOrDefault(),
                     Image = _context._3ddesigns.Where(i => i.ProductSampleId.Equals(ps.ProductSampleId)).Select(i => i.Image).FirstOrDefault()
+               
                 })
                 .First();
 
@@ -78,7 +79,7 @@ namespace JewelryProduction.Controllers
                 productSample = result,
                 gemstones = gemstone
             };
-            return Ok(result);
+            return Ok(result2);
         }
 
         // GET: api/ProductSamples/5

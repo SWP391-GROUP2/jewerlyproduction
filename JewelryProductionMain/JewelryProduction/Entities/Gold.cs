@@ -1,5 +1,5 @@
 ﻿namespace JewelryProduction;
-
+using System.Text.Json.Serialization;
 public partial class Gold
 {
 
@@ -11,6 +11,7 @@ public partial class Gold
 
     public decimal PricePerGram { get; set; }
 
+    [JsonIgnore]
     public ICollection<CustomerRequest> CustomerRequests { get; set; } = new List<CustomerRequest>();
 
     public ICollection<ProductSample> ProductSamples { get; set; } = new List<ProductSample>();

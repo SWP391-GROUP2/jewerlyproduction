@@ -37,6 +37,7 @@ const Sidebar = () => {
         ? `http://localhost:5266/api/ProductSamples/FilterInSearch?${query}`
         : `http://localhost:5266/api/ProductSamples`;
       const response = await axios.get(url);
+
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -151,7 +152,7 @@ const Sidebar = () => {
                 onClick={() => navigateToProductDetail(product.productSampleId)} // Chuyển hướng khi nhấp vào sản phẩm
               >
                 <img
-                  src={require(`../Assets/${product.image}.png`)}
+                  src={require(`../Assets/${product.image}.jpg`)}
                   alt={product.productName}
                   className="product-image"
                 />

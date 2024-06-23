@@ -23,13 +23,32 @@ const Sidebar = () => {
       color: ["Red"],
     },
     Sapphire: {
-      color: ["Blue", "Yellow", "Pink", "Green", "Colorless", "Orange", "Purple"],
+      color: [
+        "Blue",
+        "Yellow",
+        "Pink",
+        "Green",
+        "Colorless",
+        "Orange",
+        "Purple",
+      ],
     },
     Pearl: {
       color: ["White", "Pink", "Cream", "Black"],
     },
     clarity: ["FL", "IF", "VVS1", "VVS2", "VS1", "VS2", "SI1", "SI2"],
-    shape: ["Round", "Princess", "Emerald", "Oval", "Marquise", "Pear", "Cushion", "Radiant", "Heart", "Trillion"],
+    shape: [
+      "Round",
+      "Princess",
+      "Emerald",
+      "Oval",
+      "Marquise",
+      "Pear",
+      "Cushion",
+      "Radiant",
+      " ",
+      "Trillion",
+    ],
   };
 
   const fetchProducts = async () => {
@@ -170,7 +189,7 @@ const Sidebar = () => {
             onClick={() => navigateToProductDetail(product.id)}
           >
             <img
-              src={require(`../Assets/${product.image}.png`)}
+              src={require(`../Assets/${product.image}.jpg`)}
               alt={product.name}
               className="gemstone-product-image"
             />
