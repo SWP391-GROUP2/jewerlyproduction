@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JewelryProduction.Migrations
 {
     [DbContext(typeof(JewelryProductionContext))]
-    [Migration("20240613075528_Identity")]
+    [Migration("20240622131743_Identity")]
     partial class Identity
     {
         /// <inheritdoc />
@@ -200,6 +200,12 @@ namespace JewelryProduction.Migrations
                         .HasColumnType("float")
                         .HasColumnName("size");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("status");
+
                     b.Property<string>("Style")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -272,14 +278,23 @@ namespace JewelryProduction.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("name");
 
-                    b.Property<decimal>("PricePerCarat")
+                    b.Property<decimal>("Price")
                         .HasColumnType("money")
-                        .HasColumnName("pricePerCarat");
+                        .HasColumnName("price");
 
                     b.Property<string>("ProductSampleId")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("productSampleID");
+
+                    b.Property<string>("Shape")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("shape");
+
+                    b.Property<double?>("Size")
+                        .HasColumnType("float")
+                        .HasColumnName("size");
 
                     b.HasKey("GemstoneId");
 
@@ -616,37 +631,37 @@ namespace JewelryProduction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ce01b746-323d-44ba-af2d-353a3529dbdf",
+                            Id = "11b1ec93-9ad7-4b05-a016-3b7a59b36efa",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "98d261c0-ea65-40e4-9f53-f0aa9dc00a13",
+                            Id = "1e217948-6c4a-4b27-a602-f5770cfec618",
                             Name = "SaleStaff",
                             NormalizedName = "SALESTAFF"
                         },
                         new
                         {
-                            Id = "f252d6fe-6469-4f66-b632-d0d1fc392752",
+                            Id = "7b5b427a-2d9d-4ad4-926d-f4388cf88420",
                             Name = "ProductionStaff",
                             NormalizedName = "PRODUCTIONSTAFF"
                         },
                         new
                         {
-                            Id = "4226b9e1-15a5-4eb7-8bc7-5ea173561e94",
+                            Id = "182470de-2970-4cdc-9f0e-d29fd8d759d3",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "61d0d417-0bd3-4542-a0b6-a75932f18f96",
+                            Id = "bfaac087-72a7-4a58-b90c-da0ee4460a03",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "874e4182-ce44-4c8c-851d-7276987dc536",
+                            Id = "83213de7-994e-4a0f-9324-a9e74707c7fe",
                             Name = "DesignStaff",
                             NormalizedName = "DESIGNSTAFF"
                         });

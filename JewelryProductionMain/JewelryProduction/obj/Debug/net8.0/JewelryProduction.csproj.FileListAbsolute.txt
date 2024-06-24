@@ -809,3 +809,6 @@ D:\ProjectSWP\SWP391-Group2\JewelryProductionMain\JewelryProduction\obj\Debug\ne
 D:\ProjectSWP\SWP391-Group2\JewelryProductionMain\JewelryProduction\obj\Debug\net8.0\JewelryProduction.pdb
 D:\ProjectSWP\SWP391-Group2\JewelryProductionMain\JewelryProduction\obj\Debug\net8.0\JewelryProduction.genruntimeconfig.cache
 D:\ProjectSWP\SWP391-Group2\JewelryProductionMain\JewelryProduction\obj\Debug\net8.0\ref\JewelryProduction.dll
+D:\Kì 5\New folder\JewerlyProduction\JewelryProductionMain\JewelryProduction\obj\Debug\net8.0\JewelryProduction.dll
+D:\Kì 5\New folder\JewerlyProduction\JewelryProductionMain\JewelryProduction\obj\Debug\net8.0\refint\JewelryProduction.dll
+D:\Kì 5\New folder\JewerlyProduction\JewelryProductionMain\JewelryProduction\obj\Debug\net8.0\JewelryProduction.pdb

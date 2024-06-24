@@ -1,6 +1,5 @@
-﻿using System.Text.Json.Serialization;
-
 namespace JewelryProduction;
+using System.Text.Json.Serialization;
 
 public partial class Gemstone
 {
@@ -30,6 +29,7 @@ public partial class Gemstone
 
     public Category? Category { get; set; }
 
+    [JsonIgnore]
     [JsonIgnore]
     public CustomerRequest? CustomizeRequestIdNavigation { get; set; }
 
