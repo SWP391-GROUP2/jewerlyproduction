@@ -48,26 +48,32 @@ function ProductDetails() {
   return (
     <div className="ProductDetails">
       {product && (
-        <div className="details" key={product.productSampleId}>
+        <div className="details" key={product.productSample.productSampleId}>
           <div className="big-img">
             {/* Hiển thị hình ảnh sản phẩm */}
             <img
-              src={require(`../../components/Assets/${product.image}.png`)}
-              alt={product.productName}
+              src={require(`../../components/Assets/${product.productSample.image}.jpg`)}
+              alt={product.productSample.productName}
             />
           </div>
 
           <div className="box">
             <div className="row">
-              <h2>{product.productName}</h2>
-              <span>{parseInt(product.price).toLocaleString()} VND</span>
+              <h2>{product.productSample.productName}</h2>
+              <span>
+                {parseInt(product.productSample.price).toLocaleString()} VND
+              </span>
             </div>
 
-            <p>{product.description}</p>
-            <p>Type: {product.type}</p>
-            <p>Style: {product.style}</p>
-            <p>Size: {product.size}</p>
-            <p>Gold Type: {product.goldType}</p>
+            <p>{product.productSample.description}</p>
+            <p>Type: {product.productSample.type}</p>
+            <p>Style: {product.productSample.style}</p>
+            <p>Size: {product.productSample.size}</p>
+            <p>Gold Type: {product.productSample.goldType}</p>
+
+            {product.gemstones.map((gemstone) => (
+              <p>Gemstone: {gemstone.name}</p>
+            ))}
 
             {/* Nếu có nhiều hình ảnh, sử dụng DetailsThumb */}
             {product.images && (
