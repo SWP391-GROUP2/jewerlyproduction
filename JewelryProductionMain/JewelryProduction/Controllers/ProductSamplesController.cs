@@ -57,7 +57,7 @@ namespace JewelryProduction.Controllers
             var result = _context.ProductSamples
                 .Include(ps => ps.Gold)
                 .Where(ps => ps.ProductSampleId == id)
-                .Select(ps => new ProductSampleDTO
+                .Select(ps => new ProductDetailDTO
                 {
                     ProductSampleId = ps.ProductSampleId,
                     ProductName = ps.ProductName,
@@ -67,14 +67,14 @@ namespace JewelryProduction.Controllers
                     Size = ps.Size,
                     Price = ps.Price,
                     GoldType = _context.Golds.Where(g => g.GoldId.Equals(ps.GoldId)).Select(g => g.GoldType).FirstOrDefault(),
-                    Image = _context._3ddesigns.Where(i => i.ProductSampleId.Equals(ps.ProductSampleId)).Select(i => i.Image).FirstOrDefault()
+                    Image = _context._3ddesigns.Where(i => i.ProductSampleId.Equals(ps.ProductSampleId)).Select(i => i.Image).ToList()
                
                 })
                 .First();
 
             var gemstone = await _context.Gemstones.Where(g => g.ProductSampleId.Equals(id)).ToListAsync();
 
-            var result2 = new ProductSampleWithGemstone()
+            var result2 = new ProductDetailsWithGemstone()
             {
                 productSample = result,
                 gemstones = gemstone
@@ -238,9 +238,15 @@ namespace JewelryProduction.Controllers
         }
     }
 
-    public class ProductSampleWithGemstone()
+    public class ProductSamplesWithGemstone()
     {
         public ProductSampleDTO productSample { get; set; }
+        public List<Gemstone> gemstones { get; set; }
+    }
+
+    public class ProductDetailsWithGemstone()
+    {
+        public ProductDetailDTO productSample { get; set; }
         public List<Gemstone> gemstones { get; set; }
     }
 }
