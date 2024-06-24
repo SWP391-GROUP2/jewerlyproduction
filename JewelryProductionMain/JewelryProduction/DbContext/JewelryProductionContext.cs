@@ -46,7 +46,7 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
         IConfiguration configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", true, true).Build();
-        return configuration["ConnectionStrings:DefaultConnectionStringDB"];
+        return configuration["ConnectionStrings:DefaultConnection"];
         //ConnectionStrings:DefaultConnectionStringDB
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
