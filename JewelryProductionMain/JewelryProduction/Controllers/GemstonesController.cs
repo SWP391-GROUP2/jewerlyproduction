@@ -133,6 +133,20 @@ namespace JewelryProduction.Controllers
 
             return NoContent();
         }
+        [HttpPost("find")]
+        public async Task<ActionResult<List<Gemstone>>> FindGemstones([FromBody] GemstoneDTO gemstoneDTO)
+        {
+            var gemstones = await _context.Gemstones
+                .Where(g => g.Name == gemstoneDTO.Name && (
+                            g.Shape == gemstoneDTO.Shape ||
+                            g.Clarity == gemstoneDTO.Clarity ||
+                            g.Color == gemstoneDTO.Color ||
+                            g.Size == gemstoneDTO.Size ||
+                            g.CaratWeight == gemstoneDTO.CaratWeight))
+                .ToListAsync();
+
+            return Ok(gemstones);
+        }
 
         private bool GemstoneExists(string id)
         {
