@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using JewelryProduction.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,6 +40,7 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
     public DbSet<AppUser> Users { get; set; }
 
     public DbSet<_3ddesign> _3ddesigns { get; set; }
+    public DbSet<ApprovalRequest> ApprovalRequests { get; set; }
 
 
     private string? GetConnectionString()
@@ -46,7 +48,7 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
         IConfiguration configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", true, true).Build();
-        return configuration["ConnectionStrings:DefaultConnectionStringDB"];
+        return configuration["ConnectionStrings:DefaultConnection"];
         //ConnectionStrings:DefaultConnectionStringDB
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -403,6 +405,23 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
                 .HasForeignKey(d => d.GoldId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ProductSample_Gold1");
+        });
+        modelBuilder.Entity<ApprovalRequest>(entity =>
+        {
+            entity.ToTable("ApprovalRequest");
+            entity.Property(e => e.ApprovalRequestId)
+                .HasMaxLength(50)
+                .HasColumnName("approvalRequestId");
+            entity.Property(e => e.CustomerRequestId)
+                .HasMaxLength(50)
+                .HasColumnName("customerRequestId");
+            entity.Property(e => e.Price)
+                .HasColumnType("money")
+                .HasColumnName("price");
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .HasColumnName("status");
+            entity.Property(e => e.CreatedAt).HasColumnName("createdAt");
         });
 
         modelBuilder.Entity<AppUser>(entity =>
