@@ -14,21 +14,34 @@ namespace JewelryProduction.Services
         {
             _context = context;
         }
-        public async Task<List<ProductSample>> GetRecommendedSamples(CustomerRequestDTO chosenSample)
+        public async Task<List<ProductSampleDTO>> GetRecommendedSamples(CustomerRequestDTO chosenSample)
         {
             var allSamples = await _context.ProductSamples
              .Include(ps => ps.Gemstones)
+             .Include(ps => ps._3ddesigns)
+             .Include(ps => ps.Gold)
              .ToListAsync();
 
             var recommendedSamples = allSamples
-                .Select(sample => new
+                .Select(sample => new 
                 {
                     Sample = sample,
                     Similarity = CalculateSimilarity(chosenSample, sample)
                 })
                 .OrderByDescending(s => s.Similarity)
                 .Take(5) // For example, get top 5 recommendations
-                .Select(s => s.Sample)
+                .Select(s => new ProductSampleDTO
+                {
+                    ProductSampleId = s.Sample.ProductSampleId,
+                    ProductName = s.Sample.ProductName,
+                    Description = s.Sample.Description,
+                    Type = s.Sample.Type,
+                    Style = s.Sample.Style,
+                    Size = s.Sample.Size,
+                    Price = s.Sample.Price,
+                    GoldType = s.Sample.Gold.GoldType,
+                    Image = s.Sample._3ddesigns.FirstOrDefault()?.Image // Take the first image URL
+                })
                 .ToList();
 
             return recommendedSamples;

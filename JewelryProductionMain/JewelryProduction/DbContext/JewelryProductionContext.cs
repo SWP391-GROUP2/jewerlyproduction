@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using JewelryProduction.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,10 +40,11 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
     public DbSet<AppUser> Users { get; set; }
 
     public DbSet<_3ddesign> _3ddesigns { get; set; }
+    public DbSet<ApprovalRequest> ApprovalRequests { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=TONBOOK\\SQLEXPRESS;Initial Catalog=JewelryProduction;Persist Security Info=True;User ID=sa;Password=12345;Trust Server Certificate=True");
+        => optionsBuilder.UseSqlServer("Data Source=LAPTOP-4EB8UC8S\\SQLEXPRESS;Initial Catalog=JewelryProduction;Persist Security Info=True;User ID=sa;Password=12345;Encrypt=True;Trust Server Certificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -395,6 +397,23 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
                 .HasForeignKey(d => d.GoldId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ProductSample_Gold1");
+        });
+        modelBuilder.Entity<ApprovalRequest>(entity =>
+        {
+            entity.ToTable("ApprovalRequest");
+            entity.Property(e => e.ApprovalRequestId)
+                .HasMaxLength(50)
+                .HasColumnName("approvalRequestId");
+            entity.Property(e => e.CustomerRequestId)
+                .HasMaxLength(50)
+                .HasColumnName("customerRequestId");
+            entity.Property(e => e.Price)
+                .HasColumnType("money")
+                .HasColumnName("price");
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .HasColumnName("status");
+            entity.Property(e => e.CreatedAt).HasColumnName("createdAt");
         });
 
         modelBuilder.Entity<AppUser>(entity =>
