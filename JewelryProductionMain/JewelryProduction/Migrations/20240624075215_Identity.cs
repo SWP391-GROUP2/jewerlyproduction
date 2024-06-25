@@ -243,22 +243,37 @@ namespace JewelryProduction.Migrations
                     customizeRequestID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     goldID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     customerID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    SaleStaffID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    ManagerID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
                     type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     style = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     size = table.Column<double>(type: "float", nullable: true),
-                    quantity = table.Column<decimal>(type: "decimal(18,0)", nullable: false)
+                    quotation = table.Column<double>(type: "float", nullable: true),
+                    quotationDes = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    quantity = table.Column<decimal>(type: "decimal(18,0)", nullable: false),
+                    status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CustomerRequest", x => x.customizeRequestID);
+                    table.ForeignKey(
+                        name: "FK_CustomerRequest_Customer",
+                        column: x => x.customerID,
+                        principalTable: "User",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_CustomerRequest_Gold",
                         column: x => x.goldID,
                         principalTable: "Gold",
                         principalColumn: "goldID");
                     table.ForeignKey(
-                        name: "FK_CustomerRequest_User",
-                        column: x => x.customerID,
+                        name: "FK_CustomerRequest_Manager",
+                        column: x => x.ManagerID,
+                        principalTable: "User",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_CustomerRequest_SaleStaff",
+                        column: x => x.SaleStaffID,
                         principalTable: "User",
                         principalColumn: "Id");
                 });
@@ -347,11 +362,13 @@ namespace JewelryProduction.Migrations
                 {
                     gemstoneID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    shape = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    size = table.Column<double>(type: "float", nullable: true),
                     color = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     caratWeight = table.Column<double>(type: "float", nullable: false),
                     cut = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     clarity = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    pricePerCarat = table.Column<decimal>(type: "money", nullable: false),
+                    price = table.Column<decimal>(type: "money", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(350)", maxLength: 350, nullable: false),
                     productSampleID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     customizeRequestID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
@@ -383,17 +400,14 @@ namespace JewelryProduction.Migrations
                 columns: table => new
                 {
                     orderID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    customerID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
-                    saleStaffID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
-                    managerID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
                     productionStaffID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
                     orderDate = table.Column<DateTime>(type: "datetime", nullable: false),
                     depositAmount = table.Column<decimal>(type: "money", nullable: true),
                     status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    productSampleID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     customizeRequestID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     paymentMethodID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    totalPrice = table.Column<decimal>(type: "money", nullable: false)
+                    totalPrice = table.Column<decimal>(type: "money", nullable: false),
+                    ProductSampleId = table.Column<string>(type: "nvarchar(50)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -409,30 +423,16 @@ namespace JewelryProduction.Migrations
                         principalTable: "PaymentMethod",
                         principalColumn: "paymentMethodID");
                     table.ForeignKey(
-                        name: "FK_Order_ProductSample",
-                        column: x => x.productSampleID,
+                        name: "FK_Order_ProductSample_ProductSampleId",
+                        column: x => x.ProductSampleId,
                         principalTable: "ProductSample",
                         principalColumn: "productSampleID");
                     table.ForeignKey(
-                        name: "FK_Order_User",
-                        column: x => x.customerID,
-                        principalTable: "User",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Order_User1",
-                        column: x => x.saleStaffID,
-                        principalTable: "User",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Order_User2",
-                        column: x => x.managerID,
-                        principalTable: "User",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Order_User3",
+                        name: "FK_Order_User_productionStaffID",
                         column: x => x.productionStaffID,
                         principalTable: "User",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -459,12 +459,12 @@ namespace JewelryProduction.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "4226b9e1-15a5-4eb7-8bc7-5ea173561e94", null, "Manager", "MANAGER" },
-                    { "61d0d417-0bd3-4542-a0b6-a75932f18f96", null, "Customer", "CUSTOMER" },
-                    { "874e4182-ce44-4c8c-851d-7276987dc536", null, "DesignStaff", "DESIGNSTAFF" },
-                    { "98d261c0-ea65-40e4-9f53-f0aa9dc00a13", null, "SaleStaff", "SALESTAFF" },
-                    { "ce01b746-323d-44ba-af2d-353a3529dbdf", null, "Admin", "ADMIN" },
-                    { "f252d6fe-6469-4f66-b632-d0d1fc392752", null, "ProductionStaff", "PRODUCTIONSTAFF" }
+                    { "3cfa24be-e8ba-4193-9709-187b0de475a6", null, "DesignStaff", "DESIGNSTAFF" },
+                    { "bbb5e7f1-91a0-4d01-999a-7d8ac71e5bcb", null, "Admin", "ADMIN" },
+                    { "c0005aac-5946-4bc5-9eef-380dc8478505", null, "ProductionStaff", "PRODUCTIONSTAFF" },
+                    { "c7dc08cb-7b92-4e62-b9f1-7fd53c8d3cc9", null, "Manager", "MANAGER" },
+                    { "c994c8ff-0383-4251-aaaf-89fa7119d2d1", null, "SaleStaff", "SALESTAFF" },
+                    { "f0038e6b-13d0-4091-bd31-5056a0094009", null, "Customer", "CUSTOMER" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -525,6 +525,16 @@ namespace JewelryProduction.Migrations
                 column: "goldID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CustomerRequest_ManagerID",
+                table: "CustomerRequest",
+                column: "ManagerID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomerRequest_SaleStaffID",
+                table: "CustomerRequest",
+                column: "SaleStaffID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Gemstone_categoryID",
                 table: "Gemstone",
                 column: "categoryID");
@@ -563,16 +573,6 @@ namespace JewelryProduction.Migrations
                 filter: "[customizeRequestID] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Order_customerID",
-                table: "Order",
-                column: "customerID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Order_managerID",
-                table: "Order",
-                column: "managerID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Order_paymentMethodID",
                 table: "Order",
                 column: "paymentMethodID");
@@ -583,14 +583,9 @@ namespace JewelryProduction.Migrations
                 column: "productionStaffID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Order_productSampleID",
+                name: "IX_Order_ProductSampleId",
                 table: "Order",
-                column: "productSampleID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Order_saleStaffID",
-                table: "Order",
-                column: "saleStaffID");
+                column: "ProductSampleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductSample_goldID",

@@ -1,12 +1,9 @@
 ﻿using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
 using JewelryProduction.Interface;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Globalization;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 
 namespace JewelryProduction.Controllers
@@ -29,37 +26,37 @@ namespace JewelryProduction.Controllers
         [FromQuery] DateTime? endDate,
         [FromQuery] string groupBy)
         {
-            var query =  _context.Orders
+            var query = _context.Orders
                .Where(o => o.OrderDate >= startDate && o.OrderDate <= endDate);
             var orders = await query.ToListAsync();
             var totalOrders = orders.Count;
             var totalRevenue = orders.Sum(o => o.TotalPrice);
             var averageOrderValue = totalRevenue / totalOrders;
 
-            
+
 
             var orderDistribution = new Dictionary<string, Dictionary<string, int>>();
             if (groupBy == "day")
             {
-                orderDistribution["day"] =  orders
+                orderDistribution["day"] = orders
                   .GroupBy(o => o.OrderDate.ToString("yyyy-MM-dd"))
                   .ToDictionary(g => g.Key, g => g.Count());
             }
             else if (groupBy == "week")
             {
-                orderDistribution["week"] =  orders
+                orderDistribution["week"] = orders
                   .GroupBy(o => $"Week {CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(o.OrderDate, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday)}")
                   .ToDictionary(g => g.Key, g => g.Count());
             }
             else if (groupBy == "month")
             {
-                orderDistribution["month"] =  orders
+                orderDistribution["month"] = orders
                   .GroupBy(o => o.OrderDate.ToString("yyyy-MM"))
                   .ToDictionary(g => g.Key, g => g.Count());
             }
             else if (groupBy == "year")
             {
-                orderDistribution["year"] =  orders
+                orderDistribution["year"] = orders
                   .GroupBy(o => o.OrderDate.ToString("yyyy"))
                   .ToDictionary(g => g.Key, g => g.Count());
             }
@@ -83,7 +80,7 @@ namespace JewelryProduction.Controllers
         {
             // Query orders based on partial match of OrderId or EmployeeId
             var orders = _context.Orders
-                .Where(o => o.OrderId.Contains(searchTerm) || o.SaleStaffId.Contains(searchTerm) || o.CustomerId.Contains(searchTerm) || o.CustomizeRequestId.Contains(searchTerm) || o.Status.Contains(searchTerm))
+                .Where(o => o.OrderId.Contains(searchTerm) || o.CustomizeRequestId.Contains(searchTerm) || o.Status.Contains(searchTerm))
                 .ToList();
             return Ok(orders);
         }
