@@ -207,5 +207,88 @@ namespace JewelryProduction.Controllers
 
             return Ok(productSample);
         }
+        [HttpPost("approve/{customizeRequestId}")]
+        public async Task<IActionResult> ApproveCustomerRequest(string customizeRequestId)
+        {
+            var customerRequest = await _context.CustomerRequests
+                .Include(cr => cr.Gemstones)
+                .Include(cr => cr.Gold)
+                .FirstOrDefaultAsync(cr => cr.CustomizeRequestId == customizeRequestId);
+
+            if (customerRequest == null)
+            {
+                return NotFound("Customer request not found.");
+            }
+
+            customerRequest.Status = "Approved";
+            var request = await _context.ApprovalRequests
+                .Where(ar => ar.CustomerRequestId == customizeRequestId && ar.Status == "Approved")
+                .FirstOrDefaultAsync();
+
+            var order = new Order
+            {
+                OrderId = await IdGenerator.GenerateUniqueId<Order>(_context, "ORD", 6),
+                CustomerId = customerRequest.CustomerId,
+               // SaleStaffId = 
+               // ManagerId = 
+               // ProductionStaffId = null, 
+                OrderDate = DateTime.Now,
+                DepositAmount = request.Price *0.3M, 
+                Status = "Pending",
+                ProductSampleId = null,
+                CustomizeRequestId = customerRequest.CustomizeRequestId,
+                //PaymentMethodId = 
+                TotalPrice = request.Price
+            };
+
+            _context.Orders.Add(order);
+
+            using (var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            }
+
+            return Ok(order);
+        }
+        [HttpDelete("reject/{customizeRequestId}")]
+        public async Task<IActionResult> RejectCustomerRequest(string customizeRequestId)
+        {
+            var customerRequest = await _context.CustomerRequests
+                .Include(cr => cr.Gemstones)
+                .FirstOrDefaultAsync(cr => cr.CustomizeRequestId == customizeRequestId);
+            if (customerRequest == null)
+            {
+                return NotFound("Customer request not found.");
+            }
+            foreach (var gemstone in customerRequest.Gemstones)
+            {
+                gemstone.CustomizeRequestId = null;
+            }
+            _context.CustomerRequests.Remove(customerRequest);
+            using (var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
     }
 }

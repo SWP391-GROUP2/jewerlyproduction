@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import "./ProductDetails.css";
 import DetailsThumb from "../../components/Thumb/DetailsThumb";
 
@@ -8,10 +8,15 @@ function ProductDetails() {
   const [product, setProduct] = useState(null);
   const [index, setIndex] = useState(0);
   const myRef = useRef();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProduct();
   }, [productId]); // Theo dõi thay đổi của productId để fetch dữ liệu mới khi productId thay đổi
+
+  const navigateToProductDetail = (productId) => {
+    navigate(`/customize/${productId}`); // Chuyển hướng đến trang chi tiết sản phẩm
+  };
 
   useEffect(() => {
     if (myRef.current && myRef.current.children.length > 0) {
@@ -84,7 +89,14 @@ function ProductDetails() {
               />
             )}
 
-            <button className="cart">Add to cart</button>
+            <button
+              className="cart"
+              onClick={() =>
+                navigateToProductDetail(product.productSample.productSampleId)
+              }
+            >
+              Add to cart
+            </button>
           </div>
         </div>
       )}

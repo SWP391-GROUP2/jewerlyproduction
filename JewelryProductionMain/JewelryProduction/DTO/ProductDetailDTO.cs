@@ -1,7 +1,6 @@
 ﻿namespace JewelryProduction.DTO
-
 {
-    public class ProductSampleDTO
+    public class ProductDetailDTO
     {
         public string ProductSampleId { get; set; } = null!;
 
@@ -20,8 +19,6 @@
 
         public string GoldType { get; set; } = null!;
 
-        public string Image {  get; set; }
-
-
+        public ICollection<string> Image { get; set; }
     }
 }
