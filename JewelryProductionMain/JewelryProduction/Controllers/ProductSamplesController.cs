@@ -226,9 +226,9 @@ namespace JewelryProduction.Controllers
             return NoContent();
         }
         [HttpPost("getrecommend")]
-        public async Task<IActionResult> GetRecommendations([FromBody] CustomerRequestDTO chosenSample)
+        public async Task<IActionResult> GetRecommendations([FromQuery] string? type, [FromQuery] string? style, [FromQuery] double? size, [FromQuery] string? goldType, [FromQuery] List<string>? gemstoneName)
         {
-            var recommendations = await _productSampleService.GetRecommendedSamples(chosenSample);
+            var recommendations = await _productSampleService.GetRecommendedSamples(type, style, size, goldType, gemstoneName);
             return Ok(recommendations);
         }
 
