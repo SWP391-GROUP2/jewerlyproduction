@@ -23,6 +23,7 @@ namespace JewelryProduction
             builder.Services.AddScoped<IProductSampleService, ProductSampleService>();
             builder.Services.AddScoped<ISaleStaffService, SaleStaffService>();
             builder.Services.AddScoped<INotificationService, NotificationService>();
+            builder.Services.AddScoped<ICustomerRequestService, CustomerRequestService>();
             builder.Services.AddControllers();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
