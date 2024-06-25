@@ -1,6 +1,5 @@
-﻿using System.Text.Json.Serialization;
-
 namespace JewelryProduction;
+using System.Text.Json.Serialization;
 
 public partial class Gemstone
 {

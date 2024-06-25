@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
 import "./CustomizeForm.css";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 function CustomizeForm() {
+  const { productId } = useParams();
   const location = useLocation();
   const { state } = location;
   const { item } = state || {}; // Lấy dữ liệu từ state
-  const [type, setselectedType] = useState();
+  const [type, setselectedType] = useState("");
   const [style, setselectedStyle] = useState("");
   const [goldType, setselectedGold] = useState("");
   const [size, setselectedSize] = useState("");
+
   const [quantity, setselectedQuantity] = useState("1");
   const [shape, setShape] = useState("");
   const [gemstoneSize, setGemstoneSize] = useState("all");
@@ -17,12 +21,58 @@ function CustomizeForm() {
   const [gemstoneColor, setGemstoneColor] = useState("all");
   const [gemstoneClarity, setGemstoneClarity] = useState("all");
   const [gemstoneCarat, setGemstoneCarat] = useState("all");
+  const [products, setProducts] = useState([]);
+  const navigate = useNavigate(); // Sử dụng hook useNavigate để chuyển hướng
+  const [styles, setStyles] = useState([]);
+  const [ProductSample, setProductSample] = useState(null);
 
   useEffect(() => {
     if (item) {
       setselectedType(item);
     }
   }, [item]);
+
+  const navigateToProductDetail = (productId) => {
+    navigate(`/product/${productId}`); // Chuyển hướng đến trang chi tiết sản phẩm
+  };
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5266/api/ProductSamples/${productId}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch product");
+        }
+        const data = await response.json();
+        setProductSample(data); // Cập nhật dữ liệu sản phẩm vào state
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      }
+    };
+
+    fetchProduct(); // Gọi hàm fetchProduct khi component được mount hoặc khi productId thay đổi
+  }, [productId]);
+
+  // useEffect này phụ thuộc vào biến productId
+
+  useEffect(() => {
+    if (ProductSample) {
+      if (ProductSample.productSample.type) {
+        setselectedType(ProductSample.productSample.type);
+      }
+      if (ProductSample.productSample.style) {
+        setselectedStyle(ProductSample.productSample.style);
+      }
+      if (ProductSample.productSample.goldType) {
+        setselectedGold(ProductSample.productSample.goldType);
+      }
+      if (ProductSample.productSample.size) {
+        setselectedSize(ProductSample.productSample.size);
+      }
+    }
+  }, [ProductSample]);
 
   const onClickSelectedShape = (event) => {
     const element = event.currentTarget;
@@ -86,13 +136,6 @@ function CustomizeForm() {
     }`;
   };
 
-  const Style = [
-    { value: "Solitaire", label: "Solitaire", Image: "" },
-    { value: "Three Stone", label: "Three Stone", Image: "" },
-    { value: "Pave", label: "Pave", Image: "" },
-    // Add more options here
-  ];
-
   const gold = [
     { value: "Gold 9999", label: "Gold 9999" },
     { value: "Gold 999", label: "Gold 999" },
@@ -152,6 +195,13 @@ function CustomizeForm() {
     },
   ];
 
+  const typeStyles = {
+    Ring: ["Solitaire", "Three Stone", "Pave"],
+    Bracelet: ["Chain", "Pearl", "Bar"],
+    Necklace: ["Chain", "Pearl", "Station", "Initial"],
+    Earrings: ["Stud", "Jacket", "Ear Spike"],
+  };
+
   const handleCreate = (e) => {
     e.preventDefault();
     const newCustomizeRequest = {
@@ -162,12 +212,36 @@ function CustomizeForm() {
     };
   };
 
+  const fetchRecommendations = async () => {
+    try {
+      const response = await axios.get("/api/recommendations", {
+        params: {
+          type: type || undefined,
+          style: style || undefined,
+          goldType: goldType || undefined,
+        },
+      });
+      setProducts(response.data);
+    } catch (error) {
+      console.error("Error fetching recommendations:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchRecommendations();
+  }, [type, style, goldType]);
+
+  useEffect(() => {
+    setStyles(type ? typeStyles[type] : []);
+    setselectedStyle(""); // Reset style khi type thay đổi
+  }, [type]);
+
   return (
     <div className="customizer-container">
       <main className="main-content">
         <form className="CUS" onSubmit={handleCreate}>
           <h1 className="title">Customize Your Jewelry</h1>
-          <h2 className="subtitle">{item && <p>Selected Item: {item} </p>}</h2>
+          <h2 className="subtitle">{type && <p>Selected Item: {type} </p>}</h2>
           <div className="customize-options-wrapper">
             <div className="customize-options">
               <div className="option-section">
@@ -177,10 +251,11 @@ function CustomizeForm() {
                     <select
                       value={style}
                       onChange={(e) => setselectedStyle(e.target.value)}
+                      disabled={!type}
                     >
-                      {Style.map((Style) => (
-                        <option key={Style.value} value={Style.value}>
-                          {Style.label}
+                      {styles.map((styleOption) => (
+                        <option key={styleOption} value={styleOption}>
+                          {styleOption}
                         </option>
                       ))}
                     </select>
@@ -689,11 +764,35 @@ function CustomizeForm() {
         </form>
 
         <div className="divider"></div>
+
         <div className="model-gallery">
-          <div className="model-preview"></div>
-          <div className="model-preview"></div>
-          <div className="model-preview"></div>
-          <div className="model-preview"></div>
+          <div className="products">
+            {products.length === 0 ? (
+              <p>No products found</p>
+            ) : (
+              <ul>
+                {products.slice(0, 4).map((product) => (
+                  <div
+                    className="product-card"
+                    key={product.productSampleId}
+                    onClick={() =>
+                      navigateToProductDetail(product.productSampleId)
+                    } // Chuyển hướng khi nhấp vào sản phẩm
+                  >
+                    <img
+                      src={require(`../Assets/${product.image}.jpg`)}
+                      alt={product.productName}
+                      className="product-image"
+                    />
+                    <h3 className="product-name">{product.productName}</h3>
+                    <p className="product-price">
+                      {parseInt(product.price).toLocaleString()} VND
+                    </p>
+                  </div>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
         <button className="view-more-button">View More</button>
       </main>

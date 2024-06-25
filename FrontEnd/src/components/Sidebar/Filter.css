@@ -19,6 +19,10 @@
   padding: 10px;
 }
 
+.sidebar.open {
+  margin-bottom: -50px;
+}
+
 .sidebar .toggle-button {
   position: absolute;
   top: 50%;

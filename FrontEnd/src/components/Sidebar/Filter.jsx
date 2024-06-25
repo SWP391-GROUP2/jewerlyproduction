@@ -37,6 +37,7 @@ const Sidebar = () => {
         ? `http://localhost:5266/api/ProductSamples/FilterInSearch?${query}`
         : `http://localhost:5266/api/ProductSamples`;
       const response = await axios.get(url);
+
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);

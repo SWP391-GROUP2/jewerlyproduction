@@ -14,45 +14,58 @@ namespace JewelryProduction.Services
         {
             _context = context;
         }
-        public async Task<List<ProductSample>> GetRecommendedSamples(CustomerRequestDTO chosenSample)
+        public async Task<List<ProductSampleDTO>> GetRecommendedSamples(string? type, string? style, double? size, string? goldType, List<string>? gemstoneName)
         {
             var allSamples = await _context.ProductSamples
              .Include(ps => ps.Gemstones)
+             .Include(ps => ps._3ddesigns)
+             .Include(ps => ps.Gold)
              .ToListAsync();
 
             var recommendedSamples = allSamples
-                .Select(sample => new
+                .Select(sample => new 
                 {
                     Sample = sample,
-                    Similarity = CalculateSimilarity(chosenSample, sample)
+                    Similarity = CalculateSimilarity(type, style, size, goldType, gemstoneName, sample)
                 })
                 .OrderByDescending(s => s.Similarity)
                 .Take(5) // For example, get top 5 recommendations
-                .Select(s => s.Sample)
+                .Select(s => new ProductSampleDTO
+                {
+                    ProductSampleId = s.Sample.ProductSampleId,
+                    ProductName = s.Sample.ProductName,
+                    Description = s.Sample.Description,
+                    Type = s.Sample.Type,
+                    Style = s.Sample.Style,
+                    Size = s.Sample.Size,
+                    Price = s.Sample.Price,
+                    GoldType = s.Sample.Gold.GoldType,
+                    Image = s.Sample._3ddesigns.FirstOrDefault()?.Image // Take the first image URL
+                })
                 .ToList();
 
             return recommendedSamples;
         }
-        public double CalculateSimilarity(CustomerRequestDTO sample1, ProductSample sample2)
+        public double CalculateSimilarity(string? type, string? style, double? size, string? goldType, List<string>? gemstoneName , ProductSample sample2)
         {
             var gemstones =  _context.Gemstones
-            .Where(g => sample1.GemstoneName.Contains(g.Name))
+            .Where(g => gemstoneName.Contains(g.Name))
             .ToListAsync();
 
             double similarity = 0;
 
-            if (sample1.Type == sample2.Type) similarity += 1;
-            if (sample1.Style == sample2.Style) similarity += 1;
-            if (sample1.Size == sample2.Size) similarity += 1;
-            if (sample2.Gold != null && sample1.GoldType == sample2.Gold.GoldType)
+            if (sample2.Type is not null && type == sample2.Type) similarity += 1;
+            if (sample2.Style is not null && style == sample2.Style) similarity += 1;
+            if (sample2.Size is not null && size == sample2.Size) similarity += 1;
+            if (sample2.Gold is not null && goldType == sample2.Gold.GoldType)
             {
                 similarity += 1;
             }
             if (gemstones == sample2.Gemstones) similarity += 1;
-            if (sample1.GemstoneName != null && sample1.GemstoneName.Any())
+            if (gemstoneName != null && gemstoneName.Any())
             {
                 var sample2GemstoneNames = sample2.Gemstones.Select(g => g.Name).ToList();
-                foreach (var gemstonename in sample1.GemstoneName)
+                foreach (var gemstonename in gemstoneName)
                 {
                     if (sample2GemstoneNames.Contains(gemstonename))
                     {

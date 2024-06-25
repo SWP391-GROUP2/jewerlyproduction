@@ -12,7 +12,7 @@ import GemstonePage from "../pages/GemstonePage/GemstonePage";
 import GoldPage from "../pages/GoldPage/GoldPage";
 import NotFound from "../pages/NotFound/NotFound";
 import CustomizePage from "../pages/CustomizePage/CustomizePage";
-
+import GemstoneDetailPage from "../pages/GemstoneDetailPage/GemstoneDetailPage";
 
 const routes = [
   { path: "/login", element: <LoginForm /> },
@@ -25,12 +25,13 @@ const routes = [
   { path: "/gold", element: <GoldPage /> },
   { path: "/resetpassword", element: <ResetPassword /> },
   { path: "/", element: <Navigate to="/home" /> },
-  { path: "/productdetails", element: <ProductDetailsPage /> },
+  { path: "/gemstonedetail", element: <GemstoneDetailPage /> },
   { path: "*", element: <NotFound /> },
   { path: "/customize", element: <CustomizePage /> },
+  { path: "/productdetails", element: <ProductDetailsPage /> },
   { path: "/product/:productId", element: <ProductDetailsPage /> },
-  { path: "gemstonesb", element: <ProductDetailsPage /> }
-
+  { path: "/customize/:productId", element: <CustomizePage /> },
+  { path: "/gemstone/:gemstoneId", element: <GemstoneDetailPage /> },
 ];
 
 export default routes;

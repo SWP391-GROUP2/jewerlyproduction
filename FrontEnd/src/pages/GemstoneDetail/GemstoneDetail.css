@@ -1,0 +1,106 @@
+.gemstone-details {
+    max-width: 1200px; /* Adjusted for better centering */
+    width: 100%;
+    margin: 20px auto; /* Removed bottom margin */
+    padding: 20px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* Softer shadow */
+    border-radius: 15px; /* More rounded corners */
+    background-color: #f9f9f9; /* Lighter background color */
+  }
+  
+  .gemstone-details-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    padding: 30px 0;
+    gap: 20px; /* Gap between elements */
+  }
+  
+  .gemstone-details-big-img {
+    flex: 1 1 45%; /* Flex to ensure better responsiveness */
+    max-width: 600px;
+  }
+  
+  .gemstone-details-big-img img {
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+    border-radius: 15px; /* More rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Soft shadow for image */
+  }
+  
+  .gemstone-details-info-box {
+    flex: 1 1 45%; /* Flex to ensure better responsiveness */
+    max-width: 600px;
+    min-width: 300px;
+    margin: 25px;
+  }
+  
+  .gemstone-details-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .gemstone-details-info-row h2 {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .gemstone-details-info-row span {
+    color: crimson;
+    font-size: 20px;
+  }
+  
+  .gemstone-details-info-box p {
+    line-height: 1.6;
+    margin: 15px 0;
+    color: #555;
+  }
+  
+  .thumb {
+    display: flex;
+    cursor: pointer;
+    margin: 20px 0; /* Adjusted margin for spacing */
+  }
+  
+  .thumb img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    margin-right: 10px; /* Increased space between thumbnails */
+    opacity: 0.6; /* Slightly more transparent */
+    border-radius: 10px;
+    transition: all 0.3s ease-in-out; /* Smooth transition */
+  }
+  
+  .thumb img.thumb-active {
+    opacity: 1;
+    border: 2px solid lightseagreen; /* More prominent border */
+  }
+  
+  .gemstone-details-info-box .cart {
+    background: #333;
+    color: white;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    padding: 15px 30px; /* Increased padding for better appearance */
+    margin-top: 20px; /* Adjusted margin for spacing */
+    border-radius: 15px; /* More rounded corners */
+    transition: background 0.3s ease-in-out; /* Smooth transition */
+  }
+  
+  .gemstone-details-info-box .cart:hover {
+    background: #555; /* Slightly lighter on hover */
+  }
+  
+  button {
+    border-radius: 10px;
+  }
+  

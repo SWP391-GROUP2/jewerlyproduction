@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import "./ProductDetails.css";
 import DetailsThumb from "../../components/Thumb/DetailsThumb";
 
@@ -8,10 +8,15 @@ function ProductDetails() {
   const [product, setProduct] = useState(null);
   const [index, setIndex] = useState(0);
   const myRef = useRef();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProduct();
   }, [productId]); // Theo dõi thay đổi của productId để fetch dữ liệu mới khi productId thay đổi
+
+  const navigateToProductDetail = (productId) => {
+    navigate(`/customize/${productId}`); // Chuyển hướng đến trang chi tiết sản phẩm
+  };
 
   useEffect(() => {
     if (myRef.current && myRef.current.children.length > 0) {
@@ -48,26 +53,32 @@ function ProductDetails() {
   return (
     <div className="ProductDetails">
       {product && (
-        <div className="details" key={product.productSampleId}>
+        <div className="details" key={product.productSample.productSampleId}>
           <div className="big-img">
             {/* Hiển thị hình ảnh sản phẩm */}
             <img
-              src={require(`../../components/Assets/${product.image}.jpg`)}
-              alt={product.productName}
+              src={require(`../../components/Assets/${product.productSample.image}.jpg`)}
+              alt={product.productSample.productName}
             />
           </div>
 
           <div className="box">
             <div className="row">
-              <h2>{product.productName}</h2>
-              <span>{parseInt(product.price).toLocaleString()} VND</span>
+              <h2>{product.productSample.productName}</h2>
+              <span>
+                {parseInt(product.productSample.price).toLocaleString()} VND
+              </span>
             </div>
 
-            <p>{product.description}</p>
-            <p>Type: {product.type}</p>
-            <p>Style: {product.style}</p>
-            <p>Size: {product.size}</p>
-            <p>Gold Type: {product.goldType}</p>
+            <p>{product.productSample.description}</p>
+            <p>Type: {product.productSample.type}</p>
+            <p>Style: {product.productSample.style}</p>
+            <p>Size: {product.productSample.size}</p>
+            <p>Gold Type: {product.productSample.goldType}</p>
+
+            {product.gemstones.map((gemstone) => (
+              <p>Gemstone: {gemstone.name}</p>
+            ))}
 
             {/* Nếu có nhiều hình ảnh, sử dụng DetailsThumb */}
             {product.images && (
@@ -78,7 +89,14 @@ function ProductDetails() {
               />
             )}
 
-            <button className="cart">Add to cart</button>
+            <button
+              className="cart"
+              onClick={() =>
+                navigateToProductDetail(product.productSample.productSampleId)
+              }
+            >
+              Add to cart
+            </button>
           </div>
         </div>
       )}
