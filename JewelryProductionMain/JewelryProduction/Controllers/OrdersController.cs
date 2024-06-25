@@ -1,6 +1,8 @@
 ﻿
+using JewelryProduction.Common;
 using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
+using JewelryProduction.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,11 +13,15 @@ namespace JewelryProduction.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly JewelryProductionContext _context;
+        private readonly IOrderService _orderService;
 
-        public OrdersController(JewelryProductionContext context)
+        public OrdersController(JewelryProductionContext context, IOrderService orderService)
         {
             _context = context;
+            _orderService = orderService;
         }
+
+
 
         // GET: api/Orders
         [HttpGet]
@@ -120,24 +126,41 @@ namespace JewelryProduction.Controllers
 
             return CreatedAtAction("GetOrder", new { id = order.OrderId }, order);
         }
-        
-        [HttpPost("updateprice")]
-        public async Task<IActionResult> PostProductPrice([FromBody] OrderPriceRequest request)
+        [HttpGet("paging")]
+        public async Task<IActionResult> GetAllPaging([FromQuery] OrderPagingRequest request)
         {
-            var order = await _context.Orders.FindAsync(request.Order.OrderId);
-            if (order == null)
+            var products = await _orderService.GetAllPaging(request);
+            return Ok(products);
+        }
+        [HttpGet("staff-orders")]
+        public async Task<ActionResult<PagedResult<OrderDTO>>> GetStaffOrders(
+    [FromQuery] string saleStaffId,
+    [FromQuery] OrderPagingRequest request,
+    [FromQuery] string sortBy = "totalPrice",
+    [FromQuery] string sortOrder = "asc")
+        {
+            var ordersQuery = _context.Orders
+                .Where(o => o.SaleStaffId == saleStaffId);
+
+            // Apply sorting
+            switch (sortBy.ToLower())
             {
-                return NotFound($"Order with ID {request.Order.OrderId} not found.");
+                case "orderdate":
+                    ordersQuery = sortOrder.ToLower() == "desc"
+                        ? ordersQuery.OrderByDescending(o => o.OrderDate)
+                        : ordersQuery.OrderBy(o => o.OrderDate);
+                    break;
+                case "totalprice":
+                default:
+                    ordersQuery = sortOrder.ToLower() == "desc"
+                        ? ordersQuery.OrderByDescending(o => o.TotalPrice)
+                        : ordersQuery.OrderBy(o => o.TotalPrice);
+                    break;
             }
-            decimal totalPrice = CalculateProductCost(
-                request.Gold.PricePerGram,
-                request.Gold.Weight,
-                request.Gemstone.Price,
-                request.Gemstone.CaratWeight
-                );
-            order.TotalPrice = totalPrice;
-            await _context.SaveChangesAsync();
-            return Ok(order);
+
+            var products = await _orderService.GetAllPaging(request);
+
+            return Ok(products);
         }
 
         // DELETE: api/Orders/5
