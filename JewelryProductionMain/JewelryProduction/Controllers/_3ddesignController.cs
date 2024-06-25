@@ -82,7 +82,7 @@ namespace JewelryProduction.Controllers
         //    return BadRequest();
         //}
 
-        [HttpGet("DisplayWithImage")]
+        [HttpGet("DisplayOnlyImage")]
         public async Task<ActionResult<IEnumerable<_3ddesign>>> Get_3ddesigns(string id)
         {
             //return await _context._3ddesigns.ToListAsync();

@@ -55,14 +55,10 @@ namespace JewelryProduction.Controllers
             }
 
             var updateOrder = await _context.Orders.FindAsync(id);
-            updateOrder.CustomerId = orderDTO.CustomerId;
-            updateOrder.SaleStaffId = orderDTO.SaleStaffId;
-            updateOrder.ManagerId = orderDTO.ManagerId;
             updateOrder.ProductionStaffId = orderDTO.ProductionStaffId;
             updateOrder.OrderDate = orderDTO.OrderDate;
             updateOrder.DepositAmount = orderDTO.DepositAmount;
             updateOrder.Status = orderDTO.Status;
-            updateOrder.ProductSampleId = orderDTO.ProductSampleId;
             updateOrder.CustomizeRequestId = orderDTO.CustomizeRequestId;
             updateOrder.PaymentMethodId = orderDTO.PaymentMethodId;
             updateOrder.TotalPrice = orderDTO.TotalPrice;
@@ -95,14 +91,10 @@ namespace JewelryProduction.Controllers
             var order = new Order
             {
                 OrderId = orderDTO.OrderId,
-                CustomerId = orderDTO.CustomerId,
-                SaleStaffId = orderDTO.SaleStaffId,
-                ManagerId = orderDTO.ManagerId,
                 ProductionStaffId = orderDTO.ProductionStaffId,
                 OrderDate = orderDTO.OrderDate,
                 DepositAmount = orderDTO.DepositAmount,
                 Status = orderDTO.Status,
-                ProductSampleId = orderDTO.ProductSampleId,
                 CustomizeRequestId = orderDTO.CustomizeRequestId,
                 PaymentMethodId = orderDTO.PaymentMethodId,
                 TotalPrice = orderDTO.TotalPrice,
