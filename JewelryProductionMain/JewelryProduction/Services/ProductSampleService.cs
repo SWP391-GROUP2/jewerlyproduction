@@ -54,10 +54,10 @@ namespace JewelryProduction.Services
 
             double similarity = 0;
 
-            if (type == sample2.Type) similarity += 1;
-            if (style == sample2.Style) similarity += 1;
-            if (size == sample2.Size) similarity += 1;
-            if (sample2.Gold != null && goldType == sample2.Gold.GoldType)
+            if (sample2.Type is not null && type == sample2.Type) similarity += 1;
+            if (sample2.Style is not null && style == sample2.Style) similarity += 1;
+            if (sample2.Size is not null && size == sample2.Size) similarity += 1;
+            if (sample2.Gold is not null && goldType == sample2.Gold.GoldType)
             {
                 similarity += 1;
             }
