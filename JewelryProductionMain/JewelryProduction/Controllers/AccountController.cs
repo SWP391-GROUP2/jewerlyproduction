@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
+using System.Security.Claims;
 
 namespace JewelryProduction.Controllers
 {
@@ -195,6 +196,16 @@ namespace JewelryProduction.Controllers
             // Log the specific errors if needed
             var errorMessages = string.Join(", ", result.Errors.Select(e => e.Description));
             return BadRequest($"Failed to unban user: {errorMessages}");
+        }
+        [HttpGet]
+        public IActionResult GetCurrentUserId()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId != null)
+            {
+                return Ok(new { UserId = userId });
+            }
+            return Unauthorized();
         }
     }
 }

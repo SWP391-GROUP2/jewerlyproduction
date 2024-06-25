@@ -16,7 +16,7 @@ public partial class CustomerRequest
 
     public double? Size { get; set; }
 
-    public double? quotation { get; set; } = null!;
+    public decimal? quotation { get; set; } = null!;
     public string quotationDes { get; set; } = null!;
 
     public decimal Quantity { get; set; }

@@ -237,16 +237,12 @@ namespace JewelryProduction.Controllers
             var order = new Order
             {
                 OrderId = await IdGenerator.GenerateUniqueId<Order>(_context, "ORD", 6),
-                CustomerId = customerRequest.CustomerId,
-               // SaleStaffId = 
-               // ManagerId = 
-               // ProductionStaffId = null, 
+                ProductionStaffId = null, 
                 OrderDate = DateTime.Now,
                 DepositAmount = request.Price *0.3M, 
                 Status = "Pending",
-                ProductSampleId = null,
                 CustomizeRequestId = customerRequest.CustomizeRequestId,
-                //PaymentMethodId = 
+                PaymentMethodId = "1",
                 TotalPrice = request.Price
             };
 

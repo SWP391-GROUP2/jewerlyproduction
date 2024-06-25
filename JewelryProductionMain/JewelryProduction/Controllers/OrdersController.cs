@@ -126,13 +126,13 @@ namespace JewelryProduction.Controllers
         }
         [HttpGet("staff-orders")]
         public async Task<ActionResult<PagedResult<OrderDTO>>> GetStaffOrders(
-    [FromQuery] string saleStaffId,
+    [FromQuery] string productionStaffId,
     [FromQuery] OrderPagingRequest request,
     [FromQuery] string sortBy = "totalPrice",
     [FromQuery] string sortOrder = "asc")
         {
             var ordersQuery = _context.Orders
-                .Where(o => o.SaleStaffId == saleStaffId);
+                .Where(o => o.ProductionStaffId == productionStaffId);
 
             // Apply sorting
             switch (sortBy.ToLower())
