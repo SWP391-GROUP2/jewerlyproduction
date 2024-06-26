@@ -1,23 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Project_\\JewerlyProduction\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj": {}
+    "D:\\GitHub\\JPOS\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj": {}
   },
   "projects": {
-    "C:\\Project_\\JewerlyProduction\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj": {
+    "D:\\GitHub\\JPOS\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Project_\\JewerlyProduction\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj",
+        "projectUniqueName": "D:\\GitHub\\JPOS\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj",
         "projectName": "JewelryProduction",
-        "projectPath": "C:\\Project_\\JewerlyProduction\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj",
-        "packagesPath": "C:\\Users\\acer\\.nuget\\packages\\",
-        "outputPath": "C:\\Project_\\JewerlyProduction\\JewelryProductionMain\\JewelryProduction\\obj\\",
+        "projectPath": "D:\\GitHub\\JPOS\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj",
+        "packagesPath": "C:\\Users\\tranq\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\JPOS\\JewelryProductionMain\\JewelryProduction\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\acer\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\tranq\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -25,6 +22,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -51,6 +49,14 @@
             "AutoMapper": {
               "target": "Package",
               "version": "[13.0.1, )"
+            },
+            "EPPlus": {
+              "target": "Package",
+              "version": "[7.2.0, )"
+            },
+            "ExcelDataReader": {
+              "target": "Package",
+              "version": "[3.6.0, )"
             },
             "Firebase.Auth": {
               "target": "Package",
@@ -108,6 +114,14 @@
               "target": "Package",
               "version": "[8.0.2, )"
             },
+            "NETCore.MailKit": {
+              "target": "Package",
+              "version": "[2.1.0, )"
+            },
+            "Otp.NET": {
+              "target": "Package",
+              "version": "[1.4.0, )"
+            },
             "RestSharp": {
               "target": "Package",
               "version": "[111.2.0, )"
@@ -115,6 +129,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.4.0, )"
+            },
+            "Swashbuckle.AspNetCore.Filters": {
+              "target": "Package",
+              "version": "[8.0.2, )"
             }
           },
           "imports": [
@@ -136,7 +154,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
