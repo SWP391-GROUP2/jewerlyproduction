@@ -14,7 +14,6 @@ import NotFound from "../pages/NotFound/NotFound";
 import CustomizePage from "../pages/CustomizePage/CustomizePage";
 import GemstoneDetailPage from "../pages/GemstoneDetailPage/GemstoneDetailPage";
 import SendOTP from "../pages/SendOTP/SendOTP";
-import AdminPage from "../pages/AdminHomePage/AdminPage";
 
 const routes = [
   { path: "/login", element: <LoginForm /> },
@@ -34,10 +33,7 @@ const routes = [
   { path: "/product/:productId", element: <ProductDetailsPage /> },
   { path: "/gemstone/:gemstoneId", element: <GemstoneDetailPage /> },
   { path: "/otp", element: <SendOTP /> },
-  { path: "/adminpage", element: <AdminPage /> },
-  
-  
-
+  { path: "/customize/:productId", element: <CustomizePage /> },
 ];
 
 export default routes;
