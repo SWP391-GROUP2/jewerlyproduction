@@ -25,6 +25,7 @@ function CustomizeForm() {
   const navigate = useNavigate(); // Sử dụng hook useNavigate để chuyển hướng
   const [styles, setStyles] = useState([]);
   const [ProductSample, setProductSample] = useState(null);
+  const [visibleProducts, setVisibleProducts] = useState(4);
 
   useEffect(() => {
     if (item) {
@@ -38,6 +39,10 @@ function CustomizeForm() {
 
   useEffect(() => {
     const fetchProduct = async () => {
+      if (!productId) {
+        console.error("Product ID is undefined");
+        return;
+      }
       try {
         const response = await fetch(
           `http://localhost:5266/api/ProductSamples/${productId}`
@@ -54,7 +59,6 @@ function CustomizeForm() {
 
     fetchProduct(); // Gọi hàm fetchProduct khi component được mount hoặc khi productId thay đổi
   }, [productId]);
-
   // useEffect này phụ thuộc vào biến productId
 
   useEffect(() => {
@@ -73,6 +77,10 @@ function CustomizeForm() {
       }
     }
   }, [ProductSample]);
+
+  const handleViewMore = () => {
+    setVisibleProducts((prevVisibleProducts) => prevVisibleProducts + 4);
+  };
 
   const onClickSelectedShape = (event) => {
     const element = event.currentTarget;
@@ -214,16 +222,39 @@ function CustomizeForm() {
 
   const fetchRecommendations = async () => {
     try {
-      const response = await axios.get("/api/recommendations", {
-        params: {
-          type: type || undefined,
-          style: style || undefined,
-          goldType: goldType || undefined,
-        },
-      });
+      // Tạo object chứa các query parameters
+      const params = {
+        type: type || undefined,
+        style: style || undefined,
+        goldType: goldType || undefined,
+      };
+
+      // Xây dựng URL với query parameters
+      const url = new URL(
+        "http://localhost:5266/api/ProductSamples/getrecommend"
+      );
+      Object.keys(params).forEach(
+        (key) =>
+          params[key] !== undefined && url.searchParams.append(key, params[key])
+      );
+
+      console.log("Sending POST request to URL:", url.toString());
+
+      // Gửi request POST với query parameters trong URL và payload trống
+      const response = await axios.post(url.toString(), {});
+
       setProducts(response.data);
     } catch (error) {
-      console.error("Error fetching recommendations:", error);
+      if (error.response) {
+        // Server đã phản hồi với trạng thái khác 200
+        console.error("Server phản hồi với lỗi:", error.response.data);
+      } else if (error.request) {
+        // Đã gửi request nhưng không nhận được phản hồi
+        console.error("Không nhận được phản hồi:", error.request);
+      } else {
+        // Có sự cố xảy ra trong quá trình thiết lập request
+        console.error("Lỗi khi thiết lập request:", error.message);
+      }
     }
   };
 
@@ -765,36 +796,37 @@ function CustomizeForm() {
 
         <div className="divider"></div>
 
-        <div className="model-gallery">
-          <div className="products">
-            {products.length === 0 ? (
-              <p>No products found</p>
-            ) : (
-              <ul>
-                {products.slice(0, 4).map((product) => (
-                  <div
-                    className="product-card"
-                    key={product.productSampleId}
-                    onClick={() =>
-                      navigateToProductDetail(product.productSampleId)
-                    } // Chuyển hướng khi nhấp vào sản phẩm
-                  >
-                    <img
-                      src={require(`../Assets/${product.image}.jpg`)}
-                      alt={product.productName}
-                      className="product-image"
-                    />
-                    <h3 className="product-name">{product.productName}</h3>
-                    <p className="product-price">
-                      {parseInt(product.price).toLocaleString()} VND
-                    </p>
-                  </div>
-                ))}
-              </ul>
-            )}
-          </div>
+        <div className="products">
+          {products.length === 0 ? (
+            <p>No products found</p>
+          ) : (
+            <ul>
+              {products.slice(0, visibleProducts).map((product) => (
+                <div
+                  className="product-card"
+                  key={product.productSampleId}
+                  onClick={() =>
+                    navigateToProductDetail(product.productSampleId)
+                  } // Chuyển hướng khi nhấp vào sản phẩm
+                >
+                  <img
+                    src={require(`../Assets/${product.image}.jpg`)}
+                    alt={product.productName}
+                    className="product-image"
+                  />
+                  <h3 className="product-name">{product.productName}</h3>
+                  <p className="product-price">
+                    {parseInt(product.price).toLocaleString()} VND
+                  </p>
+                </div>
+              ))}
+            </ul>
+          )}
         </div>
-        <button className="view-more-button">View More</button>
+
+        <button className="view-more-button" onClick={handleViewMore}>
+          View More
+        </button>
       </main>
     </div>
   );

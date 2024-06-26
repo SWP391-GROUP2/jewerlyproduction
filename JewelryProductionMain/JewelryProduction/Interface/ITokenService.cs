@@ -1,7 +1,12 @@
-﻿namespace JewelryProduction.Interface
+﻿using System.Security.Claims;
+
+namespace JewelryProduction.Interface
 {
     public interface ITokenService
     {
-        string CreateToken(AppUser user);
+        public Task<string> CreateAccessToken(AppUser user);
+        public string CreateRefreshToken();
+        Task<bool> ValidateRefreshToken(AppUser user, string refreshToken);
+        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
     }
 }

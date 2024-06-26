@@ -166,12 +166,12 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CustomerRequest_Customer");
 
-            entity.HasOne(d => d.SaleStaff).WithMany(p => p.CustomerRequests)
+            entity.HasOne(d => d.SaleStaff).WithMany(p => p.SaleStaffRequests)
                 .HasForeignKey(d => d.SaleStaffId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CustomerRequest_SaleStaff");
 
-            entity.HasOne(d => d.Manager).WithMany(p => p.CustomerRequests)
+            entity.HasOne(d => d.Manager).WithMany(p => p.ManagerRequests)
                 .HasForeignKey(d => d.ManagerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CustomerRequest_Manager");

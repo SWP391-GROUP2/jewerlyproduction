@@ -1,0 +1,18 @@
+.OTP-Page {
+    display: flex;
+    flex-direction: column; /* Sắp xếp các phần tử con theo cột */
+    justify-content: center; /* Căn giữa theo chiều dọc */
+    align-items: center; /* Căn giữa theo chiều ngang */
+    background-color: #f0f0f0; /* Màu nền xám nhạt để tương phản */
+    padding: 20px; /* Khoảng cách bên trong khung */
+    border-radius: 8px; /* Bo tròn các góc */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ để tạo độ sâu */
+    background-color: white; /* Màu nền trắng */
+    width: 500px; /* Chiều rộng tối đa cho khung */
+    margin: 40px auto; /* Căn giữa khung và thêm khoảng cách trên dưới */
+    text-align: center; /* Căn giữa văn bản */
+    min-height: 300px; /* Chiều cao tối thiểu cho khung */
+    padding-top: 40px; /* Khoảng cách trên */
+    padding-bottom: 40px; /* Khoảng cách dưới */
+  }
+  
