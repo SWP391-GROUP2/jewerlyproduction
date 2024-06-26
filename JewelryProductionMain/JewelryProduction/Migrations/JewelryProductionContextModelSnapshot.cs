@@ -227,8 +227,8 @@ namespace JewelryProduction.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("type");
 
-                    b.Property<double?>("quotation")
-                        .HasColumnType("float")
+                    b.Property<decimal?>("quotation")
+                        .HasColumnType("decimal(18,2)")
                         .HasColumnName("quotation");
 
                     b.Property<string>("quotationDes")
@@ -248,6 +248,38 @@ namespace JewelryProduction.Migrations
                     b.HasIndex("SaleStaffId");
 
                     b.ToTable("CustomerRequest", (string)null);
+                });
+
+            modelBuilder.Entity("JewelryProduction.Entities.ApprovalRequest", b =>
+                {
+                    b.Property<string>("ApprovalRequestId")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("approvalRequestId");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("createdAt");
+
+                    b.Property<string>("CustomerRequestId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("customerRequestId");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("money")
+                        .HasColumnName("price");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("status");
+
+                    b.HasKey("ApprovalRequestId");
+
+                    b.ToTable("ApprovalRequest", (string)null);
                 });
 
             modelBuilder.Entity("JewelryProduction.Gemstone", b =>
@@ -628,37 +660,37 @@ namespace JewelryProduction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "bbb5e7f1-91a0-4d01-999a-7d8ac71e5bcb",
+                            Id = "410cd6db-1120-4481-b2d0-6f72086940e0",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "c994c8ff-0383-4251-aaaf-89fa7119d2d1",
+                            Id = "eddd84eb-eb00-45f4-b745-fd0832d54615",
                             Name = "SaleStaff",
                             NormalizedName = "SALESTAFF"
                         },
                         new
                         {
-                            Id = "c0005aac-5946-4bc5-9eef-380dc8478505",
+                            Id = "2a3ba4a9-0042-4e9b-8614-0171c7ab9ae0",
                             Name = "ProductionStaff",
                             NormalizedName = "PRODUCTIONSTAFF"
                         },
                         new
                         {
-                            Id = "c7dc08cb-7b92-4e62-b9f1-7fd53c8d3cc9",
+                            Id = "9f20bacd-d6b3-4414-8427-655d3ffda49e",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "f0038e6b-13d0-4091-bd31-5056a0094009",
+                            Id = "a79ae54e-c150-400f-bee7-d4ad9772d71a",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "3cfa24be-e8ba-4193-9709-187b0de475a6",
+                            Id = "f7961b77-281a-47a3-af86-07ae2b105920",
                             Name = "DesignStaff",
                             NormalizedName = "DESIGNSTAFF"
                         });

@@ -14,6 +14,21 @@ namespace JewelryProduction.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "ApprovalRequest",
+                columns: table => new
+                {
+                    approvalRequestId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    customerRequestId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    price = table.Column<decimal>(type: "money", nullable: false),
+                    status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    createdAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApprovalRequest", x => x.approvalRequestId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
@@ -248,7 +263,7 @@ namespace JewelryProduction.Migrations
                     type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     style = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     size = table.Column<double>(type: "float", nullable: true),
-                    quotation = table.Column<double>(type: "float", nullable: true),
+                    quotation = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     quotationDes = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
                     quantity = table.Column<decimal>(type: "decimal(18,0)", nullable: false),
                     status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
@@ -459,12 +474,12 @@ namespace JewelryProduction.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "3cfa24be-e8ba-4193-9709-187b0de475a6", null, "DesignStaff", "DESIGNSTAFF" },
-                    { "bbb5e7f1-91a0-4d01-999a-7d8ac71e5bcb", null, "Admin", "ADMIN" },
-                    { "c0005aac-5946-4bc5-9eef-380dc8478505", null, "ProductionStaff", "PRODUCTIONSTAFF" },
-                    { "c7dc08cb-7b92-4e62-b9f1-7fd53c8d3cc9", null, "Manager", "MANAGER" },
-                    { "c994c8ff-0383-4251-aaaf-89fa7119d2d1", null, "SaleStaff", "SALESTAFF" },
-                    { "f0038e6b-13d0-4091-bd31-5056a0094009", null, "Customer", "CUSTOMER" }
+                    { "2a3ba4a9-0042-4e9b-8614-0171c7ab9ae0", null, "ProductionStaff", "PRODUCTIONSTAFF" },
+                    { "410cd6db-1120-4481-b2d0-6f72086940e0", null, "Admin", "ADMIN" },
+                    { "9f20bacd-d6b3-4414-8427-655d3ffda49e", null, "Manager", "MANAGER" },
+                    { "a79ae54e-c150-400f-bee7-d4ad9772d71a", null, "Customer", "CUSTOMER" },
+                    { "eddd84eb-eb00-45f4-b745-fd0832d54615", null, "SaleStaff", "SALESTAFF" },
+                    { "f7961b77-281a-47a3-af86-07ae2b105920", null, "DesignStaff", "DESIGNSTAFF" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -610,6 +625,9 @@ namespace JewelryProduction.Migrations
         {
             migrationBuilder.DropTable(
                 name: "3DDesign");
+
+            migrationBuilder.DropTable(
+                name: "ApprovalRequest");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
