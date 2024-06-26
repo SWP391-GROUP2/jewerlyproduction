@@ -189,13 +189,31 @@ namespace JewelryProduction.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("goldID");
 
+                    b.Property<string>("ManagerId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("ManagerID");
+
                     b.Property<decimal>("Quantity")
                         .HasColumnType("decimal(18, 0)")
                         .HasColumnName("quantity");
 
+                    b.Property<string>("SaleStaffId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("SaleStaffID");
+
                     b.Property<double?>("Size")
                         .HasColumnType("float")
                         .HasColumnName("size");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("status");
 
                     b.Property<string>("Style")
                         .IsRequired()
@@ -209,11 +227,25 @@ namespace JewelryProduction.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("type");
 
+                    b.Property<double?>("quotation")
+                        .HasColumnType("float")
+                        .HasColumnName("quotation");
+
+                    b.Property<string>("quotationDes")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("quotationDes");
+
                     b.HasKey("CustomizeRequestId");
 
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("GoldId");
+
+                    b.HasIndex("ManagerId");
+
+                    b.HasIndex("SaleStaffId");
 
                     b.ToTable("CustomerRequest", (string)null);
                 });
@@ -269,14 +301,23 @@ namespace JewelryProduction.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("name");
 
-                    b.Property<decimal>("PricePerCarat")
+                    b.Property<decimal>("Price")
                         .HasColumnType("money")
-                        .HasColumnName("pricePerCarat");
+                        .HasColumnName("price");
 
                     b.Property<string>("ProductSampleId")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("productSampleID");
+
+                    b.Property<string>("Shape")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("shape");
+
+                    b.Property<double?>("Size")
+                        .HasColumnType("float")
+                        .HasColumnName("size");
 
                     b.HasKey("GemstoneId");
 
@@ -389,12 +430,6 @@ namespace JewelryProduction.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("orderID");
 
-                    b.Property<string>("CustomerId")
-                        .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("customerID");
-
                     b.Property<string>("CustomizeRequestId")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
@@ -403,12 +438,6 @@ namespace JewelryProduction.Migrations
                     b.Property<decimal?>("DepositAmount")
                         .HasColumnType("money")
                         .HasColumnName("depositAmount");
-
-                    b.Property<string>("ManagerId")
-                        .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("managerID");
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime")
@@ -421,21 +450,13 @@ namespace JewelryProduction.Migrations
                         .HasColumnName("paymentMethodID");
 
                     b.Property<string>("ProductSampleId")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("productSampleID");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("ProductionStaffId")
                         .IsRequired()
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("productionStaffID");
-
-                    b.Property<string>("SaleStaffId")
-                        .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("saleStaffID");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -449,17 +470,11 @@ namespace JewelryProduction.Migrations
 
                     b.HasKey("OrderId");
 
-                    b.HasIndex("CustomerId");
-
-                    b.HasIndex("ManagerId");
-
                     b.HasIndex("PaymentMethodId");
 
                     b.HasIndex("ProductSampleId");
 
                     b.HasIndex("ProductionStaffId");
-
-                    b.HasIndex("SaleStaffId");
 
                     b.HasIndex(new[] { "CustomizeRequestId" }, "IX_Order")
                         .IsUnique()
@@ -613,37 +628,37 @@ namespace JewelryProduction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ce01b746-323d-44ba-af2d-353a3529dbdf",
+                            Id = "bbb5e7f1-91a0-4d01-999a-7d8ac71e5bcb",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "98d261c0-ea65-40e4-9f53-f0aa9dc00a13",
+                            Id = "c994c8ff-0383-4251-aaaf-89fa7119d2d1",
                             Name = "SaleStaff",
                             NormalizedName = "SALESTAFF"
                         },
                         new
                         {
-                            Id = "f252d6fe-6469-4f66-b632-d0d1fc392752",
+                            Id = "c0005aac-5946-4bc5-9eef-380dc8478505",
                             Name = "ProductionStaff",
                             NormalizedName = "PRODUCTIONSTAFF"
                         },
                         new
                         {
-                            Id = "4226b9e1-15a5-4eb7-8bc7-5ea173561e94",
+                            Id = "c7dc08cb-7b92-4e62-b9f1-7fd53c8d3cc9",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "61d0d417-0bd3-4542-a0b6-a75932f18f96",
+                            Id = "f0038e6b-13d0-4091-bd31-5056a0094009",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "874e4182-ce44-4c8c-851d-7276987dc536",
+                            Id = "3cfa24be-e8ba-4193-9709-187b0de475a6",
                             Name = "DesignStaff",
                             NormalizedName = "DESIGNSTAFF"
                         });
@@ -776,7 +791,7 @@ namespace JewelryProduction.Migrations
                         .WithMany("CustomerRequests")
                         .HasForeignKey("CustomerId")
                         .IsRequired()
-                        .HasConstraintName("FK_CustomerRequest_User");
+                        .HasConstraintName("FK_CustomerRequest_Customer");
 
                     b.HasOne("JewelryProduction.Gold", "Gold")
                         .WithMany("CustomerRequests")
@@ -784,9 +799,25 @@ namespace JewelryProduction.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_CustomerRequest_Gold");
 
+                    b.HasOne("JewelryProduction.AppUser", "Manager")
+                        .WithMany("ManagerRequests")
+                        .HasForeignKey("ManagerId")
+                        .IsRequired()
+                        .HasConstraintName("FK_CustomerRequest_Manager");
+
+                    b.HasOne("JewelryProduction.AppUser", "SaleStaff")
+                        .WithMany("SaleStaffRequests")
+                        .HasForeignKey("SaleStaffId")
+                        .IsRequired()
+                        .HasConstraintName("FK_CustomerRequest_SaleStaff");
+
                     b.Navigation("Customer");
 
                     b.Navigation("Gold");
+
+                    b.Navigation("Manager");
+
+                    b.Navigation("SaleStaff");
                 });
 
             modelBuilder.Entity("JewelryProduction.Gemstone", b =>
@@ -846,22 +877,10 @@ namespace JewelryProduction.Migrations
 
             modelBuilder.Entity("JewelryProduction.Order", b =>
                 {
-                    b.HasOne("JewelryProduction.AppUser", "Customer")
-                        .WithMany("OrderCustomers")
-                        .HasForeignKey("CustomerId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Order_User");
-
                     b.HasOne("JewelryProduction.CustomerRequest", "CustomizeRequest")
                         .WithOne("Order")
                         .HasForeignKey("JewelryProduction.Order", "CustomizeRequestId")
                         .HasConstraintName("FK_Order_CustomerRequest");
-
-                    b.HasOne("JewelryProduction.AppUser", "Manager")
-                        .WithMany("OrderManagers")
-                        .HasForeignKey("ManagerId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Order_User2");
 
                     b.HasOne("JewelryProduction.PaymentMethod", "PaymentMethod")
                         .WithMany("Orders")
@@ -869,36 +888,21 @@ namespace JewelryProduction.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_Order_PaymentMethod");
 
-                    b.HasOne("JewelryProduction.ProductSample", "ProductSample")
+                    b.HasOne("JewelryProduction.ProductSample", null)
                         .WithMany("Orders")
-                        .HasForeignKey("ProductSampleId")
-                        .HasConstraintName("FK_Order_ProductSample");
+                        .HasForeignKey("ProductSampleId");
 
                     b.HasOne("JewelryProduction.AppUser", "ProductionStaff")
                         .WithMany("OrderProductionStaffs")
                         .HasForeignKey("ProductionStaffId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Order_User3");
-
-                    b.HasOne("JewelryProduction.AppUser", "SaleStaff")
-                        .WithMany("OrderSaleStaffs")
-                        .HasForeignKey("SaleStaffId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Order_User1");
-
-                    b.Navigation("Customer");
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("CustomizeRequest");
 
-                    b.Navigation("Manager");
-
                     b.Navigation("PaymentMethod");
 
-                    b.Navigation("ProductSample");
-
                     b.Navigation("ProductionStaff");
-
-                    b.Navigation("SaleStaff");
                 });
 
             modelBuilder.Entity("JewelryProduction.ProductSample", b =>
@@ -992,17 +996,15 @@ namespace JewelryProduction.Migrations
                 {
                     b.Navigation("CustomerRequests");
 
+                    b.Navigation("ManagerRequests");
+
                     b.Navigation("MessageCustomers");
 
                     b.Navigation("MessageSaleStaffs");
 
-                    b.Navigation("OrderCustomers");
-
-                    b.Navigation("OrderManagers");
-
                     b.Navigation("OrderProductionStaffs");
 
-                    b.Navigation("OrderSaleStaffs");
+                    b.Navigation("SaleStaffRequests");
 
                     b.Navigation("_3ddesigns");
                 });

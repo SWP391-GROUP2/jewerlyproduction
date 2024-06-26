@@ -60,29 +60,19 @@ export const logOut = async (dispatch, navigate) => {
 export const loginWithGoogle = async (credential, dispatch, navigate) => {
   dispatch(loginStart());
   try {
-    const res = await axios.post("http://localhost:5266/api/GoogleAuth/google-login", 
+    const res = await axios.post(
+      "http://localhost:5266/api/GoogleAuth/google-login",
       { Token: credential },
       {
-          headers: {
-              'Content-Type': 'application/json'
-          }
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
-  );; 
+    );
     dispatch(loginSuccess(res.data));
     navigate("/");
   } catch (err) {
     console.error("Google login Failed", err);
     dispatch(loginFalsed());
-  }
-};
-export const fetchProduct = async (productId, dispatch) => {
-  dispatch(fetchProductStart());
-  try {
-    const res = await axios.get(
-      `https://api.example.com/products/${productId}`
-    );
-    dispatch(fetchProductSuccess(res.data));
-  } catch (err) {
-    dispatch(fetchProductFailed());
   }
 };

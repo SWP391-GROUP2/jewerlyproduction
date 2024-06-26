@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using JewelryProduction.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,10 +40,19 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
     public DbSet<AppUser> Users { get; set; }
 
     public DbSet<_3ddesign> _3ddesigns { get; set; }
+    public DbSet<ApprovalRequest> ApprovalRequests { get; set; }
 
+
+    private string? GetConnectionString()
+    {
+        IConfiguration configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", true, true).Build();
+        return configuration["ConnectionStrings:DefaultConnection"];
+        //ConnectionStrings:DefaultConnectionStringDB
+    }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=DR4CE;Initial Catalog=JewelryProduction;Persist Security Info=True;User ID=sa;Password=12345;Trust Server Certificate=True");
+        => optionsBuilder.UseSqlServer(GetConnectionString());
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -124,6 +134,12 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
             entity.Property(e => e.CustomerId)
                 .HasMaxLength(450)
                 .HasColumnName("customerID");
+            entity.Property(e => e.SaleStaffId)
+                .HasMaxLength(450)
+                .HasColumnName("SaleStaffID");
+            entity.Property(e => e.ManagerId)
+                .HasMaxLength(450)
+                .HasColumnName("ManagerID");
             entity.Property(e => e.GoldId)
                 .HasMaxLength(50)
                 .HasColumnName("goldID");
@@ -131,17 +147,34 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
                 .HasColumnType("decimal(18, 0)")
                 .HasColumnName("quantity");
             entity.Property(e => e.Size).HasColumnName("size");
+            entity.Property(e => e.quotation).HasColumnName("quotation");
+            entity.Property(e => e.quotationDes)
+                .HasMaxLength(450)
+                .HasColumnName("quotationDes");
             entity.Property(e => e.Style)
                 .HasMaxLength(50)
                 .HasColumnName("style");
             entity.Property(e => e.Type)
                 .HasMaxLength(50)
                 .HasColumnName("type");
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .HasColumnName("status");
 
             entity.HasOne(d => d.Customer).WithMany(p => p.CustomerRequests)
                 .HasForeignKey(d => d.CustomerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_CustomerRequest_User");
+                .HasConstraintName("FK_CustomerRequest_Customer");
+
+            entity.HasOne(d => d.SaleStaff).WithMany(p => p.CustomerRequests)
+                .HasForeignKey(d => d.SaleStaffId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CustomerRequest_SaleStaff");
+
+            entity.HasOne(d => d.Manager).WithMany(p => p.CustomerRequests)
+                .HasForeignKey(d => d.ManagerId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CustomerRequest_Manager");
 
             entity.HasOne(d => d.Gold).WithMany(p => p.CustomerRequests)
                 .HasForeignKey(d => d.GoldId)
@@ -175,15 +208,20 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .HasColumnName("name");
-            entity.Property(e => e.PricePerCarat)
+            entity.Property(e => e.Price)
                 .HasColumnType("money")
-                .HasColumnName("pricePerCarat");
+                .HasColumnName("price");
             entity.Property(e => e.Image)
                 .HasMaxLength(350)
                 .HasColumnName("Image");
             entity.Property(e => e.ProductSampleId)
                 .HasMaxLength(50)
                 .HasColumnName("productSampleID");
+            entity.Property(e => e.Shape)
+                .HasMaxLength(50)
+                .HasColumnName("shape");
+            entity.Property(e => e.Size)
+                .HasColumnName("size");
 
             entity.HasOne(d => d.Category).WithMany(p => p.Gemstones)
                 .HasForeignKey(d => d.CategoryId)
@@ -276,33 +314,21 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
             entity.Property(e => e.OrderId)
                 .HasMaxLength(50)
                 .HasColumnName("orderID");
-            entity.Property(e => e.CustomerId)
-                .HasMaxLength(450)
-                .HasColumnName("customerID");
             entity.Property(e => e.CustomizeRequestId)
                 .HasMaxLength(50)
                 .HasColumnName("customizeRequestID");
             entity.Property(e => e.DepositAmount)
                 .HasColumnType("money")
                 .HasColumnName("depositAmount");
-            entity.Property(e => e.ManagerId)
-                .HasMaxLength(450)
-                .HasColumnName("managerID");
             entity.Property(e => e.OrderDate)
                 .HasColumnType("datetime")
                 .HasColumnName("orderDate");
             entity.Property(e => e.PaymentMethodId)
                 .HasMaxLength(50)
                 .HasColumnName("paymentMethodID");
-            entity.Property(e => e.ProductSampleId)
-                .HasMaxLength(50)
-                .HasColumnName("productSampleID");
             entity.Property(e => e.ProductionStaffId)
                 .HasMaxLength(450)
                 .HasColumnName("productionStaffID");
-            entity.Property(e => e.SaleStaffId)
-                .HasMaxLength(450)
-                .HasColumnName("saleStaffID");
             entity.Property(e => e.Status)
                 .HasMaxLength(50)
                 .HasColumnName("status");
@@ -310,38 +336,19 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
                 .HasColumnType("money")
                 .HasColumnName("totalPrice");
 
-            entity.HasOne(d => d.Customer).WithMany(p => p.OrderCustomers)
-                .HasForeignKey(d => d.CustomerId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Order_User");
-
             entity.HasOne(d => d.CustomizeRequest).WithOne(p => p.Order)
                 .HasForeignKey<Order>(d => d.CustomizeRequestId)
                 .HasConstraintName("FK_Order_CustomerRequest");
-
-            entity.HasOne(d => d.Manager).WithMany(p => p.OrderManagers)
-                .HasForeignKey(d => d.ManagerId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Order_User2");
 
             entity.HasOne(d => d.PaymentMethod).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.PaymentMethodId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Order_PaymentMethod");
 
-            entity.HasOne(d => d.ProductSample).WithMany(p => p.Orders)
-                .HasForeignKey(d => d.ProductSampleId)
-                .HasConstraintName("FK_Order_ProductSample");
-
-            entity.HasOne(d => d.ProductionStaff).WithMany(p => p.OrderProductionStaffs)
-                .HasForeignKey(d => d.ProductionStaffId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Order_User3");
-
-            entity.HasOne(d => d.SaleStaff).WithMany(p => p.OrderSaleStaffs)
-                .HasForeignKey(d => d.SaleStaffId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Order_User1");
+            entity.HasOne(e => e.ProductionStaff)
+                    .WithMany(u => u.OrderProductionStaffs)
+                    .HasForeignKey(e => e.ProductionStaffId)
+                    .OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<PaymentMethod>(entity =>
@@ -387,6 +394,23 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
                 .HasForeignKey(d => d.GoldId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ProductSample_Gold1");
+        });
+        modelBuilder.Entity<ApprovalRequest>(entity =>
+        {
+            entity.ToTable("ApprovalRequest");
+            entity.Property(e => e.ApprovalRequestId)
+                .HasMaxLength(50)
+                .HasColumnName("approvalRequestId");
+            entity.Property(e => e.CustomerRequestId)
+                .HasMaxLength(50)
+                .HasColumnName("customerRequestId");
+            entity.Property(e => e.Price)
+                .HasColumnType("money")
+                .HasColumnName("price");
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .HasColumnName("status");
+            entity.Property(e => e.CreatedAt).HasColumnName("createdAt");
         });
 
         modelBuilder.Entity<AppUser>(entity =>

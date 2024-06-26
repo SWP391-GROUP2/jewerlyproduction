@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq.Expressions;
+using System.Security.Claims;
 
 namespace JewelryProduction.Controllers
 {
@@ -188,7 +189,7 @@ namespace JewelryProduction.Controllers
             var errorMessages = string.Join(", ", result.Errors.Select(e => e.Description));
             return BadRequest($"Failed to ban user: {errorMessages}");
         }
-
+        
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDTO refreshTokenDTO)
         {

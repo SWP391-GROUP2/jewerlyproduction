@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.SignalR;
 using System.Text;
 
 namespace JewelryProduction
@@ -18,8 +19,14 @@ namespace JewelryProduction
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddSignalR();
             builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IProductSampleService, ProductSampleService>();
+            builder.Services.AddScoped<ISaleStaffService, SaleStaffService>();
+            builder.Services.AddScoped<INotificationService, NotificationService>();
+            builder.Services.AddScoped<ICustomerRequestService, CustomerRequestService>();
             builder.Services.AddControllers();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -132,7 +139,13 @@ namespace JewelryProduction
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseRouting();
 
+            app.UseEndpoints(endpoints =>
+            {
+                // Map your hubs
+                endpoints.MapHub<MyHub>("/myHub");
+            });
 
             app.MapControllers();
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Thêm useNavigate
 import "./Filter.css";
 
 const Sidebar = () => {
@@ -8,6 +9,7 @@ const Sidebar = () => {
   const [sortOption, setSortOption] = useState("");
   const [selectedFilters, setSelectedFilters] = useState({});
   const [products, setProducts] = useState([]);
+  const navigate = useNavigate(); // Sử dụng hook useNavigate để chuyển hướng
 
   const categories = ["Ring", "Bracelet", "Necklace", "Earrings"];
 
@@ -35,6 +37,7 @@ const Sidebar = () => {
         ? `http://localhost:5266/api/ProductSamples/FilterInSearch?${query}`
         : `http://localhost:5266/api/ProductSamples`;
       const response = await axios.get(url);
+
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -62,6 +65,10 @@ const Sidebar = () => {
       ...selectedFilters,
       [category]: filter,
     });
+  };
+
+  const navigateToProductDetail = (productId) => {
+    navigate(`/product/${productId}`); // Chuyển hướng đến trang chi tiết sản phẩm
   };
 
   return (
@@ -139,9 +146,13 @@ const Sidebar = () => {
         ) : (
           <ul>
             {products.map((product) => (
-              <div className="product-card" key={product.productSampleId}>
+              <div
+                className="product-card"
+                key={product.productSampleId}
+                onClick={() => navigateToProductDetail(product.productSampleId)} // Chuyển hướng khi nhấp vào sản phẩm
+              >
                 <img
-                  src={require(`../Assets/${product.image}.png`)}
+                  src={require(`../Assets/${product.image}.jpg`)}
                   alt={product.productName}
                   className="product-image"
                 />

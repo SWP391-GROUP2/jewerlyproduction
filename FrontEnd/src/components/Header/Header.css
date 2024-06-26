@@ -10,7 +10,7 @@
   left: 0;
   max-width: 100%; /* Chiều rộng bằng với chiều ngang của trang */
   z-index: 1000; /* Đảm bảo header luôn nằm trên các phần tử khác */
-  height: 60px; /* Đặt chiều cao cố định cho header */
+  height: 73px; /* Đặt chiều cao cố định cho header */
 }
 
 .logo a {
@@ -82,5 +82,5 @@
 .logo-image {
   width: 237px;
   height: auto;
-  margin-top: 30px;
+  margin-top: -10px;
 }
