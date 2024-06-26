@@ -24,11 +24,11 @@ namespace JewelryProduction.Controllers
             _notificationService = notificationService;
         }
 
-        [HttpGet("pending-requests")]
+        [HttpGet("Wait-for-Quotation-requests")]
         public async Task<ActionResult<IEnumerable<CustomerRequest>>> GetPendingRequests()
         {
             var pendingRequests = await _context.CustomerRequests
-                .Where(r => r.Status == "Pending")
+                .Where(r => r.Status == "Wait for Quotation" )
                 .ToListAsync();
 
             return Ok(pendingRequests);

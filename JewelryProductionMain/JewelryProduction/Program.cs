@@ -1,4 +1,5 @@
 using JewelryProduction.DbContext;
+using JewelryProduction.DTO.Account;
 using JewelryProduction.Interface;
 using JewelryProduction.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -23,6 +24,7 @@ namespace JewelryProduction
             builder.Services.AddScoped<IProductSampleService, ProductSampleService>();
             builder.Services.AddScoped<ISaleStaffService, SaleStaffService>();
             builder.Services.AddScoped<INotificationService, NotificationService>();
+            builder.Services.AddScoped<ICustomerRequestService, CustomerRequestService>();
             builder.Services.AddControllers();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -41,6 +43,7 @@ namespace JewelryProduction
                 options.Password.RequireNonAlphanumeric = true;
                 options.Password.RequireUppercase = true;
                 options.Password.RequiredLength = 8;
+                options.SignIn.RequireConfirmedEmail = true;
             }).AddEntityFrameworkStores<JewelryProductionContext>();
 
             // Add JWT Authentication
@@ -60,7 +63,7 @@ namespace JewelryProduction
                     {
                         ValidateIssuer = true,
                         ValidateAudience = true,
-                        ValidateLifetime = true,
+                        ValidateLifetime = false,
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = builder.Configuration["JWT:Issuer"],
                         ValidAudience = builder.Configuration["JWT:Audience"],
@@ -73,7 +76,12 @@ namespace JewelryProduction
                     googleOptions.ClientSecret = builder.Configuration["Google:ClientSecret"];
                 });
 
+            // Add Email Config
+            var emailConfig = builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
+            builder.Services.AddSingleton(emailConfig);
+
             builder.Services.AddScoped<ITokenService, TokenService>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
 
             builder.Services.AddSwaggerGen(option =>
             {
