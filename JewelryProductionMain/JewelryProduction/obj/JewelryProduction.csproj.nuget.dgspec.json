@@ -114,6 +114,14 @@
               "target": "Package",
               "version": "[8.0.2, )"
             },
+            "NETCore.MailKit": {
+              "target": "Package",
+              "version": "[2.1.0, )"
+            },
+            "Otp.NET": {
+              "target": "Package",
+              "version": "[1.4.0, )"
+            },
             "RestSharp": {
               "target": "Package",
               "version": "[111.2.0, )"
@@ -121,6 +129,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.4.0, )"
+            },
+            "Swashbuckle.AspNetCore.Filters": {
+              "target": "Package",
+              "version": "[8.0.2, )"
             }
           },
           "imports": [
