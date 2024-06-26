@@ -1,10 +1,13 @@
-﻿using Google.Apis.Auth;
+﻿using Firebase.Auth;
+using Google.Apis.Auth;
 using JewelryProduction.DTO.Account;
 using JewelryProduction.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq.Expressions;
 
 namespace JewelryProduction.Controllers
@@ -17,13 +20,15 @@ namespace JewelryProduction.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ITokenService _tokenService;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IEmailService _emailService;
 
-        public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager, RoleManager<IdentityRole> roleManager)
+        public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager, RoleManager<IdentityRole> roleManager, IEmailService emailService)
         {
             _userManager = userManager;
             _tokenService = tokenService;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _emailService = emailService;
         }
 
         [HttpPost("register/Staff")]
@@ -40,6 +45,7 @@ namespace JewelryProduction.Controllers
                     UserName = registerDTO.Email,
                     Name = registerDTO.Name,
                     PhoneNumber = registerDTO.PhoneNumber,
+                    TwoFactorEnabled = false
                 };
 
                 var result = await _userManager.CreateAsync(user, registerDTO.Password);
@@ -48,11 +54,14 @@ namespace JewelryProduction.Controllers
                     var roleResult = await _userManager.AddToRoleAsync(user, registerDTO.Role);
                     if (roleResult.Succeeded)
                     {
+                        var refreshToken = _tokenService.CreateRefreshToken();
+                        await _userManager.SetAuthenticationTokenAsync(user, "JewelryProduction", "RefreshToken", refreshToken);
                         return Ok(
                                 new NewUserDTO
                                 {
                                     Email = user.Email,
-                                    Token = _tokenService.CreateToken(user)
+                                    Token = await _tokenService.CreateAccessToken(user),
+                                    RefreshToken = refreshToken
                                 }
                             );
                     }
@@ -86,31 +95,31 @@ namespace JewelryProduction.Controllers
                     UserName = registerDTO.Email,
                     Name = registerDTO.Name,
                     PhoneNumber = registerDTO.PhoneNumber
-                };
 
+                };
                 var result = await _userManager.CreateAsync(user, registerDTO.Password);
                 if (result.Succeeded)
                 {
                     var roleResult = await _userManager.AddToRoleAsync(user, "Customer");
                     if (roleResult.Succeeded)
                     {
+                        var refreshToken = _tokenService.CreateRefreshToken();
+                        await _userManager.SetAuthenticationTokenAsync(user, "JewelryProduction", "RefreshToken", refreshToken);
                         return Ok(
                                 new NewUserDTO
                                 {
                                     Email = user.Email,
-                                    Token = _tokenService.CreateToken(user)
+                                    Token = await _tokenService.CreateAccessToken(user),
+                                    isPasswordSet = true,
+                                    RefreshToken = refreshToken,
                                 }
                             );
                     }
                     else
-                    {
                         return BadRequest("Role Error");
-                    }
                 }
                 else
-                {
                     return BadRequest("Create Error");
-                }
             }
             catch (Exception ex)
             {
@@ -126,13 +135,21 @@ namespace JewelryProduction.Controllers
             var user = await _userManager.FindByEmailAsync(loginDTO.Email);
             if (user == null)
                 return Unauthorized("Invalid Email");
+
+            var role = await _userManager.GetRolesAsync(user);
+
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDTO.Password, false);
             if(!result.Succeeded) return Unauthorized("Email not found & Invalid Password");
-            return Ok(
-                new NewUserDTO
+            var refreshToken = _tokenService.CreateRefreshToken();
+            await _userManager.SetAuthenticationTokenAsync(user, "JewelryProduction", "RefreshToken", refreshToken);
+            var isPasswordSet = user.PasswordHash == null ? false : true;
+
+            return Ok( new NewUserDTO
                 {
+                    isPasswordSet = isPasswordSet,
                     Email = user.Email,
-                    Token = _tokenService.CreateToken(user)
+                    Token = await _tokenService.CreateAccessToken(user),
+                    RefreshToken = refreshToken
                 }
             );
         }
@@ -143,6 +160,7 @@ namespace JewelryProduction.Controllers
             await _signInManager.SignOutAsync();
             return Ok("Logout Successful");
         }
+        
         [HttpPost("deactivate-user")]
         public async Task<IActionResult> DeactivateUser([FromQuery] string id)
         {
@@ -169,6 +187,135 @@ namespace JewelryProduction.Controllers
             // Log the specific errors if needed
             var errorMessages = string.Join(", ", result.Errors.Select(e => e.Description));
             return BadRequest($"Failed to ban user: {errorMessages}");
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDTO refreshTokenDTO)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var principal = _tokenService.GetPrincipalFromExpiredToken(refreshTokenDTO.Token);
+            var user = await _userManager.FindByNameAsync(principal.Identity.Name);
+
+            if (user == null || !await _tokenService.ValidateRefreshToken(user, refreshTokenDTO.RefreshToken))
+                return Unauthorized();
+
+            var newJwtToken = _tokenService.CreateAccessToken(user);
+            var newRefreshToken = _tokenService.CreateRefreshToken();
+
+            await _userManager.SetAuthenticationTokenAsync(user, "MyApp", "RefreshToken", newRefreshToken);
+
+            return Ok(new NewUserDTO
+            {
+                Email = user.Email,
+                Token = await newJwtToken,
+                RefreshToken = newRefreshToken
+            });
+        }
+
+        [HttpGet("Get-Profile")]
+        public async Task<IActionResult> GetProfile()
+        {
+            var authorizationHeader = HttpContext.Request.Headers["Authorization"].ToString();
+            var token = authorizationHeader.Substring("Bearer ".Length).Trim();
+            var handler = new JwtSecurityTokenHandler();
+
+            JwtSecurityToken jwtToken = handler.ReadJwtToken(token);
+
+            var email = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "email")?.Value;
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null || string.IsNullOrWhiteSpace(token))
+                return BadRequest("Invalid credentials");
+
+            var profile = new UserProfileDTO()
+            {
+                Name = user.Name,
+                PhoneNumber = user.PhoneNumber,
+                Email = user.Email,
+                DateOfBirth = user.DateOfBirth,
+                Avatar = user.Avatar
+            };
+            return Ok(profile);
+        }
+
+        [HttpPut("Update-Profile")]
+        public async Task<IActionResult> UpdateProfile ([FromBody] UpdateUserProfileDTO updateprofile)
+        {
+            var authorizationHeader = HttpContext.Request.Headers["Authorization"].ToString();
+            var token = authorizationHeader.Substring("Bearer ".Length).Trim();
+            var handler = new JwtSecurityTokenHandler();
+
+            JwtSecurityToken jwtToken = handler.ReadJwtToken(token);
+
+            var email = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "email")?.Value;
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null || string.IsNullOrWhiteSpace(token))
+                return BadRequest("Invalid credentials");
+
+            user.Name = updateprofile.Name;
+            user.PhoneNumber = updateprofile.PhoneNumber;
+            user.DateOfBirth = updateprofile.DateOfBirth;
+            user.Avatar = updateprofile.Avatar;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                var updatedUserProfile = new UpdateUserProfileDTO()
+                {
+                    Name = user.Name,
+                    PhoneNumber = user.PhoneNumber,
+                    DateOfBirth = user.DateOfBirth,
+                    Avatar = user.Avatar
+                };
+                return Ok(updatedUserProfile);
+            }
+            return BadRequest("Failed to update profile");
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EmailConfirm([FromBody] string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                return Unauthorized("Invalid Email");
+            if (!user.EmailConfirmed)
+                return BadRequest(false);
+            return Ok(true);
+        }
+
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePasswordAsync(SetPasswordDTO _setPassword)
+        {
+            var authorizationHeader = HttpContext.Request.Headers["Authorization"].ToString();
+            var token = authorizationHeader.Substring("Bearer ".Length).Trim();
+            var handler = new JwtSecurityTokenHandler();    
+
+            JwtSecurityToken jwtToken = handler.ReadJwtToken(token);
+
+            var email = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "email")?.Value;
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null || string.IsNullOrWhiteSpace(token))
+                return BadRequest("Invalid credentials");
+
+            var curPassword = _setPassword.CurrentPassword;
+            var newPassword = _setPassword.Password;
+            if (newPassword != _setPassword.ConfirmPassword)
+                return BadRequest("Passwords do not match");
+            var passwordCheck = await _userManager.CheckPasswordAsync(user, curPassword);
+            if (!passwordCheck)
+            {
+                return BadRequest("Incorrect current password.");
+            }
+
+            // Update the user with the new password hash
+            var result = await _userManager.ChangePasswordAsync(user, curPassword, newPassword);
+
+            if (result.Succeeded)
+                return Ok("password changes");
+            return BadRequest ("Failed to change password");
         }
     }
 }
