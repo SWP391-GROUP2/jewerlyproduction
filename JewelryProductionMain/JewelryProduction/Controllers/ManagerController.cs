@@ -1,9 +1,13 @@
 ﻿using JewelryProduction.DbContext;
 using JewelryProduction.Entities;
+using JewelryProduction.Interface;
+using JewelryProduction.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace JewelryProduction.Controllers
@@ -14,29 +18,43 @@ namespace JewelryProduction.Controllers
     {
         private readonly JewelryProductionContext _context;
         private readonly UserManager<AppUser> _userManager;
+        private readonly ISaleStaffService _staffService;
+        private readonly IHubContext<MyHub> _myhub;
+        private readonly INotificationService _notificationService;
+        private readonly ICustomerRequestService _requestService;
 
-        public ManagerController(JewelryProductionContext context, UserManager<AppUser> userManager)
+        public ManagerController(JewelryProductionContext context, UserManager<AppUser> userManager, ISaleStaffService staffService, IHubContext<MyHub> myhub, INotificationService notificationService, ICustomerRequestService requestService)
         {
             _context = context;
             _userManager = userManager;
+            _staffService = staffService;
+            _myhub = myhub;
+            _notificationService = notificationService;
+            _requestService = requestService;
         }
-
-        [HttpGet("ApprovalPriceList")]
-        public async Task<ActionResult<List<ApprovalRequest>>> GetApprovalPriceList(string status)
+        [HttpPost("approve/{customerRequestId}")]
+        public async Task<IActionResult> ApproveCustomerRequest(string customerRequestId)
         {
-            var approvalPrices = await _context.ApprovalRequests
-                .Where(ar => ar.Status == status)
-                .Select(ar => new ApprovalRequest
-                {
-                   ApprovalRequestId = ar.ApprovalRequestId,
-                   CustomerRequestId = ar.CustomerRequestId,
-                   Price = ar.Price,
-                   Status = status,
-                   CreatedAt = ar.CreatedAt
-                })
-                .ToListAsync();
+            var success = await _requestService.ApproveCustomerRequest(customerRequestId);
 
-            return Ok(approvalPrices);
+            if (!success)
+            {
+                return BadRequest("Failed to approve customer request.");
+            }
+
+            return Ok("Customer request approved successfully.");
+        }
+        [HttpPost("reject/{customerRequestId}")]
+        public async Task<IActionResult> RejectCustomerRequest(string customerRequestId, string message)
+        {
+            var success = await _requestService.RejectQuotation(customerRequestId, message);
+
+            if (!success)
+            {
+                return BadRequest("Failed to reject customer request.");
+            }
+
+            return Ok("Customer request rejected successfully.");
         }
         [HttpGet("pending-requests")]
         public async Task<ActionResult<IEnumerable<CustomerRequest>>> GetPendingRequests()
@@ -79,9 +97,17 @@ namespace JewelryProduction.Controllers
 
             return Ok("SaleStaff assigned successfully.");
         }
-        public string GetCurrentUserId()
+        [HttpPost("sendNotificationToCustomers")]
+        public async Task<IActionResult> SendNotificationToCustomers([FromBody] string message)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var senderId = GetCurrentUserId();
+            await _notificationService.SendNotificationToRoleAsync("Customer",senderId,message);
+
+            return Ok("Notification sent to customers.");
+        }
+        private string GetCurrentUserId()
+        {
+            var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sid);
                 return userId;
         }
     }

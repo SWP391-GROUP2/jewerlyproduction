@@ -318,5 +318,15 @@ namespace JewelryProduction.Controllers
                 return Ok("password changes");
             return BadRequest ("Failed to change password");
         }
+        [HttpGet("current-user-id")]
+        public IActionResult GetCurrentUserId()
+        {
+            var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sid);
+            if (userId == null)
+            {
+                return Unauthorized("User ID not found.");
+            }
+            return Ok(new { UserId = userId });
+        }
     }
 }

@@ -3,6 +3,7 @@ using JewelryProduction.Common;
 using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
 using JewelryProduction.Interface;
+using JewelryProduction.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -118,13 +119,17 @@ namespace JewelryProduction.Controllers
         [HttpPost]
         public async Task<ActionResult<CustomerRequest>> PostCustomerRequest(CustomerRequestDTO customerRequestDTO)
         {
-            var gemstones = await _context.Gemstones
-            .Where(g => customerRequestDTO.GemstoneName.Contains(g.Name))
-            .ToListAsync();
+            var requestedGemstones = customerRequestDTO.GemstoneName.Distinct().Take(3).ToList();
 
-            if (gemstones.Count != customerRequestDTO.GemstoneName.Count)
+            var gemstones = await _context.Gemstones
+                .Where(g => requestedGemstones.Contains(g.Name))
+                .GroupBy(g => g.Name)
+                .Select(g => g.FirstOrDefault())
+                .ToListAsync();
+
+            if (gemstones.Count != requestedGemstones.Count)
             {
-                return BadRequest("Some gemstones were not found.");
+                return BadRequest("Some gemstones were not found or duplicates were selected.");
             }
             var gold = await _context.Golds
             .FirstOrDefaultAsync(g => g.GoldType == customerRequestDTO.GoldType);
@@ -294,6 +299,24 @@ namespace JewelryProduction.Controllers
             }
 
             return NoContent();
+        }
+        [HttpGet("{customerRequestId}/quotations")]
+        public async Task<IActionResult> GetCustomerRequestQuotations(string customerRequestId)
+        {
+            var customerRequest = await _requestService.GetCustomerRequestWithQuotationsAsync(customerRequestId);
+
+            if (customerRequest == null)
+            {
+                return NotFound();
+            }
+
+            var response = new
+            {
+                customerRequest.quotation,
+                customerRequest.quotationDes
+            };
+
+            return Ok(response);
         }
     }
 }

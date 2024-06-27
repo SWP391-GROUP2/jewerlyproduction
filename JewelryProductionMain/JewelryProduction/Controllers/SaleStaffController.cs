@@ -6,6 +6,8 @@ using JewelryProduction.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace JewelryProduction.Controllers
 {
@@ -65,24 +67,34 @@ namespace JewelryProduction.Controllers
         [HttpPost("send-approved")]
         public async Task<ActionResult> SendForApproval(string CustomizeRequestId)
         {
+            var customerRequest = await _context.CustomerRequests.FindAsync(CustomizeRequestId);
+            var gold = await _context.Golds.FindAsync(customerRequest.GoldId);
+            var gemstones = await _context.Gemstones
+            .Where(g => customerRequest.CustomizeRequestId.Contains(g.CustomizeRequestId))
+            .ToListAsync();
+            var senderId = GetCurrentUserId();
             var price = await _service.CalculateProductCost(CustomizeRequestId);
-            var uniqueId = await IdGenerator.GenerateUniqueId<ApprovalRequest>(_context, "AR", 3);
-            var approvalRequest = new ApprovalRequest
-            {
-                ApprovalRequestId = uniqueId,
-                CustomerRequestId = CustomizeRequestId,
-                Price = price,
-                Status = "Pending",
-                CreatedAt = DateTime.Now
-            };
-
-            _context.ApprovalRequests.Add(approvalRequest);
+            var request = await _context.CustomerRequests.FindAsync(CustomizeRequestId);
+            var userId = request.ManagerId;
+            request.quotationDes = @$"
+Gemstone Price:             {gemstones.Sum(x => x.Price)}
+Gold Price:             {gold.PricePerGram * (decimal)gold.Weight}
+Production Cost:            40% Material Price
+Additional Fee:             0
+VAT:                        10%";
+            request.quotation = price;
+            request.Status = "Wait For Approve"; 
             await _context.SaveChangesAsync();
 
             // Send email or notification to manager
-           await _notificationService.SendNotificationToUserAsync("ADM000",$"There is new request with ID: {CustomizeRequestId} that need to be approved.");
+           await _notificationService.SendNotificationToUserfAsync(userId,senderId,$"There is new request with ID: {CustomizeRequestId} that need to be approved.");
 
             return Ok("Approval request sent to the manager.");
+        }
+        private string GetCurrentUserId()
+        {
+            var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sid);
+            return userId;
         }
     }
 }

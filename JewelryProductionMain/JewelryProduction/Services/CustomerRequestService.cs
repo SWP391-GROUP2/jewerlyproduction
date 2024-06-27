@@ -9,10 +9,71 @@ namespace JewelryProduction.Services
     public class CustomerRequestService : ICustomerRequestService
     {
         private readonly JewelryProductionContext _context;
+        private readonly INotificationService _notificationService;
 
-        public CustomerRequestService(JewelryProductionContext context)
+        public CustomerRequestService(JewelryProductionContext context, INotificationService notificationService)
         {
             _context = context;
+            _notificationService = notificationService;
+        }
+        public async Task<CustomerRequest> GetCustomerRequestWithQuotationsAsync(string customerRequestId)
+        {
+            return await _context.CustomerRequests
+                .FirstOrDefaultAsync(cr => cr.CustomizeRequestId == customerRequestId && cr.Status == "Wait For Approve");
+        }
+        public async Task<bool> ApproveCustomerRequest(string customerRequestId)
+        {
+            var customerRequest = await _context.CustomerRequests.FindAsync(customerRequestId);
+
+            if (customerRequest == null)
+            {
+                return false; 
+            }
+
+            customerRequest.Status = "Quotation Approve";
+
+            try
+            {
+                _context.Update(customerRequest);
+                await _context.SaveChangesAsync();
+
+                // Send notification to SaleStaff
+                await _notificationService.SendNotificationToUserfAsync(customerRequest.SaleStaffId,customerRequest.ManagerId ,"Your request has been approved.");
+
+                return true;
+            }
+            catch (DbUpdateException)
+            {
+                // Handle exception as needed
+                return false;
+            }
+        }
+        public async Task<bool> RejectQuotation(string customerRequestId, string message)
+        {
+            var customerRequest = await _context.CustomerRequests.FindAsync(customerRequestId);
+
+            if (customerRequest == null)
+            {
+                return false; // CustomerRequest not found
+            }
+
+            customerRequest.Status = "Quotation Rejected";
+
+            try
+            {
+                _context.Update(customerRequest);
+                await _context.SaveChangesAsync();
+
+                // Send notification to SaleStaff
+                await _notificationService.SendNotificationToUserfAsync(customerRequest.SaleStaffId,customerRequest.ManagerId, message);
+
+                return true;
+            }
+            catch (DbUpdateException)
+            {
+                // Handle exception as needed
+                return false;
+            }
         }
         public async Task<PagedResult<CustomerRequest>> GetAllPaging(OrderPagingRequest request)
         {
