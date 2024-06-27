@@ -2,6 +2,7 @@
 using JewelryProduction.Common;
 using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
+using JewelryProduction.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,10 +13,12 @@ namespace JewelryProduction.Controllers
     public class CustomerRequestsController : ControllerBase
     {
         private readonly JewelryProductionContext _context;
+        private readonly ICustomerRequestService _requestService;
 
-        public CustomerRequestsController(JewelryProductionContext context)
+        public CustomerRequestsController(JewelryProductionContext context, ICustomerRequestService requestService)
         {
             _context = context;
+            _requestService = requestService;
         }
 
         // GET: api/CustomerRequests
@@ -185,6 +188,12 @@ namespace JewelryProduction.Controllers
         {
             return _context.CustomerRequests.Any(e => e.CustomizeRequestId == id);
         }
+        [HttpGet("paging")]
+        public async Task<IActionResult> GetAllPaging([FromQuery] OrderPagingRequest request)
+        {
+            var products = await _requestService.GetAllPaging(request);
+            return Ok(products);
+        }
         [HttpGet("prefill")]
         public async Task<IActionResult> PrefillCustomizeRequest([FromQuery] string productSampleId)
         {
@@ -228,16 +237,12 @@ namespace JewelryProduction.Controllers
             var order = new Order
             {
                 OrderId = await IdGenerator.GenerateUniqueId<Order>(_context, "ORD", 6),
-                CustomerId = customerRequest.CustomerId,
-               // SaleStaffId = 
-               // ManagerId = 
-               // ProductionStaffId = null, 
+                ProductionStaffId = null, 
                 OrderDate = DateTime.Now,
                 DepositAmount = request.Price *0.3M, 
                 Status = "Pending",
-                ProductSampleId = null,
                 CustomizeRequestId = customerRequest.CustomizeRequestId,
-                //PaymentMethodId = 
+                PaymentMethodId = "1",
                 TotalPrice = request.Price
             };
 

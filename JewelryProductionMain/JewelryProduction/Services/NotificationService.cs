@@ -1,5 +1,6 @@
 ﻿using JewelryProduction.DbContext;
 using JewelryProduction.Interface;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 
 namespace JewelryProduction.Services
@@ -8,11 +9,13 @@ namespace JewelryProduction.Services
     {
         private readonly IHubContext<MyHub> _hubContext;
         private readonly JewelryProductionContext _context;
+        private readonly UserManager<AppUser> _userManager;
 
-        public NotificationService(IHubContext<MyHub> hubContext, JewelryProductionContext context)
+        public NotificationService(IHubContext<MyHub> hubContext, JewelryProductionContext context, UserManager<AppUser> userManager)
         {
             _hubContext = hubContext;
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task SendNotificationToUserAsync(string userId, string message)
@@ -33,6 +36,7 @@ namespace JewelryProduction.Services
                 await SendNotificationToUserAsync(user.Id, message);
             }
         }
+
         private async Task<List<AppUser>> GetUsersInRoleAsync(string role)
         {
             throw new NotImplementedException();

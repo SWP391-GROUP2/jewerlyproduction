@@ -95,7 +95,7 @@ function ProductDetails() {
                 navigateToProductDetail(product.productSample.productSampleId)
               }
             >
-              Add to cart
+              Add to customize
             </button>
           </div>
         </div>

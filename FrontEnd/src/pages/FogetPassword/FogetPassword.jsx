@@ -16,9 +16,9 @@ function FogetPassword() {
       </Link>
       <div className="wrapper">
         <form action="">
-          <h1>Quên Mật Khẩu</h1>
+          <h1>Forget Password</h1>
           <div className="register-link">
-            <p>Thêm email của bạn</p>
+            <p>Add your email</p>
           </div>
 
           <div className="input-box">
@@ -26,11 +26,11 @@ function FogetPassword() {
             <MdDriveFileRenameOutline className="icon" />
           </div>
 
-          <button type="submit">Gửi OTP</button>
+          <button type="submit">Send OTP</button>
 
           <div className="register-link">
             <p>
-              Bạn đã có tài khoản ? <Link to="/login">Đăng nhập</Link>
+              Have you got account ? <Link to="/login">Login</Link>
             </p>
           </div>
         </form>

@@ -83,7 +83,7 @@ function LoginForm() {
                 <input type="checkbox" />
                 Remeber password
               </label>
-              <Link to="/foget"> Forget password ? </Link>
+              <Link to="/forget"> Forget password ? </Link>
             </div>
             <button type="submit">Log In</button>
             <div className="register-link">

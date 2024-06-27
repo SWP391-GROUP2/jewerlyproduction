@@ -2,9 +2,7 @@
 using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
 using JewelryProduction.Interface;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Drawing.Printing;
 
 namespace JewelryProduction.Services
 {
@@ -30,16 +28,14 @@ namespace JewelryProduction.Services
 
             IQueryable<Order> query = _context.Orders;
             if (!string.IsNullOrEmpty(request.Keyword))
-                query = query.Where(o => o.OrderId.Contains(request.Keyword) || o.SaleStaffId.Contains(request.Keyword) || o.CustomerId.Contains(request.Keyword) || o.CustomizeRequestId.Contains(request.Keyword) || o.Status.Contains(request.Keyword));
+                query = query.Where(o => o.OrderId.Contains(request.Keyword) || o.CustomizeRequestId.Contains(request.Keyword) || o.Status.Contains(request.Keyword));
             var totalOrders = await query.CountAsync();
             var orders = await query
                 .Skip((request.PageIndex - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .Select(o => new Order()
                 {
-                   OrderId = o.OrderId,
-                   CustomerId = o.CustomerId,
-                    SaleStaffId = o.SaleStaffId,
+                    OrderId = o.OrderId,
                     OrderDate = o.OrderDate,
                     TotalPrice = o.TotalPrice
                 })
@@ -56,7 +52,7 @@ namespace JewelryProduction.Services
             return pagedResult;
 
         }
-        
+
     }
-   
+
 }

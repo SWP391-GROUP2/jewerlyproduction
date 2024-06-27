@@ -25,7 +25,7 @@ const routes = [
   { path: "/login", element: <LoginForm /> },
   { path: "/register", element: <Register /> },
   { path: "/home", element: <HomePage /> },
-  { path: "/foget", element: <FogetPassword /> },
+  { path: "/forget", element: <FogetPassword /> },
   { path: "/profile", element: <UserProfilePage /> },
   { path: "/product", element: <ProductPage /> },
   { path: "/gemstone", element: <GemstonePage /> },

@@ -12,6 +12,13 @@
   position: relative;
   flex-shrink: 0; /* Prevent sidebar from shrinking */
   transition: width 0.3s;
+  background-color: #f8f3ed;
+  padding: 20px; /* Adjusted padding */
+  border-right: 1px solid #3b3b3b;
+  overflow: hidden; /* Ensure no content overflow */
+  position: relative;
+  flex-shrink: 0; /* Prevent sidebar from shrinking */
+  transition: width 0.3s;
 }
 
 .gemstone-sidebar.closed {
@@ -19,6 +26,17 @@
   padding: 10px; /* Adjusted padding */
 }
 
+.gemstone-sidebar .toggle-button {
+  position: absolute;
+  top: 50%;
+  right: -20px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  margin: 0;
+  padding: 10px;
 .gemstone-sidebar .toggle-button {
   position: absolute;
   top: 50%;
@@ -38,13 +56,24 @@
 
 .gemstone-sidebar .toggle-button:hover {
   background-color: #848586;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.gemstone-sidebar .toggle-button:hover {
+  background-color: #848586;
 }
 
 .sidebar-title,
 .gemstone-filters h3 {
   margin: 0 0 10px;
+.sidebar-title,
+.gemstone-filters h3 {
+  margin: 0 0 10px;
 }
 
+.gemstone-list,
+.gemstone-filter-list {
 .gemstone-list,
 .gemstone-filter-list {
   list-style-type: none;
@@ -55,8 +84,19 @@
 .gemstone-list li,
 .gemstone-filter-list li {
   padding: 8px;
+.gemstone-list li,
+.gemstone-filter-list li {
+  padding: 8px;
   cursor: pointer;
   margin-bottom: 5px;
+  border-radius: 3px;
+  transition: background-color 0.3s;
+}
+
+.gemstone-list li:hover,
+.gemstone-filter-list li:hover {
+  background-color: #1f1e1e;
+  color: #fff;
   border-radius: 3px;
   transition: background-color 0.3s;
 }
@@ -71,6 +111,9 @@
   font-weight: bold;
 }
 
+.gemstone-filters label,
+.gemstone-filter-list label {
+  display: block;
 .gemstone-filters label,
 .gemstone-filter-list label {
   display: block;
@@ -93,10 +136,28 @@
 }
 
 .gemstone-products ul {
+.gemstone-filters input[type="radio"],
+.gemstone-filter-list input[type="radio"] {
+  margin-right: 10px;
+}
+
+.gemstone-products {
+  flex-grow: 1; /* Ensure products section takes remaining space */
+  padding: 20px;
+  overflow-y: auto; /* Enable scrolling */
+}
+
+.gemstone-products h2 {
+  margin-top: 0;
+}
+
+.gemstone-products ul {
   list-style-type: none;
   padding: 0;
 }
 
+.gemstone-products li {
+  margin-bottom: 20px;
 .gemstone-products li {
   margin-bottom: 20px;
 }
@@ -107,7 +168,19 @@
   border: 1px solid #ffffff;
   border-radius: 5px;
   padding: 10px;
+  background-color: #f9f9f9;
+  display: inline-block;
+  border: 1px solid #ffffff;
+  border-radius: 5px;
+  padding: 10px;
   text-align: center;
+  width: 270px; /* Adjusted card width */
+  margin: 10px; /* Margin between cards */
+  transition: transform 0.3s ease;
+}
+
+.gemstone-product-card:hover {
+  transform: scale(1.1); /* Zoom effect on hover */
   width: 270px; /* Adjusted card width */
   margin: 10px; /* Margin between cards */
   transition: transform 0.3s ease;
@@ -126,14 +199,26 @@
 
 .gemstone-product-card:hover .gemstone-product-image {
   transform: scale(1.1); /* Zoom effect on image hover */
+  width: 248px; /* Adjusted image width */
+  height: 213px; /* Adjusted image height */
+  border-radius: 5px;
+  transition: transform 0.3s ease;
+}
+
+.gemstone-product-card:hover .gemstone-product-image {
+  transform: scale(1.1); /* Zoom effect on image hover */
 }
 
 .gemstone-product-name {
   margin-top: 10px;
   font-weight: bold;
+  margin-top: 10px;
+  font-weight: bold;
 }
 
 .gemstone-product-price {
+  color: #c88c46;
+  margin-top: 5px;
   color: #c88c46;
   margin-top: 5px;
 }
