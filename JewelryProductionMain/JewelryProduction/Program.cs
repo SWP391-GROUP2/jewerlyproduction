@@ -47,7 +47,8 @@ namespace JewelryProduction
                 options.Password.RequireUppercase = true;
                 options.Password.RequiredLength = 8;
                 options.SignIn.RequireConfirmedEmail = true;
-            }).AddEntityFrameworkStores<JewelryProductionContext>();
+            }).AddEntityFrameworkStores<JewelryProductionContext>()
+            .AddDefaultTokenProviders();
 
             // Add JWT Authentication
             builder.Services.AddAuthentication(options =>
