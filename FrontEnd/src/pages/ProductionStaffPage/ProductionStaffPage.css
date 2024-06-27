@@ -1,0 +1,17 @@
+.productionstaff-page {
+    text-align: center;
+    display: flex;
+    flex-direction: row; /* Changed to row for elements to be side by side */
+    justify-content: center;
+    min-height: 100vh;
+    width: 100vw;
+    background-color: rgb(255, 255, 255);
+    background-size: cover;
+    background-position: center;
+    padding-bottom: 50px;
+}
+
+.productionstaff-container {
+    flex: 1; /* To occupy the remaining part of the page */
+    /* Add other necessary CSS properties here */
+}
