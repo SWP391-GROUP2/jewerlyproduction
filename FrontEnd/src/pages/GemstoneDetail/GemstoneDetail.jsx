@@ -64,11 +64,11 @@ function GemstoneDetail() {
               <span>{parseInt(gemstone.price).toLocaleString()} VND</span>
             </div>
 
-            {/* <p>{product.description}</p>
-            <p>Type: {product.type}</p>
-            <p>Style: {product.style}</p>
-            <p>Size: {product.size}</p>
-            <p>Gold Type: {product.goldType}</p> */}
+            <p>Shape: {gemstone.shape}</p>
+            <p>Color: {gemstone.color}</p>
+            <p>Cut: {gemstone.cut}</p>
+            <p>Size: {gemstone.size}</p>
+            <p>Clarity: {gemstone.clarity}</p>
 
             {/* Nếu có nhiều hình ảnh, sử dụng DetailsThumb */}
             {gemstone.images && (

@@ -1,0 +1,18 @@
+.salestaff-page {
+    text-align: center;
+    display: flex;
+    flex-direction: row; /* Đổi thành row để các phần tử con nằm cạnh nhau */
+    justify-content: center;
+    min-height: 100vh;
+    width: 100vw;
+    background-color: rgb(255, 255, 255);
+    background-size: cover;
+    background-position: center;
+    padding-bottom: 50px;
+  }
+  
+  .salestaff-container {
+    flex: 1; /* Để container chiếm phần còn lại của trang */
+    /* Thêm các thuộc tính CSS khác tại đây nếu cần */
+  }
+  
