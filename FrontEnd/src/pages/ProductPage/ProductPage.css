@@ -22,9 +22,9 @@
 
 .main-content {
   display: flex;
-  flex-grow: 1; /* Đảm bảo main-content chiếm hết không gian còn lại */
+  flex-grow: 1;
   width: 100%;
-  margin-bottom: -40px;
+  margin-bottom: 0; /* Loại bỏ giá trị margin âm */
 }
 
 .Sidebar {
@@ -40,6 +40,7 @@
 .content {
   flex-grow: 1;
   margin: 20px;
+  width: 100%; /* Đảm bảo các phần tử con trong content có chiều rộng 100% */
 }
 
 .footer {

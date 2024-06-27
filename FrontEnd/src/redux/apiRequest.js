@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import {
   loginFalsed,
   loginStart,
@@ -9,12 +10,6 @@ import {
   logOutSuccess,
   logOutFalsed,
 } from "./authSlice";
-
-import {
-  fetchProductStart,
-  fetchProductSuccess,
-  fetchProductFailed,
-} from "./productSlice";
 
 import axios from "axios";
 
@@ -35,12 +30,12 @@ export const loginUser = async (user, dispatch, navigate) => {
 export const registerUser = async (user, dispatch, navigate) => {
   dispatch(registerStart());
   try {
-    await axios.post(
+    const res = await axios.post(
       "http://localhost:5266/api/Account/register/customer",
       user
     );
-    dispatch(registerSuccess());
-    navigate("/login");
+    dispatch(registerSuccess(res.data));
+    navigate("/register");
   } catch (err) {
     dispatch(registerFalsed());
   }
@@ -74,5 +69,18 @@ export const loginWithGoogle = async (credential, dispatch, navigate) => {
   } catch (err) {
     console.error("Google login Failed", err);
     dispatch(loginFalsed());
+  }
+};
+
+export const verifyOtp = async (otp, email) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:5266/api/Email/VerifyOTP",
+      { otp, email }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Failed to verify OTP", error);
+    throw error;
   }
 };

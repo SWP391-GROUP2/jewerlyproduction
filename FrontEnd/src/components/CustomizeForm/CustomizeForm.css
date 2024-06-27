@@ -22,7 +22,7 @@
   text-align: center;
   display: flex;
   flex-direction: column; /* Ensure vertical stacking */
-  align-items: center; /* Center align items */
+
   margin-bottom: 10px;
 }
 
