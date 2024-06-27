@@ -204,10 +204,10 @@ function CustomizeForm() {
   ];
 
   const typeStyles = {
-    Ring: ["Solitaire", "Three Stone", "Pave"],
-    Bracelet: ["Chain", "Pearl", "Bar"],
-    Necklace: ["Chain", "Pearl", "Station", "Initial"],
-    Earrings: ["Stud", "Jacket", "Ear Spike"],
+    Ring: ["solitaire", "three stone", "pave"],
+    Bracelet: ["chain", "pearl", "bar"],
+    Necklace: ["chain", "pearl", "station", "initial"],
+    Earrings: ["stud", "jacket", "ear spike"],
   };
 
   const handleCreate = (e) => {
@@ -264,7 +264,7 @@ function CustomizeForm() {
 
   useEffect(() => {
     setStyles(type ? typeStyles[type] : []);
-    setselectedStyle(""); // Reset style khi type thay đổi
+    // Reset style khi type thay đổi
   }, [type]);
 
   return (
@@ -281,14 +281,18 @@ function CustomizeForm() {
                   <div className="options-grid">
                     <select
                       value={style}
-                      onChange={(e) => setselectedStyle(e.target.value)}
+                      onChange={(e) => {
+                        setselectedStyle(e.target.value);
+                      }}
                       disabled={!type}
                     >
-                      {styles.map((styleOption) => (
-                        <option key={styleOption} value={styleOption}>
-                          {styleOption}
-                        </option>
-                      ))}
+                      {styles.map((styleOption) => {
+                        return (
+                          <option key={styleOption} value={styleOption}>
+                            {styleOption}
+                          </option>
+                        );
+                      })}
                     </select>
                   </div>
                 </div>
