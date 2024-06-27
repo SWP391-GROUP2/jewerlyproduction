@@ -8,6 +8,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ZaloPayHelper\**" />
+    <Content Remove="ZaloPayHelper\**" />
+    <EmbeddedResource Remove="ZaloPayHelper\**" />
+    <None Remove="ZaloPayHelper\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\ManagerController.cs" />
+    <Compile Remove="Controllers\ZaloPayController.cs" />
+    <Compile Remove="Services\ZaloPayService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="EPPlus" Version="7.2.0" />
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />
