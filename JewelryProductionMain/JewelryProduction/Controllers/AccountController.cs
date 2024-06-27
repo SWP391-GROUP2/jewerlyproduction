@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq.Expressions;
 using System.Security.Claims;
@@ -140,18 +141,18 @@ namespace JewelryProduction.Controllers
             var role = await _userManager.GetRolesAsync(user);
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDTO.Password, false);
-            if(!result.Succeeded) return Unauthorized("Email not found & Invalid Password");
+            if (!result.Succeeded) return Unauthorized("Email not found & Invalid Password");
             var refreshToken = _tokenService.CreateRefreshToken();
             await _userManager.SetAuthenticationTokenAsync(user, "JewelryProduction", "RefreshToken", refreshToken);
             var isPasswordSet = user.PasswordHash == null ? false : true;
 
-            return Ok( new NewUserDTO
-                {
-                    isPasswordSet = isPasswordSet,
-                    Email = user.Email,
-                    Token = await _tokenService.CreateAccessToken(user),
-                    RefreshToken = refreshToken
-                }
+            return Ok(new NewUserDTO
+            {
+                isPasswordSet = isPasswordSet,
+                Email = user.Email,
+                Token = await _tokenService.CreateAccessToken(user),
+                RefreshToken = refreshToken
+            }
             );
         }
 
@@ -161,7 +162,7 @@ namespace JewelryProduction.Controllers
             await _signInManager.SignOutAsync();
             return Ok("Logout Successful");
         }
-        
+
         [HttpPost("deactivate-user")]
         public async Task<IActionResult> DeactivateUser([FromQuery] string id)
         {
@@ -189,7 +190,7 @@ namespace JewelryProduction.Controllers
             var errorMessages = string.Join(", ", result.Errors.Select(e => e.Description));
             return BadRequest($"Failed to ban user: {errorMessages}");
         }
-        
+
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDTO refreshTokenDTO)
         {
@@ -241,7 +242,7 @@ namespace JewelryProduction.Controllers
         }
 
         [HttpPut("Update-Profile")]
-        public async Task<IActionResult> UpdateProfile ([FromBody] UpdateUserProfileDTO updateprofile)
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateUserProfileDTO updateprofile)
         {
             var authorizationHeader = HttpContext.Request.Headers["Authorization"].ToString();
             var token = authorizationHeader.Substring("Bearer ".Length).Trim();
@@ -291,7 +292,7 @@ namespace JewelryProduction.Controllers
         {
             var authorizationHeader = HttpContext.Request.Headers["Authorization"].ToString();
             var token = authorizationHeader.Substring("Bearer ".Length).Trim();
-            var handler = new JwtSecurityTokenHandler();    
+            var handler = new JwtSecurityTokenHandler();
 
             JwtSecurityToken jwtToken = handler.ReadJwtToken(token);
 
@@ -316,7 +317,48 @@ namespace JewelryProduction.Controllers
 
             if (result.Succeeded)
                 return Ok("password changes");
-            return BadRequest ("Failed to change password");
+            return BadRequest("Failed to change password");
+        }
+
+        [HttpPost("Forgot-password-email")]
+        public async Task<IActionResult> ForgotPasswordInsertEmail([FromBody] string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                return Unauthorized("Invalid Email");
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var message = new MessageOTP(
+                new string[] { email },
+                "Reset Password",
+                $@"
+                <h1>Reset Password</h1>
+                <p>Dear {email},</p>
+                <p>Click the link below to reset your password:</p>
+                <p><a href='http://localhost:3000/forgetpasswordverify?email={email}&token={token}'>Reset Password</a></p>
+                <p>If you did not request this code, please ignore this email.</p>
+                <p>Best regards,</p>
+                <p>Jewelry Production </p>
+                <p>&copy; 2024 Jewelry Production. All rights reserved.</p>");
+            _emailService.SendEmail(message);
+            return Ok("Token sent");
+        }
+
+        [HttpPost("Forget-password-change")]
+        public async Task<IActionResult> ForgotPasswordInsertEmail(ForgetPasswordDTO forgetPassword)
+        {
+            var user = await _userManager.FindByEmailAsync(forgetPassword.email);
+            if (user == null)
+                return BadRequest("Invalid Email");
+            var resetToken = forgetPassword.resetToken;
+            var password = forgetPassword.password;
+            var confirmPassword = forgetPassword.confirmPassword;
+            if (!password.Equals(confirmPassword))
+                return BadRequest("Passwords do not match");
+
+            var result = await _userManager.ResetPasswordAsync(user, resetToken, password);
+            if (!result.Succeeded)
+                return BadRequest("Invalid Token");
+            return Ok("Password changed");
         }
     }
 }
