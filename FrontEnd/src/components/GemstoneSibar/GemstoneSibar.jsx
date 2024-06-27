@@ -182,21 +182,27 @@ const Sidebar = () => {
         )}
       </div>
       <div className="gemstone-products">
-        {products.map((product) => (
-          <div
-            className="gemstone-product-card"
-            key={product.id}
-            onClick={() => navigateToProductDetail(product.gemstoneId)}
-          >
-            <img
-              src={require(`../Assets/${product.image}.jpg`)}
-              alt={product.name}
-              className="gemstone-product-image"
-            />
-            <h3 className="gemstone-product-name">{product.name}</h3>
-            <p className="gemstone-product-price">${product.price}</p>
-          </div>
-        ))}
+        {products.length === 0 ? (
+          <p>No products found</p>
+        ) : (
+          <ul>
+            {products.map((product) => (
+              <div
+                className="gemstone-product-card"
+                key={product.id}
+                onClick={() => navigateToProductDetail(product.gemstoneId)}
+              >
+                <img
+                  src={require(`../Assets/${product.image}.jpg`)}
+                  alt={product.name}
+                  className="gemstone-product-image"
+                />
+                <h3 className="gemstone-product-name">{product.name}</h3>
+                <p className="gemstone-product-price">${product.price}</p>
+              </div>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

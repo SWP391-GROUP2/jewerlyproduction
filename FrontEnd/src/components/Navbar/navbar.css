@@ -32,7 +32,7 @@ ul li {
 }
 
 ul li:hover {
-  text-decoration: underline; /* Gạch chân khi di chuột vào */
+  text-decoration: none; /* Gạch chân khi di chuột vào */
 }
 
 .search-box {
@@ -88,5 +88,5 @@ ul li select option {
 }
 
 ul li select:hover {
-  text-decoration: underline; /* Gạch chân khi di chuột vào */
+  text-decoration: none; /* Gạch chân khi di chuột vào */
 }

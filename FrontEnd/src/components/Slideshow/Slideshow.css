@@ -23,7 +23,7 @@ img {
   display: block;
   margin: auto;
   max-height: 380px; /* Giảm chiều cao tối đa của hình ảnh */
-  width: auto; /* Giữ nguyên tỷ lệ khung hình của hình ảnh */
+  width: 100%; /* Giữ nguyên tỷ lệ khung hình của hình ảnh */
 }
 
 .prev,
