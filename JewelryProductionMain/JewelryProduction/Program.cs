@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.SignalR;
 using System.Text;
 
 namespace JewelryProduction
@@ -20,7 +19,11 @@ namespace JewelryProduction
 
             // Add services to the container.
             builder.Services.AddSignalR();
+
+            builder.Services.AddScoped<IVnPayService, VnPayService>();
+
             builder.Services.AddScoped<IOrderService, OrderService>();
+
             builder.Services.AddScoped<IProductSampleService, ProductSampleService>();
             builder.Services.AddScoped<ISaleStaffService, SaleStaffService>();
             builder.Services.AddScoped<INotificationService, NotificationService>();

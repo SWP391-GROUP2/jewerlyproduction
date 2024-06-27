@@ -148,6 +148,22 @@ namespace JewelryProduction.Controllers
             return Ok(gemstones);
         }
 
+        [HttpGet("Filter Gemstone")]
+        public async Task<ActionResult<IEnumerable<Gemstone>>> FilterGemstone(string? shape, string? clarity, double? size, string? colors, double? caraMin, double? caraMax)
+        {
+            var query = _context.Gemstones.AsQueryable();
+            if (!string.IsNullOrEmpty(shape)) query = query.Where(sv => sv.Shape.Contains(shape));
+            if (!string.IsNullOrEmpty(clarity)) query = query.Where(sv => sv.Clarity.Contains(clarity));
+            if (size.HasValue) query = query.Where(sv => sv.Size == size);
+            if (!string.IsNullOrEmpty(colors)) query = query.Where(sv => sv.Color.Contains(colors));
+            if (caraMin.HasValue) query = query.Where(sv => sv.CaratWeight >= caraMin);
+            if (caraMax.HasValue) query = query.Where(sv => sv.CaratWeight <= caraMax);
+
+            var result = await query.ToListAsync();
+            return Ok(result);
+
+        }
+
         private bool GemstoneExists(string id)
         {
             return _context.Gemstones.Any(e => e.GemstoneId == id);
