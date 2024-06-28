@@ -360,5 +360,15 @@ namespace JewelryProduction.Controllers
                 return BadRequest("Invalid Token");
             return Ok("Password changed");
         }
+        [HttpGet("current-user-id")]
+        public IActionResult GetCurrentUserId()
+        {
+            var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sid);
+            if (userId == null)
+            {
+                return Unauthorized("User ID not found.");
+            }
+            return Ok(new { UserId = userId });
+        }
     }
 }

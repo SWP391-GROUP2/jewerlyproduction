@@ -26,7 +26,7 @@ namespace JewelryProduction.Services
                 return 0;
             }
             decimal goldPrice = gold.PricePerGram * (decimal)gold.Weight;
-            decimal gemstonePrice = customerRequest.Gemstones.Sum(x => x.Price);
+            decimal gemstonePrice = gemstones.Sum(x => x.Price);
             decimal productCost = ((goldPrice + gemstonePrice) * 1.4M) * 1.1M;
             customerRequest.quotation = productCost;
             await _context.SaveChangesAsync();
