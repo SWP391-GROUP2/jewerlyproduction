@@ -70,6 +70,8 @@ namespace JewelryProduction.Controllers
 
             var updateCusReq = await _context.CustomerRequests.FindAsync(id);
             updateCusReq.CustomizeRequestId = customerRequestDTO.CustomizeRequestId;
+            updateCusReq.SaleStaffId = customerRequestDTO.SaleStaffId;
+            updateCusReq.ManagerId = customerRequestDTO.ManagerId;
             updateCusReq.GoldId = gold.GoldId;
             updateCusReq.CustomerId = customerRequestDTO.CustomerId;
             updateCusReq.Type = customerRequestDTO.Type;

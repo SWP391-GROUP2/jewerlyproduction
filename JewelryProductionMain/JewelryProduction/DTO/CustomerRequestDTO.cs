@@ -6,6 +6,8 @@
 
 
         public string CustomerId { get; set; } = null!;
+        public string? SaleStaffId { get; set; }
+        public string? ManagerId { get; set; }
 
         public string Type { get; set; } = null!;
 
