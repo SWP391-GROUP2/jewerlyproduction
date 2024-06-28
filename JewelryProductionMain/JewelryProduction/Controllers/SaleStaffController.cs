@@ -3,6 +3,7 @@ using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
 using JewelryProduction.Entities;
 using JewelryProduction.Interface;
+using JewelryProduction.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,12 +19,14 @@ namespace JewelryProduction.Controllers
         private readonly JewelryProductionContext _context;
         private readonly ISaleStaffService _service;
         private readonly INotificationService _notificationService;
+        private readonly ICustomerRequestService _requestService;
 
-        public SaleStaffController(JewelryProductionContext context, ISaleStaffService service, INotificationService notificationService)
+        public SaleStaffController(JewelryProductionContext context, ISaleStaffService service, INotificationService notificationService, ICustomerRequestService requestService)
         {
             _context = context;
             _service = service;
             _notificationService = notificationService;
+            _requestService = requestService;
         }
 
         [HttpGet("Wait-for-Quotation-requests")]
@@ -35,35 +38,19 @@ namespace JewelryProduction.Controllers
 
             return Ok(pendingRequests);
         }
-        [HttpPost("approve-request/{id}")]
-        public async Task<IActionResult> ApproveRequest(string id)
+        [HttpPost("send-quotation-to-Customer")]
+        public async Task<IActionResult> ApproveCustomerRequest(string customerRequestId)
         {
-            var customerRequest = await _context.CustomerRequests.FindAsync(id);
-            if (customerRequest == null)
+            var success = await _requestService.SendQuotation(customerRequestId, GetCurrentUserId());
+
+            if (!success)
             {
-                return NotFound();
+                return BadRequest("Failed to approve customer request.");
             }
 
-            customerRequest.Status = "Approved";
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return Ok("Customer request approved successfully.");
         }
 
-        [HttpPost("reject-request/{id}")]
-        public async Task<IActionResult> RejectRequest(string id)
-        {
-            var customerRequest = await _context.CustomerRequests.FindAsync(id);
-            if (customerRequest == null)
-            {
-                return NotFound();
-            }
-
-            customerRequest.Status = "Rejected";
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
         [HttpPost("send-approved")]
         public async Task<ActionResult> SendForApproval(string CustomizeRequestId)
         {

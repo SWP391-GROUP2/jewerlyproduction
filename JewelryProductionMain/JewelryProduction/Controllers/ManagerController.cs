@@ -35,7 +35,8 @@ namespace JewelryProduction.Controllers
         [HttpPost("approve/{customerRequestId}")]
         public async Task<IActionResult> ApproveCustomerRequest(string customerRequestId)
         {
-            var success = await _requestService.ApproveCustomerRequest(customerRequestId);
+            var managerId = GetCurrentUserId();
+            var success = await _requestService.ApproveQuotation(customerRequestId, managerId);
 
             if (!success)
             {
@@ -45,9 +46,10 @@ namespace JewelryProduction.Controllers
             return Ok("Customer request approved successfully.");
         }
         [HttpPost("reject/{customerRequestId}")]
-        public async Task<IActionResult> RejectCustomerRequest(string customerRequestId, string message)
+        public async Task<IActionResult> RejectQuotation(string customerRequestId, string message)
         {
-            var success = await _requestService.RejectQuotation(customerRequestId, message);
+            var managerId = GetCurrentUserId();
+            var success = await _requestService.RejectQuotation(customerRequestId, managerId, message);
 
             if (!success)
             {
@@ -55,6 +57,35 @@ namespace JewelryProduction.Controllers
             }
 
             return Ok("Customer request rejected successfully.");
+        }
+        [HttpPost("approve-request/{id}")]
+        public async Task<IActionResult> ApproveRequest(string id)
+        {
+            var customerRequest = await _context.CustomerRequests.FindAsync(id);
+            if (customerRequest == null)
+            {
+                return NotFound();
+            }
+
+            customerRequest.Status = "Approved";
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpPost("reject-request/{id}")]
+        public async Task<IActionResult> RejectRequest(string id)
+        {
+            var customerRequest = await _context.CustomerRequests.FindAsync(id);
+            if (customerRequest == null)
+            {
+                return NotFound();
+            }
+
+            customerRequest.Status = "Rejected";
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
         [HttpGet("pending-requests")]
         public async Task<ActionResult<IEnumerable<CustomerRequest>>> GetPendingRequests()
