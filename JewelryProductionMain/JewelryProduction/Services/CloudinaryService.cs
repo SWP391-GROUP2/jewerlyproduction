@@ -1,35 +1,45 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using JewelryProduction.Entities;
 using JewelryProduction.Interface;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 
-namespace JewelryProduction.Services
+public class CloudinaryService : ICloudinaryService
 {
-    public class CloudinaryService : ICloudinaryService
+    private readonly Cloudinary _cloudinary;
+
+    public CloudinaryService(IConfiguration configuration)
     {
-        private readonly Cloudinary _cloudinary;
-        public CloudinaryService(IOptions<CloudinarySettings> _config)
-        {
-            var account = new Account(
-                _config.Value.CloudName,
-                _config.Value.ApiKey,
-                _config.Value.ApiSecret
-            );
-            _cloudinary = new Cloudinary(account);
-        }
+        var cloudinaryAccount = new Account(
+            configuration["Cloudinary:CloudName"],
+            configuration["Cloudinary:ApiKey"],
+            configuration["Cloudinary:ApiSecret"]);
+        
 
-        public async Task<string> UploadImageAsync(IFormFile file)
+        _cloudinary = new Cloudinary(cloudinaryAccount);
+    }
+
+    public async Task<ImageUploadResult> UploadImageAsync(IFormFile file)
+    {
+        var uploadResult = new ImageUploadResult();
+
+        if (file.Length > 0)
         {
-            var uploadParams = new ImageUploadParams()
+            using (var stream = file.OpenReadStream())
             {
-                File = new FileDescription(file.FileName, file.OpenReadStream())
-            };
+                var uploadParams = new ImageUploadParams()
+                {
+                    File = new FileDescription(file.FileName, stream),
+                    Transformation = new Transformation().Quality("auto").FetchFormat("auto")
+                };
 
-            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
-            return uploadResult.SecureUrl.AbsoluteUri;
+                uploadResult = await _cloudinary.UploadAsync(uploadParams);
+            }
         }
+        return uploadResult;
+    }
+
+    public string GetUrl(string publicId)
+    {
+        return _cloudinary.Api.UrlImgUp.BuildUrl(publicId);
     }
 }

@@ -26,13 +26,14 @@ namespace JewelryProduction.Controllers
         private readonly IEmailService _emailService;
         private readonly ICloudinaryService _cloudinaryService;
 
-        public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager, RoleManager<IdentityRole> roleManager, IEmailService emailService)
+        public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager, RoleManager<IdentityRole> roleManager, IEmailService emailService, ICloudinaryService cloudinaryService)
         {
             _userManager = userManager;
             _tokenService = tokenService;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _emailService = emailService;
+            _cloudinaryService = cloudinaryService;
         }
 
         [HttpPost("register/Staff")]
@@ -265,18 +266,20 @@ namespace JewelryProduction.Controllers
             if (updateProfile.Avatar != null)
             {
                 var avatarUrl = await _cloudinaryService.UploadImageAsync(updateProfile.Avatar);
-                user.Avatar = avatarUrl;
+                var url = avatarUrl.Url.ToString();
+                user.Avatar = url;
             }
 
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
             {
-                var updatedUserProfile = new UpdateUserProfileDTO()
+                var updatedUserProfile = new UserProfileDTO()
                 {
                     Name = user.Name,
                     PhoneNumber = user.PhoneNumber,
-                    DateOfBirth = updateProfile.DateOfBirth,
-                    Avatar = updateProfile.Avatar
+                    Email = email,
+                    DateOfBirth = user.DateOfBirth,
+                    Avatar = user.Avatar
                 };
                 return Ok(updatedUserProfile);
             }

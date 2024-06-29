@@ -15,8 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\HomeController.cs" />
-    <Compile Remove="Controllers\ManagerController.cs" />
     <Compile Remove="Controllers\ZaloPayController.cs" />
     <Compile Remove="Services\ZaloPayService.cs" />
   </ItemGroup>

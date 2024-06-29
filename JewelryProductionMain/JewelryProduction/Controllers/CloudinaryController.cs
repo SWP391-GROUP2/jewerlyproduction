@@ -1,24 +1,29 @@
 ﻿using JewelryProduction.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace JewelryProduction.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class CloudinaryController : ControllerBase
     {
         private readonly ICloudinaryService _cloudinaryService;
+
         public CloudinaryController(ICloudinaryService cloudinaryService)
         {
             _cloudinaryService = cloudinaryService;
         }
 
         [HttpPost("Upload")]
-        public async Task<IActionResult> UploadImage([FromForm] IFormFile file)
+        public async Task<IActionResult> UploadImage(IFormFile file)
         {
-            var url = await _cloudinaryService.UploadImageAsync(file);
-            return Ok(new { url });
-        }   
+            if (file == null || file.Length == 0)
+                return BadRequest("No file uploaded.");
+
+            var imageUrl = await _cloudinaryService.UploadImageAsync(file);
+            return Ok(imageUrl);
+        }
     }
 }
