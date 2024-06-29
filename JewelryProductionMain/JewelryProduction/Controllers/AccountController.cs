@@ -2,6 +2,7 @@
 using Google.Apis.Auth;
 using JewelryProduction.DTO.Account;
 using JewelryProduction.Interface;
+using JewelryProduction.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -23,14 +24,16 @@ namespace JewelryProduction.Controllers
         private readonly ITokenService _tokenService;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IEmailService _emailService;
+        private readonly ICloudinaryService _cloudinaryService;
 
-        public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager, RoleManager<IdentityRole> roleManager, IEmailService emailService)
+        public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager, RoleManager<IdentityRole> roleManager, IEmailService emailService, ICloudinaryService cloudinaryService)
         {
             _userManager = userManager;
             _tokenService = tokenService;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _emailService = emailService;
+            _cloudinaryService = cloudinaryService;
         }
 
         [HttpPost("register/Staff")]
@@ -242,7 +245,7 @@ namespace JewelryProduction.Controllers
         }
 
         [HttpPut("Update-Profile")]
-        public async Task<IActionResult> UpdateProfile([FromBody] UpdateUserProfileDTO updateprofile)
+        public async Task<IActionResult> UpdateProfile(UpdateUserProfileDTO updateProfile)
         {
             var authorizationHeader = HttpContext.Request.Headers["Authorization"].ToString();
             var token = authorizationHeader.Substring("Bearer ".Length).Trim();
@@ -254,37 +257,33 @@ namespace JewelryProduction.Controllers
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null || string.IsNullOrWhiteSpace(token))
                 return BadRequest("Invalid credentials");
+             
+            user.Name = updateProfile.Name;
+            user.PhoneNumber = updateProfile.PhoneNumber;
 
-            user.Name = updateprofile.Name;
-            user.PhoneNumber = updateprofile.PhoneNumber;
-            user.DateOfBirth = updateprofile.DateOfBirth;
-            user.Avatar = updateprofile.Avatar;
+            user.DateOfBirth = DateOnly.Parse(updateProfile.DateOfBirth);
+
+            if (updateProfile.Avatar != null)
+            {
+                var avatarUrl = await _cloudinaryService.UploadImageAsync(updateProfile.Avatar);
+                var url = avatarUrl.Url.ToString();
+                user.Avatar = url;
+            }
 
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
             {
-                var updatedUserProfile = new UpdateUserProfileDTO()
+                var updatedUserProfile = new UserProfileDTO()
                 {
                     Name = user.Name,
                     PhoneNumber = user.PhoneNumber,
+                    Email = email,
                     DateOfBirth = user.DateOfBirth,
                     Avatar = user.Avatar
                 };
                 return Ok(updatedUserProfile);
             }
             return BadRequest("Failed to update profile");
-
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> EmailConfirm([FromBody] string email)
-        {
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user == null)
-                return Unauthorized("Invalid Email");
-            if (!user.EmailConfirmed)
-                return BadRequest(false);
-            return Ok(true);
         }
 
         [HttpPost("change-password")]
@@ -327,6 +326,7 @@ namespace JewelryProduction.Controllers
             if (user == null)
                 return Unauthorized("Invalid Email");
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
             var message = new MessageOTP(
                 new string[] { email },
                 "Reset Password",

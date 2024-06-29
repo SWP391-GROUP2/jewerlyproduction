@@ -1,5 +1,6 @@
 using JewelryProduction.DbContext;
 using JewelryProduction.DTO.Account;
+using JewelryProduction.Entities;
 using JewelryProduction.Interface;
 using JewelryProduction.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -21,13 +22,15 @@ namespace JewelryProduction
             builder.Services.AddSignalR();
 
             builder.Services.AddScoped<IVnPayService, VnPayService>();
-
             builder.Services.AddScoped<IOrderService, OrderService>();
-
             builder.Services.AddScoped<IProductSampleService, ProductSampleService>();
             builder.Services.AddScoped<ISaleStaffService, SaleStaffService>();
             builder.Services.AddScoped<INotificationService, NotificationService>();
             builder.Services.AddScoped<ICustomerRequestService, CustomerRequestService>();
+            builder.Services.AddScoped<ITokenService, TokenService>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
+            builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+
             builder.Services.AddControllers();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -36,7 +39,7 @@ namespace JewelryProduction
 
             // Add DbContext
             builder.Services.AddDbContext<JewelryProductionContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             // Add Identity
             builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
@@ -48,44 +51,39 @@ namespace JewelryProduction
                 options.Password.RequiredLength = 8;
                 options.SignIn.RequireConfirmedEmail = true;
             }).AddEntityFrameworkStores<JewelryProductionContext>()
-            .AddDefaultTokenProviders();
+              .AddDefaultTokenProviders();
 
             // Add JWT Authentication
             builder.Services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme =
-                options.DefaultChallengeScheme =
-                options.DefaultForbidScheme =
-                options.DefaultScheme =
-                options.DefaultSignInScheme =
-                options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-                .AddJwtBearer(options =>
-
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = false,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = builder.Configuration["JWT:Issuer"],
-                        ValidAudience = builder.Configuration["JWT:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
-                    };
-                })
-                .AddGoogle(googleOptions =>
-                {
-                    googleOptions.ClientId = builder.Configuration["Google:ClientId"];
-                    googleOptions.ClientSecret = builder.Configuration["Google:ClientSecret"];
-                });
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = builder.Configuration["JWT:Issuer"],
+                    ValidAudience = builder.Configuration["JWT:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]))
+                };
+            })
+            .AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = builder.Configuration["Google:ClientId"];
+                googleOptions.ClientSecret = builder.Configuration["Google:ClientSecret"];
+            });
 
             // Add Email Config
             var emailConfig = builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
             builder.Services.AddSingleton(emailConfig);
 
-            builder.Services.AddScoped<ITokenService, TokenService>();
-            builder.Services.AddScoped<IEmailService, EmailService>();
+            builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
 
             builder.Services.AddSwaggerGen(option =>
             {
@@ -100,29 +98,29 @@ namespace JewelryProduction
                     Scheme = "Bearer"
                 });
                 option.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
                 {
-                    Type=ReferenceType.SecurityScheme,
-                    Id="Bearer"
-                }
-            },
-            new string[]{}
-        }
-    });
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] { }
+                    }
+                });
             });
 
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("AllowSpecificOrigin",
+                options.AddPolicy("AllowAllOrigins",
                     builder =>
                     {
-                        builder.WithOrigins("http://localhost:3000")
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
+                        builder.AllowAnyOrigin()
+                               .AllowAnyMethod()
+                               .AllowAnyHeader();
                     });
             });
 
@@ -131,7 +129,6 @@ namespace JewelryProduction
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-            http://localhost:5266/swagger/index.html
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
@@ -139,7 +136,7 @@ namespace JewelryProduction
             app.UseHttpsRedirection();
 
             // Use CORS
-            app.UseCors("AllowSpecificOrigin");
+            app.UseCors("AllowAllOrigins");
 
             app.UseAuthentication();
             app.UseAuthorization();
@@ -149,9 +146,8 @@ namespace JewelryProduction
             {
                 // Map your hubs
                 endpoints.MapHub<MyHub>("/myHub");
+                endpoints.MapControllers();
             });
-
-            app.MapControllers();
 
             app.Run();
         }
