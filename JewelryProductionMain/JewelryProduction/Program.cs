@@ -28,6 +28,10 @@ namespace JewelryProduction
             builder.Services.AddScoped<ISaleStaffService, SaleStaffService>();
             builder.Services.AddScoped<INotificationService, NotificationService>();
             builder.Services.AddScoped<ICustomerRequestService, CustomerRequestService>();
+            builder.Services.AddScoped<ITokenService, TokenService>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
+            builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+
             builder.Services.AddControllers();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -84,8 +88,7 @@ namespace JewelryProduction
             var emailConfig = builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
             builder.Services.AddSingleton(emailConfig);
 
-            builder.Services.AddScoped<ITokenService, TokenService>();
-            builder.Services.AddScoped<IEmailService, EmailService>();
+            builder.Services.Configure<CloudinaryService>(builder.Configuration.GetSection("CloudinarySettings"));
 
             builder.Services.AddSwaggerGen(option =>
             {
