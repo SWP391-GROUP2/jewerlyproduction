@@ -19,9 +19,9 @@ namespace JewelryProduction.Services
             var customerRequest = await _context.CustomerRequests.FindAsync(CustomizeRequestId);
             var gold = await _context.Golds.FindAsync(customerRequest.GoldId);
             var gemstones = await _context.Gemstones
-            .Where(g => customerRequest.CustomizeRequestId.Contains(g.CustomizeRequestId))
+            .Where(g => g.CustomizeRequestId == CustomizeRequestId)
             .ToListAsync();
-            if (customerRequest == null || !customerRequest.Status.Equals("Pending"))
+            if (customerRequest == null)
             {
                 return 0;
             }
