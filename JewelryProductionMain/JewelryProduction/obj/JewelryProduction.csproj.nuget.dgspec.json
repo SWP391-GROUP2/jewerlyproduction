@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\GitHub\\JPOS\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj": {}
+    "C:\\Project_\\JewerlyProduction\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj": {}
   },
   "projects": {
-    "D:\\GitHub\\JPOS\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj": {
+    "C:\\Project_\\JewerlyProduction\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\GitHub\\JPOS\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj",
+        "projectUniqueName": "C:\\Project_\\JewerlyProduction\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj",
         "projectName": "JewelryProduction",
-        "projectPath": "D:\\GitHub\\JPOS\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj",
-        "packagesPath": "C:\\Users\\tranq\\.nuget\\packages\\",
-        "outputPath": "D:\\GitHub\\JPOS\\JewelryProductionMain\\JewelryProduction\\obj\\",
+        "projectPath": "C:\\Project_\\JewerlyProduction\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj",
+        "packagesPath": "C:\\Users\\acer\\.nuget\\packages\\",
+        "outputPath": "C:\\Project_\\JewerlyProduction\\JewelryProductionMain\\JewelryProduction\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\tranq\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\acer\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -49,6 +49,10 @@
             "AutoMapper": {
               "target": "Package",
               "version": "[13.0.1, )"
+            },
+            "CloudinaryDotNet": {
+              "target": "Package",
+              "version": "[1.26.2, )"
             },
             "EPPlus": {
               "target": "Package",

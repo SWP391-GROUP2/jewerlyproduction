@@ -22,6 +22,7 @@ namespace JewelryProduction.Controllers
             var url = await _vnPayService.CreatePaymentUrl(HttpContext, model);
             return Ok(url);
         }
+
         [HttpGet("PaymentCallback")]
         public IActionResult PaymentCallback()
         {

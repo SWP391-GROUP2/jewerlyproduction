@@ -14,12 +14,12 @@ import NotFound from "../pages/NotFound/NotFound";
 import CustomizePage from "../pages/CustomizePage/CustomizePage";
 import GemstoneDetailPage from "../pages/GemstoneDetailPage/GemstoneDetailPage";
 import SendOTP from "../pages/SendOTP/SendOTP";
+import ForgetPasswordVerify from "../pages/ForgetPasswordVerify/ForgetPasswordVerify";
 import AdminPage from "../pages/AdminPage/AdminPage";
 import SaleStaffPage from "../pages/SaleStaffPage/SaleStaffPage";
 import DesignStaffPage from "../pages/DesignStaffPage/DesignStaffPage";
 import ManagerPage from "../pages/ManagerPage/ManagerPage";
 import ProductionStaffPage from "../pages/ProductionStaffPage/ProductionStaffPage";
-
 
 const routes = [
   { path: "/login", element: <LoginForm /> },
@@ -37,14 +37,15 @@ const routes = [
   { path: "/customize", element: <CustomizePage /> },
   { path: "/productdetails", element: <ProductDetailsPage /> },
   { path: "/product/:productId", element: <ProductDetailsPage /> },
-  { path: "/gemstone/:gemstoneId", element: <GemstoneDetailPage /> }, 
+  { path: "/gemstone/:gemstoneId", element: <GemstoneDetailPage /> },
   { path: "/otp", element: <SendOTP /> },
   { path: "/adminpage", element: <AdminPage /> },
   { path: "/salestaffpage", element: <SaleStaffPage /> },
   { path: "/designstaffpage", element: <DesignStaffPage /> },
   { path: "/managerpage", element: <ManagerPage /> },
   { path: "/productionstaffpage", element: <ProductionStaffPage /> },
-
+  { path: "/forgetpasswordverify", element: <ForgetPasswordVerify /> },
+  { path: "/customize/:productId", element: <CustomizePage /> },
 ];
 
 export default routes;
