@@ -17,12 +17,12 @@ namespace JewelryProduction.Controllers
         }
 
         [HttpPost("Upload")]
-        public async Task<IActionResult> UploadImage(IFormFile file)
+        public async Task<IActionResult> UploadImage(IFormFile file, string folder)
         {
             if (file == null || file.Length == 0)
                 return BadRequest("No file uploaded.");
 
-            var imageUrl = await _cloudinaryService.UploadImageAsync(file);
+            var imageUrl = await _cloudinaryService.UploadImageAsync(file, "Test");
             return Ok(imageUrl);
         }
     }
