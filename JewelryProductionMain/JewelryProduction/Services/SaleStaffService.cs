@@ -19,14 +19,14 @@ namespace JewelryProduction.Services
             var customerRequest = await _context.CustomerRequests.FindAsync(CustomizeRequestId);
             var gold = await _context.Golds.FindAsync(customerRequest.GoldId);
             var gemstones = await _context.Gemstones
-            .Where(g => customerRequest.CustomizeRequestId.Contains(g.CustomizeRequestId))
+            .Where(g => g.CustomizeRequestId == CustomizeRequestId)
             .ToListAsync();
-            if (customerRequest == null || !customerRequest.Status.Equals("Pending"))
+            if (customerRequest == null)
             {
                 return 0;
             }
             decimal goldPrice = gold.PricePerGram * (decimal)gold.Weight;
-            decimal gemstonePrice = customerRequest.Gemstones.Sum(x => x.Price);
+            decimal gemstonePrice = gemstones.Sum(x => x.Price);
             decimal productCost = ((goldPrice + gemstonePrice) * 1.4M) * 1.1M;
             customerRequest.quotation = productCost;
             await _context.SaveChangesAsync();

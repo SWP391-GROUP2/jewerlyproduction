@@ -36,7 +36,7 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
 
     public DbSet<ProductSample> ProductSamples { get; set; }
 
-
+    public DbSet<Notification> Notifications { get; set; }
     public DbSet<AppUser> Users { get; set; }
 
     public DbSet<_3ddesign> _3ddesigns { get; set; }
@@ -147,7 +147,9 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
                 .HasColumnType("decimal(18, 0)")
                 .HasColumnName("quantity");
             entity.Property(e => e.Size).HasColumnName("size");
-            entity.Property(e => e.quotation).HasColumnName("quotation");
+            entity.Property(e => e.quotation)
+                .HasColumnType("money")
+                .HasColumnName("quotation");
             entity.Property(e => e.quotationDes)
                 .HasMaxLength(450)
                 .HasColumnName("quotationDes");
@@ -411,6 +413,39 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
                 .HasMaxLength(50)
                 .HasColumnName("status");
             entity.Property(e => e.CreatedAt).HasColumnName("createdAt");
+        });
+
+        modelBuilder.Entity<Notification>(entity =>
+        {
+            entity.ToTable("Notification");
+            entity.Property(e => e.NotificationId)
+                .HasMaxLength(50)
+                .HasColumnName("notificationId");
+            entity.Property(e => e.Message)
+                .HasMaxLength(200)
+                .HasColumnName("message");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(450)
+                .HasColumnName("userId");
+            entity.Property(e => e.SenderId)
+                .HasMaxLength(450)
+                .HasColumnName("senderId");
+            entity.Property(e => e.IsRead)
+                .IsRequired()
+                .HasColumnName("isRead");
+            entity.Property(e => e.CreatedAt).HasColumnName("createdAt");
+
+            entity.HasOne(n => n.User)
+                 .WithMany(u => u.ReceivedNotifications)
+                 .HasForeignKey(n => n.UserId)
+                 .OnDelete(DeleteBehavior.Restrict)
+                 .HasConstraintName("FK_Notification_User");
+
+            entity.HasOne(n => n.Sender)
+                  .WithMany(u => u.SentNotifications)
+                  .HasForeignKey(n => n.SenderId)
+                  .OnDelete(DeleteBehavior.Restrict)
+                  .HasConstraintName("FK_Notification_Sender");
         });
 
         modelBuilder.Entity<AppUser>(entity =>

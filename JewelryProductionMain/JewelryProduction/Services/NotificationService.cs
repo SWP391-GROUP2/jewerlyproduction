@@ -1,5 +1,8 @@
-﻿using JewelryProduction.DbContext;
+﻿using JewelryProduction.Common;
+using JewelryProduction.DbContext;
+using JewelryProduction.Entities;
 using JewelryProduction.Interface;
+using MailKit.Search;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 
@@ -18,28 +21,46 @@ namespace JewelryProduction.Services
             _userManager = userManager;
         }
 
-        public async Task SendNotificationToUserAsync(string userId, string message)
+        public async Task SendNotificationToUserfAsync(string user, string senderId, string message)
         {
-            var connectionId = MyHub.GetConnectionId(userId);
-            if (!string.IsNullOrEmpty(connectionId))
+            var notification = new Notification
             {
-                await _hubContext.Clients.Client(connectionId).SendAsync("ReceiveNotification", message);
-            }
+                NotificationId = await IdGenerator.GenerateUniqueId<Order>(_context, "Mess", 4),
+                UserId = user,
+                SenderId = senderId,
+                Message = message,
+                IsRead = false,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.Notifications.Add(notification);
+            await _context.SaveChangesAsync();
+
+            // Send real-time notification via SignalR
+            await _hubContext.Clients.User(user).SendAsync("ReceiveNotification", message);
         }
 
-        public async Task SendNotificationToRoleAsync(string role, string message)
-        {
-            // Logic để lấy danh sách user theo vai trò
-            var usersInRole = await GetUsersInRoleAsync(role);
-            foreach (var user in usersInRole)
-            {
-                await SendNotificationToUserAsync(user.Id, message);
-            }
-        }
 
-        private async Task<List<AppUser>> GetUsersInRoleAsync(string role)
+        public async Task SendNotificationToRoleAsync(string role, string senderId, string message)
         {
-            throw new NotImplementedException();
+            var usersrole = await _userManager.GetUsersInRoleAsync(role);
+
+            var notifications = usersrole.Select(customer => new Notification
+            {
+                UserId = customer.Id,
+                SenderId = senderId,
+                Message = message,
+                IsRead = false,
+                CreatedAt = DateTime.UtcNow
+            }).ToList();
+
+            _context.Notifications.AddRange(notifications);
+            await _context.SaveChangesAsync();
+
+            foreach (var user in usersrole)
+            {
+                await SendNotificationToUserfAsync(user.Id, senderId, message);
+            }
         }
     }
 }
