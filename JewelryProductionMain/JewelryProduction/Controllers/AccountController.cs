@@ -265,7 +265,8 @@ namespace JewelryProduction.Controllers
 
             if (updateProfile.Avatar != null)
             {
-                var avatarUrl = await _cloudinaryService.UploadImageAsync(updateProfile.Avatar);
+                var folder = "Avatar";
+                var avatarUrl = await _cloudinaryService.UploadImageAsync(updateProfile.Avatar, folder);
                 var url = avatarUrl.Url.ToString();
                 user.Avatar = url;
             }
