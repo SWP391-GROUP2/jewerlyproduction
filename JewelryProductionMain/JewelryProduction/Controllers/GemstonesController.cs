@@ -149,7 +149,7 @@ namespace JewelryProduction.Controllers
         }
 
         [HttpGet("Filter Gemstone")]
-        public async Task<ActionResult<IEnumerable<Gemstone>>> FilterGemstone(string? shape, string? clarity, double? size, string? colors, double? caraMin, double? caraMax)
+        public async Task<ActionResult<IEnumerable<Gemstone>>> FilterGemstone(string? shape, string? clarity, double? size, string? colors, double? caraMin, double? caraMax, string? categoryName)
         {
             var query = _context.Gemstones.AsQueryable();
             if (!string.IsNullOrEmpty(shape)) query = query.Where(sv => sv.Shape.Contains(shape));
@@ -158,6 +158,15 @@ namespace JewelryProduction.Controllers
             if (!string.IsNullOrEmpty(colors)) query = query.Where(sv => sv.Color.Contains(colors));
             if (caraMin.HasValue) query = query.Where(sv => sv.CaratWeight >= caraMin);
             if (caraMax.HasValue) query = query.Where(sv => sv.CaratWeight <= caraMax);
+
+            if (!string.IsNullOrEmpty(categoryName))
+            {
+                query = from gemstone in query
+                        join category in _context.Categories
+                        on gemstone.CategoryId equals category.CategoryId
+                        where category.CategoryName.Contains(categoryName)
+                        select gemstone;
+            }
 
             var result = await query.ToListAsync();
             return Ok(result);
