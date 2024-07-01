@@ -6,6 +6,8 @@ using JewelryProduction.Interface;
 using JewelryProduction.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace JewelryProduction.Controllers
 {
@@ -48,14 +50,31 @@ namespace JewelryProduction.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCustomerRequest(string id, CustomerRequestDTO customerRequestDTO)
         {
-            var gemstones = await _context.Gemstones
-            .Where(g => customerRequestDTO.GemstoneName.Contains(g.Name))
-            .ToListAsync();
+            var primaryGemstone = await _context.Gemstones
+                    .Where(g =>
+                        g.Name == customerRequestDTO.PrimaryGemstone.Name &&
+                        g.Clarity == customerRequestDTO.PrimaryGemstone.Clarity &&
+                        g.Color == customerRequestDTO.PrimaryGemstone.Color &&
+                        g.Shape == customerRequestDTO.PrimaryGemstone.Shape &&
+                        g.Size == customerRequestDTO.PrimaryGemstone.Size &&
+                        g.Cut == customerRequestDTO.PrimaryGemstone.Cut &&
+                        g.Price == customerRequestDTO.PrimaryGemstone.Price &&
+                        g.ProductSample == null && g.CustomizeRequestId == null)
+                    .FirstOrDefaultAsync();
 
-            if (gemstones.Count != customerRequestDTO.GemstoneName.Count)
+            if (primaryGemstone == null)
             {
-                return BadRequest("Some gemstones were not found.");
+                return BadRequest("The primary gemstone was not found.");
             }
+
+            var additionalGemstones = await _context.Gemstones
+                .Where(g => customerRequestDTO.AdditionalGemstoneNames.Contains(g.Name) && g.CaratWeight >= 0.1 && g.CaratWeight <= 0.3)
+                .GroupBy(g => g.Name)
+                .Select(g => g.FirstOrDefault())
+                .OrderBy(_ => Guid.NewGuid())
+                .Take(2)
+                .ToListAsync();
+            var allSelectedGemstones = new List<Gemstone> { primaryGemstone }.Concat(additionalGemstones).ToList();
             var gold = await _context.Golds
             .FirstOrDefaultAsync(g => g.GoldType == customerRequestDTO.GoldType);
 
@@ -63,13 +82,7 @@ namespace JewelryProduction.Controllers
             {
                 return BadRequest("Gold type not found.");
             }
-            if (id != customerRequestDTO.CustomizeRequestId)
-            {
-                return BadRequest();
-            }
-
             var updateCusReq = await _context.CustomerRequests.FindAsync(id);
-            updateCusReq.CustomizeRequestId = customerRequestDTO.CustomizeRequestId;
             updateCusReq.SaleStaffId = customerRequestDTO.SaleStaffId;
             updateCusReq.ManagerId = customerRequestDTO.ManagerId;
             updateCusReq.GoldId = gold.GoldId;
@@ -79,7 +92,7 @@ namespace JewelryProduction.Controllers
             updateCusReq.Size = customerRequestDTO.Size;
             updateCusReq.Quantity = customerRequestDTO.Quantity;
             updateCusReq.Status = customerRequestDTO.Status;
-            updateCusReq.Gemstones = gemstones;
+            updateCusReq.Gemstones = allSelectedGemstones;
             updateCusReq.Gold = gold;
 
             try
@@ -121,18 +134,31 @@ namespace JewelryProduction.Controllers
         [HttpPost]
         public async Task<ActionResult<CustomerRequest>> PostCustomerRequest(CustomerRequestDTO customerRequestDTO)
         {
-            var requestedGemstones = customerRequestDTO.GemstoneName.Distinct().Take(3).ToList();
+            var primaryGemstone = await _context.Gemstones
+                    .Where(g =>
+                        g.Name == customerRequestDTO.PrimaryGemstone.Name &&
+                        g.Clarity == customerRequestDTO.PrimaryGemstone.Clarity &&
+                        g.Color == customerRequestDTO.PrimaryGemstone.Color &&
+                        g.Shape == customerRequestDTO.PrimaryGemstone.Shape &&
+                        g.Size == customerRequestDTO.PrimaryGemstone.Size &&
+                        g.Cut == customerRequestDTO.PrimaryGemstone.Cut &&
+                        g.Price == customerRequestDTO.PrimaryGemstone.Price &&
+                        g.ProductSample == null && g.CustomizeRequestId == null)
+                    .FirstOrDefaultAsync();
 
-            var gemstones = await _context.Gemstones
-                .Where(g => requestedGemstones.Contains(g.Name))
+            if (primaryGemstone == null)
+            {
+                return BadRequest("The primary gemstone was not found.");
+            }
+
+            var additionalGemstones = await _context.Gemstones
+                .Where(g => customerRequestDTO.AdditionalGemstoneNames.Contains(g.Name) && g.CaratWeight >= 0.1 && g.CaratWeight <= 0.3)
                 .GroupBy(g => g.Name)
                 .Select(g => g.FirstOrDefault())
+                .OrderBy(_ => Guid.NewGuid())
+                .Take(2)
                 .ToListAsync();
-
-            if (gemstones.Count != requestedGemstones.Count)
-            {
-                return BadRequest("Some gemstones were not found or duplicates were selected.");
-            }
+            var allSelectedGemstones = new List<Gemstone> { primaryGemstone }.Concat(additionalGemstones).ToList();
             var gold = await _context.Golds
             .FirstOrDefaultAsync(g => g.GoldType == customerRequestDTO.GoldType);
 
@@ -146,12 +172,12 @@ namespace JewelryProduction.Controllers
             {
                 CustomizeRequestId = uniqueId,
                 GoldId = gold.GoldId,
-                CustomerId = customerRequestDTO.CustomerId,
+                CustomerId = GetCurrentUserId(),
                 Type = customerRequestDTO.Type,
                 Style = customerRequestDTO.Style,
                 Size = customerRequestDTO.Size,
                 Quantity = customerRequestDTO.Quantity,
-                Gemstones = gemstones,
+                Gemstones = allSelectedGemstones,
                 Gold = gold,
                 Status = "Pending"
             };
@@ -206,12 +232,36 @@ namespace JewelryProduction.Controllers
         {
             var productSample = await _context.ProductSamples
                 .Where(ps => ps.ProductSampleId == productSampleId)
-                .Select(ps => new CustomerRequestDTO
+                .Select(ps => new
                 {
                     Type = ps.Type,
                     Style = ps.Style,
                     Quantity = 1, // Default quantity, adjust as necessary
-                    GemstoneName = ps.Gemstones.Select(g => g.Name).ToList(),
+                    PrimaryGemstone = ps.Gemstones
+                        .Where(g => g.CaratWeight > 0.3)
+                        .Select(g => new AddGemstoneDTO
+                        {
+                            Name = g.Name,
+                            Clarity = g.Clarity,
+                            Color = g.Color,
+                            Shape = g.Shape,
+                            Size = g.Size,
+                            Cut = g.Cut,
+                            CaratWeight = g.CaratWeight,
+                        }).FirstOrDefault(),
+                        AdditionalGemstones = ps.Gemstones
+                        .Where(g => g.CaratWeight <= 0.3)
+                        .Select(g => new Gemstone
+                        {
+                            Name = g.Name,
+                            Clarity = g.Clarity,
+                            Color = g.Color,
+                            Shape = g.Shape,
+                            Size = g.Size,
+                            Cut = g.Cut,
+                            CaratWeight = g.CaratWeight,
+                        })
+                        .ToList(),
                     GoldType = ps.Gold.GoldType,
                 })
                 .FirstOrDefaultAsync();
@@ -221,7 +271,17 @@ namespace JewelryProduction.Controllers
                 return NotFound("Product sample not found.");
             }
 
-            return Ok(productSample);
+            var customerRequest = new CustomerRequestDTO
+            {
+                Type = productSample.Type,
+                Style = productSample.Style,
+                Quantity = productSample.Quantity,
+                PrimaryGemstone = productSample.PrimaryGemstone,
+                AdditionalGemstoneNames = productSample.AdditionalGemstones.Select(g => g.Name).ToList(),
+                GoldType = productSample.GoldType,
+            };
+
+            return Ok(customerRequest);
         }
         [HttpPost("approve/{customizeRequestId}")]
         public async Task<IActionResult> ApproveCustomerRequest(string customizeRequestId)
@@ -319,6 +379,11 @@ namespace JewelryProduction.Controllers
             };
 
             return Ok(response);
+        }
+        private string GetCurrentUserId()
+        {
+            var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sid);
+            return userId;
         }
     }
 }

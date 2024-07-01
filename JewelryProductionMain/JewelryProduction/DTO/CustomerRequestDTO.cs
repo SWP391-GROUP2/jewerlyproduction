@@ -2,8 +2,6 @@
 {
     public class CustomerRequestDTO
     {
-        public string CustomizeRequestId { get; set; } = null!;
-
 
         public string CustomerId { get; set; } = null!;
         public string? SaleStaffId { get; set; }
@@ -18,6 +16,7 @@
         public decimal Quantity { get; set; }
         public string GoldType { get; set; } = null!;
         public string Status { get; set; } = null!;
-        public List<string> GemstoneName { get; set; } = new List<string>();
+        public AddGemstoneDTO PrimaryGemstone { get; set; } = new AddGemstoneDTO();
+        public List<string> AdditionalGemstoneNames { get; set; } = new List<string>();
     }
 }
