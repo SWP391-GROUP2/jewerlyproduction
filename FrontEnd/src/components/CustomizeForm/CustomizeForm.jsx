@@ -34,7 +34,7 @@ function CustomizeForm() {
   const [currentMainPage, setCurrentMainPage] = useState(1);
   const [currentSidePage, setCurrentSidePage] = useState(1);
 
-  const user = useSelector((State) => State.auth.register.currentUser);
+  const user = useSelector((State) => State.auth.Login.currentUser);
 
   // Khai báo trạng thái chứa tên của hai loại đá dưới dạng một mảng
   const [gemstoneNames, setGemstoneNames] = useState([]);
