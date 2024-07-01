@@ -120,7 +120,7 @@ namespace JewelryProduction.Controllers
             }
 
             customerRequest.SaleStaffId = assignSaleStaffDTO.SaleStaffId;
-            customerRequest.ManagerId = GetCurrentUserId();
+            customerRequest.ManagerId = assignSaleStaffDTO.ManagerId;
             customerRequest.Status = "Wait for Quotation"; 
 
             _context.CustomerRequests.Update(customerRequest);
@@ -146,6 +146,7 @@ namespace JewelryProduction.Controllers
     public class AssignSaleStaffDTO
     {
         public string CustomizeRequestId { get; set; } = null!;
+        public string ManagerId { get; set; }
         public string SaleStaffId { get; set; } = null!;
     }
 
