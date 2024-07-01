@@ -83,10 +83,7 @@ namespace JewelryProduction.Controllers
                 return BadRequest("Gold type not found.");
             }
             var updateCusReq = await _context.CustomerRequests.FindAsync(id);
-            updateCusReq.SaleStaffId = customerRequestDTO.SaleStaffId;
-            updateCusReq.ManagerId = customerRequestDTO.ManagerId;
             updateCusReq.GoldId = gold.GoldId;
-            updateCusReq.CustomerId = customerRequestDTO.CustomerId;
             updateCusReq.Type = customerRequestDTO.Type;
             updateCusReq.Style = customerRequestDTO.Style;
             updateCusReq.Size = customerRequestDTO.Size;
