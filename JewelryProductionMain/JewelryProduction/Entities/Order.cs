@@ -4,7 +4,7 @@ public partial class Order
 {
     public string OrderId { get; set; } = null!;
 
-    public string ProductionStaffId { get; set; } = null!;
+    public string? ProductionStaffId { get; set; } = null!;
 
     public string DesignStaffId { get; set; } = null!;
 

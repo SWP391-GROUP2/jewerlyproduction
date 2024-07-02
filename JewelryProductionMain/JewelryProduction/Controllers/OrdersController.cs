@@ -170,11 +170,25 @@ namespace JewelryProduction.Controllers
 
             return NoContent();
         }
-        private decimal CalculateProductCost(decimal PricePerGram, double GoldWeight, decimal PricePerCarat, double CaratWeight)
+        [HttpGet("CheckOrderStatus/{orderId}")]
+        public async Task<IActionResult> CheckOrderStatus(string orderId)
         {
-            decimal productCost = ((PricePerGram * (decimal)GoldWeight + PricePerCarat * (decimal)CaratWeight) * 0.4M) * 0.1M;
-            return productCost;
+            if (string.IsNullOrEmpty(orderId))
+            {
+                return BadRequest("Order ID is required.");
+            }
+
+            var order = await _context.Orders
+                .FirstOrDefaultAsync(o => o.OrderId == orderId);
+
+            if (order == null)
+            {
+                return NotFound("Order not found.");
+            }
+
+            return Ok(new { order.OrderId, order.Status });
         }
+
         private decimal GetDeposit(decimal productCost)
         {
             decimal deposit = productCost * 0.3M;
