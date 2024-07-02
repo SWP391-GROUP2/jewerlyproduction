@@ -1,18 +1,154 @@
 .manager-page {
-    text-align: center;
-    display: flex;
-    flex-direction: row; /* Changed to row for elements to be side by side */
-    justify-content: center;
-    min-height: 100vh;
-    width: 100vw;
-    background-color: rgb(255, 255, 255);
-    background-size: cover;
-    background-position: center;
-    padding-bottom: 50px;
-  }
-  
-  .manager-container {
-    flex: 1; /* To occupy the remaining part of the page */
-    /* Add other necessary CSS properties here */
-  }
-  
+  text-align: center;
+  display: flex;
+  flex-direction: row; /* Changed to row for elements to be side by side */
+  justify-content: center;
+  min-height: 100vh;
+  width: 100vw;
+  background-color: rgb(255, 255, 255);
+  background-size: cover;
+  background-position: center;
+  padding-bottom: 50px;
+}
+
+.manager-container {
+  flex: 1; /* To occupy the remaining part of the page */
+  /* Add other necessary CSS properties here */
+}
+
+.new-div {
+  /* Add your desired styles for the new div */
+  height: 600px; /* This sets the height of the div to be 100% of the viewport height */
+  padding: 20px;
+  background-color: #f0f0f0;
+  margin-top: 10px;
+  border-radius: 20px;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.custom-table th, .custom-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.custom-table th {
+  background-color: #f2f2f2;
+  text-align: left;
+}
+
+.custom-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.custom-table tr:hover {
+  background-color: #ddd;
+}
+
+.detail-button, .reject-button {
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.detail-button {
+  background-color: #4CAF50; /* Green */
+  color: white;
+}
+
+.reject-button {
+  background-color: #f44336; /* Red */
+  color: white;
+}
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure popup is above other elements */
+}
+
+.popup-inner {
+  background: white;
+  padding: 40px; /* Increased padding */
+  border-radius: 10px;
+  text-align: center;
+  z-index: 1001;
+  width: 60%; /* Increased width */
+  max-width: 600px; /* Maximum width */
+  height: auto; /* Adjust height to auto */
+  max-height: 80vh; /* Ensure popup doesn't exceed 80% of viewport height */
+  overflow-y: auto; /* Add scroll if content exceeds max-height */
+}
+
+.blur {
+  filter: blur(5px);
+}
+
+/* Ensure the blur effect applies to all children of the content div when popup is open */
+.content.blur *:not(.popup) {
+  filter: blur(5px);
+}
+
+.custom-select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  font-size: 16px;
+  width: 200px; /* Adjust width as needed */
+}
+.popup_button{
+  width: 100px; /* Increased width */
+  height: 41px; /* Adjust height to auto */
+}
+
+.table-heading {
+  text-align: center;
+  margin-bottom: 20px; /* Adjust the spacing as needed */
+  font-size: 24px; /* Adjust the font size as needed */
+  font-weight: bold;
+  color: #333; /* Adjust the color as needed */
+}
+
+.confirmation-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.confirmation-popup-inner {
+  background: white;
+  padding: 40px;
+  border-radius: 10px;
+  text-align: center;
+  z-index: 1001;
+  width: 60%;
+  max-width: 400px;
+  height: auto;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.confirmation-popup_button {
+  width: 100px;
+  height: 41px;
+  margin: 10px; /* Add some space between buttons */
+}
+          
