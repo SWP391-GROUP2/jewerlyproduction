@@ -141,10 +141,17 @@ namespace JewelryProduction.Controllers
             if (user == null)
                 return Unauthorized("Invalid Email");
 
-            var role = await _userManager.GetRolesAsync(user);
+            if (!await _userManager.IsEmailConfirmedAsync(user))
+            {
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = "Email not confirmed" });
+            }
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDTO.Password, false);
             if (!result.Succeeded) return Unauthorized("Email not found & Invalid Password");
+
+            var confirmed = await _userManager.IsEmailConfirmedAsync(user);
+
+            var role = await _userManager.GetRolesAsync(user);
             var refreshToken = _tokenService.CreateRefreshToken();
             await _userManager.SetAuthenticationTokenAsync(user, "JewelryProduction", "RefreshToken", refreshToken);
             var isPasswordSet = user.PasswordHash == null ? false : true;
@@ -371,5 +378,7 @@ namespace JewelryProduction.Controllers
             }
             return Ok(new { UserId = userId });
         }
+
+
     }
 }

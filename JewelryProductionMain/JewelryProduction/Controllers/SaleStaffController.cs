@@ -1,6 +1,8 @@
-﻿using JewelryProduction.Common;
+﻿using AutoMapper;
+using JewelryProduction.Common;
 using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
+using JewelryProduction.DTO.BasicDTO;
 using JewelryProduction.Entities;
 using JewelryProduction.Interface;
 using JewelryProduction.Services;
@@ -20,13 +22,15 @@ namespace JewelryProduction.Controllers
         private readonly ISaleStaffService _service;
         private readonly INotificationService _notificationService;
         private readonly ICustomerRequestService _requestService;
+        private readonly IMapper _mapper;
 
-        public SaleStaffController(JewelryProductionContext context, ISaleStaffService service, INotificationService notificationService, ICustomerRequestService requestService)
+        public SaleStaffController(JewelryProductionContext context, ISaleStaffService service, INotificationService notificationService, ICustomerRequestService requestService, IMapper mapper)
         {
             _context = context;
             _service = service;
             _notificationService = notificationService;
             _requestService = requestService;
+            _mapper = mapper;
         }
 
         [HttpGet("Wait-for-Quotation-requests")]
@@ -65,7 +69,7 @@ namespace JewelryProduction.Controllers
             var userId = request.ManagerId;
             request.quotationDes = @$"
 Gemstone Price:             {gemstones.Sum(x => x.Price)}
-Gold Price:             {gold.PricePerGram * (decimal)gold.Weight}
+Gold Price:             {gold.PricePerGram * (decimal)customerRequest.GoldWeight}
 Production Cost:            40% Material Price
 Additional Fee:             0
 VAT:                        10%";
@@ -82,6 +86,14 @@ VAT:                        10%";
         {
             var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sid);
             return userId;
+        }
+
+        [HttpGet("Detail")]
+        public async Task<List<UserWithCountDTO>> GetDetailsAsync()
+        {
+            var result = await _service.GetStaffs();
+
+            return result;  
         }
     }
 }

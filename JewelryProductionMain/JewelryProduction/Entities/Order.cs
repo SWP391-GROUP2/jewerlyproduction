@@ -6,6 +6,8 @@ public partial class Order
 
     public string ProductionStaffId { get; set; } = null!;
 
+    public string DesignStaffId { get; set; } = null!;
+
     public DateTime OrderDate { get; set; }
 
     public decimal? DepositAmount { get; set; }
@@ -25,4 +27,5 @@ public partial class Order
     public PaymentMethod PaymentMethod { get; set; } = null!;
 
     public AppUser ProductionStaff { get; set; } = null!;
+    public AppUser DesignStaff { get; set; } = null!;
 }

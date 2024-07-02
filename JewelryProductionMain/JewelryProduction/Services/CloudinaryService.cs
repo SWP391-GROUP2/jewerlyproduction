@@ -18,7 +18,12 @@ public class CloudinaryService : ICloudinaryService
         _cloudinary = new Cloudinary(cloudinaryAccount);
     }
 
-    public async Task<ImageUploadResult> UploadImageAsync(IFormFile file)
+    public string GetUrl(string publicId)
+    {
+        return _cloudinary.Api.UrlImgUp.BuildUrl(publicId);
+    }
+
+    public async Task<ImageUploadResult> UploadImageAsync(IFormFile file, string folder)
     {
         var uploadResult = new ImageUploadResult();
 
@@ -29,17 +34,13 @@ public class CloudinaryService : ICloudinaryService
                 var uploadParams = new ImageUploadParams()
                 {
                     File = new FileDescription(file.FileName, stream),
-                    Transformation = new Transformation().Quality("auto").FetchFormat("auto")
+                    Transformation = new Transformation().Quality("auto").FetchFormat("auto"),
+                    Folder = folder
                 };
 
                 uploadResult = await _cloudinary.UploadAsync(uploadParams);
             }
         }
         return uploadResult;
-    }
-
-    public string GetUrl(string publicId)
-    {
-        return _cloudinary.Api.UrlImgUp.BuildUrl(publicId);
     }
 }
