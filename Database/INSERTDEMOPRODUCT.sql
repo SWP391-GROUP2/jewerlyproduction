@@ -2,14 +2,14 @@ use JewelryProduction
 
 
 INSERT INTO Gold (goldID, goldType, pricePerGram) VALUES
-('G001', '9999', 2.022973),
-('G002', '999.9', 1.979730),
-('G003', '24k', 1.977027),
-('G004', '99', 1.964865),
-('G005', '18k', 1.107568),
-('G006', '16k', 1.080541),
-('G007', '15k', 1.055676),
-('G008', '10k', 0.725946);
+('G001', '9999', 2022973),
+('G002', '999.9', 1979730),
+('G003', '24k', 1977027),
+('G004', '99', 1964865),
+('G005', '18k', 1107568),
+('G006', '16k', 1080541),
+('G007', '15k', 1055676),
+('G008', '10k', 725946);
 
 INSERT INTO ProductSample (productSampleID, productName, description, type, style, size, price, goldID)
 VALUES
