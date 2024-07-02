@@ -132,11 +132,11 @@ namespace JewelryProduction.Controllers
         // POST: api/CustomerRequests
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<CustomerRequest>> PostCustomerRequest(CustomerRequestDTO customerRequestDTO)
+        public async Task<ActionResult<CustomerRequest>> PostCustomerRequest(CustomerRequestDTO customerRequestDTO, string MainGemstoneId)
         {
             var primaryGemstone = await _context.Gemstones
                     .Where(g =>
-                        g.GemstoneId == customerRequestDTO.PrimaryGemstone.GemstoneId &&
+                        g.GemstoneId == MainGemstoneId &&
                         g.ProductSample == null && g.CustomizeRequestId == null)
                     .FirstOrDefaultAsync();
 
@@ -291,20 +291,16 @@ namespace JewelryProduction.Controllers
             }
 
             customerRequest.Status = "Approved";
-            var request = await _context.ApprovalRequests
-                .Where(ar => ar.CustomerRequestId == customizeRequestId && ar.Status == "Approved")
-                .FirstOrDefaultAsync();
-
             var order = new Order
             {
                 OrderId = await IdGenerator.GenerateUniqueId<Order>(_context, "ORD", 6),
                 ProductionStaffId = null, 
                 OrderDate = DateTime.Now,
-                DepositAmount = request.Price *0.3M, 
+                DepositAmount = customerRequest.quotation *0.3M, 
                 Status = "Pending",
                 CustomizeRequestId = customerRequest.CustomizeRequestId,
                 PaymentMethodId = PaymentMethodId,
-                TotalPrice = request.Price
+                TotalPrice = customerRequest.quotation.Value
             };
 
             _context.Orders.Add(order);
