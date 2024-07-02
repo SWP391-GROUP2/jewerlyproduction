@@ -189,8 +189,11 @@ namespace JewelryProduction.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("goldID");
 
+                    b.Property<double>("GoldWeight")
+                        .HasColumnType("float")
+                        .HasColumnName("goldWeight");
+
                     b.Property<string>("ManagerId")
-                        .IsRequired()
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("ManagerID");
@@ -200,7 +203,6 @@ namespace JewelryProduction.Migrations
                         .HasColumnName("quantity");
 
                     b.Property<string>("SaleStaffId")
-                        .IsRequired()
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("SaleStaffID");
@@ -228,11 +230,10 @@ namespace JewelryProduction.Migrations
                         .HasColumnName("type");
 
                     b.Property<decimal?>("quotation")
-                        .HasColumnType("decimal(18,2)")
+                        .HasColumnType("money")
                         .HasColumnName("quotation");
 
                     b.Property<string>("quotationDes")
-                        .IsRequired()
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("quotationDes");
@@ -280,6 +281,48 @@ namespace JewelryProduction.Migrations
                     b.HasKey("ApprovalRequestId");
 
                     b.ToTable("ApprovalRequest", (string)null);
+                });
+
+            modelBuilder.Entity("JewelryProduction.Entities.Notification", b =>
+                {
+                    b.Property<string>("NotificationId")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("notificationId");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("createdAt");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit")
+                        .HasColumnName("isRead");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasColumnName("message");
+
+                    b.Property<string>("SenderId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("senderId");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("userId");
+
+                    b.HasKey("NotificationId");
+
+                    b.HasIndex("SenderId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Notification", (string)null);
                 });
 
             modelBuilder.Entity("JewelryProduction.Gemstone", b =>
@@ -379,10 +422,6 @@ namespace JewelryProduction.Migrations
                         .HasColumnType("money")
                         .HasColumnName("pricePerGram");
 
-                    b.Property<double>("Weight")
-                        .HasColumnType("float")
-                        .HasColumnName("weight");
-
                     b.HasKey("GoldId");
 
                     b.ToTable("Gold", (string)null);
@@ -471,6 +510,12 @@ namespace JewelryProduction.Migrations
                         .HasColumnType("money")
                         .HasColumnName("depositAmount");
 
+                    b.Property<string>("DesignStaffId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("designStaffID");
+
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime")
                         .HasColumnName("orderDate");
@@ -501,6 +546,8 @@ namespace JewelryProduction.Migrations
                         .HasColumnName("totalPrice");
 
                     b.HasKey("OrderId");
+
+                    b.HasIndex("DesignStaffId");
 
                     b.HasIndex("PaymentMethodId");
 
@@ -551,6 +598,10 @@ namespace JewelryProduction.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("goldID");
+
+                    b.Property<double>("GoldWeight")
+                        .HasColumnType("float")
+                        .HasColumnName("goldWeight");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("money")
@@ -660,37 +711,37 @@ namespace JewelryProduction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "410cd6db-1120-4481-b2d0-6f72086940e0",
+                            Id = "571d2155-28d4-40a4-8d84-fc0e8ae3fe2b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "eddd84eb-eb00-45f4-b745-fd0832d54615",
+                            Id = "e129afd7-1100-4c8d-9e09-e8e47356ff5b",
                             Name = "SaleStaff",
                             NormalizedName = "SALESTAFF"
                         },
                         new
                         {
-                            Id = "2a3ba4a9-0042-4e9b-8614-0171c7ab9ae0",
+                            Id = "539bb975-4ab5-4218-8ce8-647e7ed32112",
                             Name = "ProductionStaff",
                             NormalizedName = "PRODUCTIONSTAFF"
                         },
                         new
                         {
-                            Id = "9f20bacd-d6b3-4414-8427-655d3ffda49e",
+                            Id = "7c57b7ff-63d6-4367-9424-22b227271f82",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "a79ae54e-c150-400f-bee7-d4ad9772d71a",
+                            Id = "3bba98de-278b-4e13-806e-85ccdd01b492",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "f7961b77-281a-47a3-af86-07ae2b105920",
+                            Id = "4060882c-6607-4a47-aed6-f9b1ae2fedf6",
                             Name = "DesignStaff",
                             NormalizedName = "DESIGNSTAFF"
                         });
@@ -834,13 +885,11 @@ namespace JewelryProduction.Migrations
                     b.HasOne("JewelryProduction.AppUser", "Manager")
                         .WithMany("ManagerRequests")
                         .HasForeignKey("ManagerId")
-                        .IsRequired()
                         .HasConstraintName("FK_CustomerRequest_Manager");
 
                     b.HasOne("JewelryProduction.AppUser", "SaleStaff")
                         .WithMany("SaleStaffRequests")
                         .HasForeignKey("SaleStaffId")
-                        .IsRequired()
                         .HasConstraintName("FK_CustomerRequest_SaleStaff");
 
                     b.Navigation("Customer");
@@ -850,6 +899,27 @@ namespace JewelryProduction.Migrations
                     b.Navigation("Manager");
 
                     b.Navigation("SaleStaff");
+                });
+
+            modelBuilder.Entity("JewelryProduction.Entities.Notification", b =>
+                {
+                    b.HasOne("JewelryProduction.AppUser", "Sender")
+                        .WithMany("SentNotifications")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_Notification_Sender");
+
+                    b.HasOne("JewelryProduction.AppUser", "User")
+                        .WithMany("ReceivedNotifications")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_Notification_User");
+
+                    b.Navigation("Sender");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("JewelryProduction.Gemstone", b =>
@@ -914,6 +984,13 @@ namespace JewelryProduction.Migrations
                         .HasForeignKey("JewelryProduction.Order", "CustomizeRequestId")
                         .HasConstraintName("FK_Order_CustomerRequest");
 
+                    b.HasOne("JewelryProduction.AppUser", "DesignStaff")
+                        .WithMany("OrderDesignStaffs")
+                        .HasForeignKey("DesignStaffId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_Order_DesignStaff");
+
                     b.HasOne("JewelryProduction.PaymentMethod", "PaymentMethod")
                         .WithMany("Orders")
                         .HasForeignKey("PaymentMethodId")
@@ -928,9 +1005,12 @@ namespace JewelryProduction.Migrations
                         .WithMany("OrderProductionStaffs")
                         .HasForeignKey("ProductionStaffId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_Order_ProductionStaff");
 
                     b.Navigation("CustomizeRequest");
+
+                    b.Navigation("DesignStaff");
 
                     b.Navigation("PaymentMethod");
 
@@ -1034,9 +1114,15 @@ namespace JewelryProduction.Migrations
 
                     b.Navigation("MessageSaleStaffs");
 
+                    b.Navigation("OrderDesignStaffs");
+
                     b.Navigation("OrderProductionStaffs");
 
+                    b.Navigation("ReceivedNotifications");
+
                     b.Navigation("SaleStaffRequests");
+
+                    b.Navigation("SentNotifications");
 
                     b.Navigation("_3ddesigns");
                 });

@@ -170,6 +170,24 @@ namespace JewelryProduction.Controllers
 
             return NoContent();
         }
+        [HttpGet("CheckOrderStatus/{orderId}")]
+        public async Task<IActionResult> CheckOrderStatus(string orderId)
+        {
+            if (string.IsNullOrEmpty(orderId))
+            {
+                return BadRequest("Order ID is required.");
+            }
+
+            var order = await _context.Orders
+                .FirstOrDefaultAsync(o => o.OrderId == orderId);
+
+            if (order == null)
+            {
+                return NotFound("Order not found.");
+            }
+
+            return Ok(new { order.OrderId, order.Status });
+        }
 
         private decimal GetDeposit(decimal productCost)
         {

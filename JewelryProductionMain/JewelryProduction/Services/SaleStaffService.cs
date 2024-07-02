@@ -1,6 +1,9 @@
 ﻿using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
+using JewelryProduction.DTO.BasicDTO;
 using JewelryProduction.Interface;
+using JewelryProduction.Repositories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace JewelryProduction.Services
@@ -8,10 +11,12 @@ namespace JewelryProduction.Services
     public class SaleStaffService : ISaleStaffService
     {
         private readonly JewelryProductionContext _context;
+        private readonly ISaleStaffRepository _repository;
 
-        public SaleStaffService(JewelryProductionContext context)
+        public SaleStaffService(JewelryProductionContext context, ISaleStaffRepository repository)
         {
             _context = context;
+            _repository = repository;
         }
 
         public async Task<decimal> CalculateProductCost(string CustomizeRequestId)
@@ -25,7 +30,7 @@ namespace JewelryProduction.Services
             {
                 return 0;
             }
-            decimal goldPrice = gold.PricePerGram * (decimal)gold.Weight;
+            decimal goldPrice = gold.PricePerGram * (decimal)customerRequest.GoldWeight;
             decimal gemstonePrice = gemstones.Sum(x => x.Price);
             decimal productCost = ((goldPrice + gemstonePrice) * 1.4M) * 1.1M;
             customerRequest.quotation = productCost;
@@ -36,6 +41,11 @@ namespace JewelryProduction.Services
         {
             decimal deposit = productCost * 0.3M;
             return deposit;
+        }
+
+        public async Task<List<UserWithCountDTO>> GetStaffs()
+        {
+            return await _repository.GetStaffs();
         }
     }
 }

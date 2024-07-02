@@ -278,7 +278,7 @@ namespace JewelryProduction.Controllers
             return Ok(customerRequest);
         }
         [HttpPost("approve/{customizeRequestId}")]
-        public async Task<IActionResult> ApproveCustomerRequest(string customizeRequestId, string PaymentMethodId)
+        public async Task<IActionResult> ApproveCustomerRequest(string customizeRequestId, string paymentMethodId)
         {
             var customerRequest = await _context.CustomerRequests
                 .Include(cr => cr.Gemstones)
@@ -290,16 +290,22 @@ namespace JewelryProduction.Controllers
                 return NotFound("Customer request not found.");
             }
 
+            if (customerRequest.quotation == null)
+            {
+                return BadRequest("Quotation is not available.");
+            }
+
             customerRequest.Status = "Approved";
+
             var order = new Order
             {
                 OrderId = await IdGenerator.GenerateUniqueId<Order>(_context, "ORD", 6),
-                ProductionStaffId = null, 
+                ProductionStaffId = null,
                 OrderDate = DateTime.Now,
-                DepositAmount = customerRequest.quotation *0.3M, 
+                DepositAmount = customerRequest.quotation.Value * 0.3M,
                 Status = "Pending",
                 CustomizeRequestId = customerRequest.CustomizeRequestId,
-                PaymentMethodId = PaymentMethodId,
+                PaymentMethodId = paymentMethodId,
                 TotalPrice = customerRequest.quotation.Value
             };
 
@@ -312,10 +318,12 @@ namespace JewelryProduction.Controllers
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    throw;
+                    // Log the exception
+                    Console.WriteLine($"Error: {ex.Message}");
+                    return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
                 }
             }
 
