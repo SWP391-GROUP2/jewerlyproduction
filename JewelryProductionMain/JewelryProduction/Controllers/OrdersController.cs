@@ -170,11 +170,7 @@ namespace JewelryProduction.Controllers
 
             return NoContent();
         }
-        private decimal CalculateProductCost(decimal PricePerGram, double GoldWeight, decimal PricePerCarat, double CaratWeight)
-        {
-            decimal productCost = ((PricePerGram * (decimal)GoldWeight + PricePerCarat * (decimal)CaratWeight) * 0.4M) * 0.1M;
-            return productCost;
-        }
+
         private decimal GetDeposit(decimal productCost)
         {
             decimal deposit = productCost * 0.3M;
