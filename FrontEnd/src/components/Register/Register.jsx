@@ -58,7 +58,7 @@ function Register() {
 
   return (
     <>
-      <Link to="/">
+      <Link to="/home">
         <button className="home-button">
           <FaHome />
           <IoReturnDownBack />

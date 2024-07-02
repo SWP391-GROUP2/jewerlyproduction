@@ -15,7 +15,7 @@ function ProductDetails() {
   }, [productId]); // Theo dõi thay đổi của productId để fetch dữ liệu mới khi productId thay đổi
 
   const navigateToProductDetail = (productId) => {
-    navigate(`/customize/${productId}`); // Chuyển hướng đến trang chi tiết sản phẩm
+    navigate(`/customer/customize/${productId}`); // Chuyển hướng đến trang chi tiết sản phẩm
   };
 
   useEffect(() => {

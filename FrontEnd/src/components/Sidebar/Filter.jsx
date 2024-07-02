@@ -37,21 +37,26 @@ const Sidebar = () => {
   };
 
   const fetchProducts = async () => {
-    let query = "";
+    let query = [];
+
     if (selectedCategory) {
-      query += `type=${selectedCategory}`;
-      if (sortOption) {
-        query += `&sortPrice=${sortOption}`;
-      }
-      if (selectedFilters[selectedCategory]) {
-        query += `&style=${selectedFilters[selectedCategory]}`;
-      }
+      query.push(`type=${selectedCategory}`);
     }
 
+    if (sortOption) {
+      query.push(`sortPrice=${sortOption}`);
+    }
+
+    if (selectedCategory && selectedFilters[selectedCategory]) {
+      query.push(`style=${selectedFilters[selectedCategory]}`);
+    }
+
+    const queryString = query.length ? `?${query.join("&")}` : "";
+
     try {
-      const url = query
-        ? `http://localhost:5266/api/ProductSamples/FilterInSearch?${query}`
-        : `http://localhost:5266/api/ProductSamples`;
+      const url = `http://localhost:5266/api/ProductSamples${
+        queryString ? "/FilterInSearch" + queryString : ""
+      }`;
       const response = await axios.get(url);
 
       setProducts(response.data);
