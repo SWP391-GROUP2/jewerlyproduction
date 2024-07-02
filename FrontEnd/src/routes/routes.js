@@ -22,30 +22,46 @@ import ManagerPage from "../pages/ManagerPage/ManagerPage";
 import ProductionStaffPage from "../pages/ProductionStaffPage/ProductionStaffPage";
 
 const routes = [
+  // Guest Routes
   { path: "/login", element: <LoginForm /> },
   { path: "/register", element: <Register /> },
   { path: "/home", element: <HomePage /> },
   { path: "/forget", element: <FogetPassword /> },
-  { path: "/profile", element: <UserProfilePage /> },
+  { path: "*", element: <NotFound /> },
+  { path: "/", element: <Navigate to="/home" /> },
   { path: "/product", element: <ProductPage /> },
   { path: "/gemstone", element: <GemstonePage /> },
   { path: "/gold", element: <GoldPage /> },
-  { path: "/resetpassword", element: <ResetPassword /> },
-  { path: "/", element: <Navigate to="/home" /> },
   { path: "/gemstonedetail", element: <GemstoneDetailPage /> },
-  { path: "*", element: <NotFound /> },
-  { path: "/customize", element: <CustomizePage /> },
   { path: "/productdetails", element: <ProductDetailsPage /> },
   { path: "/product/:productId", element: <ProductDetailsPage /> },
   { path: "/gemstone/:gemstoneId", element: <GemstoneDetailPage /> },
   { path: "/otp", element: <SendOTP /> },
-  { path: "/adminpage", element: <AdminPage /> },
-  { path: "/salestaffpage", element: <SaleStaffPage /> },
-  { path: "/designstaffpage", element: <DesignStaffPage /> },
-  { path: "/managerpage", element: <ManagerPage /> },
-  { path: "/productionstaffpage", element: <ProductionStaffPage /> },
   { path: "/forgetpasswordverify", element: <ForgetPasswordVerify /> },
-  { path: "/customize/:productId", element: <CustomizePage /> },
+
+  // Customer Routes
+  { path: "/customer/profile", element: <UserProfilePage /> },
+  { path: "/customer/customize", element: <CustomizePage /> },
+  { path: "/customer/customize/:productId", element: <CustomizePage /> },
+  { path: "/customer/resetpassword", element: <ResetPassword /> },
+
+  // Admin Routes
+  { path: "/admin/adminpage", element: <AdminPage /> },
+
+  // Sales Staff Routes
+  { path: "/salestaff/salestaffpage", element: <SaleStaffPage /> },
+
+  // Design Staff Routes
+  { path: "/designstaff/designstaffpage", element: <DesignStaffPage /> },
+
+  // Manager Routes
+  { path: "/manager/managerpage", element: <ManagerPage /> },
+
+  // Production Staff Routes
+  {
+    path: "/productionstaff/productionstaffpage",
+    element: <ProductionStaffPage />,
+  },
 ];
 
 export default routes;

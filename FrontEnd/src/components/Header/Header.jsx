@@ -22,7 +22,7 @@ function Header() {
         </Link>
       </div>
       <div className="header-buttons">
-        <Link to="/profile">
+        <Link to="/customer/profile">
           <button className="profile-button">
             <CgProfile />
           </button>

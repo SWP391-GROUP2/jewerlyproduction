@@ -334,7 +334,7 @@ namespace JewelryProduction.Controllers
             if (user == null)
                 return Unauthorized("Invalid Email");
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
+            var encodedToken = Uri.EscapeDataString(token);
             var message = new MessageOTP(
                 new string[] { email },
                 "Reset Password",
@@ -342,7 +342,7 @@ namespace JewelryProduction.Controllers
                 <h1>Reset Password</h1>
                 <p>Dear {email},</p>
                 <p>Click the link below to reset your password:</p>
-                <p><a href='http://localhost:3000/forgetpasswordverify?email={email}&token={token}'>Reset Password</a></p>
+                <p><a href='http://localhost:3000/forgetpasswordverify?email={email}&token={encodedToken}'>Reset Password</a></p>
                 <p>If you did not request this code, please ignore this email.</p>
                 <p>Best regards,</p>
                 <p>Jewelry Production </p>
