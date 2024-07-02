@@ -12,7 +12,7 @@ import { useSelector } from "react-redux";
 function UserProfile() {
   const [Name, setName] = useState("");
   const [PhoneNumber, setPhone] = useState("");
-  const [birthday, setBirthday] = useState("");
+  const [DateOfBirth, setBirthday] = useState("");
   const [Avatar, setAvatar] = useState(null);
   const [email, setEmail] = useState("");
 
@@ -45,11 +45,11 @@ function UserProfile() {
     }
   };
 
-  const updateUser = async (user) => {
+  const updateUser = async (newUserPro) => {
     try {
       const res = await axios.put(
         "http://localhost:5266/api/Account/Update-Profile",
-        user,
+        newUserPro,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -58,37 +58,34 @@ function UserProfile() {
       );
       console.log("Update User successfully:", res.data);
     } catch (err) {
-      console.error("Error Update User:", err);
+      console.error(
+        "Error Update User:",
+        err.response ? err.response.data : err.message
+      );
     }
   };
 
   const handleUpdateProfile = (e) => {
     e.preventDefault();
-    // Convert birthday to yy-mm-dd format
-    let DateOfBirth = "";
-    if (birthday) {
-      try {
-        const date = new Date(birthday);
-        if (!isNaN(date)) {
-          DateOfBirth = date.toISOString().split("T")[0].substring(2);
-        } else {
-          console.error("Định dạng ngày không hợp lệ");
-        }
-      } catch (err) {
-        console.error("Lỗi khi phân tích ngày:", err);
-      }
+
+    const formData = new FormData();
+    formData.append("Name", Name);
+    formData.append("PhoneNumber", PhoneNumber);
+    formData.append("DateOfBirth", DateOfBirth);
+
+    if (Avatar) {
+      formData.append("Avatar", Avatar);
     }
-    const newUser = {
-      Name: Name,
-      PhoneNumber: PhoneNumber,
-      birthday: DateOfBirth,
-      Avatar: Avatar,
-    };
-    updateUser(newUser);
+
+    console.log(
+      "Updating user with data:",
+      Object.fromEntries(formData.entries())
+    );
+    updateUser(formData);
   };
 
   const handleAvatarChange = (e) => {
-    setAvatar(URL.createObjectURL(e.target.files[0]));
+    setAvatar(e.target.files[0]);
   };
 
   return (
@@ -157,7 +154,7 @@ function UserProfile() {
             <input
               type="date"
               placeholder="Date of Birth"
-              value={birthday}
+              value={DateOfBirth}
               required
               onChange={(e) => setBirthday(e.target.value)}
             />
@@ -170,7 +167,7 @@ function UserProfile() {
 
           <div className="user-profile-link">
             <p>
-              <Link to="/resetpassword">Change Password</Link>
+              <Link to="/customer/resetpassword">Change Password</Link>
             </p>
           </div>
         </form>

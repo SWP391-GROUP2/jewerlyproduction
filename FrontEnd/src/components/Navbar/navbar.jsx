@@ -20,38 +20,42 @@ function Navbar() {
 
   return (
     <div className="navbar">
-      {/* {user ? (
-        <> */}
-      <ul>
-        <Link to="/home">
-          <li>Home Page</li>
-        </Link>
-        <Link to="/product">
-          <li>Sample Product</li>
-        </Link>
-        <Link to="/gemstone">
-          <li>Gemstones</li>
-        </Link>
-        <li>
-          <select id="page-select" onChange={handleCustomer} defaultValue="">
-            <option value="" disabled>
-              Customize Request
-            </option>
-            <option value="/customize">Ring</option>
-            <option value="/customize">Bracelet</option>
-            <option value="/customize">Necklace</option>
-            <option value="/customize">Earrings</option>
-          </select>
-        </li>
-        <Link to="/gold">
-          <li>Gold Price</li>
-        </Link>
-      </ul>
-      {/* </>
+      {user ? (
+        <>
+          <ul>
+            <Link to="/home">
+              <li>Home Page</li>
+            </Link>
+            <Link to="/product">
+              <li>Sample Product</li>
+            </Link>
+            <Link to="/gemstone">
+              <li>Gemstones</li>
+            </Link>
+            <li>
+              <select
+                id="page-select"
+                onChange={handleCustomer}
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Customize Request
+                </option>
+                <option value="/customer/customize">Ring</option>
+                <option value="/customer/customize">Bracelet</option>
+                <option value="/customer/customize">Necklace</option>
+                <option value="/customer/customize">Earrings</option>
+              </select>
+            </li>
+            <Link to="/gold">
+              <li>Gold Price</li>
+            </Link>
+          </ul>
+        </>
       ) : (
         <>
           <ul>
-            <Link to="/">
+            <Link to="/home">
               <li>Home Page</li>
             </Link>
             <Link to="/product">
@@ -65,7 +69,7 @@ function Navbar() {
             </Link>
           </ul>
         </>
-      )} */}
+      )}
       <div className="search-box">
         <input type="text" placeholder="Search" />
         <img src={search_icon} alt="" />

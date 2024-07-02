@@ -22,22 +22,21 @@ function CustomizeForm() {
   const [gemstoneType, setGemstoneType] = useState("");
   const [gemstoneColor, setGemstoneColor] = useState("all");
   const [gemstoneClarity, setGemstoneClarity] = useState("all");
-  const [gemstoneCarat, setGemstoneCarat] = useState("all");
+  const [gemstoneCaratMin, setGemstoneCaratMin] = useState("all");
+  const [gemstoneCaratMax, setGemstoneCaratMax] = useState("all");
   const [products, setProducts] = useState([]);
   const navigate = useNavigate(); // Sử dụng hook useNavigate để chuyển hướng
   const [styles, setStyles] = useState([]);
   const [ProductSample, setProductSample] = useState(null);
   const [visibleProducts, setVisibleProducts] = useState(4);
+  const [gemstones, setGemstones] = useState([]);
 
-  const [selectedMainStone, setSelectedMainStone] = useState(null);
-  const [selectedSideStone, setSelectedSideStone] = useState(null);
+  const [primaryGemstone, setSelectedMainStone] = useState(null);
+  const [additionalGemstoneNames, setSelectedSideStone] = useState([]);
   const [currentMainPage, setCurrentMainPage] = useState(1);
   const [currentSidePage, setCurrentSidePage] = useState(1);
 
   const user = useSelector((State) => State.auth.Login.currentUser);
-
-  // Khai báo trạng thái chứa tên của hai loại đá dưới dạng một mảng
-  const [gemstoneNames, setGemstoneNames] = useState([]);
 
   const selectMainStone = (gemstone) => {
     setSelectedMainStone(gemstone);
@@ -52,14 +51,6 @@ function CustomizeForm() {
       setselectedType(item);
     }
   }, [item]);
-
-  useEffect(() => {
-    const mainStone = selectedMainStone ? `Main: ${selectedMainStone}` : null;
-    const sideStone = selectedSideStone ? `Side: ${selectedSideStone}` : null;
-    const combinedGemstoneNames = [mainStone, sideStone].filter(Boolean);
-
-    setGemstoneNames(combinedGemstoneNames);
-  }, [selectedMainStone, selectedSideStone]);
 
   const navigateToProductDetail = (productId) => {
     navigate(`/product/${productId}`); // Chuyển hướng đến trang chi tiết sản phẩm
@@ -162,14 +153,87 @@ function CustomizeForm() {
     }`;
   };
 
+  const getCaratRange = (carat) => {
+    const caratRanges = {
+      "0.3-0.49": { caratMin: 0.3, caratMax: 0.49 },
+      "0.50-0.89": { caratMin: 0.5, caratMax: 0.89 },
+      "0.90-1.29": { caratMin: 0.9, caratMax: 1.29 },
+      "1.3-1.9": { caratMin: 1.3, caratMax: 1.9 },
+      "2.0-3.0": { caratMin: 2.0, caratMax: 3.0 },
+      "more-than-3.0": { caratMin: 3.0, caratMax: Infinity }, // Assuming API handles this case
+    };
+
+    return caratRanges[carat] || { caratMin: 0, caratMax: Infinity };
+  };
+
+  const fetchGemstones = async () => {
+    let query = [];
+
+    if (shape) {
+      query.push(`shape=${shape}`);
+    }
+
+    let sizeParam = gemstoneSize;
+    if (gemstoneSize !== "all") {
+      sizeParam = parseFloat(gemstoneSize); // Assuming gemstoneSize is already in the correct format
+      query.push(`size=${sizeParam}`);
+    }
+
+    if (gemstoneType) {
+      query.push(`categoryName=${gemstoneType}`);
+    }
+
+    if (gemstoneColor !== "all") {
+      query.push(`colors=${gemstoneColor}`);
+    }
+
+    if (gemstoneClarity !== "all") {
+      query.push(`clarity=${gemstoneClarity}`);
+    }
+
+    if (gemstoneCaratMin !== "all" && gemstoneCaratMax !== "all") {
+      query.push(`caraMin=${gemstoneCaratMin}`);
+      query.push(`caraMax=${gemstoneCaratMax}`);
+    }
+
+    const queryString = query.length ? `?${query.join("&")}` : "";
+
+    try {
+      const url = `http://localhost:5266/api/Gemstones${
+        queryString ? "/Filter Gemstone" + queryString : ""
+      }`;
+      const response = await axios.get(url);
+
+      setGemstones(response.data);
+    } catch (error) {
+      console.error("Error fetching gemstones:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchGemstones();
+  }, [
+    shape,
+    gemstoneSize,
+    gemstoneType,
+    gemstoneColor,
+    gemstoneClarity,
+    gemstoneCaratMin,
+    gemstoneCaratMax,
+  ]);
+
   const onClickSelectedCarat = (carat) => {
-    setGemstoneCarat(carat);
+    const { caratMin, caratMax } = getCaratRange(carat);
+    setGemstoneCaratMin(caratMin);
+    setGemstoneCaratMax(caratMax);
   };
 
   const getClassNamesCarat = (carat) => {
-    return `grid-size-item ${
-      gemstoneCarat === carat ? "col-size-selected" : ""
-    }`;
+    const { caratMin, caratMax } = getCaratRange(carat);
+    if (gemstoneCaratMin === caratMin && gemstoneCaratMax === caratMax) {
+      return `grid-size-item col-size-selected`;
+    }
+    return `grid-size-item`;
   };
 
   const gold = [
@@ -202,57 +266,6 @@ function CustomizeForm() {
     { value: "20", label: "20" },
 
     // Add more options here
-  ];
-
-  const gemstones = [
-    {
-      gemstoneid: 1,
-      name: "Ruby",
-      size: "10mm",
-      color: "Red",
-      clarity: "VS",
-      price: "$1000",
-    },
-    {
-      gemstoneid: 2,
-      name: "Emerald",
-      size: "8mm",
-      color: "Green",
-      clarity: "SI",
-      price: "$800",
-    },
-    {
-      gemstoneid: 3,
-      name: "Sapphire",
-      size: "9mm",
-      color: "Blue",
-      clarity: "VVS",
-      price: "$1200",
-    },
-    {
-      gemstoneid: 4,
-      name: "Ruby",
-      size: "10mm",
-      color: "Red",
-      clarity: "VS",
-      price: "$1000",
-    },
-    {
-      gemstoneid: 5,
-      name: "Emerald",
-      size: "8mm",
-      color: "Green",
-      clarity: "SI",
-      price: "$800",
-    },
-    {
-      gemstoneid: 6,
-      name: "Sapphire",
-      size: "9mm",
-      color: "Blue",
-      clarity: "VVS",
-      price: "$1200",
-    },
   ];
 
   const typeStyles = {
@@ -291,7 +304,10 @@ function CustomizeForm() {
 
   const createCustomizeRequest = async (customize) => {
     try {
-      const response = await axios.post("YOUR_API_ENDPOINT", customize);
+      const response = await axios.post(
+        "http://localhost:5266/api/CustomerRequests",
+        customize
+      );
       return response.data;
     } catch (error) {
       console.error("Error create Customize Request :", error);
@@ -311,9 +327,11 @@ function CustomizeForm() {
       size: size,
       quantity: quantity,
       goldType: goldType,
-      shape: shape,
-      gemstoneName: gemstoneNames,
+      primaryGemstone: primaryGemstone,
+      additionalGemstoneNames: additionalGemstoneNames,
     };
+    // Call the function to create the request
+    createCustomizeRequest(newCustomizeRequest);
   };
 
   const fetchRecommendations = async () => {
@@ -530,72 +548,72 @@ function CustomizeForm() {
                       All
                     </div>
                     <div
-                      id="45"
-                      className={getClassNames("45")}
-                      onClick={() => onClickSelectedGemstoneSize("45")}
+                      id="4.5"
+                      className={getClassNames("4.5")}
+                      onClick={() => onClickSelectedGemstoneSize("4.5")}
                     >
                       4.5
                     </div>
                     <div
-                      id="50"
-                      className={getClassNames("50")}
-                      onClick={() => onClickSelectedGemstoneSize("50")}
+                      id="5.0"
+                      className={getClassNames("5.0")}
+                      onClick={() => onClickSelectedGemstoneSize("5.0")}
                     >
                       5.0
                     </div>
                     <div
-                      id="54"
-                      className={getClassNames("54")}
-                      onClick={() => onClickSelectedGemstoneSize("54")}
+                      id="5.4"
+                      className={getClassNames("5.4")}
+                      onClick={() => onClickSelectedGemstoneSize("5.4")}
                     >
                       5.4
                     </div>
                     <div
-                      id="60"
-                      className={getClassNames("60")}
-                      onClick={() => onClickSelectedGemstoneSize("60")}
+                      id="6.0"
+                      className={getClassNames(".0")}
+                      onClick={() => onClickSelectedGemstoneSize("6.0")}
                     >
                       6.0
                     </div>
                     <div
-                      id="63"
-                      className={getClassNames("63")}
-                      onClick={() => onClickSelectedGemstoneSize("63")}
+                      id="6.3"
+                      className={getClassNames("6.3")}
+                      onClick={() => onClickSelectedGemstoneSize("6.3")}
                     >
                       6.3
                     </div>
                     <div
-                      id="65"
-                      className={getClassNames("65")}
-                      onClick={() => onClickSelectedGemstoneSize("65")}
+                      id="6.5"
+                      className={getClassNames("6.5")}
+                      onClick={() => onClickSelectedGemstoneSize("6.5")}
                     >
                       6.5
                     </div>
                     <div
-                      id="68"
-                      className={getClassNames("68")}
-                      onClick={() => onClickSelectedGemstoneSize("68")}
+                      id="6.8"
+                      className={getClassNames("6.8")}
+                      onClick={() => onClickSelectedGemstoneSize("6.8")}
                     >
                       6.8
                     </div>
                     <div
-                      id="72"
-                      className={getClassNames("72")}
-                      onClick={() => onClickSelectedGemstoneSize("72")}
+                      id="7.2"
+                      className={getClassNames("7.2")}
+                      onClick={() => onClickSelectedGemstoneSize("7.2")}
                     >
                       7.2
                     </div>
                     <div
-                      id="81"
-                      className={getClassNames("81")}
-                      onClick={() => onClickSelectedGemstoneSize("81")}
+                      id="8.1"
+                      className={getClassNames("8.1")}
+                      onClick={() => onClickSelectedGemstoneSize("8.1")}
                     >
                       8.1
                     </div>
                     <div
-                      id="90"
-                      className={getClassNames("90")}
-                      onClick={() => onClickSelectedGemstoneSize("90")}
+                      id="9.0"
+                      className={getClassNames("9.0")}
+                      onClick={() => onClickSelectedGemstoneSize("9.0")}
                     >
                       9.0
                     </div>
@@ -877,18 +895,17 @@ function CustomizeForm() {
                     <tbody>
                       {currentMainGemstones.map((gemstone) => (
                         <tr
-                          key={gemstone.gemstoneid}
-                          onClick={() => selectMainStone(gemstone)}
+                          key={gemstone.gemstoneId}
+                          onClick={() => selectMainStone(gemstone.gemstoneId)}
                           style={{
                             backgroundColor:
-                              selectedMainStone &&
-                              selectedMainStone.gemstoneid ===
-                                gemstone.gemstoneid
+                              primaryGemstone &&
+                              primaryGemstone.gemstoneId === gemstone.gemstoneId
                                 ? "#d3f4ff"
                                 : "transparent",
                           }}
                         >
-                          <td>{gemstone.gemstoneid}</td>
+                          <td>{gemstone.gemstoneId}</td>
                           <td>{gemstone.name}</td>
                           <td>{gemstone.size}</td>
                           <td>{gemstone.color}</td>
@@ -934,18 +951,18 @@ function CustomizeForm() {
                     <tbody>
                       {currentSideGemstones.map((gemstone) => (
                         <tr
-                          key={gemstone.gemstoneid}
-                          onClick={() => selectSideStone(gemstone)}
+                          key={gemstone.gemstoneId}
+                          onClick={() => selectSideStone(gemstone.gemstoneId)}
                           style={{
                             backgroundColor:
-                              selectedSideStone &&
-                              selectedSideStone.gemstoneid ===
-                                gemstone.gemstoneid
+                              additionalGemstoneNames &&
+                              additionalGemstoneNames.gemstoneId ===
+                                gemstone.gemstoneId
                                 ? "#ffd3d3"
                                 : "transparent",
                           }}
                         >
-                          <td>{gemstone.gemstoneid}</td>
+                          <td>{gemstone.gemstoneId}</td>
                           <td>{gemstone.name}</td>
                           <td>{gemstone.size}</td>
                           <td>{gemstone.color}</td>
@@ -979,11 +996,13 @@ function CustomizeForm() {
                   <h2>Selected Stones</h2>
                   <div>
                     <strong>Main Stone:</strong>{" "}
-                    {selectedMainStone ? selectedMainStone.name : "None"}
+                    {primaryGemstone ? primaryGemstone.name : "None"}
                   </div>
                   <div>
                     <strong>Side Stone:</strong>{" "}
-                    {selectedSideStone ? selectedSideStone.name : "None"}
+                    {additionalGemstoneNames
+                      ? additionalGemstoneNames.name
+                      : "None"}
                   </div>
                 </div>
               </div>

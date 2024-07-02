@@ -20,7 +20,31 @@ export const loginUser = async (user, dispatch, navigate) => {
       user
     );
     dispatch(loginSuccess(res.data));
-    navigate("/");
+    console.log();
+
+    // Điều hướng dựa trên vai trò của người dùng
+    const role = res.data.role;
+    switch (role) {
+      case "admin":
+        navigate("/admin/home");
+        break;
+      case "salestaff":
+        navigate("/salestaff/home");
+        break;
+      case "designstaff":
+        navigate("/designstaff/home");
+        break;
+      case "manager":
+        navigate("/manager/home");
+        break;
+      case "productionstaff":
+        navigate("/productionstaff/home");
+        break;
+      case "customer":
+      default:
+        navigate("/home");
+        break;
+    }
   } catch (err) {
     dispatch(loginFalsed());
   }

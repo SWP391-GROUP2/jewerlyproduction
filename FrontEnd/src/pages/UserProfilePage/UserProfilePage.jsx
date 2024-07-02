@@ -14,10 +14,8 @@ function UserProfilePage() {
       </div>
 
       <div>
-            <ProfilePage/>
-        </div>
-
-      
+        <ProfilePage />
+      </div>
 
       <Footer />
     </div>
