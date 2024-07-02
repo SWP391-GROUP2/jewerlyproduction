@@ -18,6 +18,7 @@ public partial class AppUser : IdentityUser
     public ICollection<Message> MessageSaleStaffs { get; set; } = new List<Message>();
 
     public ICollection<Order> OrderProductionStaffs { get; set; } = new List<Order>();
+    public ICollection<Order> OrderDesignStaffs { get; set; } = new List<Order>();
 
     public ICollection<_3ddesign> _3ddesigns { get; set; } = new List<_3ddesign>();
     public ICollection<Notification> SentNotifications { get; set; } = new List<Notification>();

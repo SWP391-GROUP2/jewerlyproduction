@@ -47,7 +47,6 @@ namespace JewelryProduction.Controllers
 
             var updateGold = await _context.Golds.FindAsync(id);
             updateGold.GoldType = goldDTO.GoldType;
-            updateGold.Weight = goldDTO.Weight;
             updateGold.PricePerGram = goldDTO.PricePerGram;
 
             try
@@ -113,7 +112,6 @@ namespace JewelryProduction.Controllers
             {
                 GoldId = goldDTO.GoldId,
                 GoldType = goldDTO.GoldType,
-                Weight = goldDTO.Weight,
                 PricePerGram = goldDTO.PricePerGram,
             };
             try

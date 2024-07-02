@@ -143,6 +143,7 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
             entity.Property(e => e.GoldId)
                 .HasMaxLength(50)
                 .HasColumnName("goldID");
+            entity.Property(e => e.GoldWeight).HasColumnName("goldWeight");
             entity.Property(e => e.Quantity)
                 .HasColumnType("decimal(18, 0)")
                 .HasColumnName("quantity");
@@ -252,7 +253,6 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
             entity.Property(e => e.PricePerGram)
                 .HasColumnType("money")
                 .HasColumnName("pricePerGram");
-            entity.Property(e => e.Weight).HasColumnName("weight");
         });
 
         modelBuilder.Entity<Insurance>(entity =>
@@ -331,6 +331,9 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
             entity.Property(e => e.ProductionStaffId)
                 .HasMaxLength(450)
                 .HasColumnName("productionStaffID");
+            entity.Property(e => e.DesignStaffId)
+                .HasMaxLength(450)
+                .HasColumnName("designStaffID");
             entity.Property(e => e.Status)
                 .HasMaxLength(50)
                 .HasColumnName("status");
@@ -350,7 +353,14 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
             entity.HasOne(e => e.ProductionStaff)
                     .WithMany(u => u.OrderProductionStaffs)
                     .HasForeignKey(e => e.ProductionStaffId)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_Order_ProductionStaff");
+
+            entity.HasOne(e => e.DesignStaff)
+                    .WithMany(u => u.OrderDesignStaffs)
+                    .HasForeignKey(e => e.DesignStaffId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_Order_DesignStaff");
         });
 
         modelBuilder.Entity<PaymentMethod>(entity =>
@@ -391,6 +401,7 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
             entity.Property(e => e.Type)
                 .HasMaxLength(50)
                 .HasColumnName("type");
+            entity.Property(e => e.GoldWeight).HasColumnName("goldWeight");
 
             entity.HasOne(d => d.Gold).WithMany(p => p.ProductSamples)
                 .HasForeignKey(d => d.GoldId)

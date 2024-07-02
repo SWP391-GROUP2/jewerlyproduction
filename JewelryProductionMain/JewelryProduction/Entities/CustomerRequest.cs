@@ -5,7 +5,7 @@ public partial class CustomerRequest
     public string CustomizeRequestId { get; set; } = null!;
 
     public string GoldId { get; set; } = null!;
-
+    public double GoldWeight { get; set; }
     public string CustomerId { get; set; } = null!;
     public string? SaleStaffId { get; set; }
     public string? ManagerId { get; set; }
