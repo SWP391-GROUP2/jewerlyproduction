@@ -34,8 +34,8 @@ namespace JewelryProduction.Services
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
-            var role = await _usermanager.GetRolesAsync(user);
-            claims.AddRange(role.Select(role => new Claim(ClaimTypes.Role, role)));
+            var roles = await _usermanager.GetRolesAsync(user);
+            claims.AddRange(roles.Select(role => new Claim("role", role)));
 
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512);
 

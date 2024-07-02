@@ -18,6 +18,11 @@ public class CloudinaryService : ICloudinaryService
         _cloudinary = new Cloudinary(cloudinaryAccount);
     }
 
+    public string GetUrl(string publicId)
+    {
+        return _cloudinary.Api.UrlImgUp.BuildUrl(publicId);
+    }
+
     public async Task<ImageUploadResult> UploadImageAsync(IFormFile file, string folder)
     {
         var uploadResult = new ImageUploadResult();
@@ -37,10 +42,5 @@ public class CloudinaryService : ICloudinaryService
             }
         }
         return uploadResult;
-    }
-
-    public string GetUrl(string publicId)
-    {
-        return _cloudinary.Api.UrlImgUp.BuildUrl(publicId);
     }
 }
