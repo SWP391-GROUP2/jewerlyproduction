@@ -14,7 +14,8 @@
         public decimal Quantity { get; set; }
         public string GoldType { get; set; } = null!;
         public string Status { get; set; } = null!;
-        public AddGemstoneDTO PrimaryGemstone { get; set; } = new AddGemstoneDTO();
+        public string PrimaryGemstoneId { get; set; }
+        public AddGemstoneDTO? PrimaryGemstone { get; set; } = new AddGemstoneDTO();
         public List<string> AdditionalGemstone { get; set; } = new List<string>();
     }
 }
