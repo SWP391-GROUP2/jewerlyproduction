@@ -6,7 +6,7 @@ namespace JewelryProduction.Controllers
     [ApiController]
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private IActionResult Index()
         {
             return View();
         }

@@ -2,6 +2,7 @@
 {
     public class AddGemstoneDTO
     {
+        public string GemstoneId { get; set; }
         public string Name { get; set; } = null!;
 
         public string Color { get; set; } = null!;

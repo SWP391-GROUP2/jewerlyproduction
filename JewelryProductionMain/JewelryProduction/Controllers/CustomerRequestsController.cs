@@ -68,7 +68,7 @@ namespace JewelryProduction.Controllers
             }
 
             var additionalGemstones = await _context.Gemstones
-                .Where(g => customerRequestDTO.AdditionalGemstoneNames.Contains(g.Name) && g.CaratWeight >= 0.1 && g.CaratWeight <= 0.3)
+                .Where(g => customerRequestDTO.AdditionalGemstone.Contains(g.Name) && g.CaratWeight >= 0.1 && g.CaratWeight <= 0.3)
                 .GroupBy(g => g.Name)
                 .Select(g => g.FirstOrDefault())
                 .OrderBy(_ => Guid.NewGuid())
@@ -136,13 +136,7 @@ namespace JewelryProduction.Controllers
         {
             var primaryGemstone = await _context.Gemstones
                     .Where(g =>
-                        g.Name == customerRequestDTO.PrimaryGemstone.Name &&
-                        g.Clarity == customerRequestDTO.PrimaryGemstone.Clarity &&
-                        g.Color == customerRequestDTO.PrimaryGemstone.Color &&
-                        g.Shape == customerRequestDTO.PrimaryGemstone.Shape &&
-                        g.Size == customerRequestDTO.PrimaryGemstone.Size &&
-                        g.Cut == customerRequestDTO.PrimaryGemstone.Cut &&
-                        g.Price == customerRequestDTO.PrimaryGemstone.Price &&
+                        g.GemstoneId == customerRequestDTO.PrimaryGemstone.GemstoneId &&
                         g.ProductSample == null && g.CustomizeRequestId == null)
                     .FirstOrDefaultAsync();
 
@@ -152,7 +146,7 @@ namespace JewelryProduction.Controllers
             }
 
             var additionalGemstones = await _context.Gemstones
-                .Where(g => customerRequestDTO.AdditionalGemstoneNames.Contains(g.Name) && g.CaratWeight >= 0.1 && g.CaratWeight <= 0.3)
+                .Where(g => customerRequestDTO.AdditionalGemstone.Contains(g.GemstoneId))
                 .GroupBy(g => g.Name)
                 .Select(g => g.FirstOrDefault())
                 .OrderBy(_ => Guid.NewGuid())
@@ -277,14 +271,14 @@ namespace JewelryProduction.Controllers
                 Style = productSample.Style,
                 Quantity = productSample.Quantity,
                 PrimaryGemstone = productSample.PrimaryGemstone,
-                AdditionalGemstoneNames = productSample.AdditionalGemstones.Select(g => g.Name).ToList(),
+                AdditionalGemstone = productSample.AdditionalGemstones.Select(g => g.Name).ToList(),
                 GoldType = productSample.GoldType,
             };
 
             return Ok(customerRequest);
         }
         [HttpPost("approve/{customizeRequestId}")]
-        public async Task<IActionResult> ApproveCustomerRequest(string customizeRequestId)
+        public async Task<IActionResult> ApproveCustomerRequest(string customizeRequestId, string PaymentMethodId)
         {
             var customerRequest = await _context.CustomerRequests
                 .Include(cr => cr.Gemstones)
@@ -309,7 +303,7 @@ namespace JewelryProduction.Controllers
                 DepositAmount = request.Price *0.3M, 
                 Status = "Pending",
                 CustomizeRequestId = customerRequest.CustomizeRequestId,
-                PaymentMethodId = "1",
+                PaymentMethodId = PaymentMethodId,
                 TotalPrice = request.Price
             };
 
