@@ -132,11 +132,11 @@ namespace JewelryProduction.Controllers
         // POST: api/CustomerRequests
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<CustomerRequest>> PostCustomerRequest(CustomerRequestDTO customerRequestDTO, string MainGemstoneId)
+        public async Task<ActionResult<CustomerRequest>> PostCustomerRequest(CustomerRequestDTO customerRequestDTO)
         {
             var primaryGemstone = await _context.Gemstones
                     .Where(g =>
-                        g.GemstoneId == MainGemstoneId &&
+                        g.GemstoneId == customerRequestDTO.PrimaryGemstoneId &&
                         g.ProductSample == null && g.CustomizeRequestId == null)
                     .FirstOrDefaultAsync();
 
