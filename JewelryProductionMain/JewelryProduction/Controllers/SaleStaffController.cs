@@ -33,7 +33,7 @@ namespace JewelryProduction.Controllers
         public async Task<ActionResult<IEnumerable<CustomerRequest>>> GetPendingRequests()
         {
             var pendingRequests = await _context.CustomerRequests
-                .Where(r => r.Status == "Wait for Quotation" )
+                .Where(r => r.Status == "Wait for Quotation" && r.SaleStaffId == GetCurrentUserId() )
                 .ToListAsync();
 
             return Ok(pendingRequests);

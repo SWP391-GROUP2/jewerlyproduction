@@ -84,6 +84,9 @@ namespace JewelryProduction.Controllers
             }
             var updateCusReq = await _context.CustomerRequests.FindAsync(id);
             updateCusReq.GoldId = gold.GoldId;
+            updateCusReq.CustomerId = customerRequestDTO.CustomerId;
+            updateCusReq.SaleStaffId = customerRequestDTO.SaleStaffId;
+            updateCusReq.ManagerId = customerRequestDTO.ManagerId;
             updateCusReq.Type = customerRequestDTO.Type;
             updateCusReq.Style = customerRequestDTO.Style;
             updateCusReq.Size = customerRequestDTO.Size;
@@ -169,7 +172,7 @@ namespace JewelryProduction.Controllers
             {
                 CustomizeRequestId = uniqueId,
                 GoldId = gold.GoldId,
-                CustomerId = GetCurrentUserId(),
+                CustomerId = customerRequestDTO.CustomerId,
                 Type = customerRequestDTO.Type,
                 Style = customerRequestDTO.Style,
                 Size = customerRequestDTO.Size,
