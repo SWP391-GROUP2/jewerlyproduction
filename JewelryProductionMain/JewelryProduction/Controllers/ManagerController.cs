@@ -58,21 +58,6 @@ namespace JewelryProduction.Controllers
 
             return Ok("Customer request rejected successfully.");
         }
-        [HttpPost("approve-request/{id}")]
-        public async Task<IActionResult> ApproveRequest(string id)
-        {
-            var customerRequest = await _context.CustomerRequests.FindAsync(id);
-            if (customerRequest == null)
-            {
-                return NotFound();
-            }
-
-            customerRequest.Status = "Approved";
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
         [HttpPost("reject-request/{id}")]
         public async Task<IActionResult> RejectRequest(string id)
         {
@@ -128,7 +113,36 @@ namespace JewelryProduction.Controllers
 
             return Ok("SaleStaff assigned successfully.");
         }
-        [HttpPost("sendNotificationToCustomers")]
+        [HttpPost("assignProductionStaff")]
+        public async Task<IActionResult> AssignProductionStaff([FromBody] AssignProductionStaffDTO assignProductionStaffDTO)
+        {
+            var order = await _context.Orders
+                .FirstOrDefaultAsync(o => o.OrderId == assignProductionStaffDTO.OrderId);
+
+            if (order == null)
+            {
+                return NotFound("Order not found.");
+            }
+
+            var productionStaff = await _userManager.FindByIdAsync(assignProductionStaffDTO.ProductionStaffId);
+            if (productionStaff == null)
+            {
+                return NotFound("Production Staff not found.");
+            }
+
+            var isProductionStaff = await _userManager.IsInRoleAsync(productionStaff, "ProductionStaff");
+            if (!isProductionStaff)
+            {
+                return BadRequest("The user is not assigned the ProductionStaff role.");
+            }
+
+            order.ProductionStaffId = assignProductionStaffDTO.ProductionStaffId;
+            _context.Orders.Update(order);
+            await _context.SaveChangesAsync();
+
+            return Ok("Production Staff assigned successfully.");
+        }
+            [HttpPost("sendNotificationToCustomers")]
         public async Task<IActionResult> SendNotificationToCustomers([FromBody] string message)
         {
             var senderId = GetCurrentUserId();
@@ -148,6 +162,11 @@ namespace JewelryProduction.Controllers
         public string CustomizeRequestId { get; set; } = null!;
         public string ManagerId { get; set; }
         public string SaleStaffId { get; set; } = null!;
+    }
+    public class AssignProductionStaffDTO
+    {
+        public string OrderId { get; set; }
+        public string ProductionStaffId { get; set; }
     }
 
 }
