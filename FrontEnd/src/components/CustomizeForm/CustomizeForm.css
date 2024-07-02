@@ -241,29 +241,62 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   background-color: #f9f9f9;
 }
-table {
+
+.tablegemstone table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
   margin-bottom: 20px;
 }
 
-th,
-td {
+.tablegemstone th,
+.tablegemstone td {
   border: 1px solid #ddd;
   padding: 8px;
-  text-align: center;
 }
 
-th {
+.tablegemstone th {
   background-color: #f2f2f2;
-  color: #333;
+  text-align: left;
 }
 
-tbody tr:nth-child(even) {
+.tablegemstone tbody tr {
+  cursor: pointer;
+}
+
+.tablegemstone tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.selected {
+  background-color: #d3f4ff; /* Màu nền cho đá chính */
+}
+
+.selected-side {
+  background-color: #ffd3d3; /* Màu nền cho đá phụ */
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.pagination .page-node {
+  margin: 0 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  border-radius: 4px;
   background-color: #f2f2f2;
 }
 
-tbody tr:hover {
-  background-color: #ddd;
+.pagination .page-node.current {
+  background-color: #c8363a;
+  color: white;
+  border-color: #c8363a;
+}
+
+.pagination .page-node:hover {
+  background-color: #e0e0e0;
 }

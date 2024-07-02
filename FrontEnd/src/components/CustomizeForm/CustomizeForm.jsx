@@ -3,6 +3,8 @@ import "./CustomizeForm.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { jwtDecode } from "jwt-decode";
 
 function CustomizeForm() {
   const { productId } = useParams();
@@ -13,8 +15,8 @@ function CustomizeForm() {
   const [style, setselectedStyle] = useState("");
   const [goldType, setselectedGold] = useState("");
   const [size, setselectedSize] = useState("");
-
   const [quantity, setselectedQuantity] = useState("1");
+
   const [shape, setShape] = useState("");
   const [gemstoneSize, setGemstoneSize] = useState("all");
   const [gemstoneType, setGemstoneType] = useState("");
@@ -27,11 +29,37 @@ function CustomizeForm() {
   const [ProductSample, setProductSample] = useState(null);
   const [visibleProducts, setVisibleProducts] = useState(4);
 
+  const [selectedMainStone, setSelectedMainStone] = useState(null);
+  const [selectedSideStone, setSelectedSideStone] = useState(null);
+  const [currentMainPage, setCurrentMainPage] = useState(1);
+  const [currentSidePage, setCurrentSidePage] = useState(1);
+
+  const user = useSelector((State) => State.auth.Login.currentUser);
+
+  // Khai báo trạng thái chứa tên của hai loại đá dưới dạng một mảng
+  const [gemstoneNames, setGemstoneNames] = useState([]);
+
+  const selectMainStone = (gemstone) => {
+    setSelectedMainStone(gemstone);
+  };
+
+  const selectSideStone = (gemstone) => {
+    setSelectedSideStone(gemstone);
+  };
+
   useEffect(() => {
     if (item) {
       setselectedType(item);
     }
   }, [item]);
+
+  useEffect(() => {
+    const mainStone = selectedMainStone ? `Main: ${selectedMainStone}` : null;
+    const sideStone = selectedSideStone ? `Side: ${selectedSideStone}` : null;
+    const combinedGemstoneNames = [mainStone, sideStone].filter(Boolean);
+
+    setGemstoneNames(combinedGemstoneNames);
+  }, [selectedMainStone, selectedSideStone]);
 
   const navigateToProductDetail = (productId) => {
     navigate(`/product/${productId}`); // Chuyển hướng đến trang chi tiết sản phẩm
@@ -201,6 +229,30 @@ function CustomizeForm() {
       clarity: "VVS",
       price: "$1200",
     },
+    {
+      gemstoneid: 4,
+      name: "Ruby",
+      size: "10mm",
+      color: "Red",
+      clarity: "VS",
+      price: "$1000",
+    },
+    {
+      gemstoneid: 5,
+      name: "Emerald",
+      size: "8mm",
+      color: "Green",
+      clarity: "SI",
+      price: "$800",
+    },
+    {
+      gemstoneid: 6,
+      name: "Sapphire",
+      size: "9mm",
+      color: "Blue",
+      clarity: "VVS",
+      price: "$1200",
+    },
   ];
 
   const typeStyles = {
@@ -210,13 +262,57 @@ function CustomizeForm() {
     Earrings: ["stud", "jacket", "ear spike"],
   };
 
+  const gemstonesPerPage = 5;
+
+  const totalMainPages = Math.ceil(gemstones.length / gemstonesPerPage);
+  const totalSidePages = Math.ceil(gemstones.length / gemstonesPerPage);
+
+  const handleMainPageChange = (page) => {
+    setCurrentMainPage(page);
+  };
+
+  const handleSidePageChange = (page) => {
+    setCurrentSidePage(page);
+  };
+
+  const indexOfLastMainGemstone = currentMainPage * gemstonesPerPage;
+  const indexOfFirstMainGemstone = indexOfLastMainGemstone - gemstonesPerPage;
+  const currentMainGemstones = gemstones.slice(
+    indexOfFirstMainGemstone,
+    indexOfLastMainGemstone
+  );
+
+  const indexOfLastSideGemstone = currentSidePage * gemstonesPerPage;
+  const indexOfFirstSideGemstone = indexOfLastSideGemstone - gemstonesPerPage;
+  const currentSideGemstones = gemstones.slice(
+    indexOfFirstSideGemstone,
+    indexOfLastSideGemstone
+  );
+
+  const createCustomizeRequest = async (customize) => {
+    try {
+      const response = await axios.post("YOUR_API_ENDPOINT", customize);
+      return response.data;
+    } catch (error) {
+      console.error("Error create Customize Request :", error);
+    }
+  };
+
   const handleCreate = (e) => {
     e.preventDefault();
+    // Giải mã token để lấy customerId
+    const decodedToken = jwtDecode(user.token);
+    const customerId = decodedToken.sid; // hoặc trường tương ứng trong token
+
     const newCustomizeRequest = {
+      customerId: customerId,
       type: type,
       style: style,
+      size: size,
+      quantity: quantity,
       goldType: goldType,
       shape: shape,
+      gemstoneName: gemstoneNames,
     };
   };
 
@@ -779,8 +875,19 @@ function CustomizeForm() {
                       </tr>
                     </thead>
                     <tbody>
-                      {gemstones.map((gemstone) => (
-                        <tr key={gemstone.gemstoneid}>
+                      {currentMainGemstones.map((gemstone) => (
+                        <tr
+                          key={gemstone.gemstoneid}
+                          onClick={() => selectMainStone(gemstone)}
+                          style={{
+                            backgroundColor:
+                              selectedMainStone &&
+                              selectedMainStone.gemstoneid ===
+                                gemstone.gemstoneid
+                                ? "#d3f4ff"
+                                : "transparent",
+                          }}
+                        >
                           <td>{gemstone.gemstoneid}</td>
                           <td>{gemstone.name}</td>
                           <td>{gemstone.size}</td>
@@ -791,6 +898,93 @@ function CustomizeForm() {
                       ))}
                     </tbody>
                   </table>
+                  <div className="pagination">
+                    {Array.from(
+                      { length: totalMainPages },
+                      (_, i) => i + 1
+                    ).map((page) => (
+                      <span
+                        key={page}
+                        className={`page-node ${
+                          page === currentMainPage ? "current" : ""
+                        }`}
+                        onClick={() => handleMainPageChange(page)}
+                      >
+                        {page}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="option-section">
+                <div className="tablegemstone">
+                  <h2>Side Stones Information</h2>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Size</th>
+                        <th>Color</th>
+                        <th>Clarity</th>
+                        <th>Price</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {currentSideGemstones.map((gemstone) => (
+                        <tr
+                          key={gemstone.gemstoneid}
+                          onClick={() => selectSideStone(gemstone)}
+                          style={{
+                            backgroundColor:
+                              selectedSideStone &&
+                              selectedSideStone.gemstoneid ===
+                                gemstone.gemstoneid
+                                ? "#ffd3d3"
+                                : "transparent",
+                          }}
+                        >
+                          <td>{gemstone.gemstoneid}</td>
+                          <td>{gemstone.name}</td>
+                          <td>{gemstone.size}</td>
+                          <td>{gemstone.color}</td>
+                          <td>{gemstone.clarity}</td>
+                          <td>{gemstone.price}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <div className="pagination">
+                    {Array.from(
+                      { length: totalSidePages },
+                      (_, i) => i + 1
+                    ).map((page) => (
+                      <span
+                        key={page}
+                        className={`page-node ${
+                          page === currentSidePage ? "current" : ""
+                        }`}
+                        onClick={() => handleSidePageChange(page)}
+                      >
+                        {page}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="option-section">
+                <div className="selected-stones">
+                  <h2>Selected Stones</h2>
+                  <div>
+                    <strong>Main Stone:</strong>{" "}
+                    {selectedMainStone ? selectedMainStone.name : "None"}
+                  </div>
+                  <div>
+                    <strong>Side Stone:</strong>{" "}
+                    {selectedSideStone ? selectedSideStone.name : "None"}
+                  </div>
                 </div>
               </div>
             </div>

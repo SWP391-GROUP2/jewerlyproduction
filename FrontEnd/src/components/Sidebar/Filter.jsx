@@ -11,6 +11,22 @@ const Sidebar = () => {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate(); // Sử dụng hook useNavigate để chuyển hướng
 
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const productsPerPage = 8;
+  const totalPages = Math.ceil(products.length / productsPerPage);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = products.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
+
   const categories = ["Ring", "Bracelet", "Necklace", "Earrings"];
 
   const filters = {
@@ -141,11 +157,11 @@ const Sidebar = () => {
         )}
       </div>
       <div className="products">
-        {products.length === 0 ? (
+        {currentProducts.length === 0 ? (
           <p>No products found</p>
         ) : (
           <ul>
-            {products.map((product) => (
+            {currentProducts.map((product) => (
               <div
                 className="product-card"
                 key={product.productSampleId}
@@ -162,6 +178,21 @@ const Sidebar = () => {
                 </p>
               </div>
             ))}
+            <div className="pagination">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (page) => (
+                  <span
+                    key={page}
+                    className={`page-node ${
+                      page === currentPage ? "current" : ""
+                    }`}
+                    onClick={() => handlePageChange(page)}
+                  >
+                    {page}
+                  </span>
+                )
+              )}
+            </div>
           </ul>
         )}
       </div>
