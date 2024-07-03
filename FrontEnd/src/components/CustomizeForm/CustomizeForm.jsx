@@ -37,13 +37,6 @@ function CustomizeForm() {
   const [selectedSideStones, setSelectedSideStones] = useState([]);
   const [currentMainPage, setCurrentMainPage] = useState(1);
   const [currentSidePage, setCurrentSidePage] = useState(1);
-  const [status, setStatus] = useState("");
-  const [primaryGemstone, setPrimaryGemstone] = useState({
-    name: "",
-    color: "",
-    cut: "",
-    clarity: "",
-  });
 
   const user = useSelector((State) => State.auth.Login.currentUser);
 
@@ -382,13 +375,6 @@ function CustomizeForm() {
       goldType: goldType,
       PrimaryGemstoneId: PrimaryGemstoneId,
       AdditionalGemstone: AdditionalGemstone,
-      status: status, // Gán giá trị rỗng cho status nếu không có dữ liệu
-      primaryGemstone: {
-        name: primaryGemstone.name || "", // Gửi giá trị mặc định nếu không có primaryGemstone
-        color: primaryGemstone.color || "",
-        cut: primaryGemstone.cut || "",
-        clarity: primaryGemstone.clarity || "",
-      },
     };
     // Call the function to create the request
     createCustomizeRequest(newCustomizeRequest);

@@ -8,7 +8,7 @@
   background-color: rgb(255, 255, 255);
   background-size: cover;
   background-position: center;
-  padding-bottom: 50px;
+  padding-bottom: 0px;
 }
 
 .manager-container {
@@ -18,19 +18,21 @@
 
 .new-div {
   /* Add your desired styles for the new div */
-  height: 600px; /* This sets the height of the div to be 100% of the viewport height */
-  padding: 20px;
-  background-color: #f0f0f0;
+  height: auto;
+  padding: 50px;
+  background-color: #f8f3ed;
   margin-top: 10px;
   border-radius: 20px;
 }
 
 .custom-table {
+  margin-top: 20px;
   width: 100%;
   border-collapse: collapse;
 }
 
-.custom-table th, .custom-table td {
+.custom-table th,
+.custom-table td {
   border: 1px solid #ddd;
   padding: 8px;
 }
@@ -46,16 +48,18 @@
 
 .custom-table tr:hover {
   background-color: #ddd;
+  cursor: pointer;
 }
 
-.detail-button, .reject-button {
+.detail-button,
+.reject-button {
   padding: 5px 10px;
   border: none;
   cursor: pointer;
 }
 
 .detail-button {
-  background-color: #4CAF50; /* Green */
+  background-color: #4caf50; /* Green */
   color: white;
 }
 
@@ -63,31 +67,98 @@
   background-color: #f44336; /* Red */
   color: white;
 }
-
-.popup {
+/* CSS cho lớp mờ */
+.overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
+  z-index: 1000; /* Đảm bảo lớp mờ ở trên cùng */
+  display: none; /* Ban đầu ẩn đi */
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.5
+  ); /* Màu nền làm mờ với độ trong suốt 50% */
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Ensure popup is above other elements */
+  z-index: 1000; /* Đảm bảo lớp overlay hiển thị trên cùng */
+}
+
+.overlay.active {
+  display: block; /* Hiển thị khi có lớp mờ được kích hoạt */
+}
+
+/* CSS cho popup */
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1010; /* Đảm bảo popup ở trên cùng so với lớp mờ */
+  width: 400px;
 }
 
 .popup-inner {
-  background: white;
-  padding: 40px; /* Increased padding */
-  border-radius: 10px;
   text-align: center;
-  z-index: 1001;
-  width: 60%; /* Increased width */
-  max-width: 600px; /* Maximum width */
-  height: auto; /* Adjust height to auto */
-  max-height: 80vh; /* Ensure popup doesn't exceed 80% of viewport height */
-  overflow-y: auto; /* Add scroll if content exceeds max-height */
+}
+
+/* CSS cho bảng nhân viên */
+.employee-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.employee-table th,
+.employee-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.employee-table th {
+  background-color: #f4f4f4;
+}
+
+.employee-table tr:hover {
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
+.employee-table .selected {
+  background-color: #e0e0e0;
+}
+
+/* CSS cho các nút */
+.popup_button {
+  margin: 10px 5px;
+  padding: 10px 15px;
+  border: none;
+  background-color: #000000;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.popup_button:hover {
+  background-color: #777777;
 }
 
 .blur {
@@ -106,10 +177,6 @@
   background-color: #fff;
   font-size: 16px;
   width: 200px; /* Adjust width as needed */
-}
-.popup_button{
-  width: 100px; /* Increased width */
-  height: 41px; /* Adjust height to auto */
 }
 
 .table-heading {
@@ -151,4 +218,3 @@
   height: 41px;
   margin: 10px; /* Add some space between buttons */
 }
-          

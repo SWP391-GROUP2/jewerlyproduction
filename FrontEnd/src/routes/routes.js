@@ -46,20 +46,20 @@ const routes = [
   { path: "/customer/resetpassword", element: <ResetPassword /> },
 
   // Admin Routes
-  { path: "/admin/adminpage", element: <AdminPage /> },
+  { path: "/admin/home", element: <AdminPage /> },
 
   // Sales Staff Routes
-  { path: "/salestaff/salestaffpage", element: <SaleStaffPage /> },
+  { path: "/salestaff/home", element: <SaleStaffPage /> },
 
   // Design Staff Routes
-  { path: "/designstaff/designstaffpage", element: <DesignStaffPage /> },
+  { path: "/designstaff/home", element: <DesignStaffPage /> },
 
   // Manager Routes
-  { path: "/manager/managerpage", element: <ManagerPage /> },
+  { path: "/manager/home", element: <ManagerPage /> },
 
   // Production Staff Routes
   {
-    path: "/productionstaff/productionstaffpage",
+    path: "/productionstaff/home",
     element: <ProductionStaffPage />,
   },
 ];
