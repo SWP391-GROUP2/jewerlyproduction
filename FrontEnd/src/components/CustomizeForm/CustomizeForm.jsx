@@ -31,20 +31,58 @@ function CustomizeForm() {
   const [visibleProducts, setVisibleProducts] = useState(4);
   const [gemstones, setGemstones] = useState([]);
 
-  const [primaryGemstone, setSelectedMainStone] = useState(null);
-  const [additionalGemstoneNames, setSelectedSideStone] = useState([]);
+  const [PrimaryGemstoneId, setPrimaryGemstoneId] = useState("");
+  const [AdditionalGemstone, setAdditionalGemstoneIds] = useState([]);
+  const [PrimaryGemstone, setSelectedMainStone] = useState(null);
+  const [selectedSideStones, setSelectedSideStones] = useState([]);
   const [currentMainPage, setCurrentMainPage] = useState(1);
   const [currentSidePage, setCurrentSidePage] = useState(1);
+  const [status, setStatus] = useState("");
+  const [primaryGemstone, setPrimaryGemstone] = useState({
+    name: "",
+    color: "",
+    cut: "",
+    clarity: "",
+  });
 
   const user = useSelector((State) => State.auth.Login.currentUser);
 
   const selectMainStone = (gemstone) => {
     setSelectedMainStone(gemstone);
+    setPrimaryGemstoneId(gemstone.gemstoneId);
   };
 
+  useEffect(() => {
+    console.log("select Main Stone ", PrimaryGemstoneId);
+  }, [PrimaryGemstoneId]);
+
   const selectSideStone = (gemstone) => {
-    setSelectedSideStone(gemstone);
+    setSelectedSideStones((prevSelectedStones) => {
+      if (
+        prevSelectedStones.some(
+          (stone) => stone.gemstoneId === gemstone.gemstoneId
+        )
+      ) {
+        // Nếu đã chọn, bỏ chọn
+        return prevSelectedStones.filter(
+          (stone) => stone.gemstoneId !== gemstone.gemstoneId
+        );
+      } else if (prevSelectedStones.length < 2) {
+        // Nếu chưa chọn và số lượng chọn < 2, thêm vào danh sách
+        const updatedStones = [...prevSelectedStones, gemstone];
+        const updatedIds = updatedStones.map((stone) => stone.gemstoneId);
+        setAdditionalGemstoneIds(updatedIds);
+        return updatedStones;
+      } else {
+        // Nếu đã chọn đủ 2 viên, không thêm nữa
+        return prevSelectedStones;
+      }
+    });
   };
+
+  useEffect(() => {
+    console.log("select Side Stone ", AdditionalGemstone);
+  }, [AdditionalGemstone]);
 
   useEffect(() => {
     if (item) {
@@ -238,13 +276,13 @@ function CustomizeForm() {
 
   const gold = [
     { value: "Gold 9999", label: "Gold 9999" },
-    { value: "Gold 999", label: "Gold 999" },
-    { value: "Gold 98", label: "Gold 98" },
-    { value: "Gold 75", label: "Gold 75" },
-    { value: "Gold 58.3", label: "Gold 58.3" },
-    { value: "White Gold", label: "White Gold" },
-    { value: "Gold 14k", label: "Gold 14k" },
-    { value: "Italy Gold", label: "Italy Gold" },
+    { value: "Gold 999.9", label: "Gold 999.9" },
+    { value: "Gold 24k", label: "Gold 24k" },
+    { value: "Gold 99", label: "Gold 99" },
+    { value: "Gold 18k", label: "Gold 18k" },
+    { value: "White 16k", label: "White 16k" },
+    { value: "Gold 15k", label: "Gold 15k" },
+    { value: "Italy 10k", label: "Italy 10k" },
     // Add more options here
   ];
 
@@ -310,7 +348,22 @@ function CustomizeForm() {
       );
       return response.data;
     } catch (error) {
-      console.error("Error create Customize Request :", error);
+      // Xử lý lỗi từ server nếu có
+      if (error.response) {
+        // Xử lý lỗi từ server nếu có
+        if (error.response) {
+          console.error("Server responded with error:", error.response.data);
+
+          // In ra các lỗi validation từ server
+          if (error.response.data.errors) {
+            Object.keys(error.response.data.errors).forEach((key) => {
+              console.error(`${key}: ${error.response.data.errors[key]}`);
+            });
+          }
+        } else {
+          console.error("Error create Customize Request:", error.message);
+        }
+      }
     }
   };
 
@@ -327,11 +380,20 @@ function CustomizeForm() {
       size: size,
       quantity: quantity,
       goldType: goldType,
-      primaryGemstone: primaryGemstone,
-      additionalGemstoneNames: additionalGemstoneNames,
+      PrimaryGemstoneId: PrimaryGemstoneId,
+      AdditionalGemstone: AdditionalGemstone,
+      status: status, // Gán giá trị rỗng cho status nếu không có dữ liệu
+      primaryGemstone: {
+        name: primaryGemstone.name || "", // Gửi giá trị mặc định nếu không có primaryGemstone
+        color: primaryGemstone.color || "",
+        cut: primaryGemstone.cut || "",
+        clarity: primaryGemstone.clarity || "",
+      },
     };
     // Call the function to create the request
     createCustomizeRequest(newCustomizeRequest);
+    // Xử lý kết quả từ server nếu cần
+    console.log("Create Customize Request successful:", newCustomizeRequest);
   };
 
   const fetchRecommendations = async () => {
@@ -896,11 +958,11 @@ function CustomizeForm() {
                       {currentMainGemstones.map((gemstone) => (
                         <tr
                           key={gemstone.gemstoneId}
-                          onClick={() => selectMainStone(gemstone.gemstoneId)}
+                          onClick={() => selectMainStone(gemstone)}
                           style={{
                             backgroundColor:
-                              primaryGemstone &&
-                              primaryGemstone.gemstoneId === gemstone.gemstoneId
+                              PrimaryGemstone &&
+                              PrimaryGemstone.gemstoneId === gemstone.gemstoneId
                                 ? "#d3f4ff"
                                 : "transparent",
                           }}
@@ -952,14 +1014,14 @@ function CustomizeForm() {
                       {currentSideGemstones.map((gemstone) => (
                         <tr
                           key={gemstone.gemstoneId}
-                          onClick={() => selectSideStone(gemstone.gemstoneId)}
+                          onClick={() => selectSideStone(gemstone)}
                           style={{
-                            backgroundColor:
-                              additionalGemstoneNames &&
-                              additionalGemstoneNames.gemstoneId ===
-                                gemstone.gemstoneId
-                                ? "#ffd3d3"
-                                : "transparent",
+                            backgroundColor: selectedSideStones.some(
+                              (stone) =>
+                                stone.gemstoneId === gemstone.gemstoneId
+                            )
+                              ? "#ffd3d3"
+                              : "transparent",
                           }}
                         >
                           <td>{gemstone.gemstoneId}</td>
@@ -996,12 +1058,12 @@ function CustomizeForm() {
                   <h2>Selected Stones</h2>
                   <div>
                     <strong>Main Stone:</strong>{" "}
-                    {primaryGemstone ? primaryGemstone.name : "None"}
+                    {PrimaryGemstone ? PrimaryGemstone.name : "None"}
                   </div>
                   <div>
-                    <strong>Side Stone:</strong>{" "}
-                    {additionalGemstoneNames
-                      ? additionalGemstoneNames.name
+                    <strong>Side Stones:</strong>{" "}
+                    {selectedSideStones.length > 0
+                      ? selectedSideStones.map((stone) => stone.name).join(", ")
                       : "None"}
                   </div>
                 </div>

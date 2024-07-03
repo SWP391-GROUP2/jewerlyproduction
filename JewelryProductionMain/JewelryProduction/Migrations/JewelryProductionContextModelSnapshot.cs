@@ -189,7 +189,7 @@ namespace JewelryProduction.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("goldID");
 
-                    b.Property<double>("GoldWeight")
+                    b.Property<double?>("GoldWeight")
                         .HasColumnType("float")
                         .HasColumnName("goldWeight");
 
@@ -530,7 +530,6 @@ namespace JewelryProduction.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("ProductionStaffId")
-                        .IsRequired()
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("productionStaffID");
@@ -711,37 +710,37 @@ namespace JewelryProduction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "571d2155-28d4-40a4-8d84-fc0e8ae3fe2b",
+                            Id = "52ba8c5a-63a3-490d-b2f8-dc24ef11cdc7",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "e129afd7-1100-4c8d-9e09-e8e47356ff5b",
+                            Id = "2bd65d6d-d828-4121-bc6e-77207c676c53",
                             Name = "SaleStaff",
                             NormalizedName = "SALESTAFF"
                         },
                         new
                         {
-                            Id = "539bb975-4ab5-4218-8ce8-647e7ed32112",
+                            Id = "996aad05-1a3a-40f7-a37d-d35e47bb1637",
                             Name = "ProductionStaff",
                             NormalizedName = "PRODUCTIONSTAFF"
                         },
                         new
                         {
-                            Id = "7c57b7ff-63d6-4367-9424-22b227271f82",
+                            Id = "f25081c6-8094-443b-8b6d-6ffc56ed881b",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "3bba98de-278b-4e13-806e-85ccdd01b492",
+                            Id = "e3ed8f96-2e7e-430f-977d-d561b3b341d5",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "4060882c-6607-4a47-aed6-f9b1ae2fedf6",
+                            Id = "7cb8bdf6-41d4-41fa-9668-0e0123eb5015",
                             Name = "DesignStaff",
                             NormalizedName = "DESIGNSTAFF"
                         });
@@ -1005,7 +1004,6 @@ namespace JewelryProduction.Migrations
                         .WithMany("OrderProductionStaffs")
                         .HasForeignKey("ProductionStaffId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
                         .HasConstraintName("FK_Order_ProductionStaff");
 
                     b.Navigation("CustomizeRequest");
