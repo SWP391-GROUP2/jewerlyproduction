@@ -52,13 +52,7 @@ namespace JewelryProduction.Controllers
         {
             var primaryGemstone = await _context.Gemstones
                     .Where(g =>
-                        g.Name == customerRequestDTO.PrimaryGemstone.Name &&
-                        g.Clarity == customerRequestDTO.PrimaryGemstone.Clarity &&
-                        g.Color == customerRequestDTO.PrimaryGemstone.Color &&
-                        g.Shape == customerRequestDTO.PrimaryGemstone.Shape &&
-                        g.Size == customerRequestDTO.PrimaryGemstone.Size &&
-                        g.Cut == customerRequestDTO.PrimaryGemstone.Cut &&
-                        g.Price == customerRequestDTO.PrimaryGemstone.Price &&
+                        g.GemstoneId == customerRequestDTO.PrimaryGemstoneId &&
                         g.ProductSample == null && g.CustomizeRequestId == null)
                     .FirstOrDefaultAsync();
 
@@ -91,7 +85,6 @@ namespace JewelryProduction.Controllers
             updateCusReq.Style = customerRequestDTO.Style;
             updateCusReq.Size = customerRequestDTO.Size;
             updateCusReq.Quantity = customerRequestDTO.Quantity;
-            updateCusReq.Status = customerRequestDTO.Status;
             updateCusReq.Gemstones = allSelectedGemstones;
             updateCusReq.Gold = gold;
 
@@ -230,6 +223,7 @@ namespace JewelryProduction.Controllers
                 {
                     Type = ps.Type,
                     Style = ps.Style,
+                    GoldWeight = ps.GoldWeight,
                     Quantity = 1, // Default quantity, adjust as necessary
                     PrimaryGemstone = ps.Gemstones
                         .Where(g => g.CaratWeight > 0.3)
@@ -265,7 +259,7 @@ namespace JewelryProduction.Controllers
                 return NotFound("Product sample not found.");
             }
 
-            var customerRequest = new CustomerRequestDTO
+            var customerRequest = new PrefillDTO
             {
                 Type = productSample.Type,
                 Style = productSample.Style,

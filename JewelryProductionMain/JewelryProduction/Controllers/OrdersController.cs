@@ -3,6 +3,7 @@ using JewelryProduction.Common;
 using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
 using JewelryProduction.Interface;
+using JewelryProduction.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -188,7 +189,17 @@ namespace JewelryProduction.Controllers
 
             return Ok(new { order.OrderId, order.Status });
         }
+        [HttpGet("CalculateGoldWeightUsedInMonth")]
+        public async Task<IActionResult> CalculateGoldWeightUsedInMonth([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+        {
+            if (startDate > endDate)
+            {
+                return BadRequest("Start date cannot be later than end date.");
+            }
 
+            var totalGoldWeight = await _orderService.CalculateGoldWeightByTypeInMonth(startDate, endDate);
+            return Ok(totalGoldWeight);
+        }
         private decimal GetDeposit(decimal productCost)
         {
             decimal deposit = productCost * 0.3M;

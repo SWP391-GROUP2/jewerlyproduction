@@ -56,7 +56,7 @@ namespace JewelryProduction.Controllers
         }
 
         [HttpPost("send-approved")]
-        public async Task<ActionResult> SendForApproval(string CustomizeRequestId)
+        public async Task<ActionResult> SendForApproval(string CustomizeRequestId, float GoldWeight)
         {
             var customerRequest = await _context.CustomerRequests.FindAsync(CustomizeRequestId);
             var gold = await _context.Golds.FindAsync(customerRequest.GoldId);
@@ -64,6 +64,10 @@ namespace JewelryProduction.Controllers
             .Where(g => customerRequest.CustomizeRequestId.Contains(g.CustomizeRequestId))
             .ToListAsync();
             var senderId = GetCurrentUserId();
+            if (customerRequest.GoldWeight == 0)
+            {
+                customerRequest.GoldWeight = GoldWeight;
+            }
             var price = await _service.CalculateProductCost(CustomizeRequestId);
             var request = await _context.CustomerRequests.FindAsync(CustomizeRequestId);
             var userId = request.ManagerId;

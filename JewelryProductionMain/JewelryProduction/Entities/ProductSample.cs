@@ -17,7 +17,7 @@ public partial class ProductSample
     public decimal Price { get; set; }
 
     public string GoldId { get; set; } = null!;
-    public double GoldWeight { get; set; }
+    public double? GoldWeight { get; set; }
 
     public ICollection<Gemstone> Gemstones { get; set; } = new List<Gemstone>();
 
