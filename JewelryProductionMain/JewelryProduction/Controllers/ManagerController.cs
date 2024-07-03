@@ -32,7 +32,7 @@ namespace JewelryProduction.Controllers
             _notificationService = notificationService;
             _requestService = requestService;
         }
-        [HttpPost("approve/{customerRequestId}")]
+        [HttpPost("approveQuotation/{customerRequestId}")]
         public async Task<IActionResult> ApproveCustomerRequest(string customerRequestId)
         {
             var managerId = GetCurrentUserId();
@@ -45,7 +45,7 @@ namespace JewelryProduction.Controllers
 
             return Ok("Customer request approved successfully.");
         }
-        [HttpPost("reject/{customerRequestId}")]
+        [HttpPost("rejectQuotation/{customerRequestId}")]
         public async Task<IActionResult> RejectQuotation(string customerRequestId, string message)
         {
             var managerId = GetCurrentUserId();
@@ -57,29 +57,6 @@ namespace JewelryProduction.Controllers
             }
 
             return Ok("Customer request rejected successfully.");
-        }
-        [HttpPost("reject-request/{id}")]
-        public async Task<IActionResult> RejectRequest(string id)
-        {
-            var customerRequest = await _context.CustomerRequests.FindAsync(id);
-            if (customerRequest == null)
-            {
-                return NotFound();
-            }
-
-            customerRequest.Status = "Rejected";
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-        [HttpGet("pending-requests")]
-        public async Task<ActionResult<IEnumerable<CustomerRequest>>> GetPendingRequests()
-        {
-            var pendingRequests = await _context.CustomerRequests
-                .Where(r => r.Status == "Pending")
-                .ToListAsync();
-
-            return Ok(pendingRequests);
         }
         [HttpPost("assignSaleStaff")]
         public async Task<IActionResult> AssignSaleStaff([FromBody] AssignSaleStaffDTO assignSaleStaffDTO)

@@ -289,12 +289,13 @@ namespace JewelryProduction.Controllers
                 return BadRequest("Quotation is not available.");
             }
 
-            customerRequest.Status = "Approved";
+            customerRequest.Status = "Request Approved";
 
             var order = new Order
             {
                 OrderId = await IdGenerator.GenerateUniqueId<Order>(_context, "ORD", 6),
                 ProductionStaffId = null,
+                DesignStaffId = "DE001",
                 OrderDate = DateTime.Now,
                 DepositAmount = customerRequest.quotation.Value * 0.3M,
                 Status = "Pending",
@@ -323,7 +324,7 @@ namespace JewelryProduction.Controllers
 
             return Ok(order);
         }
-        [HttpDelete("reject/{customizeRequestId}")]
+        [HttpPost("reject/{customizeRequestId}")]
         public async Task<IActionResult> RejectCustomerRequest(string customizeRequestId)
         {
             var customerRequest = await _context.CustomerRequests
@@ -337,7 +338,7 @@ namespace JewelryProduction.Controllers
             {
                 gemstone.CustomizeRequestId = null;
             }
-            _context.CustomerRequests.Remove(customerRequest);
+            customerRequest.Status = "Request Reject";
             using (var transaction = await _context.Database.BeginTransactionAsync())
             {
                 try
