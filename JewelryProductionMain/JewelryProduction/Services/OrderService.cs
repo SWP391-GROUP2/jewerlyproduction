@@ -23,7 +23,21 @@ namespace JewelryProduction.Services
 
             return await query.ToListAsync();
         }
-        public async Task<PagedResult<Order>> GetAllPaging(OrderPagingRequest request)
+        public async Task<Dictionary<string, double>> CalculateGoldWeightByTypeInMonth(DateTime startDate, DateTime endDate)
+        {
+            var totalGoldWeights = await (from cr in _context.CustomerRequests
+                                          join o in _context.Orders on cr.CustomizeRequestId equals o.CustomizeRequestId
+                                          where o.OrderDate >= startDate && o.OrderDate <= endDate
+                                          group cr by cr.GoldId into g
+                                          select new
+                                          {
+                                              GoldId = g.Key,
+                                              TotalGoldWeight = g.Sum(cr => cr.GoldWeight) ?? 0
+                                          }).ToDictionaryAsync(g => g.GoldId, g => g.TotalGoldWeight);
+
+            return totalGoldWeights;
+        }
+            public async Task<PagedResult<Order>> GetAllPaging(OrderPagingRequest request)
         {
 
             IQueryable<Order> query = _context.Orders;

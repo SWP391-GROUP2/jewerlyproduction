@@ -7,5 +7,6 @@ namespace JewelryProduction.Interface
     {
         Task<List<Order>> GetOrdersByYearSortedByPrice(int year);
         Task<PagedResult<Order>> GetAllPaging(OrderPagingRequest request);
+        Task<Dictionary<string, double>> CalculateGoldWeightByTypeInMonth(DateTime startDate, DateTime endDate);
     }
 }
