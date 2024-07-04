@@ -32,16 +32,6 @@ namespace JewelryProduction.Controllers
             _requestService = requestService;
             _mapper = mapper;
         }
-
-        [HttpGet("Wait-for-Quotation-requests")]
-        public async Task<ActionResult<IEnumerable<CustomerRequest>>> GetPendingRequests()
-        {
-            var pendingRequests = await _context.CustomerRequests
-                .Where(r => r.Status == "Wait for Quotation" && r.SaleStaffId == GetCurrentUserId() )
-                .ToListAsync();
-
-            return Ok(pendingRequests);
-        }
         [HttpPost("send-quotation-to-Customer")]
         public async Task<IActionResult> ApproveCustomerRequest(string customerRequestId)
         {
@@ -56,7 +46,7 @@ namespace JewelryProduction.Controllers
         }
 
         [HttpPost("send-approved")]
-        public async Task<ActionResult> SendForApproval(string CustomizeRequestId, float GoldWeight)
+        public async Task<ActionResult> SendForApproval(string CustomizeRequestId, double GoldWeight)
         {
             var customerRequest = await _context.CustomerRequests.FindAsync(CustomizeRequestId);
             var gold = await _context.Golds.FindAsync(customerRequest.GoldId);
@@ -64,7 +54,7 @@ namespace JewelryProduction.Controllers
             .Where(g => customerRequest.CustomizeRequestId.Contains(g.CustomizeRequestId))
             .ToListAsync();
             var senderId = GetCurrentUserId();
-            if (customerRequest.GoldWeight == 0)
+            if (customerRequest.GoldWeight == null)
             {
                 customerRequest.GoldWeight = GoldWeight;
             }
@@ -78,7 +68,7 @@ Production Cost:            40% Material Price
 Additional Fee:             0
 VAT:                        10%";
             request.quotation = price;
-            request.Status = "Wait For Approve"; 
+            request.Status = "Wait For Approval"; 
             await _context.SaveChangesAsync();
 
             // Send email or notification to manager
@@ -90,14 +80,6 @@ VAT:                        10%";
         {
             var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sid);
             return userId;
-        }
-
-        [HttpGet("Detail")]
-        public async Task<List<UserWithCountDTO>> GetDetailsAsync()
-        {
-            var result = await _service.GetStaffs();
-
-            return result;  
         }
     }
 }

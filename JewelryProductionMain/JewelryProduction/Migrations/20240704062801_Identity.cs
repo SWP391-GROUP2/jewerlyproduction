@@ -154,7 +154,7 @@ namespace JewelryProduction.Migrations
                     size = table.Column<double>(type: "float", nullable: true),
                     price = table.Column<decimal>(type: "money", nullable: false),
                     goldID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    goldWeight = table.Column<double>(type: "float", nullable: false)
+                    goldWeight = table.Column<double>(type: "float", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -257,7 +257,7 @@ namespace JewelryProduction.Migrations
                 {
                     customizeRequestID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     goldID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    goldWeight = table.Column<double>(type: "float", nullable: false),
+                    goldWeight = table.Column<double>(type: "float", nullable: true),
                     customerID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
                     SaleStaffID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
                     ManagerID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
@@ -444,8 +444,8 @@ namespace JewelryProduction.Migrations
                 columns: table => new
                 {
                     orderID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    productionStaffID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
-                    designStaffID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    productionStaffID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    designStaffID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
                     orderDate = table.Column<DateTime>(type: "datetime", nullable: false),
                     depositAmount = table.Column<decimal>(type: "money", nullable: true),
                     status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
@@ -510,12 +510,12 @@ namespace JewelryProduction.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "3bba98de-278b-4e13-806e-85ccdd01b492", null, "Customer", "CUSTOMER" },
-                    { "4060882c-6607-4a47-aed6-f9b1ae2fedf6", null, "DesignStaff", "DESIGNSTAFF" },
-                    { "539bb975-4ab5-4218-8ce8-647e7ed32112", null, "ProductionStaff", "PRODUCTIONSTAFF" },
-                    { "571d2155-28d4-40a4-8d84-fc0e8ae3fe2b", null, "Admin", "ADMIN" },
-                    { "7c57b7ff-63d6-4367-9424-22b227271f82", null, "Manager", "MANAGER" },
-                    { "e129afd7-1100-4c8d-9e09-e8e47356ff5b", null, "SaleStaff", "SALESTAFF" }
+                    { "446e0457-d977-4186-9988-76313e39507e", null, "SaleStaff", "SALESTAFF" },
+                    { "5c286cde-97f7-4c86-98f2-b3a05413b0d7", null, "Admin", "ADMIN" },
+                    { "619b74fc-9136-46f9-aaad-a1a8670f31d9", null, "Customer", "CUSTOMER" },
+                    { "8d43a9cb-88c3-4202-9504-e9027f1f28b5", null, "Manager", "MANAGER" },
+                    { "c34f688a-9601-495e-aff6-7b2321bc57bf", null, "ProductionStaff", "PRODUCTIONSTAFF" },
+                    { "e103db46-ee35-4eaa-9683-5c2f196294f6", null, "DesignStaff", "DESIGNSTAFF" }
                 });
 
             migrationBuilder.CreateIndex(

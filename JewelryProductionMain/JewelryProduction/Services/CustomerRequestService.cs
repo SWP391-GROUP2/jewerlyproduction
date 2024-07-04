@@ -2,6 +2,7 @@
 using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
 using JewelryProduction.Interface;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Drawing;
 
@@ -11,11 +12,13 @@ namespace JewelryProduction.Services
     {
         private readonly JewelryProductionContext _context;
         private readonly INotificationService _notificationService;
+        private readonly ICustomerRequestRepository _customerRequestRepository;
 
-        public CustomerRequestService(JewelryProductionContext context, INotificationService notificationService)
+        public CustomerRequestService(JewelryProductionContext context, INotificationService notificationService, ICustomerRequestRepository customerRequestRepository)
         {
             _context = context;
             _notificationService = notificationService;
+            _customerRequestRepository = customerRequestRepository;
         }
         public async Task<CustomerRequest> GetCustomerRequestWithQuotationsAsync(string customerRequestId)
         {
@@ -159,6 +162,16 @@ namespace JewelryProduction.Services
 
             return pagedResult;
 
+        }
+
+        public async Task<List<CustomerRequestGetDTO>> GetCustomerRequests()
+        {
+            return await _customerRequestRepository.GetCustomerRequests();
+        }
+
+        public async Task<CustomerRequestGetDTO> GetCustomerRequest(string id)
+        {
+            return await _customerRequestRepository.GetCustomerRequest(id);
         }
     }
 }

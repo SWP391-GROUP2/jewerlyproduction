@@ -52,6 +52,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Interface\DesignStaff\" />
+    <Folder Include="Interface\ProductionStaff\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
