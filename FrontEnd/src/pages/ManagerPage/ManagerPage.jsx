@@ -107,7 +107,7 @@ function ManagerPage() {
     const fetchSaleStaff = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5266/api/CustomerRequests"
+          "http://localhost:5266/api/Manager/Staff/Sales/List"
         );
         setSaleStaff(response.data);
       } catch (error) {
@@ -125,7 +125,7 @@ function ManagerPage() {
     const fetchDesignStaff = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5266/api/CustomerRequests"
+          "http://localhost:5266/api/Manager/Staff/Design/List"
         );
         setDesignStaff(response.data);
       } catch (error) {
@@ -143,7 +143,7 @@ function ManagerPage() {
     const fetchProductionStaff = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5266/api/CustomerRequests"
+          "http://localhost:5266/api/Manager/Staff/Production/List"
         );
         setProductionStaff(response.data);
       } catch (error) {
@@ -158,13 +158,13 @@ function ManagerPage() {
   }, []);
 
   const pendingRequests = requestData.filter(
-    (requestData) => requestData.status === "Pending"
+    (requestData) => requestData.customerRequest.status === "Pending"
   );
   const waitquotation = requestData.filter(
-    (requestData) => requestData.status === "Wait for Quotation"
+    (requestData) => requestData.customerRequest.status === "Wait for Quotation"
   );
   const waitapprove = requestData.filter(
-    (requestData) => requestData.status === "Wait for Approve"
+    (requestData) => requestData.customerRequest.status === "Wait for Approve"
   );
 
   if (loading) return <div>Loading...</div>;
@@ -416,17 +416,26 @@ function ManagerPage() {
             <table className="custom-table">
               <thead>
                 <tr>
-                  <th>ID Customize Request</th>
-                  <th>Customer Name</th>
-                  <th>Sales Staff Name</th>
+                  <th>Avatar</th>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Requests</th>
+                  <th>Orders</th>
                 </tr>
               </thead>
               <tbody>
                 {SaleStaff.map((row, index) => (
                   <tr key={index}>
-                    <td>{row.id}</td>
-                    <td>{row.customer}</td>
-                    <td>{row.salesStaff}</td>
+                    <td className="avatar"><img 
+                    src={row.appUser.avatar ? row.appUser.avatar : "https://res.cloudinary.com/dfvplhyjj/image/upload/v1719657663/txeadynuhg4akiyaww34.jpg"} 
+                    alt="avatar" 
+                    /></td>
+                    <td>{row.appUser.id}</td>
+                    <td>{row.appUser.name}</td>
+                    <td>{row.appUser.email}</td>
+                    <td>{row.requestCount}</td>
+                    <td>{row.orderCount}</td>
                   </tr>
                 ))}
               </tbody>
@@ -439,17 +448,24 @@ function ManagerPage() {
             <table className="custom-table">
               <thead>
                 <tr>
-                  <th>ID Customize Request</th>
-                  <th>Customer Name</th>
-                  <th>Sales Staff Name</th>
+                  <th>Avatar</th>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Orders</th>
                 </tr>
               </thead>
               <tbody>
                 {DesignStaff.map((row, index) => (
                   <tr key={index}>
-                    <td>{row.id}</td>
-                    <td>{row.customer}</td>
-                    <td>{row.salesStaff}</td>
+                    <td className="avatar"><img 
+                    src={row.appUser.avatar ? row.appUser.avatar : "https://res.cloudinary.com/dfvplhyjj/image/upload/v1719657663/txeadynuhg4akiyaww34.jpg"} 
+                    alt="avatar" 
+                    /></td>
+                    <td>{row.appUser.id}</td>
+                    <td>{row.appUser.name}</td>
+                    <td>{row.appUser.email}</td>
+                    <td>{row.orderCount}</td>
                   </tr>
                 ))}
               </tbody>
@@ -462,17 +478,24 @@ function ManagerPage() {
             <table className="custom-table">
               <thead>
                 <tr>
-                  <th>ID Customize Request</th>
-                  <th>Customer Name</th>
-                  <th>Sales Staff Name</th>
+                  <th>Avatar</th>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Orders</th>
                 </tr>
               </thead>
               <tbody>
                 {ProductionStaff.map((row, index) => (
                   <tr key={index}>
-                    <td>{row.id}</td>
-                    <td>{row.customer}</td>
-                    <td>{row.salesStaff}</td>
+                    <td className="avatar"><img 
+                    src={row.appUser.avatar ? row.appUser.avatar : "https://res.cloudinary.com/dfvplhyjj/image/upload/v1719657663/txeadynuhg4akiyaww34.jpg"} 
+                    alt="avatar" 
+                    /></td>
+                    <td>{row.appUser.id}</td>
+                    <td>{row.appUser.name}</td>
+                    <td>{row.appUser.email}</td>
+                    <td>{row.orderCount}</td>
                   </tr>
                 ))}
               </tbody>
