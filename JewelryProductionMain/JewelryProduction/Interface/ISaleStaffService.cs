@@ -7,6 +7,6 @@ namespace JewelryProduction.Interface
     {
         Task<decimal> CalculateProductCost(string CustomizeRequestId);
         decimal GetDeposit(decimal productCost);
-        Task<List<UserWithCountDTO>> GetStaffs();
+        Task<List<SaleStaffWithCountDTO>> GetStaffs();
     }
 }

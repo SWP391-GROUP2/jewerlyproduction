@@ -1,6 +1,6 @@
 #salestaff-sidebar {
     width: 260px;
-    height: 100%; /* Chiều cao của sidebar bằng chiều cao của viewport */
+    height: 680px; /* Chiều cao của sidebar bằng chiều cao của viewport */
     padding: 20px;
     background-color: #f0f0f0;
     transition: width 0.3s ease;

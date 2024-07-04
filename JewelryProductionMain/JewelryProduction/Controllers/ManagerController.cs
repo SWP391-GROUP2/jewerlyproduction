@@ -1,4 +1,5 @@
 ﻿using JewelryProduction.DbContext;
+using JewelryProduction.DTO.BasicDTO;
 using JewelryProduction.Entities;
 using JewelryProduction.Interface;
 using JewelryProduction.Services;
@@ -18,19 +19,23 @@ namespace JewelryProduction.Controllers
     {
         private readonly JewelryProductionContext _context;
         private readonly UserManager<AppUser> _userManager;
-        private readonly ISaleStaffService _staffService;
+        private readonly ISaleStaffService _saleStaffService;
         private readonly IHubContext<MyHub> _myhub;
         private readonly INotificationService _notificationService;
         private readonly ICustomerRequestService _requestService;
+        private readonly IDesignStaffService _designStaffService;
+        private readonly IProductionStaffService _productionStaffService;
 
-        public ManagerController(JewelryProductionContext context, UserManager<AppUser> userManager, ISaleStaffService staffService, IHubContext<MyHub> myhub, INotificationService notificationService, ICustomerRequestService requestService)
+        public ManagerController(JewelryProductionContext context, UserManager<AppUser> userManager, ISaleStaffService saleStaffService, IHubContext<MyHub> myhub, INotificationService notificationService, ICustomerRequestService requestService, IDesignStaffService designstaffService, IProductionStaffService productionStaffService)
         {
             _context = context;
             _userManager = userManager;
-            _staffService = staffService;
+            _saleStaffService = saleStaffService;
             _myhub = myhub;
             _notificationService = notificationService;
             _requestService = requestService;
+            _designStaffService = designstaffService;
+            _productionStaffService = productionStaffService;
         }
         [HttpPost("approveQuotation/{customerRequestId}")]
         public async Task<IActionResult> ApproveCustomerRequest(string customerRequestId)
@@ -132,6 +137,31 @@ namespace JewelryProduction.Controllers
             var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sid);
                 return userId;
         }
+
+        [HttpGet("Staff/Sales/List")]
+        public async Task<List<SaleStaffWithCountDTO>> GetSaleDetailsAsync()
+        {
+            var result = await _saleStaffService.GetStaffs();
+
+            return result;
+        }
+
+        [HttpGet("Staff/Design/List")]
+        public async Task<List<StaffWithCountDTO>> GetDesignDetailsAsync()
+        {
+            var result = await _designStaffService.GetStaffs();
+
+            return result;
+        }
+
+        [HttpGet("Staff/Production/List")]
+        public async Task<List<StaffWithCountDTO>> GetProductionDetailsAsync()
+        {
+            var result = await _productionStaffService.GetStaffs();
+
+            return result;
+        }
+
     }
 
     public class AssignSaleStaffDTO

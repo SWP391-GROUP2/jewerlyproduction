@@ -24,16 +24,24 @@ namespace JewelryProduction
             // Add services to the container.
             builder.Services.AddSignalR();
 
+            //Dependency Injections
             builder.Services.AddScoped<IVnPayService, VnPayService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IProductSampleService, ProductSampleService>();
+            builder.Services.AddScoped<ISaleStaffRepository, SaleStaffRepository>();
             builder.Services.AddScoped<ISaleStaffService, SaleStaffService>();
+            builder.Services.AddScoped<IProductionStaffRepository, ProductionStaffRepository>();
+            builder.Services.AddScoped<IProductionStaffService, ProductionStaffService>();
+            builder.Services.AddScoped<IDesignStaffRepository, DesignStaffRepository>();
+            builder.Services.AddScoped<IDesignStaffService, DesignStaffService>();
             builder.Services.AddScoped<INotificationService, NotificationService>();
             builder.Services.AddScoped<ICustomerRequestService, CustomerRequestService>();
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
-            builder.Services.AddScoped<ISaleStaffRepository, SaleStaffRepository>();
+            builder.Services.AddScoped<I3dDesignRepository, _3dDesignRepository>();
+            builder.Services.AddScoped<I3dDesignService, _3dDesignService>();
+
 
             builder.Services.AddControllers();
 
@@ -83,12 +91,14 @@ namespace JewelryProduction
                 googleOptions.ClientSecret = builder.Configuration["Google:ClientSecret"];
             });
 
-            // Add Email Config
+            // Add Email Configuration
             var emailConfig = builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
             builder.Services.AddSingleton(emailConfig);
 
+            //Add Cloudinary Configuration
             builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
 
+            //Add Swagger Configuration
             builder.Services.AddSwaggerGen(option =>
             {
                 option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
@@ -117,6 +127,7 @@ namespace JewelryProduction
                 });
             });
 
+            //Add Cors configuration
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAllOrigins",
@@ -128,6 +139,7 @@ namespace JewelryProduction
                     });
             });
 
+            //Add Mapper Configuration
             builder.Services.AddAutoMapper(typeof(MappingProfiles));
 
             var app = builder.Build();

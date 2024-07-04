@@ -1,3 +1,4 @@
+import { jwtDecode } from "jwt-decode";
 import {
   loginFalsed,
   loginStart,
@@ -23,7 +24,8 @@ export const loginUser = async (user, dispatch, navigate) => {
     console.log();
 
     // Điều hướng dựa trên vai trò của người dùng
-    const role = res.data.role;
+    const tokenrole = jwtDecode(res.data.token);
+    const role = tokenrole.role.toLowerCase();
     switch (role) {
       case "admin":
         navigate("/admin/home");

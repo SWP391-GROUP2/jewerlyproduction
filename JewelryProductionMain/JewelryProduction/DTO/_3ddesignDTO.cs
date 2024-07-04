@@ -2,7 +2,7 @@
 {
     public class _3ddesignDTO
     {
-        public string _3dDesignId { get; set; } = null!;
+        public string _3dDesignId { get; set; } = Guid.NewGuid().ToString();
 
         public string DesignName { get; set; } = null!;
 
