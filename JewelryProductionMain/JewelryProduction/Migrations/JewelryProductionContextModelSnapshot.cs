@@ -710,37 +710,37 @@ namespace JewelryProduction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c4a75068-30a3-4bb4-8815-a95fc0cba19e",
+                            Id = "52ba8c5a-63a3-490d-b2f8-dc24ef11cdc7",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "45ae30c3-c054-4177-ab17-abf137215002",
+                            Id = "2bd65d6d-d828-4121-bc6e-77207c676c53",
                             Name = "SaleStaff",
                             NormalizedName = "SALESTAFF"
                         },
                         new
                         {
-                            Id = "df33d238-7d5d-4512-a7ec-f67d3a08adf2",
+                            Id = "996aad05-1a3a-40f7-a37d-d35e47bb1637",
                             Name = "ProductionStaff",
                             NormalizedName = "PRODUCTIONSTAFF"
                         },
                         new
                         {
-                            Id = "961a5ea9-1be6-49b0-a54d-a7a194596811",
+                            Id = "f25081c6-8094-443b-8b6d-6ffc56ed881b",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "5a21c7fc-2bfe-4d11-a08d-9829c126114c",
+                            Id = "e3ed8f96-2e7e-430f-977d-d561b3b341d5",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "63f8e8b4-4b9c-49c9-a5c6-1106537b88b5",
+                            Id = "7cb8bdf6-41d4-41fa-9668-0e0123eb5015",
                             Name = "DesignStaff",
                             NormalizedName = "DESIGNSTAFF"
                         });
