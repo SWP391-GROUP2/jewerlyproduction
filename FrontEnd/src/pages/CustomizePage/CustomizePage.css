@@ -17,9 +17,7 @@
   flex-grow: 1;
   margin: 20px;
 }
-.navbar {
-  border-bottom: 1px black;
-}
+
 .footer {
   flex-shrink: 0; /* Ensure footer does not shrink */
   width: 100%;

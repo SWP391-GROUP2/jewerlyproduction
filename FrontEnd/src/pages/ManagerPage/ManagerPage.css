@@ -111,11 +111,13 @@
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 1010; /* Đảm bảo popup ở trên cùng so với lớp mờ */
-  width: 400px;
+  max-width: 500px;
+  width: 100%;
+  border-radius: 10px;
 }
 
 .popup-inner {
-  text-align: center;
+  text-align: left;
 }
 
 /* CSS cho bảng nhân viên */
@@ -217,4 +219,18 @@
   width: 100px;
   height: 41px;
   margin: 10px; /* Add some space between buttons */
+}
+
+.details-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.detail-box {
+  background: #f9f9f9;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
 }
