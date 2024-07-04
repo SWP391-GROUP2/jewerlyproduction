@@ -12,7 +12,7 @@ function UserProfilePage() {
         <Header />
         <Navbar />
       </div>
-
+      <hr />
       <div>
         <ProfilePage />
       </div>
