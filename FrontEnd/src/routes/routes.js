@@ -20,6 +20,7 @@ import SaleStaffPage from "../pages/SaleStaffPage/SaleStaffPage";
 import DesignStaffPage from "../pages/DesignStaffPage/DesignStaffPage";
 import ManagerPage from "../pages/ManagerPage/ManagerPage";
 import ProductionStaffPage from "../pages/ProductionStaffPage/ProductionStaffPage";
+import CheckOutPage from "../pages/CheckOutPage/CheckOutPage";
 
 const routes = [
   // Guest Routes
@@ -38,6 +39,7 @@ const routes = [
   { path: "/gemstone/:gemstoneId", element: <GemstoneDetailPage /> },
   { path: "/otp", element: <SendOTP /> },
   { path: "/forgetpasswordverify", element: <ForgetPasswordVerify /> },
+  { path: "/checkoutpage", element: <CheckOutPage /> },
 
   // Customer Routes
   { path: "/customer/profile", element: <UserProfilePage /> },

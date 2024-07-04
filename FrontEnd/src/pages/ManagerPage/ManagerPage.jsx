@@ -73,8 +73,10 @@ function ManagerPage() {
         const response = await axios.get(
           "http://localhost:5266/api/CustomerRequests"
         );
+        console.log("Response Data:", response.data); // Kiểm tra dữ liệu phản hồi
         setRequestData(response.data);
       } catch (error) {
+        console.error("Error fetching data:", error); // Kiểm tra lỗi
         setError(error);
       } finally {
         setLoading(false);
@@ -82,8 +84,11 @@ function ManagerPage() {
     };
 
     fetchRequests();
-    console.log("Your request", requestData);
   }, []);
+
+  useEffect(() => {
+    console.log("Updated Request Data:", requestData); // Kiểm tra dữ liệu sau khi cập nhật
+  }, [requestData]);
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -252,9 +257,9 @@ function ManagerPage() {
               <tbody>
                 {pendingRequests.map((row, index) => (
                   <tr key={index} onClick={() => handleRowClick(index)}>
-                    <td>{row.customizeRequestId}</td>
-                    <td>{row.customerId}</td>
-                    <td>{row.saleStaffId}</td>
+                    <td>{row.customerRequest.customizeRequestId}</td>
+                    <td>{row.customerName}</td>
+                    <td>{row.saleStaffName}</td>
                     <td>
                       <button
                         className="detail-button"
@@ -570,14 +575,15 @@ function ManagerPage() {
                 <div className="details-container">
                   <div className="detail-box">
                     <strong>ID Customize Request:</strong>{" "}
-                    {selectedRequest.customizeRequestId}
+                    {selectedRequest.customerRequest.customizeRequestId}
                   </div>
                   <div className="detail-box">
-                    <strong>Customer Name:</strong> {selectedRequest.customerId}
+                    <strong>Customer Name:</strong>{" "}
+                    {selectedRequest.customerName}
                   </div>
                   <div className="detail-box">
                     <strong>Sales Staff Name:</strong>{" "}
-                    {selectedRequest.saleStaffId}
+                    {selectedRequest.saleStaffName}
                   </div>
                   {/* Thêm các thông tin chi tiết khác của yêu cầu nếu cần */}
                 </div>
