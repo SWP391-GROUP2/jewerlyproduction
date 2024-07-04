@@ -2,11 +2,11 @@ using JewelryProduction.DbContext;
 using JewelryProduction.DTO.Account;
 using JewelryProduction.Entities;
 using JewelryProduction.Helper;
+using JewelryProduction.Hubs;
 using JewelryProduction.Interface;
 using JewelryProduction.Repositories;
 using JewelryProduction.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -40,6 +40,12 @@ namespace JewelryProduction
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
 
             // Add DbContext
             builder.Services.AddDbContext<JewelryProductionContext>(options =>
@@ -143,7 +149,7 @@ namespace JewelryProduction
 
             // Use CORS
             app.UseCors("AllowAllOrigins");
-
+            app.UseCookiePolicy();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseRouting();
@@ -155,6 +161,7 @@ namespace JewelryProduction
                 endpoints.MapControllers();
             });
 
+            app.MapHub<ChatHub>("/chatHub");
             app.Run();
         }
     }

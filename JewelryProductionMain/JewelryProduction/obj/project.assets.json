@@ -2718,6 +2718,19 @@
           "lib/netcoreapp3.1/Mono.TextTemplating.dll": {}
         }
       },
+      "NaCl.Net/0.1.13": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.1/NaCl.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/NaCl.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "NETCore.MailKit/2.1.0": {
         "type": "package",
         "dependencies": {
@@ -2922,6 +2935,19 @@
           "lib/netstandard2.0/BouncyCastle.Crypto.dll": {
             "related": ".xml"
           }
+        }
+      },
+      "PusherServer/5.0.0": {
+        "type": "package",
+        "dependencies": {
+          "NaCl.Net": "0.1.13",
+          "Newtonsoft.Json": "13.0.2"
+        },
+        "compile": {
+          "lib/netstandard2.0/PusherServer.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/PusherServer.dll": {}
         }
       },
       "RestSharp/111.2.0": {
@@ -9601,6 +9627,27 @@
         "readme.md"
       ]
     },
+    "NaCl.Net/0.1.13": {
+      "sha512": "AVg1455RQnyTy6tiessudruZHvbl70QWRPyx3og2I1Fei17LDNc7Z3DRgqN2+PsySBui/1EDP4A7adhQXydi6g==",
+      "type": "package",
+      "path": "nacl.net/0.1.13",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net45/NaCl.dll",
+        "lib/net45/NaCl.xml",
+        "lib/net472/NaCl.dll",
+        "lib/net472/NaCl.xml",
+        "lib/netstandard1.3/NaCl.dll",
+        "lib/netstandard1.3/NaCl.xml",
+        "lib/netstandard2.0/NaCl.dll",
+        "lib/netstandard2.0/NaCl.xml",
+        "lib/netstandard2.1/NaCl.dll",
+        "lib/netstandard2.1/NaCl.xml",
+        "nacl.net.0.1.13.nupkg.sha512",
+        "nacl.net.nuspec"
+      ]
+    },
     "NETCore.MailKit/2.1.0": {
       "sha512": "+1C0sg4YJQczp/2RVrVbKLIntg7Mou7Ie5M01UBiAsxmIarjfBRlCgKK4sEbPyGask52VRKV29/Zi+41B6LPXA==",
       "type": "package",
@@ -9828,6 +9875,25 @@
         "lib/netstandard2.0/BouncyCastle.Crypto.xml",
         "portable.bouncycastle.1.9.0.nupkg.sha512",
         "portable.bouncycastle.nuspec"
+      ]
+    },
+    "PusherServer/5.0.0": {
+      "sha512": "lRAlhMcf29ZEKNa/78SV0FsbNDLniMwaIYhFriQ+WBWDBPtPmE57q9HNZFXvhr7SkZebKLh4WdRc0khVhRrhLA==",
+      "type": "package",
+      "path": "pusherserver/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "CHANGELOG.md",
+        "PusherServer.public.snk",
+        "README.md",
+        "icon-128.png",
+        "lib/net45/PusherServer.dll",
+        "lib/net472/PusherServer.dll",
+        "lib/netstandard1.3/PusherServer.dll",
+        "lib/netstandard2.0/PusherServer.dll",
+        "pusherserver.5.0.0.nupkg.sha512",
+        "pusherserver.nuspec"
       ]
     },
     "RestSharp/111.2.0": {
@@ -14458,25 +14524,26 @@
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 8.0.2",
       "NETCore.MailKit >= 2.1.0",
       "Otp.NET >= 1.4.0",
+      "PusherServer >= 5.0.0",
       "RestSharp >= 111.2.0",
       "Swashbuckle.AspNetCore >= 6.4.0",
       "Swashbuckle.AspNetCore.Filters >= 8.0.2"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\acer\\.nuget\\packages\\": {}
+    "C:\\Users\\tranq\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Project_\\JewerlyProduction\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj",
+      "projectUniqueName": "D:\\GitHub\\040724_ChatMessenger\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj",
       "projectName": "JewelryProduction",
-      "projectPath": "C:\\Project_\\JewerlyProduction\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj",
-      "packagesPath": "C:\\Users\\acer\\.nuget\\packages\\",
-      "outputPath": "C:\\Project_\\JewerlyProduction\\JewelryProductionMain\\JewelryProduction\\obj\\",
+      "projectPath": "D:\\GitHub\\040724_ChatMessenger\\JewelryProductionMain\\JewelryProduction\\JewelryProduction.csproj",
+      "packagesPath": "C:\\Users\\tranq\\.nuget\\packages\\",
+      "outputPath": "D:\\GitHub\\040724_ChatMessenger\\JewelryProductionMain\\JewelryProduction\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\acer\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\tranq\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -14587,6 +14654,10 @@
           "Otp.NET": {
             "target": "Package",
             "version": "[1.4.0, )"
+          },
+          "PusherServer": {
+            "target": "Package",
+            "version": "[5.0.0, )"
           },
           "RestSharp": {
             "target": "Package",
