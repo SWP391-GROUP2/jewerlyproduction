@@ -43,7 +43,7 @@ namespace JewelryProduction.Services
             return deposit;
         }
 
-        public async Task<List<UserWithCountDTO>> GetStaffs()
+        public async Task<List<SaleStaffWithCountDTO>> GetStaffs()
         {
             return await _repository.GetStaffs();
         }

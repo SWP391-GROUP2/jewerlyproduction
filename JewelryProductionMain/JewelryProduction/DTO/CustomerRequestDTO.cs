@@ -13,7 +13,7 @@
 
         public decimal Quantity { get; set; }
         public string GoldType { get; set; } = null!;
-        public string PrimaryGemstoneId { get; set; }
+        public List<string> PrimaryGemstoneId { get; set; } = new List<string>();
         public List<string> AdditionalGemstone { get; set; } = new List<string>();
     }
 }

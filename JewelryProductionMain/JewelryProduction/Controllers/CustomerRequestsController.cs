@@ -28,21 +28,16 @@ namespace JewelryProduction.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CustomerRequest>>> GetCustomerRequests()
         {
-            return await _context.CustomerRequests.ToListAsync();
+            var result = await _requestService.GetCustomerRequests();
+            return Ok(result);
         }
 
         // GET: api/CustomerRequests/5
         [HttpGet("{id}")]
         public async Task<ActionResult<CustomerRequest>> GetCustomerRequest(string id)
         {
-            var customerRequest = await _context.CustomerRequests.FindAsync(id);
-
-            if (customerRequest == null)
-            {
-                return NotFound();
-            }
-
-            return customerRequest;
+            var result = await _requestService.GetCustomerRequest(id);
+            return Ok(result);
         }
 
         // PUT: api/CustomerRequests/5
@@ -52,7 +47,7 @@ namespace JewelryProduction.Controllers
         {
             var primaryGemstone = await _context.Gemstones
                     .Where(g =>
-                        g.GemstoneId == customerRequestDTO.PrimaryGemstoneId &&
+                         customerRequestDTO.PrimaryGemstoneId.Contains(g.GemstoneId) &&
                         g.ProductSample == null && g.CustomizeRequestId == null)
                     .FirstOrDefaultAsync();
 
@@ -129,14 +124,13 @@ namespace JewelryProduction.Controllers
         {
             var primaryGemstone = await _context.Gemstones
                     .Where(g =>
-                        g.GemstoneId == customerRequestDTO.PrimaryGemstoneId &&
+                        customerRequestDTO.PrimaryGemstoneId.Contains(g.GemstoneId) &&
                         g.ProductSample == null && g.CustomizeRequestId == null)
-                    .FirstOrDefaultAsync();
-
-            if (primaryGemstone == null)
-            {
-                return BadRequest("The primary gemstone was not found.");
-            }
+                    .GroupBy(g => g.Name)
+                    .Select(g => g.FirstOrDefault())
+                    .OrderBy(_ => Guid.NewGuid())
+                    .Take(2)
+                    .ToListAsync();
 
             var additionalGemstones = await _context.Gemstones
                 .Where(g => customerRequestDTO.AdditionalGemstone.Contains(g.GemstoneId))
@@ -145,7 +139,8 @@ namespace JewelryProduction.Controllers
                 .OrderBy(_ => Guid.NewGuid())
                 .Take(2)
                 .ToListAsync();
-            var allSelectedGemstones = new List<Gemstone> { primaryGemstone }.Concat(additionalGemstones).ToList();
+            var allSelectedGemstones = new List<Gemstone>(primaryGemstone);
+            allSelectedGemstones.AddRange(additionalGemstones);
             var gold = await _context.Golds
             .FirstOrDefaultAsync(g => g.GoldType == customerRequestDTO.GoldType);
 
@@ -289,12 +284,13 @@ namespace JewelryProduction.Controllers
                 return BadRequest("Quotation is not available.");
             }
 
-            customerRequest.Status = "Approved";
+            customerRequest.Status = "Request Approved";
 
             var order = new Order
             {
                 OrderId = await IdGenerator.GenerateUniqueId<Order>(_context, "ORD", 6),
                 ProductionStaffId = null,
+                DesignStaffId = "DE001",
                 OrderDate = DateTime.Now,
                 DepositAmount = customerRequest.quotation.Value * 0.3M,
                 Status = "Pending",
@@ -323,7 +319,7 @@ namespace JewelryProduction.Controllers
 
             return Ok(order);
         }
-        [HttpDelete("reject/{customizeRequestId}")]
+        [HttpPost("reject/{customizeRequestId}")]
         public async Task<IActionResult> RejectCustomerRequest(string customizeRequestId)
         {
             var customerRequest = await _context.CustomerRequests
@@ -337,7 +333,7 @@ namespace JewelryProduction.Controllers
             {
                 gemstone.CustomizeRequestId = null;
             }
-            _context.CustomerRequests.Remove(customerRequest);
+            customerRequest.Status = "Request Reject";
             using (var transaction = await _context.Database.BeginTransactionAsync())
             {
                 try
