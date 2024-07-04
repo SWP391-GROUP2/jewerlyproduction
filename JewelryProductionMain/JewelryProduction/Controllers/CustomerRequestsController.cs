@@ -28,21 +28,16 @@ namespace JewelryProduction.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CustomerRequest>>> GetCustomerRequests()
         {
-            return await _context.CustomerRequests.ToListAsync();
+            var result = await _requestService.GetCustomerRequests();
+            return Ok(result);
         }
 
         // GET: api/CustomerRequests/5
         [HttpGet("{id}")]
         public async Task<ActionResult<CustomerRequest>> GetCustomerRequest(string id)
         {
-            var customerRequest = await _context.CustomerRequests.FindAsync(id);
-
-            if (customerRequest == null)
-            {
-                return NotFound();
-            }
-
-            return customerRequest;
+            var result = await _requestService.GetCustomerRequest(id);
+            return Ok(result);
         }
 
         // PUT: api/CustomerRequests/5

@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace JewelryProduction
 {
@@ -26,6 +27,7 @@ namespace JewelryProduction
 
             //Dependency Injections
             builder.Services.AddScoped<IVnPayService, VnPayService>();
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IProductSampleService, ProductSampleService>();
             builder.Services.AddScoped<ISaleStaffRepository, SaleStaffRepository>();
@@ -35,12 +37,14 @@ namespace JewelryProduction
             builder.Services.AddScoped<IDesignStaffRepository, DesignStaffRepository>();
             builder.Services.AddScoped<IDesignStaffService, DesignStaffService>();
             builder.Services.AddScoped<INotificationService, NotificationService>();
+            builder.Services.AddScoped<ICustomerRequestRepository, CustomerRequestRepository>();
             builder.Services.AddScoped<ICustomerRequestService, CustomerRequestService>();
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
-            builder.Services.AddScoped<I3dDesignRepository, _3dDesignRepository>();
-            builder.Services.AddScoped<I3dDesignService, _3dDesignService>();
+            //builder.Services.AddScoped<I3dDesignRepository, _3dDesignRepository>();
+            //builder.Services.AddScoped<I3dDesignService, _3dDesignService>();
+
 
 
             builder.Services.AddControllers();
@@ -138,6 +142,9 @@ namespace JewelryProduction
                                .AllowAnyHeader();
                     });
             });
+
+            builder.Services.AddControllersWithViews()
+    .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
             //Add Mapper Configuration
             builder.Services.AddAutoMapper(typeof(MappingProfiles));

@@ -6,7 +6,7 @@ public partial class Order
 
     public string? ProductionStaffId { get; set; } = null!;
 
-    public string DesignStaffId { get; set; } = null!;
+    public string? DesignStaffId { get; set; } = null!;
 
     public DateTime OrderDate { get; set; }
 

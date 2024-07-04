@@ -511,7 +511,6 @@ namespace JewelryProduction.Migrations
                         .HasColumnName("depositAmount");
 
                     b.Property<string>("DesignStaffId")
-                        .IsRequired()
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("designStaffID");
@@ -710,37 +709,37 @@ namespace JewelryProduction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "52ba8c5a-63a3-490d-b2f8-dc24ef11cdc7",
+                            Id = "5c286cde-97f7-4c86-98f2-b3a05413b0d7",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "2bd65d6d-d828-4121-bc6e-77207c676c53",
+                            Id = "446e0457-d977-4186-9988-76313e39507e",
                             Name = "SaleStaff",
                             NormalizedName = "SALESTAFF"
                         },
                         new
                         {
-                            Id = "996aad05-1a3a-40f7-a37d-d35e47bb1637",
+                            Id = "c34f688a-9601-495e-aff6-7b2321bc57bf",
                             Name = "ProductionStaff",
                             NormalizedName = "PRODUCTIONSTAFF"
                         },
                         new
                         {
-                            Id = "f25081c6-8094-443b-8b6d-6ffc56ed881b",
+                            Id = "8d43a9cb-88c3-4202-9504-e9027f1f28b5",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "e3ed8f96-2e7e-430f-977d-d561b3b341d5",
+                            Id = "619b74fc-9136-46f9-aaad-a1a8670f31d9",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "7cb8bdf6-41d4-41fa-9668-0e0123eb5015",
+                            Id = "e103db46-ee35-4eaa-9683-5c2f196294f6",
                             Name = "DesignStaff",
                             NormalizedName = "DESIGNSTAFF"
                         });
@@ -987,7 +986,6 @@ namespace JewelryProduction.Migrations
                         .WithMany("OrderDesignStaffs")
                         .HasForeignKey("DesignStaffId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
                         .HasConstraintName("FK_Order_DesignStaff");
 
                     b.HasOne("JewelryProduction.PaymentMethod", "PaymentMethod")
