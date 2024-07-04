@@ -598,7 +598,7 @@ namespace JewelryProduction.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("goldID");
 
-                    b.Property<double>("GoldWeight")
+                    b.Property<double?>("GoldWeight")
                         .HasColumnType("float")
                         .HasColumnName("goldWeight");
 

@@ -5,6 +5,6 @@ namespace JewelryProduction.Interface
 {
     public interface ISaleStaffRepository
     {
-        Task<List<UserWithCountDTO>> GetStaffs();
-    }
+        Task<List<SaleStaffWithCountDTO>> GetStaffs();
+    }   
 }

@@ -11,6 +11,10 @@ INSERT INTO Gold (goldID, goldType, pricePerGram) VALUES
 ('G007', '15k', 1055676),
 ('G008', '10k', 725946);
 
+Insert into PaymentMethod (paymentMethodID, paymentMethodName) values
+('P001', 'Cash'),
+('P002', 'VnPay')
+
 INSERT INTO ProductSample (productSampleID, productName, description, type, style, size, price, goldID)
 VALUES
     ('PS001', 'Golden Necklace', 'A beautiful 18k gold necklace with a pendant', 'Necklace', 'Chain', 18.0, 500000000.00, 'G001'),
