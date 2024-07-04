@@ -9,10 +9,12 @@ namespace JewelryProduction.Services
     public class OrderService : IOrderService
     {
         private readonly JewelryProductionContext _context;
+        private readonly IOrderRepository _repository;
 
-        public OrderService(JewelryProductionContext context)
+        public OrderService(JewelryProductionContext context, IOrderRepository repository)
         {
             _context = context;
+            _repository = repository;
         }
 
         public async Task<List<Order>> GetOrdersByYearSortedByPrice(int year)
@@ -87,6 +89,15 @@ namespace JewelryProduction.Services
 
         }
 
+        public async Task<List<OrderGetDTO>> GetOrders()
+        {
+            return await _repository.GetOrders();
+        }
+
+        public async Task<OrderGetDTO> GetOrder(string id)
+        {
+            return await _repository.GetOrder(id);
+        }
     }
 
 }

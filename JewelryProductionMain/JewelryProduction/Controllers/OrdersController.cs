@@ -28,21 +28,22 @@ namespace JewelryProduction.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
         {
-            return await _context.Orders.ToListAsync();
+            var result = await _orderService.GetOrders();
+            return Ok(result);
         }
 
         // GET: api/Orders/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Order>> GetOrder(string id)
         {
-            var order = await _context.Orders.FindAsync(id);
+            var result = await _orderService.GetOrder(id);
 
-            if (order == null)
+            if (result == null)
             {
                 return NotFound();
             }
 
-            return order;
+            return Ok(result);
         }
 
         // PUT: api/Orders/5

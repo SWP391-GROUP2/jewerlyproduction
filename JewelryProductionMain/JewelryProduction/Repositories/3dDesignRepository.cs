@@ -15,7 +15,7 @@ namespace JewelryProduction.Repositories
 
         public Task<_3ddesignDTO> UploadImage()
         {
-            
+            return null;
         }
     }
 }
