@@ -91,14 +91,6 @@ VAT:                        10%";
             var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sid);
             return userId;
         }
-
-        [HttpGet("Detail")]
-        public async Task<List<UserWithCountDTO>> GetDetailsAsync()
-        {
-            var result = await _service.GetStaffs();
-
-            return result;  
-        }
     }
 }
 
