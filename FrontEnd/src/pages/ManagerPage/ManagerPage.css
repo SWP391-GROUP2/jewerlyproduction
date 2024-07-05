@@ -51,14 +51,14 @@
   cursor: pointer;
 }
 
-.detail-button,
+.detail-button-s,
 .reject-button {
   padding: 5px 10px;
   border: none;
   cursor: pointer;
 }
 
-.detail-button {
+.detail-button-s {
   background-color: #4caf50; /* Green */
   color: white;
 }
@@ -156,7 +156,7 @@
   transition: transform 0.2s; /* Smooth transformation */
 }
 
-.avatar img{
+.avatar img {
   border-radius: 50%;
 }
 
@@ -164,7 +164,6 @@
   transform: scale(1.1); /* Slightly enlarges on hover */
   border-color: #888; /* Changes border color on hover */
 }
-
 
 /* CSS cho các nút */
 .popup_button {
