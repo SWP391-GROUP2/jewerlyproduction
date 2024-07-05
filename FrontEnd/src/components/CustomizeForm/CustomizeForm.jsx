@@ -332,25 +332,34 @@ function CustomizeForm() {
 
   const gemstonesPerPage = 5;
 
-  const totalMainPages = Math.ceil(gemstones.length / gemstonesPerPage);
-  const totalMainPagessecond = Math.ceil(gemstones.length / gemstonesPerPage);
+  const filteredGemstones = gemstones.filter((gemstone) => {
+    // Filter out the primary gemstone and gemstones with non-null productSampleID or customizeRequestID
+    return (
+      gemstone.gemstoneId !==
+        (PrimaryGemstone ? PrimaryGemstone.gemstoneId : null) &&
+      gemstone.productSampleId === null &&
+      gemstone.customizeRequestId === null
+    );
+  });
+
+  const filteredMainGemstones = gemstones.filter((gemstone) => {
+    // Filter out the primary gemstone and gemstones with non-null productSampleID or customizeRequestID
+    return (
+      gemstone.productSampleId === null && gemstone.customizeRequestId === null
+    );
+  });
+
+  const totalMainPages = Math.ceil(
+    filteredMainGemstones.length / gemstonesPerPage
+  );
+  const totalMainPagessecond = Math.ceil(
+    filteredGemstones.length / gemstonesPerPage
+  );
   const totalSidePages = Math.ceil(gemstones.length / gemstonesPerPage);
-
-  const handleMainPageChange = (page) => {
-    setCurrentMainPage(page);
-  };
-
-  const handleMainPageSecondChange = (page) => {
-    setCurrentSecondMainPage(page);
-  };
-
-  const handleSidePageChange = (page) => {
-    setCurrentSidePage(page);
-  };
 
   const indexOfLastMainGemstone = currentMainPage * gemstonesPerPage;
   const indexOfFirstMainGemstone = indexOfLastMainGemstone - gemstonesPerPage;
-  const currentMainGemstones = gemstones.slice(
+  const currentMainGemstones = filteredMainGemstones.slice(
     indexOfFirstMainGemstone,
     indexOfLastMainGemstone
   );
@@ -359,7 +368,7 @@ function CustomizeForm() {
     currentSecondMainPage * gemstonesPerPage;
   const indexOfFirsSecondtMainGemstone =
     indexOfLastSecondMainGemstone - gemstonesPerPage;
-  const currentSecondMainGemstones = gemstones.slice(
+  const currentSecondMainGemstones = filteredGemstones.slice(
     indexOfFirsSecondtMainGemstone,
     indexOfLastSecondMainGemstone
   );
@@ -371,13 +380,27 @@ function CustomizeForm() {
     indexOfLastSideGemstone
   );
 
-  const filteredGemstones = currentSecondMainGemstones.filter((gemstone) => {
-    // Filter out the primary gemstone
-    return (
-      gemstone.gemstoneId !==
-      (PrimaryGemstone ? PrimaryGemstone.gemstoneId : null)
-    );
-  });
+  const handleMainPageChange = (page) => {
+    setCurrentMainPage(page);
+  };
+
+  const handleMainPageSecondChange = (page) => {
+    if (page >= 1 && page <= totalMainPagessecond) {
+      setCurrentSecondMainPage(page);
+    }
+  };
+
+  // Nếu trang hiện tại vượt quá số trang mới, đặt lại về trang đầu tiên
+  if (
+    currentSecondMainPage > totalMainPagessecond &&
+    totalMainPagessecond > 0
+  ) {
+    setCurrentSecondMainPage(1);
+  }
+
+  const handleSidePageChange = (page) => {
+    setCurrentSidePage(page);
+  };
 
   const createCustomizeRequest = async (customize) => {
     try {
@@ -1043,7 +1066,7 @@ function CustomizeForm() {
                           </tr>
                         </thead>
                         <tbody>
-                          {filteredGemstones.map((gemstone) => (
+                          {currentSecondMainGemstones.map((gemstone) => (
                             <tr
                               key={gemstone.gemstoneId}
                               onClick={() => selectSencondMainStone(gemstone)}

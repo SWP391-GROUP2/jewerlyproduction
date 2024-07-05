@@ -32,8 +32,12 @@ function UserProfile() {
     setOpenSidebarToggle(!openSidebarToggle);
   };
 
-  const handleRowClick = (index) => {
-    setSelectedRequest(requestData[index]);
+  const handleRowClick = (customizeRequestId) => {
+    const selectedRequest = requestData.find(
+      (request) =>
+        request.customerRequest.customizeRequestId === customizeRequestId
+    );
+    setSelectedRequest(selectedRequest);
     setDetailPopupOpen(true);
   };
 
@@ -260,6 +264,7 @@ function UserProfile() {
                     <th>ID Customize Request</th>
                     <th>Customer Name</th>
                     <th>Sales Staff Name</th>
+                    <th>Quation</th>
                     <th>Status</th>
                     <th></th>
                     <th></th>
@@ -267,14 +272,20 @@ function UserProfile() {
                 </thead>
                 <tbody>
                   {requestData.map((row, index) => (
-                    <tr key={index} onClick={() => handleRowClick(index)}>
-                      <td>{row.customizeRequestId}</td>
-                      <td>{row.customerId}</td>
-                      <td>{row.saleStaffId}</td>
-                      <td>{row.status}</td>
+                    <tr
+                      key={index}
+                      onClick={() =>
+                        handleRowClick(row.customerRequest.customizeRequestId)
+                      }
+                    >
+                      <td>{row.customerRequest.customizeRequestId}</td>
+                      <td>{row.customerName}</td>
+                      <td>{row.saleStaffName}</td>
+                      <td>{row.customerRequest.quotation}</td>
+                      <td>{row.customerRequest.status}</td>
                       <td>
                         <button
-                          className="detail-button"
+                          className="detail-button-s"
                           onClick={(e) => {
                             e.stopPropagation(); // Ngăn chặn sự kiện click hàng
                             handleAssignClick(index);
@@ -380,18 +391,19 @@ function UserProfile() {
                   <div>
                     <p>
                       <strong>ID Customize Request:</strong>{" "}
-                      {selectedRequest.customizeRequestId}
+                      {selectedRequest.customerRequest.customizeRequestId}
                     </p>
                     <p>
                       <strong>Customer Name:</strong>{" "}
-                      {selectedRequest.customerId}
+                      {selectedRequest.customerName}
                     </p>
                     <p>
                       <strong>Sales Staff Name:</strong>{" "}
-                      {selectedRequest.saleStaffId}
+                      {selectedRequest.saleStaffName}
                     </p>
                     <p>
-                      <strong>Status:</strong> {selectedRequest.status}
+                      <strong>Status:</strong>{" "}
+                      {selectedRequest.customerRequest.status}
                     </p>
                     {/* Thêm các thông tin chi tiết khác của yêu cầu nếu cần */}
                   </div>
