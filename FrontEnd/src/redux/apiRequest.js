@@ -90,7 +90,29 @@ export const loginWithGoogle = async (credential, dispatch, navigate) => {
       }
     );
     dispatch(loginSuccess(res.data));
-    navigate("/");
+    const tokenrole = jwtDecode(res.data.token);
+    const role = tokenrole.role.toLowerCase();
+    switch (role) {
+      case "admin":
+        navigate("/admin/home");
+        break;
+      case "salestaff":
+        navigate("/salestaff/home");
+        break;
+      case "designstaff":
+        navigate("/designstaff/home");
+        break;
+      case "manager":
+        navigate("/manager/home");
+        break;
+      case "productionstaff":
+        navigate("/productionstaff/home");
+        break;
+      case "customer":
+      default:
+        navigate("/home");
+        break;
+    }
   } catch (err) {
     console.error("Google login Failed", err);
     dispatch(loginFalsed());

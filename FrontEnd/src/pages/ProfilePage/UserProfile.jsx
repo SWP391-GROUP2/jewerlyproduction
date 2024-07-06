@@ -9,6 +9,7 @@ import { FaUserCircle } from "react-icons/fa"; // Placeholder icon
 import axios from "axios";
 import { useSelector } from "react-redux";
 import ProfileSidebar from "../../components/ProfileSibar/ProfileSidebar";
+import { jwtDecode } from "jwt-decode";
 
 function UserProfile() {
   const [Name, setName] = useState("");
@@ -27,6 +28,11 @@ function UserProfile() {
   const [error, setError] = useState(null);
 
   const [requestData, setRequestData] = useState([]);
+  const [OrderData, setOrderData] = useState([]);
+  const [fetchDataFlag, setFetchDataFlag] = useState(false);
+  const [hasFetchedOrders, setHasFetchedOrders] = useState(false);
+
+  const user = useSelector((State) => State.auth.Login.currentUser);
 
   const OpenSidebar = () => {
     setOpenSidebarToggle(!openSidebarToggle);
@@ -59,25 +65,57 @@ function UserProfile() {
     setConfirmationPopupOpen(true);
   };
 
+  const fetchRequests = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5266/api/CustomerRequests"
+      );
+      console.log("Response Data:", response.data); // Kiểm tra dữ liệu phản hồi
+      setRequestData(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error); // Kiểm tra lỗi
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchRequests = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5266/api/CustomerRequests"
-        );
-        setRequestData(response.data);
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (!hasFetchedOrders && (fetchDataFlag || requestData.length === 0)) {
+      fetchRequests();
+      setFetchDataFlag(false);
+    }
+  }, [fetchDataFlag, requestData]);
 
-    fetchRequests();
-    console.log("Your request", requestData);
-  }, []);
+  const decodedToken = jwtDecode(user.token);
+  const customerId = decodedToken.sid;
 
-  const user = useSelector((state) => state.auth.Login.currentUser);
+  const RequestsOfCustomer = requestData.filter(
+    (requestData) => requestData.customerRequest.customerId === customerId
+  );
+
+  console.log("Filtered Requests:", customerId); // Kiểm tra kết quả lọc
+
+  const fetchOrder = async () => {
+    try {
+      const response = await axios.get("http://localhost:5266/api/Orders");
+      console.log("Response Data:", response.data); // Kiểm tra dữ liệu phản hồi
+      setOrderData(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error); // Kiểm tra lỗi
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!hasFetchedOrders && (fetchDataFlag || OrderData.length === 0)) {
+      fetchOrder();
+      setFetchDataFlag(false);
+      setHasFetchedOrders(true);
+    }
+  }, [fetchDataFlag, OrderData]);
 
   useEffect(() => {
     if (user && user.token) {
@@ -271,7 +309,7 @@ function UserProfile() {
                   </tr>
                 </thead>
                 <tbody>
-                  {requestData.map((row, index) => (
+                  {RequestsOfCustomer.map((row, index) => (
                     <tr
                       key={index}
                       onClick={() =>
@@ -325,7 +363,7 @@ function UserProfile() {
                   </tr>
                 </thead>
                 <tbody>
-                  {requestData.map((row, index) => (
+                  {OrderData.map((row, index) => (
                     <tr key={index} onClick={() => handleRowClick(index)}>
                       <td>{row.id}</td>
                       <td>{row.customer}</td>
@@ -333,7 +371,7 @@ function UserProfile() {
 
                       <td>
                         <button
-                          className="detail-button"
+                          className="detail-button-s"
                           onClick={(e) => {
                             e.stopPropagation(); // Ngăn chặn sự kiện click hàng
                             handleAssignClick(index);
@@ -360,6 +398,25 @@ function UserProfile() {
             </div>
           )}
         </div>
+        {confirmationPopupOpen && (
+          <div className="confirmation-popup">
+            <div className="confirmation-popup-inner">
+              <h2>Are you sure?</h2>
+              <button
+                className="confirmation-popup_button"
+                onClick={handleConfirmReject}
+              >
+                Yes
+              </button>
+              <button
+                className="confirmation-popup_button"
+                onClick={() => setConfirmationPopupOpen(false)}
+              >
+                No
+              </button>
+            </div>
+          </div>
+        )}
         {confirmationPopupOpen && (
           <div className="confirmation-popup">
             <div className="confirmation-popup-inner">
