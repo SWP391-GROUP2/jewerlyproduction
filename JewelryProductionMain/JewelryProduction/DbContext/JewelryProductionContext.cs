@@ -40,6 +40,8 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
     public DbSet<AppUser> Users { get; set; }
 
     public DbSet<_3ddesign> _3ddesigns { get; set; }
+    public DbSet<Inspection> Inspections { get; set; }
+    public DbSet<QualityCheckList> QualityCheckLists { get; set; }
 
 
     private string? GetConnectionString()
@@ -360,6 +362,54 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
                     .HasForeignKey(e => e.DesignStaffId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("FK_Order_DesignStaff");
+        });
+        modelBuilder.Entity<Inspection>(entity =>
+        {
+            entity.ToTable("Inspection");
+
+            entity.Property(e => e.InspectionId)
+                .HasMaxLength(50)
+                .HasColumnName("inspectionID");
+            entity.Property(e => e.ProductStaffId)
+                .HasMaxLength(50)
+                .HasColumnName("productStaffID");
+            entity.Property(e => e.Stage)
+                .HasMaxLength(100)
+                .HasColumnName("stage");
+            entity.Property(e => e.InspectionDate)
+                .HasColumnType("datetime")
+                .HasColumnName("inspectionDate");
+            entity.Property(e => e.Result)
+                .HasMaxLength(50)
+                .HasColumnName("result");
+            entity.Property(e => e.Comment)
+                .HasMaxLength(500)
+                .HasColumnName("comment");
+            entity.Property(e => e.OrderId)
+                .HasMaxLength(50)
+                .HasColumnName("orderID");
+
+            entity.HasOne(d => d.Order)
+                .WithMany(p => p.Inspections)
+                .HasForeignKey(d => d.OrderId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("FK_Inspection_Order");
+        });
+
+        // Configure QualityCheckList
+        modelBuilder.Entity<QualityCheckList>(entity =>
+        {
+            entity.ToTable("QualityCheckList");
+            entity.HasKey(e => e.ChecklistId);
+            entity.Property(e => e.ChecklistId)
+                .HasMaxLength(50)
+                .HasColumnName("checklistID");
+            entity.Property(e => e.Stage)
+                .HasMaxLength(100)
+                .HasColumnName("stage");
+            entity.Property(e => e.ChecklistItem)
+                .HasMaxLength(255)
+                .HasColumnName("checklistItem");
         });
 
         modelBuilder.Entity<PaymentMethod>(entity =>
