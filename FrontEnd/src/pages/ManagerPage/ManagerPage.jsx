@@ -15,6 +15,7 @@ function ManagerPage() {
   const [currentView, setCurrentView] = useState("request");
   const [quotationView, setQuotationView] = useState("");
   const [detailPopupOpen, setDetailPopupOpen] = useState(false);
+  const [PopupOpenDetail, setPopupOpenDetail] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -26,19 +27,9 @@ function ManagerPage() {
   const [ProductionStaff, setProductionStaff] = useState([]);
 
   const [fetchDataFlag, setFetchDataFlag] = useState(false);
+  const [hasFetchedOrders, setHasFetchedOrders] = useState(false);
 
   const user = useSelector((State) => State.auth.Login.currentUser);
-
-  const employees = [
-    "Jane Smith",
-    "Jim Brown",
-    "Susan Clark",
-    "Michael Brown",
-    "Patricia Garcia",
-    "Christopher Anderson",
-    "Jessica Lewis",
-    "Brian Walker",
-  ];
 
   const fetchRequests = async () => {
     try {
@@ -56,9 +47,10 @@ function ManagerPage() {
   };
 
   useEffect(() => {
-    if (fetchDataFlag || requestData.length === 0) {
+    if (!hasFetchedOrders && (fetchDataFlag || requestData.length === 0)) {
       fetchRequests();
       setFetchDataFlag(false);
+      setHasFetchedOrders(true);
     }
   }, [fetchDataFlag, requestData]); // Thêm requestData vào dependency để cập nhật khi requestData thay đổi
 
@@ -66,7 +58,7 @@ function ManagerPage() {
     const fetchOrder = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5266/api/CustomerRequests"
+          "http://localhost:5266/api/Orders"
         );
         setOrderData(response.data);
       } catch (error) {
@@ -141,7 +133,7 @@ function ManagerPage() {
     (requestData) => requestData.customerRequest.status === "Wait for Quotation"
   );
   const waitapprove = requestData.filter(
-    (requestData) => requestData.customerRequest.status === "Wait for Approve"
+    (requestData) => requestData.customerRequest.status === "Wait For Approval"
   );
 
   if (loading) return <div>Loading...</div>;
@@ -171,6 +163,38 @@ function ManagerPage() {
     );
     setRequestData(updatedRequestData);
     setConfirmationPopupOpen(false);
+  };
+
+  const ApproveRequest = async (customizeRequestId) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${user.token}`, // Đảm bảo rằng Authorization header đúng định dạng
+      };
+
+      const response = await axios.post(
+        `http://localhost:5266/api/Manager/approveQuotation/${customizeRequestId}`,
+        {}, // Sử dụng một object rỗng nếu không có body
+        { headers: headers } // Thêm headers vào đây
+      );
+
+      console.log("Response:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error sending quotation request:", error);
+      throw error;
+    }
+  };
+
+  const handleApproveClick = async () => {
+    const { customizeRequestId } = selectedRequest.customerRequest;
+    try {
+      await ApproveRequest(customizeRequestId);
+      await fetchRequests();
+    } catch (error) {
+      console.error("Error updating request:", error);
+    }
+
+    setDetailPopupOpen(false);
   };
 
   const fetchAssign = async (assignsalestaff) => {
@@ -217,6 +241,15 @@ function ManagerPage() {
     setDetailPopupOpen(true);
   };
 
+  const handleRowDetailClick = (customizeRequestId) => {
+    const selectedRequest = requestData.find(
+      (request) =>
+        request.customerRequest.customizeRequestId === customizeRequestId
+    );
+    setSelectedRequest(selectedRequest);
+    setPopupOpenDetail(true);
+  };
+
   return (
     <div className="manager-page">
       <ManagerSidebar
@@ -241,7 +274,6 @@ function ManagerPage() {
                   <th>Sales Staff Name</th>
                   <th>Status</th>
                   <th></th>
-                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -249,7 +281,9 @@ function ManagerPage() {
                   <tr
                     key={index}
                     onClick={() =>
-                      handleRowClick(row.customerRequest.customizeRequestId)
+                      handleRowDetailClick(
+                        row.customerRequest.customizeRequestId
+                      )
                     }
                   >
                     <td>{row.customerRequest.customizeRequestId}</td>
@@ -267,17 +301,6 @@ function ManagerPage() {
                         }}
                       >
                         Assign
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        className="reject-button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRejectClick(index);
-                        }}
-                      >
-                        Reject
                       </button>
                     </td>
                   </tr>
@@ -312,7 +335,9 @@ function ManagerPage() {
                     <tr
                       key={index}
                       onClick={() =>
-                        handleRowClick(row.customerRequest.customizeRequestId)
+                        handleRowDetailClick(
+                          row.customerRequest.customizeRequestId
+                        )
                       }
                     >
                       <td>{row.customerRequest.customizeRequestId}</td>
@@ -331,8 +356,6 @@ function ManagerPage() {
                     <th>Customer Name</th>
                     <th>Sales Staff Name</th>
                     <th>Quotation</th>
-                    <th></th>
-                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -346,29 +369,7 @@ function ManagerPage() {
                       <td>{row.customerRequest.customizeRequestId}</td>
                       <td>{row.customerName}</td>
                       <td>{row.saleStaffName}</td>
-                      <td>{row.quotation}</td>
-                      <td>
-                        <button
-                          className="detail-button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleRejectClick(index);
-                          }}
-                        >
-                          Approve
-                        </button>
-                      </td>
-                      <td>
-                        <button
-                          className="reject-button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleRejectClick(index);
-                          }}
-                        >
-                          Reject
-                        </button>
-                      </td>
+                      <td>{row.customerRequest.quotation}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -382,28 +383,33 @@ function ManagerPage() {
             <table className="custom-table">
               <thead>
                 <tr>
-                  <th>ID Customize Request</th>
-                  <th>Customer Name</th>
-                  <th>Sales Staff Name</th>
-                  <th></th>
-                  <th></th>
+                  <th>ID</th>
+                  <th>Customer</th>
+                  <th>Sales Staff</th>
+                  <th>Design Staff</th> 
+                  <th>Production Staff</th>
+                  <th>Price</th>
+                  <th>Status</th> 
                 </tr>
               </thead>
               <tbody>
                 {OrderData.map((row, index) => (
                   <tr key={index} onClick={() => handleRowClick(index)}>
-                    <td>{row.id}</td>
-                    <td>{row.customer}</td>
-                    <td>{row.salesStaff}</td>
+                    <td>{row.order.orderId}</td>
+                    <td>{row.order.customizeRequest.customer.name}</td>
+                    <td>{row.order.customizeRequest.saleStaff.name}</td>
+                    <td>{row.order.designStaff.name}</td>
+                    <td>{row.order.productionStaff.name}</td>
+                    <td>{row.order.totalPrice}</td>
+                    <td>{row.order.status}</td>
                     <td>
                       <button
-                        className="detail-button"
+                        className="detail-button-s"
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleAssignClick(index);
                         }}
                       >
-                        Assign
+                        Approve
                       </button>
                     </td>
                     <td>
@@ -615,18 +621,140 @@ function ManagerPage() {
                     {selectedRequest.saleStaffName}
                   </div>
                   <div className="detail-box">
+                    <strong>Gold Type:</strong>{" "}
+                    {selectedRequest.customerRequest.gold.goldType}
+                  </div>
+                  <div className="detail-box">
+                    <strong>Gold Weight:</strong>{" "}
+                    {selectedRequest.customerRequest.goldWeight}
+                  </div>
+                  <div className="detail-box">
+                    <strong>Type:</strong>{" "}
+                    {selectedRequest.customerRequest.type}
+                  </div>
+                  <div className="detail-box">
+                    <strong>Style:</strong>{" "}
+                    {selectedRequest.customerRequest.style}
+                  </div>
+                  <div className="detail-box">
+                    <strong>Size:</strong>{" "}
+                    {selectedRequest.customerRequest.size}
+                  </div>
+                  <div className="detail-box">
+                    <strong>Quotation:</strong>{" "}
+                    {selectedRequest.customerRequest.quotation}
+                  </div>
+                  <div className="detail-box">
+                    <strong>Quotation Description:</strong>{" "}
+                    {selectedRequest.customerRequest.quotationDes}
+                  </div>
+                  <div className="detail-box">
+                    <strong>Quantity:</strong>{" "}
+                    {selectedRequest.customerRequest.quantity}
+                  </div>
+                  <div className="detail-box">
                     <strong>Status:</strong>{" "}
                     {selectedRequest.customerRequest.status}
                   </div>
                   {/* Thêm các thông tin chi tiết khác của yêu cầu nếu cần */}
                 </div>
               )}
-              <button
-                className="popup_button"
-                onClick={() => setDetailPopupOpen(false)}
-              >
-                Close
-              </button>
+              <div className="popup_acction_close">
+                <div>
+                  <button
+                    className="popup_button_approve"
+                    onClick={handleApproveClick}
+                  >
+                    Approve
+                  </button>
+                  <button
+                    className="popup_button_reject"
+                    onClick={() => setDetailPopupOpen(false)}
+                  >
+                    Reject
+                  </button>
+                </div>
+
+                <div>
+                  <button
+                    className="popup_button"
+                    onClick={() => setDetailPopupOpen(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {PopupOpenDetail && (
+        <div className="popup-overlay">
+          <div className="popup">
+            <div className="popup-inner">
+              <h2>Request Detail</h2>
+              {selectedRequest && (
+                <div className="details-container">
+                  <div className="detail-box">
+                    <strong>ID Customize Request:</strong>{" "}
+                    {selectedRequest.customerRequest.customizeRequestId}
+                  </div>
+                  <div className="detail-box">
+                    <strong>Customer Name:</strong>{" "}
+                    {selectedRequest.customerName}
+                  </div>
+                  <div className="detail-box">
+                    <strong>Sales Staff Name:</strong>{" "}
+                    {selectedRequest.saleStaffName}
+                  </div>
+                  <div className="detail-box">
+                    <strong>Gold Type:</strong>{" "}
+                    {selectedRequest.customerRequest.gold.goldType}
+                  </div>
+                  <div className="detail-box">
+                    <strong>Gold Weight:</strong>{" "}
+                    {selectedRequest.customerRequest.goldWeight}
+                  </div>
+                  <div className="detail-box">
+                    <strong>Type:</strong>{" "}
+                    {selectedRequest.customerRequest.type}
+                  </div>
+                  <div className="detail-box">
+                    <strong>Style:</strong>{" "}
+                    {selectedRequest.customerRequest.style}
+                  </div>
+                  <div className="detail-box">
+                    <strong>Size:</strong>{" "}
+                    {selectedRequest.customerRequest.size}
+                  </div>
+                  <div className="detail-box">
+                    <strong>Quotation:</strong>{" "}
+                    {selectedRequest.customerRequest.quotation}
+                  </div>
+                  <div className="detail-box">
+                    <strong>Quotation Description:</strong>{" "}
+                    {selectedRequest.customerRequest.quotationDes}
+                  </div>
+                  <div className="detail-box">
+                    <strong>Quantity:</strong>{" "}
+                    {selectedRequest.customerRequest.quantity}
+                  </div>
+                  <div className="detail-box">
+                    <strong>Status:</strong>{" "}
+                    {selectedRequest.customerRequest.status}
+                  </div>
+                  {/* Thêm các thông tin chi tiết khác của yêu cầu nếu cần */}
+                </div>
+              )}
+
+              <div>
+                <button
+                  className="popup_button"
+                  onClick={() => setPopupOpenDetail(false)}
+                >
+                  Close
+                </button>
+              </div>
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 .salestaff-page {
-  text-align: center;
+  text-align: left;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -8,7 +8,7 @@
   background-color: rgb(255, 255, 255);
   background-size: cover;
   background-position: center;
-  padding-bottom: 50px;
+  padding-bottom: 0px;
 }
 
 .salestaff-container {
@@ -16,10 +16,11 @@
 }
 
 .salestaff-newdiv {
-  border-radius: 15px;
-  height: 600px;
-  background-color: #f0f0f0;
-  margin: 10px;
+  height: auto;
+  padding: 50px;
+  background-color: #f8f3ed;
+  margin-top: 10px;
+  border-radius: 20px;
 }
 
 .custom-table {

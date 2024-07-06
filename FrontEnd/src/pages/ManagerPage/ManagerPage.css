@@ -111,8 +111,10 @@
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 1010; /* Đảm bảo popup ở trên cùng so với lớp mờ */
-  max-width: 500px;
-  width: 100%;
+  max-width: 700px; /* Tăng chiều rộng tối đa */
+  width: 90%;
+  max-height: 80vh; /* Giới hạn chiều cao tối đa */
+  overflow-y: auto; /* Thêm thanh trượt dọc nếu nội dung quá dài */
   border-radius: 10px;
 }
 
@@ -251,4 +253,28 @@
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
+}
+.popup_acction_close {
+  display: flex;
+  justify-content: space-between;
+}
+.popup_button_approve {
+  margin: 10px 5px;
+  padding: 10px 15px;
+  border: none;
+  background-color: #2a9c13;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+}
+.popup_button_reject {
+  margin: 10px 5px;
+  padding: 10px 15px;
+  border: none;
+  background-color: #cf1010;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
 }
