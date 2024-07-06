@@ -66,7 +66,7 @@ function ManagerPage() {
     const fetchOrder = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5266/api/CustomerRequests"
+          "http://localhost:5266/api/Orders"
         );
         setOrderData(response.data);
       } catch (error) {
@@ -382,19 +382,25 @@ function ManagerPage() {
             <table className="custom-table">
               <thead>
                 <tr>
-                  <th>ID Customize Request</th>
-                  <th>Customer Name</th>
-                  <th>Sales Staff Name</th>
-                  <th></th>
-                  <th></th>
+                  <th>ID</th>
+                  <th>Customer</th>
+                  <th>Sales Staff</th>
+                  <th>Design Staff</th> 
+                  <th>Production Staff</th>
+                  <th>Price</th>
+                  <th>Status</th> 
                 </tr>
               </thead>
               <tbody>
                 {OrderData.map((row, index) => (
                   <tr key={index} onClick={() => handleRowClick(index)}>
-                    <td>{row.id}</td>
-                    <td>{row.customer}</td>
-                    <td>{row.salesStaff}</td>
+                    <td>{row.order.orderId}</td>
+                    <td>{row.order.customizeRequest.customer.name}</td>
+                    <td>{row.order.customizeRequest.saleStaff.name}</td>
+                    <td>{row.order.designStaff.name}</td>
+                    <td>{row.order.productionStaff.name}</td>
+                    <td>{row.order.totalPrice}</td>
+                    <td>{row.order.status}</td>
                     <td>
                       <button
                         className="detail-button"
