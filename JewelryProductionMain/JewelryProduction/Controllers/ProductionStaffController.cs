@@ -6,6 +6,8 @@ using JewelryProduction.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace JewelryProduction.Controllers
 {
@@ -21,28 +23,27 @@ namespace JewelryProduction.Controllers
             _notificationService = notificationService;
         }
 
-        [HttpPost("record-inspection")]
-        public async Task<IActionResult> RecordInspection([FromBody] InspectionDTO inspection, string senderId)
+        [HttpPut("record-inspection")]
+        public async Task<IActionResult> RecordInspection(string orderId, string stage,[FromBody] InspectionDTO inspectionDto)
         {
-            var order = await _context.Orders.FindAsync(inspection.OrderId);
+            var order = await _context.Orders
+                .Include(o => o.ProductionStaff)
+                .Include(o => o.CustomizeRequest)
+                .Where(o => o.OrderId == orderId)
+                .FirstOrDefaultAsync();
+
+            var inspection = await _context.Inspections
+                .Where(i => i.OrderId == orderId && i.Stage == stage)
+                .FirstOrDefaultAsync();
             if (order == null)
             {
                 return NotFound("Order not found");
             }
             var userId = order.CustomizeRequest.ManagerId;
-            var newInspection = new Inspection
-            {
-                OrderId = inspection.OrderId,
-                Stage = inspection.Stage,
-                ProductStaffId = inspection.ProductStaffId,
-                InspectionDate = DateTime.Now,
-                Result = inspection.Result,
-                Comment = inspection.Comment
-            };
-
-            _context.Inspections.Add(newInspection);
-
-            if (inspection.Result == "Fail")
+            var senderId = GetCurrentUserId();
+            inspection.Result = inspectionDto.Result;
+            inspection.Comment = inspectionDto.Comment;
+            if (inspection.Result is false)
             {
                 order.Status = "Failed";
                 await _notificationService.SendNotificationToUserfAsync(userId, senderId, inspection.Comment);
@@ -67,6 +68,11 @@ namespace JewelryProduction.Controllers
             }
 
             return Ok(checklist);
+        }
+        private string GetCurrentUserId()
+        {
+            var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sid);
+            return userId;
         }
     }
 }

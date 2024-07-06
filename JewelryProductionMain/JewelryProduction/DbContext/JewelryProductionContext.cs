@@ -338,6 +338,9 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
             entity.Property(e => e.Status)
                 .HasMaxLength(50)
                 .HasColumnName("status");
+            entity.Property(e => e.Address)
+                .HasMaxLength(50)
+                .HasColumnName("address");
             entity.Property(e => e.TotalPrice)
                 .HasColumnType("money")
                 .HasColumnName("totalPrice");

@@ -1,4 +1,5 @@
-﻿using JewelryProduction.Common;
+﻿using Azure.Identity;
+using JewelryProduction.Common;
 using JewelryProduction.DbContext;
 using JewelryProduction.Entities;
 using JewelryProduction.Interface;
@@ -21,12 +22,12 @@ namespace JewelryProduction.Services
             _userManager = userManager;
         }
 
-        public async Task SendNotificationToUserfAsync(string user, string senderId, string message)
+        public async Task SendNotificationToUserfAsync(string userId, string senderId, string message)
         {
             var notification = new Notification
             {
                 NotificationId = await IdGenerator.GenerateUniqueId<Order>(_context, "Mess", 4),
-                UserId = user,
+                UserId = userId,
                 SenderId = senderId,
                 Message = message,
                 IsRead = false,
@@ -37,7 +38,7 @@ namespace JewelryProduction.Services
             await _context.SaveChangesAsync();
 
             // Send real-time notification via SignalR
-            await _hubContext.Clients.User(user).SendAsync("ReceiveNotification", message);
+            await _hubContext.Clients.User(userId).SendAsync("ReceiveNotification", message);
         }
 
 
