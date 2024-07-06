@@ -267,7 +267,7 @@ namespace JewelryProduction.Controllers
             return Ok(customerRequest);
         }
         [HttpPost("approve/{customizeRequestId}")]
-        public async Task<IActionResult> ApproveCustomerRequest(string customizeRequestId, string paymentMethodId)
+        public async Task<IActionResult> ApproveCustomerRequest(string customizeRequestId)
         {
             var customerRequest = await _context.CustomerRequests
                 .Include(cr => cr.Gemstones)
@@ -293,10 +293,10 @@ namespace JewelryProduction.Controllers
                 DesignStaffId = "DE001",
                 OrderDate = DateTime.Now,
                 DepositAmount = customerRequest.quotation.Value * 0.3M,
-                Status = "Pending",
+                Status = "Wait for Deposit",
                 CustomizeRequestId = customerRequest.CustomizeRequestId,
-                PaymentMethodId = paymentMethodId,
-                TotalPrice = customerRequest.quotation.Value
+                PaymentMethodId = null,
+                TotalPrice = customerRequest.quotation.Value - customerRequest.quotation.Value * 0.3M
             };
 
             _context.Orders.Add(order);
