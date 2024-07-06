@@ -27,27 +27,45 @@ function CustomizeForm() {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate(); // Sử dụng hook useNavigate để chuyển hướng
   const [styles, setStyles] = useState([]);
+  const [quantitys, setQuantity] = useState([]);
   const [ProductSample, setProductSample] = useState(null);
   const [visibleProducts, setVisibleProducts] = useState(4);
   const [gemstones, setGemstones] = useState([]);
 
-  const [PrimaryGemstoneId, setPrimaryGemstoneId] = useState("");
+  const [PrimaryGemstonesId, setPrimaryGemstoneId] = useState("");
+  const [PrimarySencondGemstoneId, setPrimarySencondGemstoneId] = useState("");
   const [AdditionalGemstone, setAdditionalGemstoneIds] = useState([]);
   const [PrimaryGemstone, setSelectedMainStone] = useState(null);
+  const [PrimarySecondGemstone, setSelectedSencondMainStone] = useState(null);
   const [selectedSideStones, setSelectedSideStones] = useState([]);
   const [currentMainPage, setCurrentMainPage] = useState(1);
+  const [currentSecondMainPage, setCurrentSecondMainPage] = useState(1);
   const [currentSidePage, setCurrentSidePage] = useState(1);
+  const [PrimaryGemstoneId, setSelectedStones] = useState(["", ""]);
 
   const user = useSelector((State) => State.auth.Login.currentUser);
 
   const selectMainStone = (gemstone) => {
     setSelectedMainStone(gemstone);
     setPrimaryGemstoneId(gemstone.gemstoneId);
+    // Nếu chọn trùng với đá quý phụ, reset đá quý phụ
+    if (PrimarySencondGemstoneId === gemstone.gemstoneId) {
+      setSelectedSencondMainStone(null);
+      setPrimarySencondGemstoneId("");
+    }
+    setSelectedStones([gemstone.gemstoneId, PrimaryGemstoneId[1]]);
+  };
+
+  const selectSencondMainStone = (gemstone) => {
+    setSelectedSencondMainStone(gemstone);
+    setPrimarySencondGemstoneId(gemstone.gemstoneId);
+    setSelectedStones([PrimaryGemstoneId[0], gemstone.gemstoneId]);
   };
 
   useEffect(() => {
-    console.log("select Main Stone ", PrimaryGemstoneId);
-  }, [PrimaryGemstoneId]);
+    console.log("select Main Stone ", PrimaryGemstonesId);
+    console.log("select Second Stone ", PrimarySencondGemstoneId);
+  }, [PrimaryGemstonesId, PrimarySencondGemstoneId]);
 
   const selectSideStone = (gemstone) => {
     setSelectedSideStones((prevSelectedStones) => {
@@ -305,25 +323,54 @@ function CustomizeForm() {
     Necklace: ["chain", "pearl", "station", "initial"],
     Earrings: ["stud", "jacket", "ear spike"],
   };
+  const typeQuantitys = {
+    Ring: ["1"],
+    Bracelet: ["1"],
+    Necklace: ["1"],
+    Earrings: ["2"],
+  };
 
   const gemstonesPerPage = 5;
 
-  const totalMainPages = Math.ceil(gemstones.length / gemstonesPerPage);
+  const filteredGemstones = gemstones.filter((gemstone) => {
+    // Filter out the primary gemstone and gemstones with non-null productSampleID or customizeRequestID
+    return (
+      gemstone.gemstoneId !==
+        (PrimaryGemstone ? PrimaryGemstone.gemstoneId : null) &&
+      gemstone.productSampleId === null &&
+      gemstone.customizeRequestId === null
+    );
+  });
+
+  const filteredMainGemstones = gemstones.filter((gemstone) => {
+    // Filter out the primary gemstone and gemstones with non-null productSampleID or customizeRequestID
+    return (
+      gemstone.productSampleId === null && gemstone.customizeRequestId === null
+    );
+  });
+
+  const totalMainPages = Math.ceil(
+    filteredMainGemstones.length / gemstonesPerPage
+  );
+  const totalMainPagessecond = Math.ceil(
+    filteredGemstones.length / gemstonesPerPage
+  );
   const totalSidePages = Math.ceil(gemstones.length / gemstonesPerPage);
-
-  const handleMainPageChange = (page) => {
-    setCurrentMainPage(page);
-  };
-
-  const handleSidePageChange = (page) => {
-    setCurrentSidePage(page);
-  };
 
   const indexOfLastMainGemstone = currentMainPage * gemstonesPerPage;
   const indexOfFirstMainGemstone = indexOfLastMainGemstone - gemstonesPerPage;
-  const currentMainGemstones = gemstones.slice(
+  const currentMainGemstones = filteredMainGemstones.slice(
     indexOfFirstMainGemstone,
     indexOfLastMainGemstone
+  );
+
+  const indexOfLastSecondMainGemstone =
+    currentSecondMainPage * gemstonesPerPage;
+  const indexOfFirsSecondtMainGemstone =
+    indexOfLastSecondMainGemstone - gemstonesPerPage;
+  const currentSecondMainGemstones = filteredGemstones.slice(
+    indexOfFirsSecondtMainGemstone,
+    indexOfLastSecondMainGemstone
   );
 
   const indexOfLastSideGemstone = currentSidePage * gemstonesPerPage;
@@ -332,6 +379,28 @@ function CustomizeForm() {
     indexOfFirstSideGemstone,
     indexOfLastSideGemstone
   );
+
+  const handleMainPageChange = (page) => {
+    setCurrentMainPage(page);
+  };
+
+  const handleMainPageSecondChange = (page) => {
+    if (page >= 1 && page <= totalMainPagessecond) {
+      setCurrentSecondMainPage(page);
+    }
+  };
+
+  // Nếu trang hiện tại vượt quá số trang mới, đặt lại về trang đầu tiên
+  if (
+    currentSecondMainPage > totalMainPagessecond &&
+    totalMainPagessecond > 0
+  ) {
+    setCurrentSecondMainPage(1);
+  }
+
+  const handleSidePageChange = (page) => {
+    setCurrentSidePage(page);
+  };
 
   const createCustomizeRequest = async (customize) => {
     try {
@@ -426,7 +495,7 @@ function CustomizeForm() {
 
   useEffect(() => {
     setStyles(type ? typeStyles[type] : []);
-    // Reset style khi type thay đổi
+    setQuantity(type ? typeQuantitys[type] : []);
   }, [type]);
 
   return (
@@ -496,9 +565,7 @@ function CustomizeForm() {
                     <input
                       className="input-quantity"
                       type="number"
-                      min="1"
-                      max="20"
-                      value={quantity}
+                      value={quantitys}
                       onChange={(e) => setselectedQuantity(e.target.value)}
                     ></input>
                   </div>
@@ -981,6 +1048,67 @@ function CustomizeForm() {
                   </div>
                 </div>
               </div>
+
+              {type === "Earrings" && (
+                <>
+                  <div className="option-section">
+                    <div className="tablegemstone">
+                      <h2>Gemstone Second Information</h2>
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Size</th>
+                            <th>Color</th>
+                            <th>Clarity</th>
+                            <th>Price</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {currentSecondMainGemstones.map((gemstone) => (
+                            <tr
+                              key={gemstone.gemstoneId}
+                              onClick={() => selectSencondMainStone(gemstone)}
+                              style={{
+                                backgroundColor:
+                                  PrimarySecondGemstone &&
+                                  PrimarySecondGemstone.gemstoneId ===
+                                    gemstone.gemstoneId
+                                    ? "#d3f4ff"
+                                    : "transparent",
+                              }}
+                            >
+                              <td>{gemstone.gemstoneId}</td>
+                              <td>{gemstone.name}</td>
+                              <td>{gemstone.size}</td>
+                              <td>{gemstone.color}</td>
+                              <td>{gemstone.clarity}</td>
+                              <td>{gemstone.price}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                      <div className="pagination">
+                        {Array.from(
+                          { length: totalMainPagessecond },
+                          (_, i) => i + 1
+                        ).map((page) => (
+                          <span
+                            key={page}
+                            className={`page-node ${
+                              page === currentSecondMainPage ? "current" : ""
+                            }`}
+                            onClick={() => handleMainPageSecondChange(page)}
+                          >
+                            {page}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
 
               <div className="option-section">
                 <div className="tablegemstone">

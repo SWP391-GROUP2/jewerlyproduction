@@ -1,0 +1,343 @@
+.checkout-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 100vh;
+    width: 100vw;
+    background-color: rgb(255, 255, 255);
+    background-size: cover;
+    background-position: center;
+    padding-bottom: 50px;
+  }
+  
+  .head-checkout {
+    width: 100%;
+  }
+  
+  .middle-content {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 1200px;
+    max-height: 600px;
+    overflow: auto;
+  }
+  
+  .content-wrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .shipping-address,
+  .order-summary {
+    width: 48%;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .shipping-address h2 {
+    text-align: center;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+  }
+  
+  form,
+  textarea {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  label {
+    margin-bottom: 10px;
+  }
+  
+  label.fullname-label {
+    font-size: 0.9em;
+    margin-bottom: 0;
+  }
+  
+  input,
+  select,
+  textarea {
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    
+  }
+  
+  input[type="text"].fullname-input {
+    width: 100%;
+  }
+  
+  .order-total,
+  .product,
+  .payment-method,
+  .terms {
+    margin-top: 20px;
+  }
+  
+  .order-total .total-item,
+  .order-total .shipping,
+  .order-total .total-amount,
+  .product .product-item,
+  .payment-method .payment-option {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .product-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+  }
+  
+  .product-details {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+  }
+  
+  .payment-option button {
+    margin-right: 10px;
+  }
+  
+  .terms label {
+    display: flex;
+    align-items: center;
+  }
+  
+  .place-order {
+    background-color: black;
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 100%;
+  }
+  .fullname-input {
+    width: 100%; /* Đặt chiều rộng tối đa là 100% */
+  }
+  .address-input {
+    width: 100%; /* Đặt chiều rộng tối đa là 100% */
+  }
+  .shipping-address form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .two-columns {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .column {
+    flex: 1;
+    margin-right: 10px;
+  }
+  
+  .column:last-child {
+    margin-right: 0;
+  }
+  
+  label {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+  
+  input,
+  select {
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+  }
+  
+  .fullname-input,
+  .address-input {
+    width: 100%; /* Đặt chiều rộng tối đa là 100% */
+  }
+  .order-summary h2 {
+    text-align: center; /* Căn giữa tiêu đề */
+    font-size: 1.5em;
+    margin-bottom: 20px;
+  }
+  
+  .divider {
+    border: none; /* Xóa đường viền mặc định */
+    border-top: 1px solid #ccc; /* Thêm đường gạch ngang */
+    margin: 10px 0; /* Khoảng cách trên dưới */
+  }
+  
+  .order-total .total-item,
+  .order-total .total-amount {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .shipping {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .product {
+    margin-top: 20px; /* Khoảng cách từ sản phẩm đến phần khác */
+  }
+  
+  .product h3 {
+    text-align: center; /* Căn giữa tiêu đề sản phẩm */
+    font-size: 1.2em;
+  }
+  
+  .product-item {
+    display: flex;
+    margin-top: 10px;
+  }
+  
+  .product-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+  }
+  
+  .product-details {
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .product-details span {
+    margin-bottom: 5px;
+  }
+  textarea {
+    max-width: 100%;
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical; /* Cho phép điều chỉnh chiều cao dọc */
+  }
+
+  .order-summary h2 {
+    text-align: center; /* Căn giữa tiêu đề */
+    font-size: 1.5em;
+    margin-bottom: 20px;
+  }
+  
+  .divider {
+    border: none; /* Xóa đường viền mặc định */
+    border-top: 1px solid #ccc; /* Thêm đường gạch ngang */
+    margin: 10px 0; /* Khoảng cách trên dưới */
+  }
+  
+  .order-total .total-item,
+  .order-total .total-amount {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .shipping {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .product {
+    margin-top: 20px; /* Khoảng cách từ sản phẩm đến phần khác */
+  }
+  
+  .product h3 {
+    text-align: center; /* Căn giữa tiêu đề sản phẩm */
+    font-size: 1.2em;
+  }
+  
+  .product-item {
+    display: flex;
+    margin-top: 10px;
+  }
+  
+  .product-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+  }
+  
+  .product-details {
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .product-details span {
+    margin-bottom: 5px;
+  }
+  
+  .payment-method {
+    text-align: center; /* Căn giữa nội dung */
+    margin-top: 20px;
+  }
+  
+  .payment-method h3 {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  
+  .payment-method span {
+    display: inline-block;
+  }
+  .terms input[type="checkbox"] {
+    margin-right: 490px; /* Khoảng cách giữa checkbox và văn bản */
+  }
+  .popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+  
+  .popup-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .popup-content p {
+    margin-bottom: 20px;
+  }
+  
+  .popup-content button {
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  
+  
+  
+  

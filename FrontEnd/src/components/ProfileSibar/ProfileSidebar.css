@@ -1,0 +1,49 @@
+#manager-sidebar-profile {
+  width: 260px;
+  max-height: 100%;
+  padding: 20px;
+  background-color: #f0e1cf;
+  transition: width 0.3s ease;
+  border-radius: 15px;
+  overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.manager-sidebar-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.manager-sidebar-list-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.manager-sidebar-button {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+  background: none;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  white-space: nowrap; /* Ngăn chặn các chữ xuống hàng */
+}
+
+.manager-sidebar-button:hover {
+  background-color: #ddd;
+}
+
+.manager-sidebar-list-item.active .manager-sidebar-button {
+  background-color: #f0f0f0;
+}
+
+.manager-icon {
+  margin-right: 10px;
+}

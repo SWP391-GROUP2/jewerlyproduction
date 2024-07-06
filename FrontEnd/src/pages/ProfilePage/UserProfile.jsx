@@ -8,6 +8,7 @@ import { IoReturnDownBack } from "react-icons/io5";
 import { FaUserCircle } from "react-icons/fa"; // Placeholder icon
 import axios from "axios";
 import { useSelector } from "react-redux";
+import ProfileSidebar from "../../components/ProfileSibar/ProfileSidebar";
 
 function UserProfile() {
   const [Name, setName] = useState("");
@@ -15,6 +16,66 @@ function UserProfile() {
   const [DateOfBirth, setBirthday] = useState("");
   const [Avatar, setAvatar] = useState(null);
   const [email, setEmail] = useState("");
+  const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
+  const [currentView, setCurrentView] = useState("profile");
+
+  const [detailPopupOpen, setDetailPopupOpen] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState(null);
+  const [confirmationPopupOpen, setConfirmationPopupOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const [requestData, setRequestData] = useState([]);
+
+  const OpenSidebar = () => {
+    setOpenSidebarToggle(!openSidebarToggle);
+  };
+
+  const handleRowClick = (customizeRequestId) => {
+    const selectedRequest = requestData.find(
+      (request) =>
+        request.customerRequest.customizeRequestId === customizeRequestId
+    );
+    setSelectedRequest(selectedRequest);
+    setDetailPopupOpen(true);
+  };
+
+  const handleRejectClick = (index) => {
+    setSelectedRow(index); // This is correct as per the context
+    setConfirmationPopupOpen(true);
+  };
+
+  const handleConfirmReject = () => {
+    const updatedRequestData = requestData.filter(
+      (_, index) => index !== selectedRow
+    );
+    setRequestData(updatedRequestData);
+    setConfirmationPopupOpen(false);
+  };
+
+  const handleAssignClick = (index) => {
+    setSelectedRow(index);
+    setConfirmationPopupOpen(true);
+  };
+
+  useEffect(() => {
+    const fetchRequests = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5266/api/CustomerRequests"
+        );
+        setRequestData(response.data);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRequests();
+    console.log("Your request", requestData);
+  }, []);
 
   const user = useSelector((state) => state.auth.Login.currentUser);
 
@@ -88,6 +149,9 @@ function UserProfile() {
     setAvatar(e.target.files[0]);
   };
 
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
   return (
     <>
       <Link to="/">
@@ -96,81 +160,264 @@ function UserProfile() {
           <IoReturnDownBack />
         </button>
       </Link>
-      <div className="user-profile-wrapper">
-        <form onSubmit={handleUpdateProfile}>
-          <h1 className="user-profile-title">User Profile</h1>
+      <div className="manager-page-profile">
+        <ProfileSidebar
+          openSidebarToggle={openSidebarToggle}
+          OpenSidebar={OpenSidebar}
+          setCurrentView={setCurrentView}
+        />
+        <div
+          className={`content ${
+            detailPopupOpen || confirmationPopupOpen ? "blur" : ""
+          }`}
+        >
+          {currentView === "profile" && (
+            <div className="user-profile-wrapper">
+              <form onSubmit={handleUpdateProfile}>
+                <h1 className="user-profile-title">User Profile</h1>
 
-          <div
-            className="user-profile-avatar-wrapper"
-            onClick={() => document.getElementById("avatar-upload").click()}
-          >
-            {Avatar ? (
-              <img src={Avatar} alt="Avatar" className="user-profile-avatar" />
-            ) : (
-              <FaUserCircle className="user-profile-avatar-placeholder" />
-            )}
-            <input
-              type="file"
-              id="avatar-upload"
-              style={{ display: "none" }}
-              onChange={handleAvatarChange}
-            />
+                <div
+                  className="user-profile-avatar-wrapper"
+                  onClick={() =>
+                    document.getElementById("avatar-upload").click()
+                  }
+                >
+                  {Avatar ? (
+                    <img
+                      src={Avatar}
+                      alt="Avatar"
+                      className="user-profile-avatar"
+                    />
+                  ) : (
+                    <FaUserCircle className="user-profile-avatar-placeholder" />
+                  )}
+                  <input
+                    type="file"
+                    id="avatar-upload"
+                    style={{ display: "none" }}
+                    onChange={handleAvatarChange}
+                  />
+                </div>
+
+                <div className="user-profile-input-box">
+                  <input
+                    type="text"
+                    placeholder="Your Name"
+                    value={Name}
+                    required
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                  <MdDriveFileRenameOutline className="user-profile-icon" />
+                </div>
+
+                <div className="user-profile-input-box">
+                  <input
+                    type="text"
+                    placeholder="Phone Number"
+                    value={PhoneNumber}
+                    required
+                    onChange={(e) => setPhone(e.target.value)}
+                  />
+                  <MdDriveFileRenameOutline className="user-profile-icon" />
+                </div>
+
+                <div className="user-profile-input-box">
+                  <input
+                    type="text"
+                    placeholder="user@domain.com"
+                    value={email}
+                    required
+                    readOnly
+                  />
+                  <MdDriveFileRenameOutline className="user-profile-icon" />
+                </div>
+
+                <div className="user-profile-input-box">
+                  <input
+                    type="date"
+                    placeholder="Date of Birth"
+                    value={DateOfBirth}
+                    required
+                    onChange={(e) => setBirthday(e.target.value)}
+                  />
+                  <MdDriveFileRenameOutline className="user-profile-icon" />
+                </div>
+
+                <button type="submit" className="btn-submit">
+                  Save Profile
+                </button>
+
+                <div className="user-profile-link">
+                  <p>
+                    <Link to="/customer/resetpassword">Change Password</Link>
+                  </p>
+                </div>
+              </form>
+            </div>
+          )}
+          {currentView === "request" && (
+            <div className="new-div">
+              <h2 className="table-heading">Request List</h2>
+              <table className="custom-table">
+                <thead>
+                  <tr>
+                    <th>ID Customize Request</th>
+                    <th>Customer Name</th>
+                    <th>Sales Staff Name</th>
+                    <th>Quation</th>
+                    <th>Status</th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {requestData.map((row, index) => (
+                    <tr
+                      key={index}
+                      onClick={() =>
+                        handleRowClick(row.customerRequest.customizeRequestId)
+                      }
+                    >
+                      <td>{row.customerRequest.customizeRequestId}</td>
+                      <td>{row.customerName}</td>
+                      <td>{row.saleStaffName}</td>
+                      <td>{row.customerRequest.quotation}</td>
+                      <td>{row.customerRequest.status}</td>
+                      <td>
+                        <button
+                          className="detail-button-s"
+                          onClick={(e) => {
+                            e.stopPropagation(); // Ngăn chặn sự kiện click hàng
+                            handleAssignClick(index);
+                          }}
+                        >
+                          Approve
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          className="reject-button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRejectClick(index);
+                          }}
+                        >
+                          Reject
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          {currentView === "order" && (
+            <div className="new-div">
+              <h2 className="table-heading">Order List</h2>
+              <table className="custom-table">
+                <thead>
+                  <tr>
+                    <th>ID Customize Request</th>
+                    <th>Customer Name</th>
+                    <th>Sales Staff Name</th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {requestData.map((row, index) => (
+                    <tr key={index} onClick={() => handleRowClick(index)}>
+                      <td>{row.id}</td>
+                      <td>{row.customer}</td>
+                      <td>{row.salesStaff}</td>
+
+                      <td>
+                        <button
+                          className="detail-button"
+                          onClick={(e) => {
+                            e.stopPropagation(); // Ngăn chặn sự kiện click hàng
+                            handleAssignClick(index);
+                          }}
+                        >
+                          Approve
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          className="reject-button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRejectClick(index);
+                          }}
+                        >
+                          Reject
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+        {confirmationPopupOpen && (
+          <div className="confirmation-popup">
+            <div className="confirmation-popup-inner">
+              <h2>Are you sure?</h2>
+              <button
+                className="confirmation-popup_button"
+                onClick={handleConfirmReject}
+              >
+                Yes
+              </button>
+              <button
+                className="confirmation-popup_button"
+                onClick={() => setConfirmationPopupOpen(false)}
+              >
+                No
+              </button>
+            </div>
           </div>
-
-          <div className="user-profile-input-box">
-            <input
-              type="text"
-              placeholder="Your Name"
-              value={Name}
-              required
-              onChange={(e) => setName(e.target.value)}
-            />
-            <MdDriveFileRenameOutline className="user-profile-icon" />
+        )}
+        {detailPopupOpen && (
+          <div className="overlay" onClick={handleRowClick}></div>
+        )}
+        {detailPopupOpen && (
+          <div className="popup-overlay">
+            <div className="popup">
+              <div className="popup-inner">
+                <h2>Request Detail</h2>
+                {selectedRequest && (
+                  <div>
+                    <p>
+                      <strong>ID Customize Request:</strong>{" "}
+                      {selectedRequest.customerRequest.customizeRequestId}
+                    </p>
+                    <p>
+                      <strong>Customer Name:</strong>{" "}
+                      {selectedRequest.customerName}
+                    </p>
+                    <p>
+                      <strong>Sales Staff Name:</strong>{" "}
+                      {selectedRequest.saleStaffName}
+                    </p>
+                    <p>
+                      <strong>Status:</strong>{" "}
+                      {selectedRequest.customerRequest.status}
+                    </p>
+                    {/* Thêm các thông tin chi tiết khác của yêu cầu nếu cần */}
+                  </div>
+                )}
+                <button
+                  className="popup_button"
+                  onClick={() => setDetailPopupOpen(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
           </div>
-
-          <div className="user-profile-input-box">
-            <input
-              type="text"
-              placeholder="Phone Number"
-              value={PhoneNumber}
-              required
-              onChange={(e) => setPhone(e.target.value)}
-            />
-            <MdDriveFileRenameOutline className="user-profile-icon" />
-          </div>
-
-          <div className="user-profile-input-box">
-            <input
-              type="text"
-              placeholder="user@domain.com"
-              value={email}
-              required
-              readOnly
-            />
-            <MdDriveFileRenameOutline className="user-profile-icon" />
-          </div>
-
-          <div className="user-profile-input-box">
-            <input
-              type="date"
-              placeholder="Date of Birth"
-              value={DateOfBirth}
-              required
-              onChange={(e) => setBirthday(e.target.value)}
-            />
-            <MdDriveFileRenameOutline className="user-profile-icon" />
-          </div>
-
-          <button type="submit" className="btn-submit">
-            Save Profile
-          </button>
-
-          <div className="user-profile-link">
-            <p>
-              <Link to="/customer/resetpassword">Change Password</Link>
-            </p>
-          </div>
-        </form>
+        )}
       </div>
     </>
   );

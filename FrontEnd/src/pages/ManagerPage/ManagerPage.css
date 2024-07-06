@@ -51,14 +51,14 @@
   cursor: pointer;
 }
 
-.detail-button,
+.detail-button-s,
 .reject-button {
   padding: 5px 10px;
   border: none;
   cursor: pointer;
 }
 
-.detail-button {
+.detail-button-s {
   background-color: #4caf50; /* Green */
   color: white;
 }
@@ -111,11 +111,13 @@
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 1010; /* Đảm bảo popup ở trên cùng so với lớp mờ */
-  width: 400px;
+  max-width: 500px;
+  width: 100%;
+  border-radius: 10px;
 }
 
 .popup-inner {
-  text-align: center;
+  text-align: left;
 }
 
 /* CSS cho bảng nhân viên */
@@ -143,6 +145,24 @@
 
 .employee-table .selected {
   background-color: #e0e0e0;
+}
+
+.avatar {
+  width: 80px; /* Adjusted to a slightly larger size for better visibility */
+  height: 80px;
+  border-radius: 50%; /* Makes the avatar circular */
+  object-fit: cover; /* Ensures the image covers the entire element */
+  border: 2px solid #ccc; /* Adds a subtle border */
+  transition: transform 0.2s; /* Smooth transformation */
+}
+
+.avatar img {
+  border-radius: 50%;
+}
+
+.avatar:hover {
+  transform: scale(1.1); /* Slightly enlarges on hover */
+  border-color: #888; /* Changes border color on hover */
 }
 
 /* CSS cho các nút */
@@ -217,4 +237,18 @@
   width: 100px;
   height: 41px;
   margin: 10px; /* Add some space between buttons */
+}
+
+.details-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.detail-box {
+  background: #f9f9f9;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
 }
