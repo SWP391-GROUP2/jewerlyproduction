@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./UserProfile.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MdDriveFileRenameOutline } from "react-icons/md";
 import { FaHome } from "react-icons/fa";
 import { IoReturnDownBack } from "react-icons/io5";
@@ -22,8 +22,7 @@ function UserProfile() {
 
   const [detailPopupOpen, setDetailPopupOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
-  const [confirmationPopupOpen, setConfirmationPopupOpen] = useState(false);
-  const [selectedRow, setSelectedRow] = useState(null);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -31,6 +30,13 @@ function UserProfile() {
   const [OrderData, setOrderData] = useState([]);
   const [fetchDataFlag, setFetchDataFlag] = useState(false);
   const [hasFetchedOrders, setHasFetchedOrders] = useState(false);
+
+  const [ApprovePopupOpen, setApprovePopupOpen] = useState(false);
+  const [RejectPopupOpen, setRejectPopupOpen] = useState(false);
+
+  const [approveSelectedRequest, setapproveSelectedRequest] = useState(false);
+
+  const navigate = useNavigate();
 
   const user = useSelector((State) => State.auth.Login.currentUser);
 
@@ -47,22 +53,25 @@ function UserProfile() {
     setDetailPopupOpen(true);
   };
 
+  const navigateToProductDetail = (customizeRequestId) => {
+    navigate(`/customer/checkoutpage/${customizeRequestId}`); // Chuyển hướng đến trang chi tiết sản phẩm
+  };
+
   const handleRejectClick = (index) => {
-    setSelectedRow(index); // This is correct as per the context
-    setConfirmationPopupOpen(true);
+    setRejectPopupOpen(true);
   };
 
-  const handleConfirmReject = () => {
-    const updatedRequestData = requestData.filter(
-      (_, index) => index !== selectedRow
+  const handleYesReject = () => {
+    setRejectPopupOpen(false);
+  };
+
+  const handleApproveClick = (customizeRequestId) => {
+    const approveSelectedRequest = requestData.find(
+      (request) =>
+        request.customerRequest.customizeRequestId === customizeRequestId
     );
-    setRequestData(updatedRequestData);
-    setConfirmationPopupOpen(false);
-  };
-
-  const handleAssignClick = (index) => {
-    setSelectedRow(index);
-    setConfirmationPopupOpen(true);
+    setapproveSelectedRequest(approveSelectedRequest);
+    setApprovePopupOpen(true);
   };
 
   const fetchRequests = async () => {
@@ -206,7 +215,7 @@ function UserProfile() {
         />
         <div
           className={`content ${
-            detailPopupOpen || confirmationPopupOpen ? "blur" : ""
+            detailPopupOpen || ApprovePopupOpen || RejectPopupOpen ? "blur" : ""
           }`}
         >
           {currentView === "profile" && (
@@ -326,7 +335,9 @@ function UserProfile() {
                           className="detail-button-s"
                           onClick={(e) => {
                             e.stopPropagation(); // Ngăn chặn sự kiện click hàng
-                            handleAssignClick(index);
+                            handleApproveClick(
+                              row.customerRequest.customizeRequestId
+                            );
                           }}
                         >
                           Approve
@@ -374,21 +385,10 @@ function UserProfile() {
                           className="detail-button-s"
                           onClick={(e) => {
                             e.stopPropagation(); // Ngăn chặn sự kiện click hàng
-                            handleAssignClick(index);
+                            // handle gì đó cho order để ở đây
                           }}
                         >
                           Approve
-                        </button>
-                      </td>
-                      <td>
-                        <button
-                          className="reject-button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleRejectClick(index);
-                          }}
-                        >
-                          Reject
                         </button>
                       </td>
                     </tr>
@@ -398,38 +398,42 @@ function UserProfile() {
             </div>
           )}
         </div>
-        {confirmationPopupOpen && (
+        {ApprovePopupOpen && (
           <div className="confirmation-popup">
             <div className="confirmation-popup-inner">
-              <h2>Are you sure?</h2>
+              <h2>Are you sure for approve ?</h2>
               <button
                 className="confirmation-popup_button"
-                onClick={handleConfirmReject}
+                onClick={() =>
+                  navigateToProductDetail(
+                    approveSelectedRequest.customerRequest.customizeRequestId
+                  )
+                }
               >
                 Yes
               </button>
               <button
                 className="confirmation-popup_button"
-                onClick={() => setConfirmationPopupOpen(false)}
+                onClick={() => setApprovePopupOpen(false)}
               >
                 No
               </button>
             </div>
           </div>
         )}
-        {confirmationPopupOpen && (
+        {RejectPopupOpen && (
           <div className="confirmation-popup">
             <div className="confirmation-popup-inner">
-              <h2>Are you sure?</h2>
+              <h2>Are you sure for reject ?</h2>
               <button
                 className="confirmation-popup_button"
-                onClick={handleConfirmReject}
+                onClick={handleYesReject}
               >
                 Yes
               </button>
               <button
                 className="confirmation-popup_button"
-                onClick={() => setConfirmationPopupOpen(false)}
+                onClick={() => setRejectPopupOpen(false)}
               >
                 No
               </button>
@@ -445,23 +449,55 @@ function UserProfile() {
               <div className="popup-inner">
                 <h2>Request Detail</h2>
                 {selectedRequest && (
-                  <div>
-                    <p>
+                  <div className="details-container">
+                    <div className="detail-box">
                       <strong>ID Customize Request:</strong>{" "}
                       {selectedRequest.customerRequest.customizeRequestId}
-                    </p>
-                    <p>
+                    </div>
+                    <div className="detail-box">
                       <strong>Customer Name:</strong>{" "}
                       {selectedRequest.customerName}
-                    </p>
-                    <p>
+                    </div>
+                    <div className="detail-box">
                       <strong>Sales Staff Name:</strong>{" "}
                       {selectedRequest.saleStaffName}
-                    </p>
-                    <p>
+                    </div>
+                    <div className="detail-box">
+                      <strong>Gold Type:</strong>{" "}
+                      {selectedRequest.customerRequest.gold.goldType}
+                    </div>
+                    <div className="detail-box">
+                      <strong>Gold Weight:</strong>{" "}
+                      {selectedRequest.customerRequest.goldWeight}
+                    </div>
+                    <div className="detail-box">
+                      <strong>Type:</strong>{" "}
+                      {selectedRequest.customerRequest.type}
+                    </div>
+                    <div className="detail-box">
+                      <strong>Style:</strong>{" "}
+                      {selectedRequest.customerRequest.style}
+                    </div>
+                    <div className="detail-box">
+                      <strong>Size:</strong>{" "}
+                      {selectedRequest.customerRequest.size}
+                    </div>
+                    <div className="detail-box">
+                      <strong>Quotation:</strong>{" "}
+                      {selectedRequest.customerRequest.quotation}
+                    </div>
+                    <div className="detail-box">
+                      <strong>Quotation Description:</strong>{" "}
+                      {selectedRequest.customerRequest.quotationDes}
+                    </div>
+                    <div className="detail-box">
+                      <strong>Quantity:</strong>{" "}
+                      {selectedRequest.customerRequest.quantity}
+                    </div>
+                    <div className="detail-box">
                       <strong>Status:</strong>{" "}
                       {selectedRequest.customerRequest.status}
-                    </p>
+                    </div>
                     {/* Thêm các thông tin chi tiết khác của yêu cầu nếu cần */}
                   </div>
                 )}
