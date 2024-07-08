@@ -251,38 +251,6 @@ namespace JewelryProduction.Migrations
                     b.ToTable("CustomerRequest", (string)null);
                 });
 
-            modelBuilder.Entity("JewelryProduction.Entities.ApprovalRequest", b =>
-                {
-                    b.Property<string>("ApprovalRequestId")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("approvalRequestId");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("createdAt");
-
-                    b.Property<string>("CustomerRequestId")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("customerRequestId");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("money")
-                        .HasColumnName("price");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("status");
-
-                    b.HasKey("ApprovalRequestId");
-
-                    b.ToTable("ApprovalRequest", (string)null);
-                });
-
             modelBuilder.Entity("JewelryProduction.Entities.Notification", b =>
                 {
                     b.Property<string>("NotificationId")
@@ -501,6 +469,12 @@ namespace JewelryProduction.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("orderID");
 
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("address");
+
                     b.Property<string>("CustomizeRequestId")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
@@ -525,9 +499,6 @@ namespace JewelryProduction.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("paymentMethodID");
 
-                    b.Property<string>("ProductSampleId")
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<string>("ProductionStaffId")
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)")
@@ -548,8 +519,6 @@ namespace JewelryProduction.Migrations
                     b.HasIndex("DesignStaffId");
 
                     b.HasIndex("PaymentMethodId");
-
-                    b.HasIndex("ProductSampleId");
 
                     b.HasIndex("ProductionStaffId");
 
@@ -641,11 +610,6 @@ namespace JewelryProduction.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("3dDesignID");
 
-                    b.Property<string>("CustomizeRequestId")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("customizeRequestID");
-
                     b.Property<string>("DesignName")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -664,6 +628,11 @@ namespace JewelryProduction.Migrations
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("Image");
 
+                    b.Property<string>("OrderId")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("orderId");
+
                     b.Property<string>("ProductSampleId")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
@@ -671,9 +640,9 @@ namespace JewelryProduction.Migrations
 
                     b.HasKey("_3dDesignId");
 
-                    b.HasIndex("CustomizeRequestId");
-
                     b.HasIndex("DesignStaffId");
+
+                    b.HasIndex("OrderId");
 
                     b.HasIndex("ProductSampleId");
 
@@ -709,37 +678,37 @@ namespace JewelryProduction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "5c286cde-97f7-4c86-98f2-b3a05413b0d7",
+                            Id = "0e29acb9-460a-4ea8-8988-094f4d257cf1",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "446e0457-d977-4186-9988-76313e39507e",
+                            Id = "a0291948-c667-4092-ac3c-926628051baa",
                             Name = "SaleStaff",
                             NormalizedName = "SALESTAFF"
                         },
                         new
                         {
-                            Id = "c34f688a-9601-495e-aff6-7b2321bc57bf",
+                            Id = "7a8df558-cf61-42fd-a0c6-dc5e6018a32b",
                             Name = "ProductionStaff",
                             NormalizedName = "PRODUCTIONSTAFF"
                         },
                         new
                         {
-                            Id = "8d43a9cb-88c3-4202-9504-e9027f1f28b5",
+                            Id = "0db328b5-de2f-4a30-8300-1c9c19cc7b0c",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "619b74fc-9136-46f9-aaad-a1a8670f31d9",
+                            Id = "fc5178bf-47a6-4301-affa-d3b392e245d2",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "e103db46-ee35-4eaa-9683-5c2f196294f6",
+                            Id = "40f9b8a6-05ca-4108-90e7-e382024c9bf9",
                             Name = "DesignStaff",
                             NormalizedName = "DESIGNSTAFF"
                         });
@@ -994,10 +963,6 @@ namespace JewelryProduction.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_Order_PaymentMethod");
 
-                    b.HasOne("JewelryProduction.ProductSample", null)
-                        .WithMany("Orders")
-                        .HasForeignKey("ProductSampleId");
-
                     b.HasOne("JewelryProduction.AppUser", "ProductionStaff")
                         .WithMany("OrderProductionStaffs")
                         .HasForeignKey("ProductionStaffId")
@@ -1026,25 +991,25 @@ namespace JewelryProduction.Migrations
 
             modelBuilder.Entity("JewelryProduction._3ddesign", b =>
                 {
-                    b.HasOne("JewelryProduction.CustomerRequest", "CustomizeRequest")
-                        .WithMany("_3ddesigns")
-                        .HasForeignKey("CustomizeRequestId")
-                        .HasConstraintName("FK_3DDesign_CustomerRequest");
-
                     b.HasOne("JewelryProduction.AppUser", "DesignStaff")
                         .WithMany("_3ddesigns")
                         .HasForeignKey("DesignStaffId")
                         .IsRequired()
                         .HasConstraintName("FK_3DDesign_User");
 
+                    b.HasOne("JewelryProduction.Order", "Order")
+                        .WithMany("_3ddesigns")
+                        .HasForeignKey("OrderId")
+                        .HasConstraintName("FK_3DDesign_Order");
+
                     b.HasOne("JewelryProduction.ProductSample", "ProductSample")
                         .WithMany("_3ddesigns")
                         .HasForeignKey("ProductSampleId")
                         .HasConstraintName("FK_3DDesign_ProductSample");
 
-                    b.Navigation("CustomizeRequest");
-
                     b.Navigation("DesignStaff");
+
+                    b.Navigation("Order");
 
                     b.Navigation("ProductSample");
                 });
@@ -1133,8 +1098,6 @@ namespace JewelryProduction.Migrations
                     b.Navigation("Gemstones");
 
                     b.Navigation("Order");
-
-                    b.Navigation("_3ddesigns");
                 });
 
             modelBuilder.Entity("JewelryProduction.Gold", b =>
@@ -1147,6 +1110,8 @@ namespace JewelryProduction.Migrations
             modelBuilder.Entity("JewelryProduction.Order", b =>
                 {
                     b.Navigation("Insurance");
+
+                    b.Navigation("_3ddesigns");
                 });
 
             modelBuilder.Entity("JewelryProduction.PaymentMethod", b =>
@@ -1157,8 +1122,6 @@ namespace JewelryProduction.Migrations
             modelBuilder.Entity("JewelryProduction.ProductSample", b =>
                 {
                     b.Navigation("Gemstones");
-
-                    b.Navigation("Orders");
 
                     b.Navigation("_3ddesigns");
                 });

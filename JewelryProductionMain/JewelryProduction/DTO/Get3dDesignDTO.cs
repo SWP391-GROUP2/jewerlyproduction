@@ -1,12 +1,12 @@
 ﻿namespace JewelryProduction.DTO
 {
-    public class _3ddesignDTO
+    public class Get3dDesignDTO
     {
-        public string _3dDesignId { get; set; } = Guid.NewGuid().ToString();
+        public string _3dDesignId { get; set; }
 
         public string DesignName { get; set; } = null!;
 
-        public IFormFile Image { get; set; }
+        public string Image { get; set; }
 
         public string? OrderId { get; set; }
 

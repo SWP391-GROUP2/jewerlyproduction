@@ -13,12 +13,51 @@ namespace JewelryProduction.Services
         private readonly JewelryProductionContext _context;
         private readonly INotificationService _notificationService;
         private readonly ICustomerRequestRepository _customerRequestRepository;
+        private readonly IGoldRepository _goldRepository;
+        private readonly IGemstoneRepository _gemstoneRepository;
 
-        public CustomerRequestService(JewelryProductionContext context, INotificationService notificationService, ICustomerRequestRepository customerRequestRepository)
+        public CustomerRequestService(JewelryProductionContext context, INotificationService notificationService, ICustomerRequestRepository customerRequestRepository, IGoldRepository goldRepository, IGemstoneRepository gemstoneRepository)
         {
             _context = context;
             _notificationService = notificationService;
             _customerRequestRepository = customerRequestRepository;
+            _goldRepository = goldRepository;
+            _gemstoneRepository = gemstoneRepository;
+        }
+        public async Task<CustomerRequest> CreateCustomerRequestAsync(CustomerRequestDTO customerRequestDTO)
+        {
+            var primaryGemstones = await _gemstoneRepository.GetPrimaryGemstonesAsync(customerRequestDTO.PrimaryGemstoneId);
+            var additionalGemstones = await _gemstoneRepository.GetAdditionalGemstonesAsync(customerRequestDTO.AdditionalGemstone);
+
+            var allSelectedGemstones = new List<Gemstone>(primaryGemstones);
+            allSelectedGemstones.AddRange(additionalGemstones);
+
+            var gold = await _goldRepository.GetByTypeAsync(customerRequestDTO.GoldType);
+            if (gold == null)
+            {
+                throw new Exception("Gold type not found.");
+            }
+
+            var uniqueId = await IdGenerator.GenerateUniqueId<CustomerRequest>(_context, "REQ", 3);
+
+            var customerRequest = new CustomerRequest
+            {
+                CustomizeRequestId = uniqueId,
+                GoldId = gold.GoldId,
+                CustomerId = customerRequestDTO.CustomerId,
+                Type = customerRequestDTO.Type,
+                Style = customerRequestDTO.Style,
+                Size = customerRequestDTO.Size,
+                Quantity = customerRequestDTO.Quantity,
+                Gemstones = allSelectedGemstones,
+                Gold = gold,
+                Status = "Pending"
+            };
+
+            await _customerRequestRepository.AddAsync(customerRequest);
+            await _customerRequestRepository.SaveChangesAsync();
+
+            return customerRequest;
         }
         public async Task<CustomerRequest> GetCustomerRequestWithQuotationsAsync(string customerRequestId)
         {

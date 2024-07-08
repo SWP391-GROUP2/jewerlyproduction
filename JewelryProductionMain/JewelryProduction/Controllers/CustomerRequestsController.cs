@@ -120,67 +120,17 @@ namespace JewelryProduction.Controllers
         // POST: api/CustomerRequests
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<CustomerRequest>> PostCustomerRequest(CustomerRequestDTO customerRequestDTO)
+        public async Task<IActionResult> PostCustomerRequest([FromBody] CustomerRequestDTO customerRequestDTO)
         {
-            var primaryGemstone = await _context.Gemstones
-                    .Where(g =>
-                        customerRequestDTO.PrimaryGemstoneId.Contains(g.GemstoneId) &&
-                        g.ProductSample == null && g.CustomizeRequestId == null)
-                    .GroupBy(g => g.Name)
-                    .Select(g => g.FirstOrDefault())
-                    .OrderBy(_ => Guid.NewGuid())
-                    .Take(2)
-                    .ToListAsync();
-
-            var additionalGemstones = await _context.Gemstones
-                .Where(g => customerRequestDTO.AdditionalGemstone.Contains(g.GemstoneId))
-                .GroupBy(g => g.Name)
-                .Select(g => g.FirstOrDefault())
-                .OrderBy(_ => Guid.NewGuid())
-                .Take(2)
-                .ToListAsync();
-            var allSelectedGemstones = new List<Gemstone>(primaryGemstone);
-            allSelectedGemstones.AddRange(additionalGemstones);
-            var gold = await _context.Golds
-            .FirstOrDefaultAsync(g => g.GoldType == customerRequestDTO.GoldType);
-
-            if (gold == null)
-            {
-                return BadRequest("Gold type not found.");
-            }
-            var uniqueId = await IdGenerator.GenerateUniqueId<CustomerRequest>(_context, "REQ", 3);
-
-            var customerRequest = new CustomerRequest
-            {
-                CustomizeRequestId = uniqueId,
-                GoldId = gold.GoldId,
-                CustomerId = customerRequestDTO.CustomerId,
-                Type = customerRequestDTO.Type,
-                Style = customerRequestDTO.Style,
-                Size = customerRequestDTO.Size,
-                Quantity = customerRequestDTO.Quantity,
-                Gemstones = allSelectedGemstones,
-                Gold = gold,
-                Status = "Pending"
-            };
-            _context.CustomerRequests.Add(customerRequest);
             try
             {
-                await _context.SaveChangesAsync();
+                var customerRequest = await _requestService.CreateCustomerRequestAsync(customerRequestDTO);
+                return CreatedAtAction("GetCustomerRequest", new { id = customerRequest.CustomizeRequestId }, customerRequest);
             }
-            catch (DbUpdateException)
+            catch (Exception ex)
             {
-                if (CustomerRequestExists(customerRequest.CustomizeRequestId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(ex.Message);
             }
-
-            return CreatedAtAction("GetCustomerRequest", new { id = customerRequest.CustomizeRequestId }, customerRequest);
         }
 
         // DELETE: api/CustomerRequests/5
@@ -232,7 +182,7 @@ namespace JewelryProduction.Controllers
                             Cut = g.Cut,
                             CaratWeight = g.CaratWeight,
                         }).FirstOrDefault(),
-                        AdditionalGemstones = ps.Gemstones
+                    AdditionalGemstones = ps.Gemstones
                         .Where(g => g.CaratWeight <= 0.3)
                         .Select(g => new Gemstone
                         {
@@ -290,10 +240,10 @@ namespace JewelryProduction.Controllers
             {
                 OrderId = await IdGenerator.GenerateUniqueId<Order>(_context, "ORD", 6),
                 ProductionStaffId = null,
-                DesignStaffId = "DE001",
+                DesignStaffId = null,
                 OrderDate = DateTime.Now,
-                DepositAmount = customerRequest.quotation.Value * 0.3M,
-                Status = "Pending",
+                DepositAmount = null,
+                Status = "Choosing Payment",
                 CustomizeRequestId = customerRequest.CustomizeRequestId,
                 PaymentMethodId = paymentMethodId,
                 TotalPrice = customerRequest.quotation.Value

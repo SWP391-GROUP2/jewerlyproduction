@@ -12,11 +12,13 @@ namespace JewelryProduction.Services
     {
         private readonly JewelryProductionContext _context;
         private readonly ISaleStaffRepository _repository;
+        private readonly INotificationService _notificationService;
 
-        public SaleStaffService(JewelryProductionContext context, ISaleStaffRepository repository)
+        public SaleStaffService(JewelryProductionContext context, ISaleStaffRepository repository, INotificationService notificationService)
         {
             _context = context;
             _repository = repository;
+            _notificationService = notificationService;
         }
 
         public async Task<decimal> CalculateProductCost(string CustomizeRequestId)
@@ -36,6 +38,31 @@ namespace JewelryProduction.Services
             customerRequest.quotation = productCost;
             await _context.SaveChangesAsync();
             return productCost;
+        }
+        public async Task<bool> UpdateCustomerRequestQuotation(string customerRequestId, decimal newQuotation, string newQuotationDes, string senderId)
+        {
+            var customerRequest = await _context.CustomerRequests.FindAsync(customerRequestId);
+
+            if (customerRequest == null || customerRequest.Status != "Quotation Rejected")
+            {
+                return false;
+            }
+
+            customerRequest.quotation = newQuotation;
+            customerRequest.quotationDes = newQuotationDes;
+            customerRequest.Status = "Wait for Approved";
+
+            try
+            {
+                _context.Update(customerRequest);
+                await _context.SaveChangesAsync();
+                await _notificationService.SendNotificationToUserfAsync(customerRequest.ManagerId, senderId, $"{customerRequest.CustomizeRequestId} quotation has been updated.");
+                return true;
+            }
+            catch (DbUpdateException)
+            {
+                return false;
+            }
         }
         public decimal GetDeposit(decimal productCost)
         {
