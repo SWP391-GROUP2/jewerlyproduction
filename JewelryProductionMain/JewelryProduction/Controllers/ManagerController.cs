@@ -1,5 +1,6 @@
 ﻿using JewelryProduction.Common;
 using JewelryProduction.DbContext;
+using JewelryProduction.DTO;
 using JewelryProduction.DTO.BasicDTO;
 using JewelryProduction.Entities;
 using JewelryProduction.Interface;
@@ -27,8 +28,9 @@ namespace JewelryProduction.Controllers
         private readonly ICustomerRequestService _requestService;
         private readonly IDesignStaffService _designStaffService;
         private readonly IProductionStaffService _productionStaffService;
+        private readonly IManagerService _managerService;
 
-        public ManagerController(JewelryProductionContext context, UserManager<AppUser> userManager, ISaleStaffService saleStaffService, IHubContext<MyHub> myhub, INotificationService notificationService, ICustomerRequestService requestService, IDesignStaffService designstaffService, IProductionStaffService productionStaffService)
+        public ManagerController(JewelryProductionContext context, UserManager<AppUser> userManager, ISaleStaffService saleStaffService, IHubContext<MyHub> myhub, INotificationService notificationService, ICustomerRequestService requestService, IDesignStaffService designstaffService, IProductionStaffService productionStaffService, IManagerService managerService)
         {
             _context = context;
             _userManager = userManager;
@@ -38,6 +40,7 @@ namespace JewelryProduction.Controllers
             _requestService = requestService;
             _designStaffService = designstaffService;
             _productionStaffService = productionStaffService;
+            _managerService = managerService;
         }
         [HttpPost("approveQuotation/{customerRequestId}")]
         public async Task<IActionResult> ApproveCustomerRequest(string customerRequestId)
@@ -68,104 +71,46 @@ namespace JewelryProduction.Controllers
         [HttpPost("assignSaleStaff")]
         public async Task<IActionResult> AssignSaleStaff([FromBody] AssignSaleStaffDTO assignSaleStaffDTO)
         {
-            var customerRequest = await _context.CustomerRequests
-                .FirstOrDefaultAsync(cr => cr.CustomizeRequestId == assignSaleStaffDTO.CustomizeRequestId);
-
-            if (customerRequest == null)
+            try
             {
-                return NotFound("CustomerRequest not found.");
+                await _managerService.AssignSaleStaffAsync(assignSaleStaffDTO);
+                return Ok("SaleStaff assigned successfully.");
             }
-
-            var saleStaff = await _userManager.FindByIdAsync(assignSaleStaffDTO.SaleStaffId);
-            if (saleStaff == null)
+            catch (KeyNotFoundException ex)
             {
-                return NotFound("SaleStaff not found.");
+                return NotFound(ex.Message);
             }
-
-            var isSaleStaff = await _userManager.IsInRoleAsync(saleStaff, "SaleStaff");
-            if (!isSaleStaff)
+            catch (InvalidOperationException ex)
             {
-                return BadRequest("The user is not assigned the SaleStaff role.");
+                return BadRequest(ex.Message);
             }
-
-            customerRequest.SaleStaffId = assignSaleStaffDTO.SaleStaffId;
-            customerRequest.ManagerId = assignSaleStaffDTO.ManagerId;
-            customerRequest.Status = "Wait for Quotation"; 
-
-            _context.CustomerRequests.Update(customerRequest);
-            await _context.SaveChangesAsync();
-
-            return Ok("SaleStaff assigned successfully.");
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
         [HttpPost("assignProductionStaff")]
         public async Task<IActionResult> AssignProductionStaff([FromBody] AssignProductionStaffDTO assignProductionStaffDTO)
         {
-            var order = await _context.Orders
-                .FirstOrDefaultAsync(o => o.OrderId == assignProductionStaffDTO.OrderId);
-
-            if (order == null)
+            try
             {
-                return NotFound("Order not found.");
+                await _managerService.AssignProductionStaffAsync(assignProductionStaffDTO);
+                return Ok("Production Staff assigned successfully.");
             }
-
-            var productionStaff = await _userManager.FindByIdAsync(assignProductionStaffDTO.ProductionStaffId);
-            if (productionStaff == null)
+            catch (KeyNotFoundException ex)
             {
-                return NotFound("Production Staff not found.");
+                return NotFound(ex.Message);
             }
-
-            var isProductionStaff = await _userManager.IsInRoleAsync(productionStaff, "ProductionStaff");
-            if (!isProductionStaff)
+            catch (InvalidOperationException ex)
             {
-                return BadRequest("The user is not assigned the ProductionStaff role.");
+                return BadRequest(ex.Message);
             }
-
-            order.ProductionStaffId = assignProductionStaffDTO.ProductionStaffId;
-            _context.Orders.Update(order);
-            var inpsections1 = new Inspection
+            catch (Exception ex)
             {
-                InspectionId = await IdGenerator.GenerateUniqueId<Inspection>(_context, "I", 6),
-                OrderId = assignProductionStaffDTO.OrderId,
-                InspectionDate = DateTime.Now,
-                ProductStaffId = assignProductionStaffDTO.ProductionStaffId,
-                Stage = "Material Checking",
-                Result = null,
-                Comment = null,
-
-
-            };
-            var inpsections2 = new Inspection
-            {
-                InspectionId = await IdGenerator.GenerateUniqueId<Inspection>(_context, "I", 6),
-                OrderId = assignProductionStaffDTO.OrderId,
-                InspectionDate = DateTime.Now,
-                ProductStaffId = assignProductionStaffDTO.ProductionStaffId,
-                Stage = "In Production Progress",
-                Result = null,
-                Comment = null,
-
-
-            };
-            var inpsections3 = new Inspection
-            {
-                InspectionId = await IdGenerator.GenerateUniqueId<Inspection>(_context, "I", 6),
-                OrderId = assignProductionStaffDTO.OrderId,
-                InspectionDate = DateTime.Now,
-                ProductStaffId = assignProductionStaffDTO.ProductionStaffId,
-                Stage = "Final Inspection",
-                Result = null,
-                Comment = null,
-
-
-            };
-            _context.Inspections.Add(inpsections1);
-            _context.Inspections.Add(inpsections2);
-            _context.Inspections.Add(inpsections3);
-            await _context.SaveChangesAsync();
-
-            return Ok("Production Staff assigned successfully.");
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
-            [HttpPost("sendNotificationToCustomers")]
+        [HttpPost("sendNotificationToCustomers")]
         public async Task<IActionResult> SendNotificationToCustomers([FromBody] string message)
         {
             var senderId = GetCurrentUserId();
@@ -204,18 +149,5 @@ namespace JewelryProduction.Controllers
         }
 
     }
-
-    public class AssignSaleStaffDTO
-    {
-        public string CustomizeRequestId { get; set; } = null!;
-        public string ManagerId { get; set; }
-        public string SaleStaffId { get; set; } = null!;
-    }
-    public class AssignProductionStaffDTO
-    {
-        public string OrderId { get; set; }
-        public string ProductionStaffId { get; set; }
-    }
-
 }
 

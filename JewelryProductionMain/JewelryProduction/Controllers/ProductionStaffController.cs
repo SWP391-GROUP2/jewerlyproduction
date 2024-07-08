@@ -45,11 +45,11 @@ namespace JewelryProduction.Controllers
             inspection.Comment = inspectionDto.Comment;
             if (inspection.Result is false)
             {
-                order.Status = "Failed";
                 await _notificationService.SendNotificationToUserfAsync(userId, senderId, inspection.Comment);
 
                 return Ok("Inspection recorded was sent to the manager.");
             }
+            if (stage == "Final Inspection" && inspection.Result is true) order.Status = "Completed" ;
 
             await _context.SaveChangesAsync();
 

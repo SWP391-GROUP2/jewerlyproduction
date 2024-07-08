@@ -1,4 +1,4 @@
-﻿using JewelryProduction.Entities;
+﻿using JewelryProduction.DTO;
 
 namespace JewelryProduction.Interface
 {

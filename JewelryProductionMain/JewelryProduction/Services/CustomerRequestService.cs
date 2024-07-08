@@ -2,6 +2,7 @@
 using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
 using JewelryProduction.Interface;
+using JewelryProduction.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Drawing;
@@ -13,12 +14,51 @@ namespace JewelryProduction.Services
         private readonly JewelryProductionContext _context;
         private readonly INotificationService _notificationService;
         private readonly ICustomerRequestRepository _customerRequestRepository;
+        private readonly IGemstoneRepository _gemstoneRepository;
+        private readonly IGoldRepository _goldRepository;
 
-        public CustomerRequestService(JewelryProductionContext context, INotificationService notificationService, ICustomerRequestRepository customerRequestRepository)
+        public CustomerRequestService(JewelryProductionContext context, INotificationService notificationService, ICustomerRequestRepository customerRequestRepository, IGemstoneRepository gemstoneRepository, IGoldRepository goldRepository)
         {
             _context = context;
             _notificationService = notificationService;
             _customerRequestRepository = customerRequestRepository;
+            _gemstoneRepository = gemstoneRepository;
+            _goldRepository = goldRepository;
+        }
+        public async Task<CustomerRequest> CreateCustomerRequestAsync(CustomerRequestDTO customerRequestDTO)
+        {
+            var primaryGemstones = await _gemstoneRepository.GetPrimaryGemstonesAsync(customerRequestDTO.PrimaryGemstoneId);
+            var additionalGemstones = await _gemstoneRepository.GetAdditionalGemstonesAsync(customerRequestDTO.AdditionalGemstone);
+
+            var allSelectedGemstones = new List<Gemstone>(primaryGemstones);
+            allSelectedGemstones.AddRange(additionalGemstones);
+
+            var gold = await _goldRepository.GetByTypeAsync(customerRequestDTO.GoldType);
+            if (gold == null)
+            {
+                throw new Exception("Gold type not found.");
+            }
+
+            var uniqueId = await IdGenerator.GenerateUniqueId<CustomerRequest>(_context, "REQ", 3);
+
+            var customerRequest = new CustomerRequest
+            {
+                CustomizeRequestId = uniqueId,
+                GoldId = gold.GoldId,
+                CustomerId = customerRequestDTO.CustomerId,
+                Type = customerRequestDTO.Type,
+                Style = customerRequestDTO.Style,
+                Size = customerRequestDTO.Size,
+                Quantity = customerRequestDTO.Quantity,
+                Gemstones = allSelectedGemstones,
+                Gold = gold,
+                Status = "Pending"
+            };
+
+            await _customerRequestRepository.AddAsync(customerRequest);
+            await _customerRequestRepository.SaveChangesAsync();
+
+            return customerRequest;
         }
         public async Task<CustomerRequest> GetCustomerRequestWithQuotationsAsync(string customerRequestId)
         {
@@ -101,31 +141,7 @@ namespace JewelryProduction.Services
                 return false;
             }
         }
-        public async Task<bool> UpdateCustomerRequestQuotation(string customerRequestId, decimal newQuotation, string newQuotationDes)
-        {
-            var customerRequest = await _context.CustomerRequests.FindAsync(customerRequestId);
-
-            if (customerRequest == null)
-            {
-                return false;
-            }
-
-            customerRequest.quotation = newQuotation;
-            customerRequest.quotationDes = newQuotationDes;
-            customerRequest.Status = "Wait for Approved";
-
-            try
-            {
-                _context.Update(customerRequest);
-                await _context.SaveChangesAsync();
-                await _notificationService.SendNotificationToUserfAsync(customerRequest.SaleStaffId, customerRequest.ManagerId, $"{customerRequest.CustomizeRequestId} quotation has been updated.");
-                return true;
-            }
-            catch (DbUpdateException)
-            {
-                return false;
-            }
-        }
+        
     public async Task<PagedResult<CustomerRequest>> GetAllPaging(OrderPagingRequest request)
         {
 

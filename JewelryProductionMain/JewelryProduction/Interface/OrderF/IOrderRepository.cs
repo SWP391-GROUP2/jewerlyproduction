@@ -2,7 +2,7 @@
 
 namespace JewelryProduction.Interface
 {
-    public interface IOrderRepository
+    public interface IOrderRepository : IRepository<Order>
     {
         Task<List<OrderGetDTO>> GetOrders();
         Task<OrderGetDTO> GetOrder(string id);

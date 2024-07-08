@@ -214,16 +214,17 @@ namespace JewelryProduction.Controllers
             return Ok(GemWeight);
         }
         [HttpPut("UpdatePayment/{orderId}")]
-        public async Task<IActionResult> UpdatePayment(string orderId, decimal depositAmount)
+        public async Task<IActionResult> UpdatePayment(string orderId)
         {
+            
             var updateOrder = await _context.Orders.FindAsync(orderId);
             if (updateOrder == null)
-            {
                 return BadRequest();
-            }
-            updateOrder.DepositAmount = depositAmount;
+            var updateRequest = await _context.CustomerRequests.FindAsync(updateOrder.CustomizeRequestId);
+            updateRequest.Status = "Closed";
+            updateOrder.DepositAmount = updateRequest.quotation*0.3M;
             updateOrder.Status = "Wait for Design";
-            updateOrder.TotalPrice -= depositAmount;
+            updateOrder.TotalPrice -= updateOrder.DepositAmount ?? 0M;
             try
             {
                 await _context.SaveChangesAsync();
