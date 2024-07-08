@@ -78,7 +78,7 @@ function ManagerPage() {
     const fetchOrder = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5266/api/CustomerRequests"
+          "http://localhost:5266/api/Orders"
         );
         setOrderData(response.data);
       } catch (error) {
@@ -180,10 +180,7 @@ function ManagerPage() {
     setAssignedProductionEmployee(selectedEmployeeId);
   };
 
-  const handleRejectClick = (index) => {
-    setSelectedRow(index); // This is correct as per the context
-    setConfirmationPopupOpen(true);
-  };
+  
 
   const handleConfirmReject = () => {
     const updatedRequestData = requestData.filter(
@@ -269,13 +266,14 @@ function ManagerPage() {
     setDetailPopupOpen(true);
   };
 
-  const handleRowOrderClick = (orderid) => {
+  const handleRowOrderClick = (orderId) => {
     const selectedOrder = OrderData.find(
       (order) =>
-        order.orderId === orderid
+        order.order.orderId === orderId
     );
     setSelectedOrder(selectedOrder);
     setOrderDetailPopupOpen(true);
+    console.log("selectOrder", selectedOrder);
   };
 
   const handleRowDetailClick = (customizeRequestId) => {
@@ -420,19 +418,23 @@ function ManagerPage() {
     <table className="custom-table">
       <thead>
         <tr>
-          <th>Order ID</th>
-          <th>Customer Name</th>
-          <th>Design Staff Name</th>
-          <th>Production Staff Name</th>
+          <th>ID</th>
+          <th>Customer</th>
+          <th>Design Staff</th>
+          <th>Production Staff</th>
+          <th>Price</th>
+          <th>Status</th>
         </tr>
       </thead>
       <tbody>
         {OrderData.map((row, index) => (
-          <tr key={index} onClick={() => handleRowOrderClick(index)}>
-            <td>{row.id}</td>
-            <td>{row.customer}</td>
-            <td>{row.designStaff}</td>
-            <td>{row.productionStaff}</td>
+          <tr key={index} onClick={() => handleRowOrderClick(row.order.orderId)}>
+            <td>{row.order.orderId}</td>
+            <td>{row.order.customizeRequest.customer.name}</td>
+            <td>{row.order.designStaff.name}</td>
+            <td>{row.order.productionStaff.name}</td>
+            <td>{row.order.totalPrice}</td>
+            <td>{row.order.status}</td>
           </tr>
         ))}
       </tbody>
@@ -776,56 +778,41 @@ function ManagerPage() {
     <div className="popup">
       <div className="popup-inner">
         <h2>Order Detail</h2>
-        {selectedRequest && (
+        {selectedOrder && ( 
           <div className="details-container">
             <div className="detail-box">
-              <strong>ID Customize Request:</strong>{" "}
-              {selectedRequest.customerRequest.customizeRequestId}
+              <strong>Order ID:</strong>{" "}
+              {selectedOrder.order.orderId}
             </div>
             <div className="detail-box">
               <strong>Customer Name:</strong>{" "}
-              {selectedRequest.customerName}
+              {selectedOrder.order.customizeRequest.customer.name}
             </div>
             <div className="detail-box">
-              <strong>Sales Staff Name:</strong>{" "}
-              {selectedRequest.saleStaffName}
+              <strong>Design Staff Name:</strong>{" "}
+              {selectedOrder.order.designStaff.name}
             </div>
             <div className="detail-box">
-              <strong>Gold Type:</strong>{" "}
-              {selectedRequest.customerRequest.gold.goldType}
+              <strong>Production Staff Name:</strong>{" "}
+              {selectedOrder.order.productionStaff.name}
             </div>
             <div className="detail-box">
-              <strong>Gold Weight:</strong>{" "}
-              {selectedRequest.customerRequest.goldWeight}
+              <strong>Total Price:</strong>{" "}
+              {selectedOrder.order.totalPrice}
             </div>
             <div className="detail-box">
-              <strong>Type:</strong>{" "}
-              {selectedRequest.customerRequest.type}
-            </div>
-            <div className="detail-box">
-              <strong>Style:</strong>{" "}
-              {selectedRequest.customerRequest.style}
-            </div>
-            <div className="detail-box">
-              <strong>Size:</strong>{" "}
-              {selectedRequest.customerRequest.size}
-            </div>
-            <div className="detail-box">
-              <strong>Quotation:</strong>{" "}
-              {selectedRequest.customerRequest.quotation}
-            </div>
-            <div className="detail-box">
-              <strong>Quotation Description:</strong>{" "}
-              {selectedRequest.customerRequest.quotationDes}
-            </div>
-            <div className="detail-box">
-              <strong>Quantity:</strong>{" "}
-              {selectedRequest.customerRequest.quantity}
+              <strong>Customize Request ID:</strong>{" "}
+              {selectedOrder.order.customizeRequest.customizeRequestId}
             </div>
             <div className="detail-box">
               <strong>Status:</strong>{" "}
-              {selectedRequest.customerRequest.status}
+              {selectedOrder.order.status}
             </div>
+            <div className="detail-box">
+              <strong>Order Date:</strong>{" "}
+              {selectedOrder.order.orderDate}
+            </div>
+            
             {/* Thêm các thông tin chi tiết khác của yêu cầu nếu cần */}
           </div>
         )}
