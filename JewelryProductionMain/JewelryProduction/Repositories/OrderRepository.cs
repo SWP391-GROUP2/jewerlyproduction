@@ -1,5 +1,6 @@
 ﻿using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
+using JewelryProduction.Entities;
 using JewelryProduction.Interface;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +12,19 @@ namespace JewelryProduction.Repositories
         public OrderRepository(JewelryProductionContext context)
         {
             _context = context;
+        }
+        public async Task<Order> GetOrderByIdAsync(string orderId)
+        {
+            return await _context.Orders
+                .Include(o => o.ProductionStaff)
+                .Include(o => o.CustomizeRequest)
+                .FirstOrDefaultAsync(o => o.OrderId == orderId);
+        }
+
+        public async Task<Inspection> GetInspectionAsync(string orderId, string stage)
+        {
+            return await _context.Inspections
+                .FirstOrDefaultAsync(i => i.OrderId == orderId && i.Stage == stage);
         }
 
         public async Task<List<OrderGetDTO>> GetOrders()
@@ -36,7 +50,15 @@ namespace JewelryProduction.Repositories
 
             return result;
         }
+        public string GetManagerIdByOrderId(string orderId)
+        {
+            var managerId = _context.Orders
+                .Where(o => o.OrderId == orderId)
+                .Select(o => o.CustomizeRequest.ManagerId)
+                .FirstOrDefault();
 
+            return managerId;
+        }
         public async Task<OrderGetDTO> GetOrder(string id)
         {
             var order = await _context.Orders

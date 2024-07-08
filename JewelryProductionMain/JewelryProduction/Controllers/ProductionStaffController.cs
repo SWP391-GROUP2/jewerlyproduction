@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using JewelryProduction.Services;
 
 namespace JewelryProduction.Controllers
 {
@@ -16,42 +17,25 @@ namespace JewelryProduction.Controllers
     {
         private readonly JewelryProductionContext _context;
         private readonly INotificationService _notificationService;
-        public ProductionStaffController(JewelryProductionContext context, INotificationService notificationService)
+        private readonly IOrderService _orderService;
+        public ProductionStaffController(JewelryProductionContext context, INotificationService notificationService, IOrderService orderService, ICustomerRequestService customerRequestService)
         {
             _context = context;
             _notificationService = notificationService;
+            _orderService = orderService;
         }
         [HttpPut("record-inspection")]
         public async Task<IActionResult> RecordInspection(string orderId, string stage, [FromBody] InspectionDTO inspectionDto)
         {
-            var order = await _context.Orders
-                .Include(o => o.ProductionStaff)
-                .Include(o => o.CustomizeRequest)
-                .Where(o => o.OrderId == orderId)
-                .FirstOrDefaultAsync();
-
-            var inspection = await _context.Inspections
-                .Where(i => i.OrderId == orderId && i.Stage == stage)
-                .FirstOrDefaultAsync();
-            if (order == null)
+            if (inspectionDto.Result == false)
             {
-                return NotFound("Order not found");
+                var userId = _orderService.GetManagerIdByOrderId(orderId);
+                var senderId = GetCurrentUserId();
+                await _notificationService.SendNotificationToUserfAsync(userId, senderId, inspectionDto.Comment);
+
+                return new OkObjectResult("Inspection recorded and sent to the manager.");
             }
-            var userId = order.CustomizeRequest.ManagerId;
-            var senderId = GetCurrentUserId();
-            inspection.Result = inspectionDto.Result;
-            inspection.Comment = inspectionDto.Comment;
-            if (inspection.Result is false)
-            {
-                await _notificationService.SendNotificationToUserfAsync(userId, senderId, inspection.Comment);
-
-                return Ok("Inspection recorded was sent to the manager.");
-            }
-            if (stage == "Final Inspection" && inspection.Result is true) order.Status = "Completed";
-
-            await _context.SaveChangesAsync();
-
-            return Ok("Inspection recorded successfully");
+            return await _orderService.RecordInspection(orderId, stage, inspectionDto);
         }
         [HttpGet("quality-checklist/{stage}")]
         public async Task<IActionResult> GetQualityChecklist(string stage)

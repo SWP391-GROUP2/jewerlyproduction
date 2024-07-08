@@ -1,8 +1,10 @@
 ﻿using JewelryProduction.Common;
 using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
+using JewelryProduction.Entities;
 using JewelryProduction.Interface;
 using JewelryProduction.Repositories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace JewelryProduction.Services
@@ -63,7 +65,42 @@ namespace JewelryProduction.Services
             return pagedResult;
 
         }
+        public async Task<IActionResult> RecordInspection(string orderId, string stage, InspectionDTO inspectionDto)
+        {
+            var order = await _repository.GetOrderByIdAsync(orderId);
+            if (order == null)
+            {
+                return new NotFoundObjectResult("Order not found");
+            }
 
+            var inspection = await _repository.GetInspectionAsync(orderId, stage);
+            if (inspection == null)
+            {
+                inspection = new Inspection { OrderId = orderId, Stage = stage };
+                _context.Inspections.Add(inspection);
+            }
+
+            inspection.Result = inspectionDto.Result;
+            inspection.Comment = inspectionDto.Comment;
+
+            if (inspection.Result == false)
+            {
+                return new OkObjectResult("Inspection recorded and sent to the manager.");
+            }
+
+            if (stage == "Final Inspection" && inspection.Result == true)
+            {
+                order.Status = "Completed";
+            }
+
+            await _repository.SaveChangesAsync();
+
+            return new OkObjectResult("Inspection recorded successfully");
+        }
+        public string GetManagerIdByOrderId(string orderId)
+        {
+            return _repository.GetManagerIdByOrderId(orderId);
+        }
         public async Task<List<OrderGetDTO>> GetOrders()
         {
             return await _repository.GetOrders();
