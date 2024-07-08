@@ -23,8 +23,6 @@ public partial class ProductSample
 
     public Gold Gold { get; set; } = null!;
 
-    public ICollection<Order> Orders { get; set; } = new List<Order>();
-
     public ICollection<_3ddesign> _3ddesigns { get; set; } = new List<_3ddesign>();
 
     public ICollection<Collection> Collections { get; set; } = new List<Collection>();

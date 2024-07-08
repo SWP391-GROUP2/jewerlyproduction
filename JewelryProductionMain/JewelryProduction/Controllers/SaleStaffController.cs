@@ -70,7 +70,19 @@ VAT:                        10%";
 
             return Ok("Approval request sent to the manager.");
         }
-
+        
+        [HttpPost("updateCustomerRequestQuotation")]
+        public async Task<IActionResult> UpdateCustomerRequestQuotation([FromBody] UpdateQuotationDTO updateQuotationDTO)
+        {
+            var senderId = GetCurrentUserId();
+            var result = await _service.UpdateCustomerRequestQuotation(updateQuotationDTO.CustomerRequestId, updateQuotationDTO.NewQuotation, updateQuotationDTO.NewQuotationDes, senderId);
+            if (result)
+            {
+                return Ok("Quotation updated successfully.");
+            }
+            return BadRequest("Failed to update quotation.");
+        }
+        
         private string GetCurrentUserId()
         {
             var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sid);

@@ -14,21 +14,6 @@ namespace JewelryProduction.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "ApprovalRequest",
-                columns: table => new
-                {
-                    approvalRequestId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    customerRequestId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    price = table.Column<decimal>(type: "money", nullable: false),
-                    status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    createdAt = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ApprovalRequest", x => x.approvalRequestId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
@@ -370,37 +355,6 @@ namespace JewelryProduction.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "3DDesign",
-                columns: table => new
-                {
-                    _3dDesignID = table.Column<string>(name: "3dDesignID", type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    designName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Image = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    customizeRequestID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    productSampleID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    designStaffID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_3DDesign", x => x._3dDesignID);
-                    table.ForeignKey(
-                        name: "FK_3DDesign_CustomerRequest",
-                        column: x => x.customizeRequestID,
-                        principalTable: "CustomerRequest",
-                        principalColumn: "customizeRequestID");
-                    table.ForeignKey(
-                        name: "FK_3DDesign_ProductSample",
-                        column: x => x.productSampleID,
-                        principalTable: "ProductSample",
-                        principalColumn: "productSampleID");
-                    table.ForeignKey(
-                        name: "FK_3DDesign_User",
-                        column: x => x.designStaffID,
-                        principalTable: "User",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Gemstone",
                 columns: table => new
                 {
@@ -449,10 +403,10 @@ namespace JewelryProduction.Migrations
                     orderDate = table.Column<DateTime>(type: "datetime", nullable: false),
                     depositAmount = table.Column<decimal>(type: "money", nullable: true),
                     status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    address = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     customizeRequestID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     paymentMethodID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    totalPrice = table.Column<decimal>(type: "money", nullable: false),
-                    ProductSampleId = table.Column<string>(type: "nvarchar(50)", nullable: true)
+                    totalPrice = table.Column<decimal>(type: "money", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -474,16 +428,42 @@ namespace JewelryProduction.Migrations
                         principalTable: "PaymentMethod",
                         principalColumn: "paymentMethodID");
                     table.ForeignKey(
-                        name: "FK_Order_ProductSample_ProductSampleId",
-                        column: x => x.ProductSampleId,
-                        principalTable: "ProductSample",
-                        principalColumn: "productSampleID");
-                    table.ForeignKey(
                         name: "FK_Order_ProductionStaff",
                         column: x => x.productionStaffID,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "3DDesign",
+                columns: table => new
+                {
+                    _3dDesignID = table.Column<string>(name: "3dDesignID", type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    designName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Image = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    orderId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    productSampleID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    designStaffID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_3DDesign", x => x._3dDesignID);
+                    table.ForeignKey(
+                        name: "FK_3DDesign_Order",
+                        column: x => x.orderId,
+                        principalTable: "Order",
+                        principalColumn: "orderID");
+                    table.ForeignKey(
+                        name: "FK_3DDesign_ProductSample",
+                        column: x => x.productSampleID,
+                        principalTable: "ProductSample",
+                        principalColumn: "productSampleID");
+                    table.ForeignKey(
+                        name: "FK_3DDesign_User",
+                        column: x => x.designStaffID,
+                        principalTable: "User",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -510,23 +490,23 @@ namespace JewelryProduction.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "446e0457-d977-4186-9988-76313e39507e", null, "SaleStaff", "SALESTAFF" },
-                    { "5c286cde-97f7-4c86-98f2-b3a05413b0d7", null, "Admin", "ADMIN" },
-                    { "619b74fc-9136-46f9-aaad-a1a8670f31d9", null, "Customer", "CUSTOMER" },
-                    { "8d43a9cb-88c3-4202-9504-e9027f1f28b5", null, "Manager", "MANAGER" },
-                    { "c34f688a-9601-495e-aff6-7b2321bc57bf", null, "ProductionStaff", "PRODUCTIONSTAFF" },
-                    { "e103db46-ee35-4eaa-9683-5c2f196294f6", null, "DesignStaff", "DESIGNSTAFF" }
+                    { "0db328b5-de2f-4a30-8300-1c9c19cc7b0c", null, "Manager", "MANAGER" },
+                    { "0e29acb9-460a-4ea8-8988-094f4d257cf1", null, "Admin", "ADMIN" },
+                    { "40f9b8a6-05ca-4108-90e7-e382024c9bf9", null, "DesignStaff", "DESIGNSTAFF" },
+                    { "7a8df558-cf61-42fd-a0c6-dc5e6018a32b", null, "ProductionStaff", "PRODUCTIONSTAFF" },
+                    { "a0291948-c667-4092-ac3c-926628051baa", null, "SaleStaff", "SALESTAFF" },
+                    { "fc5178bf-47a6-4301-affa-d3b392e245d2", null, "Customer", "CUSTOMER" }
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_3DDesign_customizeRequestID",
-                table: "3DDesign",
-                column: "customizeRequestID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_3DDesign_designStaffID",
                 table: "3DDesign",
                 column: "designStaffID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_3DDesign_orderId",
+                table: "3DDesign",
+                column: "orderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_3DDesign_productSampleID",
@@ -649,11 +629,6 @@ namespace JewelryProduction.Migrations
                 column: "productionStaffID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Order_ProductSampleId",
-                table: "Order",
-                column: "ProductSampleId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ProductSample_goldID",
                 table: "ProductSample",
                 column: "goldID");
@@ -676,9 +651,6 @@ namespace JewelryProduction.Migrations
         {
             migrationBuilder.DropTable(
                 name: "3DDesign");
-
-            migrationBuilder.DropTable(
-                name: "ApprovalRequest");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -720,6 +692,9 @@ namespace JewelryProduction.Migrations
                 name: "Category");
 
             migrationBuilder.DropTable(
+                name: "ProductSample");
+
+            migrationBuilder.DropTable(
                 name: "Order");
 
             migrationBuilder.DropTable(
@@ -727,9 +702,6 @@ namespace JewelryProduction.Migrations
 
             migrationBuilder.DropTable(
                 name: "PaymentMethod");
-
-            migrationBuilder.DropTable(
-                name: "ProductSample");
 
             migrationBuilder.DropTable(
                 name: "User");
