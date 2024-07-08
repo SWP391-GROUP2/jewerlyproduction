@@ -290,13 +290,13 @@ namespace JewelryProduction.Controllers
             {
                 OrderId = await IdGenerator.GenerateUniqueId<Order>(_context, "ORD", 6),
                 ProductionStaffId = null,
-                DesignStaffId = null,
+                DesignStaffId = "DE001",
                 OrderDate = DateTime.Now,
-                DepositAmount = null,
-                Status = "Wait for Deposit",
+                DepositAmount = customerRequest.quotation.Value * 0.3M,
+                Status = "Pending",
                 CustomizeRequestId = customerRequest.CustomizeRequestId,
                 PaymentMethodId = paymentMethodId,
-                TotalPrice = customerRequest.quotation.Value 
+                TotalPrice = customerRequest.quotation.Value
             };
 
             _context.Orders.Add(order);

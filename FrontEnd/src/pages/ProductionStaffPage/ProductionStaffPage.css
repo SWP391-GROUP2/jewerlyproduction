@@ -1,17 +1,113 @@
 .productionstaff-page {
-    text-align: center;
+    text-align: left;
     display: flex;
-    flex-direction: row; /* Changed to row for elements to be side by side */
+    flex-direction: row;
     justify-content: center;
     min-height: 100vh;
     width: 100vw;
     background-color: rgb(255, 255, 255);
     background-size: cover;
     background-position: center;
-    padding-bottom: 50px;
-}
-
-.productionstaff-container {
-    flex: 1; /* To occupy the remaining part of the page */
-    /* Add other necessary CSS properties here */
-}
+    padding-bottom: 0px;
+  }
+  
+  .productionstaff-container {
+    flex: 1; /* Make container take the remaining space */
+    /* Add other CSS properties if needed */
+  }
+  
+  .productionstaff-main-container {
+    margin-top: 20px; /* Adjust the margin as needed */
+    flex-grow: 1; /* Make the main container grow to fill the remaining space */
+  }
+  
+  .productionstaff-table-container {
+    margin: 20px; /* Add margin to the table container */
+    padding: 20px; /* Optional padding */
+    border: 1px solid #ddd; /* Optional border */
+    border-radius: 8px; /* Optional border radius */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional box shadow */
+    background-color: #fff; /* Optional background color */
+  }
+  
+  .productionstaff-table-title {
+    text-align: center; /* Center the title */
+    margin-bottom: 20px; /* Add some space below the title */
+  }
+  
+  .productionstaff-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: left;
+  }
+  
+  .productionstaff-table th,
+  .productionstaff-table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+  }
+  
+  .productionstaff-table th {
+    background-color: #f2f2f2;
+  }
+  
+  .productionstaff-detail-button {
+    padding: 8px 12px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .productionstaff-detail-button:hover {
+    background-color: #45a049;
+  }
+  
+  .productionstaff-detail-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 1000; /* Ensure popup appears above other content */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .productionstaff-detail-popup-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    max-width: 80%;
+    overflow-y: auto; /* Enable scrolling if content exceeds popup height */
+  }
+  
+  .productionstaff-detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .productionstaff-detail-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  .productionstaff-close-button {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .productionstaff-close-button:hover {
+    background-color: #d32f2f;
+  }
+  

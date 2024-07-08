@@ -42,8 +42,8 @@ namespace JewelryProduction
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
-            builder.Services.AddScoped<I3dDesignRepository, _3dDesignRepository>();
-            builder.Services.AddScoped<I3dDesignService, _3dDesignService>();
+            //builder.Services.AddScoped<I3dDesignRepository, _3dDesignRepository>();
+            //builder.Services.AddScoped<I3dDesignService, _3dDesignService>();
 
 
 

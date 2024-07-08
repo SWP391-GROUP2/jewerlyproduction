@@ -16,9 +16,6 @@ namespace JewelryProduction.Repositories
         public async Task<List<OrderGetDTO>> GetOrders()
         {
             var orders = await _context.Orders
-                .Include(o => o.CustomizeRequest.Customer)
-                .Include(o => o.CustomizeRequest.Manager)
-                .Include(o => o.CustomizeRequest.SaleStaff)
                 .Include(o => o.ProductionStaff)
                 .Include(o => o.DesignStaff)
                 .Include(o => o.PaymentMethod)
@@ -38,7 +35,6 @@ namespace JewelryProduction.Repositories
         public async Task<OrderGetDTO> GetOrder(string id)
         {
             var order = await _context.Orders
-                .Include(o => o.CustomizeRequest)
                 .Include(o => o.ProductionStaff)
                 .Include(o => o.DesignStaff)
                 .Include(o => o.PaymentMethod)

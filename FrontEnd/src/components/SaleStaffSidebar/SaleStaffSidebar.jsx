@@ -54,6 +54,15 @@ function SaleStaffSidebar({ openSidebarToggle, setCurrentView }) {
         <li className="salestaff-sidebar-list-item">
           <button
             className="salestaff-sidebar-button"
+            onClick={() => setCurrentView("payment_pending")}
+          >
+            <BsGrid1X2Fill className="salestaff-icon" />
+            Payment Pending
+          </button>
+        </li>
+        <li className="salestaff-sidebar-list-item">
+          <button
+            className="salestaff-sidebar-button"
             onClick={() => setCurrentView("Reject_list")}
           >
             <BsFillArchiveFill className="salestaff-icon" />

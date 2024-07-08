@@ -1,4 +1,4 @@
-﻿using JewelryProduction.DTO;
+﻿using JewelryProduction.Entities;
 using JewelryProduction.Interface;
 using Microsoft.AspNetCore.Mvc;
 

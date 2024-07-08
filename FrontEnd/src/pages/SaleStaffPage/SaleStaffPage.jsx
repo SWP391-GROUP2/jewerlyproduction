@@ -85,6 +85,11 @@ function SaleStaffPage() {
     setGoldWeight(rowData.goldweight);
   };
 
+  // Gắn api ok sẽ qua trang update deposit và tạo 3 inspection
+  const handleCheckPayment = (rowData) => {
+    setDetailPopupData(rowData);
+  };
+
   const handleCloseDetailPopup = () => {
     setDetailPopupData(null);
     setGoldWeight("");
@@ -95,6 +100,9 @@ function SaleStaffPage() {
   );
   const waitForApproveRequests = requestData.filter(
     (data) => data.customerRequest.status === "Wait For Approval"
+  );
+  const paymentpendingRequests = requestData.filter(
+    (data) => data.customerRequest.status === "Payment Pending"
   );
   const rejectListData = requestData.filter(
     (data) => data.customerRequest.status === "Quotation Rejected"
@@ -196,6 +204,53 @@ function SaleStaffPage() {
                             onClick={() => handleShowDetailPopup(row)}
                           >
                             Details
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {currentView === "payment_pending" && (
+              <div>
+                <h2 className="table-heading">Wait for Approve</h2>
+                <table className="custom-table">
+                  <thead>
+                    <tr>
+                      <th>Customize Request ID</th>
+                      <th>Customer Name</th>
+                      <th>Sales Staff Name</th>
+                      <th>Gold Type</th>
+                      <th>Type</th>
+                      <th>Style</th>
+                      <th>Size</th>
+                      <th>Quotation</th>
+                      <th>Quantity</th>
+                      <th>Status</th>
+                      <th>Check Payment</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {paymentpendingRequests.map((row, index) => (
+                      <tr key={index}>
+                        <td>{row.customerRequest.customizeRequestId}</td>
+                        <td>{row.customerName}</td>
+                        <td>{row.saleStaffName}</td>
+                        <td>{row.customerRequest.gold.goldType}</td>
+                        <td>{row.customerRequest.type}</td>
+                        <td>{row.customerRequest.style}</td>
+                        <td>{row.customerRequest.size}</td>
+                        <td>{row.customerRequest.quotation}</td>
+                        <td>{row.customerRequest.quantity}</td>
+                        <td>{row.customerRequest.status}</td>
+                        <td>
+                          <button
+                            className="salestaff-detail-button"
+                            onClick={() => handleCheckPayment(row)}
+                          >
+                            Already Paid
                           </button>
                         </td>
                       </tr>

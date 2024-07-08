@@ -1,4 +1,4 @@
-﻿namespace JewelryProduction.DTO
+﻿namespace JewelryProduction.Entities
 {
 
     public class VnPaymentResponseModel

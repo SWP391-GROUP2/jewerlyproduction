@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import './DesignStaffPage.css';
-import DesignStaffSidebar from '../../components/DesignStaffSidebar/DesignStaffSidebar';
-import DesignStaffHeader from '../../components/DesignStaffHeader/DesignStaffHeader';
+import React, { useState } from "react";
+import "./DesignStaffPage.css";
+import DesignStaffSidebar from "../../components/DesignStaffSidebar/DesignStaffSidebar";
+import DesignStaffHeader from "../../components/DesignStaffHeader/DesignStaffHeader";
 
 function DesignStaffPage() {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
-  const [currentView, setCurrentView] = useState('');
+  const [currentView, setCurrentView] = useState("");
   const [selectedItem, setSelectedItem] = useState(null); // State to store selected item details
   const [showDetailPopup, setShowDetailPopup] = useState(false); // State to manage popup visibility
 
@@ -17,51 +17,51 @@ function DesignStaffPage() {
     setCurrentView(view);
   };
 
-  const requestData = [
+  const orderData = [
     {
       customizeRequestID: 1,
-      goldID: 'G001',
-      goldweight: '100g',
-      customerID: 'C001',
-      saleStaffID: 'S001',
-      managerID: 'M001',
-      type: 'Type A',
-      style: 'Style X',
-      size: 'L',
-      quotation: 'Q001',
-      quotationdes: 'Description for Q001',
+      goldID: "G001",
+      goldweight: "100g",
+      customerID: "C001",
+      saleStaffID: "S001",
+      managerID: "M001",
+      type: "Type A",
+      style: "Style X",
+      size: "L",
+      quotation: "Q001",
+      quotationdes: "Description for Q001",
       quantity: 2,
-      status: 'Pending',
+      status: "Pending",
     },
     {
       customizeRequestID: 2,
-      goldID: 'G002',
-      goldweight: '150g',
-      customerID: 'C002',
-      saleStaffID: 'S002',
-      managerID: 'M002',
-      type: 'Type B',
-      style: 'Style Y',
-      size: 'M',
-      quotation: 'Q002',
-      quotationdes: 'Description for Q002',
+      goldID: "G002",
+      goldweight: "150g",
+      customerID: "C002",
+      saleStaffID: "S002",
+      managerID: "M002",
+      type: "Type B",
+      style: "Style Y",
+      size: "M",
+      quotation: "Q002",
+      quotationdes: "Description for Q002",
       quantity: 1,
-      status: 'Completed',
+      status: "Completed",
     },
     {
       customizeRequestID: 3,
-      goldID: 'G003',
-      goldweight: '120g',
-      customerID: 'C003',
-      saleStaffID: 'S003',
-      managerID: 'M003',
-      type: 'Type C',
-      style: 'Style Z',
-      size: 'XL',
-      quotation: 'Q003',
-      quotationdes: 'Description for Q003',
+      goldID: "G003",
+      goldweight: "120g",
+      customerID: "C003",
+      saleStaffID: "S003",
+      managerID: "M003",
+      type: "Type C",
+      style: "Style Z",
+      size: "XL",
+      quotation: "Q003",
+      quotationdes: "Description for Q003",
       quantity: 3,
-      status: 'Pending',
+      status: "Pending",
     },
   ];
 
@@ -77,73 +77,78 @@ function DesignStaffPage() {
   };
 
   return (
-    <div className='designstaff-page'>
+    <div className="designstaff-page">
       <DesignStaffSidebar
         openSidebarToggle={openSidebarToggle}
         OpenSidebar={OpenSidebar}
         handleViewChange={handleViewChange}
       />
-      <div className='designstaff-container'>
-        <DesignStaffHeader />
-        <div className='designstaff-main-container'>
-          {currentView === 'orderlist' && (
-            <div className='designstaff-table-container'>
-              <h2 className='designstaff-table-title'>Order List</h2>
-              <table className='designstaff-table'>
-                <thead>
-                  <tr>
-                    <th>Request ID</th>
-                    <th>Gold ID</th>
-                    <th>Gold Weight</th>
-                    <th>Customer ID</th>
-                    <th>Sale Staff ID</th>
-                    <th>Manager ID</th>
-                    <th>Type</th>
-                    <th>Style</th>
-                    <th>Size</th>
-                    <th>Quotation</th>
-                    <th>Quotation Description</th>
-                    <th>Quantity</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {requestData.map((item) => (
-                    <tr key={item.customizeRequestID}>
-                      <td>{item.customizeRequestID}</td>
-                      <td>{item.goldID}</td>
-                      <td>{item.goldweight}</td>
-                      <td>{item.customerID}</td>
-                      <td>{item.saleStaffID}</td>
-                      <td>{item.managerID}</td>
-                      <td>{item.type}</td>
-                      <td>{item.style}</td>
-                      <td>{item.size}</td>
-                      <td>{item.quotation}</td>
-                      <td>{item.quotationdes}</td>
-                      <td>{item.quantity}</td>
-                      <td>{item.status}</td>
-                      <td>
-                        <button className='designstaff-detail-button' onClick={() => showDetail(item)}>
-                          Detail
-                        </button>
-                      </td>
+      <div className={`content ${showDetailPopup ? "blur" : ""}`}>
+        <div className="designstaff-container">
+          <DesignStaffHeader />
+          <div className="salestaff-newdiv">
+            {currentView === "orderlist" && (
+              <div>
+                <h2 className="designstaff-table-title">Order List</h2>
+                <table className="custom-table">
+                  <thead>
+                    <tr>
+                      <th>Order ID</th>
+                      <th>Gold ID</th>
+                      <th>Gold Weight</th>
+                      <th>Customer ID</th>
+                      <th>Sale Staff ID</th>
+                      <th>Manager ID</th>
+                      <th>Type</th>
+                      <th>Style</th>
+                      <th>Size</th>
+                      <th>Quotation</th>
+                      <th>Quotation Description</th>
+                      <th>Quantity</th>
+                      <th>Status</th>
+                      <th>Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  </thead>
+                  <tbody>
+                    {orderData.map((item) => (
+                      <tr key={item.customizeRequestID}>
+                        <td>{item.customizeRequestID}</td>
+                        <td>{item.goldID}</td>
+                        <td>{item.goldweight}</td>
+                        <td>{item.customerID}</td>
+                        <td>{item.saleStaffID}</td>
+                        <td>{item.managerID}</td>
+                        <td>{item.type}</td>
+                        <td>{item.style}</td>
+                        <td>{item.size}</td>
+                        <td>{item.quotation}</td>
+                        <td>{item.quotationdes}</td>
+                        <td>{item.quantity}</td>
+                        <td>{item.status}</td>
+                        <td>
+                          <button
+                            className="designstaff-detail-button"
+                            onClick={() => showDetail(item)}
+                          >
+                            Detail
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Detail Popup */}
       {showDetailPopup && (
-        <div className='designstaff-detail-popup'>
-          <div className='designstaff-detail-popup-content'>
+        <div className="designstaff-detail-popup">
+          <div className="designstaff-detail-popup-content">
             <h2>Detail Popup</h2>
-            <table className='designstaff-detail-table'>
+            <table className="designstaff-detail-table">
               <tbody>
                 <tr>
                   <td>Request ID:</td>
@@ -199,7 +204,7 @@ function DesignStaffPage() {
                 </tr>
               </tbody>
             </table>
-            <button className='designstaff-close-button' onClick={hideDetail}>
+            <button className="designstaff-close-button" onClick={hideDetail}>
               Close
             </button>
           </div>

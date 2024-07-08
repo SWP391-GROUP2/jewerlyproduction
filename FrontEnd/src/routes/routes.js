@@ -39,13 +39,17 @@ const routes = [
   { path: "/gemstone/:gemstoneId", element: <GemstoneDetailPage /> },
   { path: "/otp", element: <SendOTP /> },
   { path: "/forgetpasswordverify", element: <ForgetPasswordVerify /> },
-  { path: "/checkoutpage", element: <CheckOutPage /> },
 
   // Customer Routes
   { path: "/customer/profile", element: <UserProfilePage /> },
   { path: "/customer/customize", element: <CustomizePage /> },
   { path: "/customer/customize/:productId", element: <CustomizePage /> },
   { path: "/customer/resetpassword", element: <ResetPassword /> },
+  { path: "/customer/checkoutpage", element: <CheckOutPage /> },
+  {
+    path: "/customer/checkoutpage/:customizeRequestId",
+    element: <CheckOutPage />,
+  },
 
   // Admin Routes
   { path: "/admin/home", element: <AdminPage /> },
