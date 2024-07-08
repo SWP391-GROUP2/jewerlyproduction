@@ -1,9 +1,6 @@
 ﻿using JewelryProduction.DbContext;
-using JewelryProduction.DTO;
 using JewelryProduction.DTO.BasicDTO;
 using JewelryProduction.Interface;
-using JewelryProduction.Repositories;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace JewelryProduction.Services
@@ -19,7 +16,7 @@ namespace JewelryProduction.Services
             _repository = repository;
         }
 
-        public async Task<decimal> CalculateProductCost(string CustomizeRequestId)
+        public async Task<double> CalculateProductCost(string CustomizeRequestId)
         {
             var customerRequest = await _context.CustomerRequests.FindAsync(CustomizeRequestId);
             var gold = await _context.Golds.FindAsync(customerRequest.GoldId);
@@ -30,16 +27,16 @@ namespace JewelryProduction.Services
             {
                 return 0;
             }
-            decimal goldPrice = gold.PricePerGram * (decimal)customerRequest.GoldWeight;
-            decimal gemstonePrice = gemstones.Sum(x => x.Price);
-            decimal productCost = ((goldPrice + gemstonePrice) * customerRequest.Quantity * 1.4M) * 1.1M;
+            double goldPrice = gold.PricePerGram * (double)customerRequest.GoldWeight;
+            double gemstonePrice = gemstones.Sum(x => x.Price);
+            double productCost = ((goldPrice + gemstonePrice) * (double)customerRequest.Quantity * 1.4e6) * 1.1e6;
             customerRequest.quotation = productCost;
             await _context.SaveChangesAsync();
             return productCost;
         }
-        public decimal GetDeposit(decimal productCost)
+        public double GetDeposit(double productCost)
         {
-            decimal deposit = productCost * 0.3M;
+            double deposit = productCost * 0.3e6;
             return deposit;
         }
 

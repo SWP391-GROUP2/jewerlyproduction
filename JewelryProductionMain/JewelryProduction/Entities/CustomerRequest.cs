@@ -16,15 +16,15 @@ public partial class CustomerRequest
 
     public double? Size { get; set; }
 
-    public decimal? quotation { get; set; }
+    public double? quotation { get; set; }
     public string? quotationDes { get; set; }
 
     public decimal Quantity { get; set; }
     public string Status { get; set; } = null!;
 
     public AppUser Customer { get; set; } = null!;
-    public AppUser SaleStaff { get; set; } 
-    public AppUser Manager { get; set; } 
+    public AppUser SaleStaff { get; set; }
+    public AppUser Manager { get; set; }
 
     public ICollection<Gemstone> Gemstones { get; set; } = new List<Gemstone>();
 

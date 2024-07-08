@@ -6,6 +6,6 @@
 
         public string GoldType { get; set; } = null!;
 
-        public decimal PricePerGram { get; set; }
+        public double PricePerGram { get; set; }
     }
 }

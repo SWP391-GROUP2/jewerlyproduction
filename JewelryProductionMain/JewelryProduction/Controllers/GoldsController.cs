@@ -88,7 +88,7 @@ namespace JewelryProduction.Controllers
                     for (int row = 2; row <= rowCount; row++) // Assuming the first row is header
                     {
                         var goldType = worksheet.Cells[row, 1].Value.ToString();
-                        var pricePerGram = decimal.Parse(worksheet.Cells[row, 3].Value.ToString());
+                        var pricePerGram = double.Parse(worksheet.Cells[row, 3].Value.ToString());
 
                         var gold = _context.Golds.FirstOrDefault(g => g.GoldType == goldType);
                         if (gold != null)
