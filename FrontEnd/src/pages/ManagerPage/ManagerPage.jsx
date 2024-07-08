@@ -11,12 +11,23 @@ function ManagerPage() {
   const [popupOpen, setPopupOpen] = useState(false);
   const [confirmationPopupOpen, setConfirmationPopupOpen] = useState(false); // State for confirmation popup
   const [customizeRequestId, setSelectedRow] = useState(null);
+
+
   const [saleStaffId, setAssignedEmployee] = useState("");
+  const [designStaffId, setAssignedDesignEmployee] = useState("");
+  const [productionStaffId, setAssignedProductionEmployee] = useState("");
+
+
   const [currentView, setCurrentView] = useState("request");
   const [quotationView, setQuotationView] = useState("");
   const [detailPopupOpen, setDetailPopupOpen] = useState(false);
   const [PopupOpenDetail, setPopupOpenDetail] = useState(false);
+
+  const [OrderdetailPopupOpen, setOrderDetailPopupOpen] = useState(false);
+  
+
   const [selectedRequest, setSelectedRequest] = useState(null);
+  const [selectedOrder, setSelectedOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -28,6 +39,15 @@ function ManagerPage() {
 
   const [fetchDataFlag, setFetchDataFlag] = useState(false);
   const [hasFetchedOrders, setHasFetchedOrders] = useState(false);
+
+  const [assignDesignPopupOpen, setAssignDesignPopupOpen] = useState(false);
+  const [assignProductionPopupOpen, setAssignProductionPopupOpen] = useState(false);
+
+
+
+  
+
+  
 
   const user = useSelector((State) => State.auth.Login.currentUser);
 
@@ -152,6 +172,14 @@ function ManagerPage() {
     setAssignedEmployee(selectedEmployeeId);
   };
 
+  const handleAssignedDesignEmployee = (selectedEmployeeId) => {
+    setAssignedDesignEmployee(selectedEmployeeId);
+  };
+
+  const handleAssignedProductionEmployee = (selectedEmployeeId) => {
+    setAssignedProductionEmployee(selectedEmployeeId);
+  };
+
   const handleRejectClick = (index) => {
     setSelectedRow(index); // This is correct as per the context
     setConfirmationPopupOpen(true);
@@ -239,6 +267,15 @@ function ManagerPage() {
     );
     setSelectedRequest(selectedRequest);
     setDetailPopupOpen(true);
+  };
+
+  const handleRowOrderClick = (orderid) => {
+    const selectedOrder = OrderData.find(
+      (order) =>
+        order.orderId === orderid
+    );
+    setSelectedOrder(selectedOrder);
+    setOrderDetailPopupOpen(true);
   };
 
   const handleRowDetailClick = (customizeRequestId) => {
@@ -378,51 +415,31 @@ function ManagerPage() {
           </div>
         )}
         {currentView === "orderlist" && (
-          <div className="new-div">
-            <h2 className="table-heading">Order List</h2>
-            <table className="custom-table">
-              <thead>
-                <tr>
-                  <th>ID Customize Request</th>
-                  <th>Customer Name</th>
-                  <th>Sales Staff Name</th>
-                  <th></th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {OrderData.map((row, index) => (
-                  <tr key={index} onClick={() => handleRowClick(index)}>
-                    <td>{row.id}</td>
-                    <td>{row.customer}</td>
-                    <td>{row.salesStaff}</td>
-                    <td>
-                      <button
-                        className="detail-button-s"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                      >
-                        Approve
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        className="reject-button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRejectClick(index);
-                        }}
-                      >
-                        Reject
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+  <div className="new-div">
+    <h2 className="table-heading">Order List</h2>
+    <table className="custom-table">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Customer Name</th>
+          <th>Design Staff Name</th>
+          <th>Production Staff Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        {OrderData.map((row, index) => (
+          <tr key={index} onClick={() => handleRowOrderClick(index)}>
+            <td>{row.id}</td>
+            <td>{row.customer}</td>
+            <td>{row.designStaff}</td>
+            <td>{row.productionStaff}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+)}
+
         {currentView === "salesstaff" && (
           <div className="new-div">
             <h2 className="table-heading">Sales Staff List</h2>
@@ -753,6 +770,169 @@ function ManagerPage() {
           </div>
         </div>
       )}
+        
+      {OrderdetailPopupOpen && (
+  <div className="popup-overlay">
+    <div className="popup">
+      <div className="popup-inner">
+        <h2>Order Detail</h2>
+        {selectedRequest && (
+          <div className="details-container">
+            <div className="detail-box">
+              <strong>ID Customize Request:</strong>{" "}
+              {selectedRequest.customerRequest.customizeRequestId}
+            </div>
+            <div className="detail-box">
+              <strong>Customer Name:</strong>{" "}
+              {selectedRequest.customerName}
+            </div>
+            <div className="detail-box">
+              <strong>Sales Staff Name:</strong>{" "}
+              {selectedRequest.saleStaffName}
+            </div>
+            <div className="detail-box">
+              <strong>Gold Type:</strong>{" "}
+              {selectedRequest.customerRequest.gold.goldType}
+            </div>
+            <div className="detail-box">
+              <strong>Gold Weight:</strong>{" "}
+              {selectedRequest.customerRequest.goldWeight}
+            </div>
+            <div className="detail-box">
+              <strong>Type:</strong>{" "}
+              {selectedRequest.customerRequest.type}
+            </div>
+            <div className="detail-box">
+              <strong>Style:</strong>{" "}
+              {selectedRequest.customerRequest.style}
+            </div>
+            <div className="detail-box">
+              <strong>Size:</strong>{" "}
+              {selectedRequest.customerRequest.size}
+            </div>
+            <div className="detail-box">
+              <strong>Quotation:</strong>{" "}
+              {selectedRequest.customerRequest.quotation}
+            </div>
+            <div className="detail-box">
+              <strong>Quotation Description:</strong>{" "}
+              {selectedRequest.customerRequest.quotationDes}
+            </div>
+            <div className="detail-box">
+              <strong>Quantity:</strong>{" "}
+              {selectedRequest.customerRequest.quantity}
+            </div>
+            <div className="detail-box">
+              <strong>Status:</strong>{" "}
+              {selectedRequest.customerRequest.status}
+            </div>
+            {/* Thêm các thông tin chi tiết khác của yêu cầu nếu cần */}
+          </div>
+        )}
+
+        
+        <div className="Full-Button">
+        <button
+          className="popup_button"
+            onClick={() => setOrderDetailPopupOpen(false)}
+          >   
+          Close
+          </button>
+          <div className="assign-buttons">
+            <button className="popup_button" onClick={() => setAssignDesignPopupOpen(true)}>
+              Assign Design Staff
+            </button>
+            <button className="popup_button" onClick={() => setAssignProductionPopupOpen(true)}>
+      Assign Production Staff
+    </button>
+                </div>
+        </div>
+        
+        
+      </div>
+    </div>
+  </div>
+)}
+{assignProductionPopupOpen && (
+  <div className="popup-overlay">
+    <div className="popup">
+      <div className="popup-inner">
+        <h2>Assign Production Staff</h2>
+        <table className="employee-table">
+              <thead>
+                <tr>
+                  <th>Employee Name</th>
+                  <th>Number of Quoted</th>
+                </tr>
+              </thead>
+              <tbody>
+                {ProductionStaff.map((staff, index) => (
+                  <tr
+                    key={index}
+                    onClick={() => handleAssignedProductionEmployee(staff.appUser.id)}
+                    className={
+                      productionStaffId === staff.appUser.id ? "selected" : ""
+                    }
+                  >
+                    <td>{staff.appUser.name}</td>
+                    <td>{staff.appUser.id}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <button className="popup_button" onClick={handleAssign}>
+              Assign
+            </button>
+            <button
+              className="popup_button"
+              onClick={() => setAssignProductionPopupOpen(false)}
+            >
+              Close
+            </button>
+      </div>
+    </div>
+  </div>
+)}
+{assignDesignPopupOpen  && (
+  <div className="popup-overlay">
+    <div className="popup">
+      <div className="popup-inner">
+        <h2>Assign Design Staff</h2>
+        <table className="employee-table">
+              <thead>
+                <tr>
+                  <th>Employee Name</th>
+                  <th>Number of Quoted</th>
+                </tr>
+              </thead>
+              <tbody>
+                {DesignStaff.map((staff, index) => (
+                  <tr
+                    key={index}
+                    onClick={() => handleAssignedDesignEmployee(staff.appUser.id)}
+                    className={
+                      designStaffId === staff.appUser.id ? "selected" : ""
+                    }
+                  >
+                    <td>{staff.appUser.name}</td>
+                    <td>{staff.appUser.id}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <button className="popup_button" onClick={handleAssign}>
+              Assign
+            </button>
+            <button
+              className="popup_button"
+              onClick={() => setAssignDesignPopupOpen(false)}
+            >
+              Close
+            </button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 }

@@ -278,3 +278,15 @@
   border-radius: 4px;
   font-size: 16px;
 }
+.Full-Button {
+  display: flex;
+  justify-content: space-between; /* Để căn chỉnh các phần tử con sang hai bên */
+}
+
+.assign-buttons {
+  display: flex;
+}
+
+.assign-buttons button {
+  margin-left: 10px; /* Để tạo khoảng cách giữa các nút */
+}
