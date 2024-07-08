@@ -1,12 +1,6 @@
 ﻿using AutoMapper;
-using JewelryProduction.Common;
 using JewelryProduction.DbContext;
-using JewelryProduction.DTO;
-using JewelryProduction.DTO.BasicDTO;
-using JewelryProduction.Entities;
 using JewelryProduction.Interface;
-using JewelryProduction.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
@@ -68,14 +62,15 @@ Production Cost:            40% Material Price
 Additional Fee:             0
 VAT:                        10%";
             request.quotation = price;
-            request.Status = "Wait For Approval"; 
+            request.Status = "Wait For Approval";
             await _context.SaveChangesAsync();
 
             // Send email or notification to manager
-           await _notificationService.SendNotificationToUserfAsync(userId,senderId,$"There is new request with ID: {CustomizeRequestId} that need to be approved.");
+            await _notificationService.SendNotificationToUserfAsync(userId, senderId, $"There is new request with ID: {CustomizeRequestId} that need to be approved.");
 
             return Ok("Approval request sent to the manager.");
         }
+        
         [HttpPost("updateCustomerRequestQuotation")]
         public async Task<IActionResult> UpdateCustomerRequestQuotation([FromBody] UpdateQuotationDTO updateQuotationDTO)
         {
@@ -87,6 +82,7 @@ VAT:                        10%";
             }
             return BadRequest("Failed to update quotation.");
         }
+        
         private string GetCurrentUserId()
         {
             var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sid);

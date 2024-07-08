@@ -15,6 +15,7 @@ public partial class Order
     public decimal? DepositAmount { get; set; }
 
     public string Status { get; set; } = null!;
+    public string Address { get; set; } = null!;
 
     public string? CustomizeRequestId { get; set; }
 
@@ -30,5 +31,6 @@ public partial class Order
 
     public AppUser ProductionStaff { get; set; } = null!;
     public AppUser DesignStaff { get; set; } = null!;
+    public ICollection<_3ddesign> _3ddesigns { get; set; } = new List<_3ddesign>();
     public ICollection<Inspection> Inspections { get; set; } = new List<Inspection>();
 }
