@@ -311,7 +311,7 @@ function UserProfile() {
                     <th>ID Customize Request</th>
                     <th>Customer Name</th>
                     <th>Sales Staff Name</th>
-                    <th>Quation</th>
+                    <th>Quotation</th>
                     <th>Status</th>
                     <th></th>
                     <th></th>
@@ -330,36 +330,46 @@ function UserProfile() {
                       <td>{row.saleStaffName}</td>
                       <td>{row.customerRequest.quotation}</td>
                       <td>{row.customerRequest.status}</td>
-                      <td>
-                        <button
-                          className="detail-button-s"
-                          onClick={(e) => {
-                            e.stopPropagation(); // Ngăn chặn sự kiện click hàng
-                            handleApproveClick(
-                              row.customerRequest.customizeRequestId
-                            );
-                          }}
-                        >
-                          Approve
-                        </button>
-                      </td>
-                      <td>
-                        <button
-                          className="reject-button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleRejectClick(index);
-                          }}
-                        >
-                          Reject
-                        </button>
-                      </td>
+                      {row.customerRequest.status === "Quotation Approved" ? (
+                        <>
+                          <td>
+                            <button
+                              className="detail-button-s"
+                              onClick={(e) => {
+                                e.stopPropagation(); // Ngăn chặn sự kiện click hàng
+                                handleApproveClick(
+                                  row.customerRequest.customizeRequestId
+                                );
+                              }}
+                            >
+                              Approve
+                            </button>
+                          </td>
+                          <td>
+                            <button
+                              className="reject-button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleRejectClick(index);
+                              }}
+                            >
+                              Reject
+                            </button>
+                          </td>
+                        </>
+                      ) : (
+                        <>
+                          <td></td>
+                          <td></td>
+                        </>
+                      )}
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           )}
+
           {currentView === "order" && (
             <div className="new-div">
               <h2 className="table-heading">Order List</h2>
