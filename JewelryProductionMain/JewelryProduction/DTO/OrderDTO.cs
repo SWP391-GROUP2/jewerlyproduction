@@ -9,7 +9,7 @@
 
         public DateTime OrderDate { get; set; }
 
-        public decimal? DepositAmount { get; set; }
+        public double? DepositAmount { get; set; }
 
         public string Status { get; set; } = null!;
 
@@ -17,6 +17,6 @@
 
         public string PaymentMethodId { get; set; } = null!;
 
-        public decimal TotalPrice { get; set; }
+        public double TotalPrice { get; set; }
     }
 }

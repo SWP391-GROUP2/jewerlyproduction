@@ -2,9 +2,7 @@
 using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
 using JewelryProduction.Interface;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Drawing;
 
 namespace JewelryProduction.Services
 {
@@ -31,7 +29,7 @@ namespace JewelryProduction.Services
 
             if (customerRequest == null)
             {
-                return false; 
+                return false;
             }
 
             customerRequest.Status = "Quotation Approved";
@@ -56,18 +54,18 @@ namespace JewelryProduction.Services
             var customerRequest = await _context.CustomerRequests.FindAsync(customerRequestId);
 
 
-            if (customerRequest == null|| customerRequest.Status != "Quotation Approved")
+            if (customerRequest == null || customerRequest.Status != "Quotation Approved")
             {
                 return false; // CustomerRequest not found
             }
             try
             {
                 // Calculate deposit amount
-                var depositAmount = customerRequest.quotation * 0.3M;
+                var depositAmount = customerRequest.quotation * 0.3e6;
 
                 // Send notification to Customer
                 var message = $"Your quotation has been approved. Quotation: {customerRequest.quotation:C}. Description: {customerRequest.quotation}. Please deposit 30% of the quotation amount: {depositAmount:C}.";
-                await _notificationService.SendNotificationToUserfAsync(customerRequest.CustomerId,staffId, message);
+                await _notificationService.SendNotificationToUserfAsync(customerRequest.CustomerId, staffId, message);
 
                 return true;
             }
@@ -77,7 +75,7 @@ namespace JewelryProduction.Services
                 return false;
             }
         }
-        public async Task<bool> RejectQuotation(string customerRequestId,string managerId, string message)
+        public async Task<bool> RejectQuotation(string customerRequestId, string managerId, string message)
         {
             var customerRequest = await _context.CustomerRequests.FindAsync(customerRequestId);
 
@@ -92,7 +90,7 @@ namespace JewelryProduction.Services
             {
                 _context.Update(customerRequest);
                 await _context.SaveChangesAsync();
-                await _notificationService.SendNotificationToUserfAsync(customerRequest.SaleStaffId,customerRequest.ManagerId, message);
+                await _notificationService.SendNotificationToUserfAsync(customerRequest.SaleStaffId, customerRequest.ManagerId, message);
 
                 return true;
             }
@@ -101,7 +99,7 @@ namespace JewelryProduction.Services
                 return false;
             }
         }
-        public async Task<bool> UpdateCustomerRequestQuotation(string customerRequestId, decimal newQuotation, string newQuotationDes)
+        public async Task<bool> UpdateCustomerRequestQuotation(string customerRequestId, double newQuotation, string newQuotationDes)
         {
             var customerRequest = await _context.CustomerRequests.FindAsync(customerRequestId);
 
@@ -126,7 +124,7 @@ namespace JewelryProduction.Services
                 return false;
             }
         }
-    public async Task<PagedResult<CustomerRequest>> GetAllPaging(OrderPagingRequest request)
+        public async Task<PagedResult<CustomerRequest>> GetAllPaging(OrderPagingRequest request)
         {
 
             IQueryable<CustomerRequest> query = _context.CustomerRequests;

@@ -17,7 +17,7 @@ public partial class Gemstone
 
     public string Clarity { get; set; } = null!;
 
-    public decimal Price { get; set; }
+    public double Price { get; set; }
 
     public string Image { get; set; }
 

@@ -1,12 +1,11 @@
-﻿using JewelryProduction.DTO;
-using JewelryProduction.DTO.BasicDTO;
+﻿using JewelryProduction.DTO.BasicDTO;
 
 namespace JewelryProduction.Interface
 {
     public interface ISaleStaffService
     {
-        Task<decimal> CalculateProductCost(string CustomizeRequestId);
-        decimal GetDeposit(decimal productCost);
+        Task<double> CalculateProductCost(string CustomizeRequestId);
+        double GetDeposit(double productCost);
         Task<List<SaleStaffWithCountDTO>> GetStaffs();
     }
 }
