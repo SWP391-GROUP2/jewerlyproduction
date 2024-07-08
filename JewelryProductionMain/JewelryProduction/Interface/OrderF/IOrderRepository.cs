@@ -6,5 +6,6 @@ namespace JewelryProduction.Interface
     {
         Task<List<OrderGetDTO>> GetOrders();
         Task<OrderGetDTO> GetOrder(string id);
+        Order GetOrderOnly(string id);
     }
 }

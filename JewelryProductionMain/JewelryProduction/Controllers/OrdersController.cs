@@ -2,9 +2,7 @@
 using JewelryProduction.Common;
 using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
-using JewelryProduction.Entities;
 using JewelryProduction.Interface;
-using JewelryProduction.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -214,7 +212,7 @@ namespace JewelryProduction.Controllers
             return Ok(GemWeight);
         }
         [HttpPut("UpdatePayment/{orderId}")]
-        public async Task<IActionResult> UpdatePayment(string orderId, decimal depositAmount)
+        public async Task<IActionResult> UpdatePayment(string orderId, double depositAmount)
         {
             var updateOrder = await _context.Orders.FindAsync(orderId);
             if (updateOrder == null)

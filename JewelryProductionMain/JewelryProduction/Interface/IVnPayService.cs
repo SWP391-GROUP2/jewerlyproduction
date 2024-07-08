@@ -1,10 +1,10 @@
-﻿using JewelryProduction.Entities;
+﻿using JewelryProduction.DTO;
 
 namespace JewelryProduction.Interface
 {
     public interface IVnPayService
     {
-        Task<string> CreatePaymentUrl(HttpContext context, VnPaymentRequestModel model);
+        public Task<string> CreatePaymentUrl(HttpContext context, double price, string orderID);
         VnPaymentResponseModel PaymentExecute(IQueryCollection collection);
     }
 }

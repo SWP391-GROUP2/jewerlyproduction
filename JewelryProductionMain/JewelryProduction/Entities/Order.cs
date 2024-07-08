@@ -12,7 +12,7 @@ public partial class Order
 
     public DateTime OrderDate { get; set; }
 
-    public decimal? DepositAmount { get; set; }
+    public double? DepositAmount { get; set; }
 
     public string Status { get; set; } = null!;
     public string? Address { get; set; }
@@ -20,7 +20,7 @@ public partial class Order
 
     public string? PaymentMethodId { get; set; } = null!;
 
-    public decimal TotalPrice { get; set; }
+    public double TotalPrice { get; set; }
 
     public CustomerRequest? CustomizeRequest { get; set; }
 

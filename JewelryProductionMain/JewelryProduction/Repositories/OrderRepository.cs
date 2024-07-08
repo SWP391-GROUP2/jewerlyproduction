@@ -55,5 +55,18 @@ namespace JewelryProduction.Repositories
 
             return result;
         }
+
+        public Order GetOrderOnly(string id)
+        {
+            var order = _context.Orders
+                .Include(o => o.CustomizeRequest)
+                .Include(o => o.ProductionStaff)
+                .Include(o => o.DesignStaff)
+                .Include(o => o.PaymentMethod)
+                .Where(o => o.OrderId.Equals(id))
+                .FirstOrDefault();
+
+            return order;
+        }
     }
 }

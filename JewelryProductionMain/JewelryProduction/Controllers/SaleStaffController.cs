@@ -1,12 +1,6 @@
 ﻿using AutoMapper;
-using JewelryProduction.Common;
 using JewelryProduction.DbContext;
-using JewelryProduction.DTO;
-using JewelryProduction.DTO.BasicDTO;
-using JewelryProduction.Entities;
 using JewelryProduction.Interface;
-using JewelryProduction.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
@@ -63,16 +57,16 @@ namespace JewelryProduction.Controllers
             var userId = request.ManagerId;
             request.quotationDes = @$"
 Gemstone Price:             {gemstones.Sum(x => x.Price)}
-Gold Price:             {gold.PricePerGram * (decimal)customerRequest.GoldWeight}
+Gold Price:             {gold.PricePerGram * (double)customerRequest.GoldWeight}
 Production Cost:            40% Material Price
 Additional Fee:             0
 VAT:                        10%";
             request.quotation = price;
-            request.Status = "Wait For Approval"; 
+            request.Status = "Wait For Approval";
             await _context.SaveChangesAsync();
 
             // Send email or notification to manager
-           await _notificationService.SendNotificationToUserfAsync(userId,senderId,$"There is new request with ID: {CustomizeRequestId} that need to be approved.");
+            await _notificationService.SendNotificationToUserfAsync(userId, senderId, $"There is new request with ID: {CustomizeRequestId} that need to be approved.");
 
             return Ok("Approval request sent to the manager.");
         }

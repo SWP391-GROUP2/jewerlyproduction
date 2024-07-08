@@ -1,5 +1,4 @@
-﻿using JewelryProduction.DTO;
-using JewelryProduction.Interface;
+﻿using JewelryProduction.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JewelryProduction.Controllers
@@ -17,9 +16,9 @@ namespace JewelryProduction.Controllers
 
 
         [HttpPost("CreatePaymentUrl")]
-        public async Task<IActionResult> CreatePaymentUrl(VnPaymentRequestModel model)
+        public async Task<IActionResult> CreatePaymentUrl(double price, string orderID)
         {
-            var url = await _vnPayService.CreatePaymentUrl(HttpContext, model);
+            var url = await _vnPayService.CreatePaymentUrl(HttpContext, price, orderID);
             return Ok(url);
         }
 
