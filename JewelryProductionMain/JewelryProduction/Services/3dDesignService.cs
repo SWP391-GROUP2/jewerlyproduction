@@ -40,7 +40,7 @@ namespace JewelryProduction.Services
                 _3dDesignId = design._3dDesignId,
                 DesignName = design.DesignName,
                 Image = url,
-                CustomizeRequestId = design.CustomizeRequestId,
+                OrderId = design.OrderId,
                 ProductSampleId = design.ProductSampleId,
                 DesignStaffId = user.Id
             };

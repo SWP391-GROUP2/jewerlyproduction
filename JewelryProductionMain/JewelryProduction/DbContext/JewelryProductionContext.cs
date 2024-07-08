@@ -355,17 +355,18 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
                 .HasConstraintName("FK_Order_PaymentMethod");
 
             entity.HasOne(e => e.ProductionStaff)
-                    .WithMany(u => u.OrderProductionStaffs)
-                    .HasForeignKey(e => e.ProductionStaffId)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_Order_ProductionStaff");
+                .WithMany(u => u.OrderProductionStaffs)
+                .HasForeignKey(e => e.ProductionStaffId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("FK_Order_ProductionStaff");
 
             entity.HasOne(e => e.DesignStaff)
-                    .WithMany(u => u.OrderDesignStaffs)
-                    .HasForeignKey(e => e.DesignStaffId)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_Order_DesignStaff");
+                .WithMany(u => u.OrderDesignStaffs)
+                .HasForeignKey(e => e.DesignStaffId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("FK_Order_DesignStaff");
         });
+
         modelBuilder.Entity<Inspection>(entity =>
         {
             entity.ToTable("Inspection");
@@ -458,7 +459,7 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
             entity.HasOne(d => d.Gold).WithMany(p => p.ProductSamples)
                 .HasForeignKey(d => d.GoldId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_ProductSample_Gold1");
+                .HasConstraintName("FK_ProductSample_Gold");
         });
         modelBuilder.Entity<Notification>(entity =>
         {
@@ -513,9 +514,9 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
             entity.Property(e => e._3dDesignId)
                 .HasMaxLength(50)
                 .HasColumnName("3dDesignID");
-            entity.Property(e => e.CustomizeRequestId)
+            entity.Property(e => e.OrderId)
                 .HasMaxLength(50)
-                .HasColumnName("customizeRequestID");
+                .HasColumnName("orderID");
             entity.Property(e => e.Image)
                 .HasMaxLength(200)
                 .HasColumnName("Image");
@@ -529,9 +530,9 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
                 .HasMaxLength(50)
                 .HasColumnName("productSampleID");
 
-            entity.HasOne(d => d.CustomizeRequest).WithMany(p => p._3ddesigns)
-                .HasForeignKey(d => d.CustomizeRequestId)
-                .HasConstraintName("FK_3DDesign_CustomerRequest");
+            entity.HasOne(d => d.Order).WithMany(p => p._3ddesigns)
+                .HasForeignKey(d => d.OrderId)
+                .HasConstraintName("FK_3DDesign_Order");
 
             entity.HasOne(d => d.DesignStaff).WithMany(p => p._3ddesigns)
                 .HasForeignKey(d => d.DesignStaffId)

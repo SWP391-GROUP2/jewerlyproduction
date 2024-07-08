@@ -8,7 +8,7 @@
 
         public IFormFile Image { get; set; }
 
-        public string? CustomizeRequestId { get; set; }
+        public string? OrderId { get; set; }
 
         public string? ProductSampleId { get; set; }
 
