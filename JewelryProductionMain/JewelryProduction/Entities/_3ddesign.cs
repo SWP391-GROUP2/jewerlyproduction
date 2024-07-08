@@ -11,13 +11,13 @@ public partial class _3ddesign
 
     public string Image { get; set; } = null!;
 
-    public string? CustomizeRequestId { get; set; }
+    public string? OrderId { get; set; }
 
     public string? ProductSampleId { get; set; }
 
     public string DesignStaffId { get; set; } = null!;
 
-    public CustomerRequest? CustomizeRequest { get; set; }
+    public Order? Order { get; set; }
 
     public AppUser DesignStaff { get; set; } = null!;
 
