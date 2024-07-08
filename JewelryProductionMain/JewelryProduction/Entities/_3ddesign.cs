@@ -12,7 +12,7 @@ public partial class _3ddesign
     public string Image { get; set; } = null!;
 
     public string? OrderId { get; set; }
-
+        
     public string? ProductSampleId { get; set; }
 
     public string DesignStaffId { get; set; } = null!;
