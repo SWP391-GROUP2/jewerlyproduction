@@ -49,6 +49,8 @@ namespace JewelryProduction
             builder.Services.AddScoped<IManagerService, ManagerService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IInspectionRepository, InspectionRepository>();
+            builder.Services.AddScoped<IProductSampleRepository, ProductSampleRepository>();
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
             //builder.Services.AddScoped<I3dDesignRepository, _3dDesignRepository>();
             //builder.Services.AddScoped<I3dDesignService, _3dDesignService>();
 

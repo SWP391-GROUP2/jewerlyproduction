@@ -8,6 +8,7 @@ namespace JewelryProduction.Interface
     public interface ICustomerRequestService
     {
         Task<CustomerRequest> CreateCustomerRequestAsync(CustomerRequestDTO customerRequestDTO);
+        Task<Order> ApproveCustomerRequestAsync(string customizeRequestId, string paymentMethodId);
         Task<PagedResult<CustomerRequest>> GetAllPaging(OrderPagingRequest request);
         Task<CustomerRequest> GetCustomerRequestWithQuotationsAsync(string customerRequestId);
         Task<bool> ApproveQuotation(string customerRequestId, string managerId);
