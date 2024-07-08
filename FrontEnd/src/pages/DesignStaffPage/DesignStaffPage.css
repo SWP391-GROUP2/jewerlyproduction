@@ -134,3 +134,19 @@
 .blur {
   filter: blur(2px);
 }
+.designstaff-add-image-button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  background-color: #2196f3;
+  color: white;
+  border-radius: 4px;
+  float: right; /* Di chuyển nút sang phải */
+  margin-left: 10px; /* Để cách nút Save và Close một khoảng */
+}
+
+.designstaff-add-image-button:hover {
+  background-color: #0b7dda;
+}
+
