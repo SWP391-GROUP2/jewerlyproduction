@@ -6,8 +6,9 @@ import DesignStaffHeader from "../../components/DesignStaffHeader/DesignStaffHea
 function DesignStaffPage() {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
   const [currentView, setCurrentView] = useState("");
-  const [selectedItem, setSelectedItem] = useState(null); // State to store selected item details
-  const [showDetailPopup, setShowDetailPopup] = useState(false); // State to manage popup visibility
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [showDetailPopup, setShowDetailPopup] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState(null);
 
   const OpenSidebar = () => {
     setOpenSidebarToggle(!openSidebarToggle);
@@ -32,6 +33,7 @@ function DesignStaffPage() {
       quotationdes: "Description for Q001",
       quantity: 2,
       status: "Pending",
+      image: "image1.jpg",
     },
     {
       customizeRequestID: 2,
@@ -47,6 +49,7 @@ function DesignStaffPage() {
       quotationdes: "Description for Q002",
       quantity: 1,
       status: "Completed",
+      image: "image2.jpg",
     },
     {
       customizeRequestID: 3,
@@ -62,17 +65,38 @@ function DesignStaffPage() {
       quotationdes: "Description for Q003",
       quantity: 3,
       status: "Pending",
+      image: "image3.jpg",
     },
   ];
 
-  // Function to handle showing the detail popup
   const showDetail = (item) => {
-    setSelectedItem(item); // Set selected item details
-    setShowDetailPopup(true); // Show the detail popup
+    setSelectedItem(item);
+    setShowDetailPopup(true);
+    setUploadedImage(null); // Reset uploaded image state
   };
 
-  // Function to hide the detail popup
   const hideDetail = () => {
+    setShowDetailPopup(false);
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    setUploadedImage(URL.createObjectURL(file)); // Store image preview URL
+    setSelectedItem({
+      ...selectedItem,
+      image: file.name, // Update selected item with new image name
+    });
+  };
+
+  const handleSave = () => {
+    const updatedOrderData = orderData.map((order) =>
+      order.customizeRequestID === selectedItem.customizeRequestID
+        ? { ...order, image: selectedItem.image }
+        : order
+    );
+
+    // Update orderData state or send API request to save changes
+    console.log(updatedOrderData); // Replace with actual state update or API call
     setShowDetailPopup(false);
   };
 
@@ -86,11 +110,11 @@ function DesignStaffPage() {
       <div className={`content ${showDetailPopup ? "blur" : ""}`}>
         <div className="designstaff-container">
           <DesignStaffHeader />
-          <div className="salestaff-newdiv">
+          <div className="designstaff-main-container">
             {currentView === "orderlist" && (
-              <div>
+              <div className="designstaff-table-container">
                 <h2 className="designstaff-table-title">Order List</h2>
-                <table className="custom-table">
+                <table className="designstaff-table">
                   <thead>
                     <tr>
                       <th>Order ID</th>
@@ -106,12 +130,12 @@ function DesignStaffPage() {
                       <th>Quotation Description</th>
                       <th>Quantity</th>
                       <th>Status</th>
-                      <th>Actions</th>
+                      
                     </tr>
                   </thead>
                   <tbody>
                     {orderData.map((item) => (
-                      <tr key={item.customizeRequestID}>
+                      <tr key={item.customizeRequestID} onClick={() => showDetail(item)}>
                         <td>{item.customizeRequestID}</td>
                         <td>{item.goldID}</td>
                         <td>{item.goldweight}</td>
@@ -125,14 +149,7 @@ function DesignStaffPage() {
                         <td>{item.quotationdes}</td>
                         <td>{item.quantity}</td>
                         <td>{item.status}</td>
-                        <td>
-                          <button
-                            className="designstaff-detail-button"
-                            onClick={() => showDetail(item)}
-                          >
-                            Detail
-                          </button>
-                        </td>
+                        
                       </tr>
                     ))}
                   </tbody>
@@ -143,7 +160,6 @@ function DesignStaffPage() {
         </div>
       </div>
 
-      {/* Detail Popup */}
       {showDetailPopup && (
         <div className="designstaff-detail-popup">
           <div className="designstaff-detail-popup-content">
@@ -202,11 +218,28 @@ function DesignStaffPage() {
                   <td>Status:</td>
                   <td>{selectedItem.status}</td>
                 </tr>
+                
+                {uploadedImage && (
+  <tr>
+    <td colSpan="2">
+      <img src={uploadedImage} alt="Uploaded Preview" className="uploaded-image-preview" />
+    </td>
+  </tr>
+)}
+<tr>
+  <td colSpan="2">
+      
+    <button className="designstaff-close-button" onClick={hideDetail}>
+      Close
+    </button>
+    <button className="designstaff-add-image-button" onClick={handleImageUpload}>
+      Add Image
+    </button>
+  </td>
+</tr>
+
               </tbody>
             </table>
-            <button className="designstaff-close-button" onClick={hideDetail}>
-              Close
-            </button>
           </div>
         </div>
       )}

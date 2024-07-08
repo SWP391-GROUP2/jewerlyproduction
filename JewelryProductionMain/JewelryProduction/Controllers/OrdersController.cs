@@ -3,7 +3,6 @@ using JewelryProduction.Common;
 using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
 using JewelryProduction.Interface;
-using JewelryProduction.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -218,6 +217,14 @@ namespace JewelryProduction.Controllers
             return deposit;
         }
 
+        [HttpPost("change-status")]
+        public async Task<ActionResult> ChangeStatus(string orderID)
+        {
+            var order = await _orderService.GetOrder(orderID);
+            order.Order.Status = "Assigning Designer";
+            _context.SaveChangesAsync();
+            return Ok("Status has changed");
+        }
         private bool OrderExists(string id)
         {
             return _context.Orders.Any(e => e.OrderId == id);
