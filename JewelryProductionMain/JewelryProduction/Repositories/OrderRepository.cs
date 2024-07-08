@@ -68,5 +68,29 @@ namespace JewelryProduction.Repositories
 
             return order;
         }
+        public async Task<Order> GetByIdAsync(object id)
+        {
+            return await _context.Orders.FindAsync(id);
+        }
+
+        public async Task<IEnumerable<Order>> GetAllAsync()
+        {
+            return await _context.Orders.ToListAsync();
+        }
+
+        public async Task AddAsync(Order entity)
+        {
+            await _context.Orders.AddAsync(entity);
+        }
+
+        public void Update(Order entity)
+        {
+            _context.Orders.Update(entity);
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }
