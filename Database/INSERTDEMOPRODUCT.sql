@@ -27,7 +27,7 @@ VALUES
     ('PS008', 'Rose Gold Earrings', 'Trendy rose gold earrings with a drop design', 'Earrings', 'Jacket', NULL, 60000000.00, 'G008'),
     ('PS009', 'White Gold Ring', 'A sophisticated 14k white gold ring with a diamond accent', 'Ring',  'Three Stone', 9.0, 30000000.00, 'G006')
 
-INSERT INTO Gemstone (gemstoneID, name, color, caratWeight, cut, clarity, pricePerCarat, image, productSampleID, customizeRequestID, categoryID) 
+INSERT INTO Gemstone (gemstoneID, name, color, caratWeight, cut, clarity, price, image, productSampleID, customizeRequestID, categoryID) 
 VALUES 
 	('GS001', 'Ruby Bright', 'Red', 1.5, 'Round', 'VVS1', 1500000, NULL, 'PS001', NULL, 2), 
     ('GS002', 'Emerald Glow', 'Green', 2.0, 'Emerald', 'VS2', 2500000, NULL, 'PS002', NULL, 2), 
