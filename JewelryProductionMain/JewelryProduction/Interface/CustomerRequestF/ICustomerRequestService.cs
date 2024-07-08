@@ -9,6 +9,7 @@ namespace JewelryProduction.Interface
     {
         Task<CustomerRequest> CreateCustomerRequestAsync(CustomerRequestDTO customerRequestDTO);
         Task<Order> ApproveCustomerRequestAsync(string customizeRequestId, string paymentMethodId);
+        Task<bool> RejectCustomerRequestAsync(string customizeRequestId);
         Task<PagedResult<CustomerRequest>> GetAllPaging(OrderPagingRequest request);
         Task<CustomerRequest> GetCustomerRequestWithQuotationsAsync(string customerRequestId);
         Task<bool> ApproveQuotation(string customerRequestId, string managerId);

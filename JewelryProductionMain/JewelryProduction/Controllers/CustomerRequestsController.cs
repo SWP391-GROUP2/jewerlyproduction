@@ -204,30 +204,11 @@ namespace JewelryProduction.Controllers
         [HttpPost("reject/{customizeRequestId}")]
         public async Task<IActionResult> RejectCustomerRequest(string customizeRequestId)
         {
-            var customerRequest = await _context.CustomerRequests
-                .Include(cr => cr.Gemstones)
-                .FirstOrDefaultAsync(cr => cr.CustomizeRequestId == customizeRequestId);
-            if (customerRequest == null)
+            var result = await _requestService.RejectCustomerRequestAsync(customizeRequestId);
+
+            if (!result)
             {
                 return NotFound("Customer request not found.");
-            }
-            foreach (var gemstone in customerRequest.Gemstones)
-            {
-                gemstone.CustomizeRequestId = null;
-            }
-            customerRequest.Status = "Request Reject";
-            using (var transaction = await _context.Database.BeginTransactionAsync())
-            {
-                try
-                {
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                catch (Exception)
-                {
-                    await transaction.RollbackAsync();
-                    throw;
-                }
             }
 
             return NoContent();

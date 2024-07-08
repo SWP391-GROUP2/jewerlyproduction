@@ -214,7 +214,38 @@ namespace JewelryProduction.Services
 
             return order;
         }
-        public async Task<PagedResult<CustomerRequest>> GetAllPaging(OrderPagingRequest request)
+        public async Task<bool> RejectCustomerRequestAsync(string customizeRequestId)
+        {
+            var customerRequest = await _customerRequestRepository.GetCustomerRequestWithDetailsAsync(customizeRequestId);
+
+            if (customerRequest == null)
+            {
+                return false;
+            }
+
+            foreach (var gemstone in customerRequest.Gemstones)
+            {
+                gemstone.CustomizeRequestId = null;
+            }
+
+            customerRequest.Status = "Request Reject";
+
+            using (var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    return true;
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            }
+        }
+            public async Task<PagedResult<CustomerRequest>> GetAllPaging(OrderPagingRequest request)
         {
 
             IQueryable<CustomerRequest> query = _context.CustomerRequests;
