@@ -43,7 +43,7 @@ namespace JewelryProduction.Services
         {
             var customerRequest = await _context.CustomerRequests.FindAsync(customerRequestId);
 
-            if (customerRequest == null)
+            if (customerRequest == null || customerRequest.Status != "Quotation Rejected")
             {
                 return false;
             }

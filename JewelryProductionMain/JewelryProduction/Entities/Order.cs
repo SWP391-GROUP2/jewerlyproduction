@@ -1,4 +1,6 @@
-﻿namespace JewelryProduction;
+﻿using JewelryProduction.Entities;
+
+namespace JewelryProduction;
 
 public partial class Order
 {
@@ -28,4 +30,5 @@ public partial class Order
 
     public AppUser ProductionStaff { get; set; } = null!;
     public AppUser DesignStaff { get; set; } = null!;
+    public ICollection<Inspection> Inspections { get; set; } = new List<Inspection>();
 }
