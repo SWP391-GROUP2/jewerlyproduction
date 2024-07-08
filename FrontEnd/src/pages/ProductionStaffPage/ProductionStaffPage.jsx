@@ -8,6 +8,8 @@ function ProductionStaffPage() {
   const [currentView, setCurrentView] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
   const [showDetailPopup, setShowDetailPopup] = useState(false);
+  
+  const [detailData, setDetailData] = useState(null); // State to store detail data
 
   const OpenSidebar = () => {
     setOpenSidebarToggle(!openSidebarToggle);
@@ -15,6 +17,8 @@ function ProductionStaffPage() {
 
   const handleViewChange = (view) => {
     setCurrentView(view);
+    // Clear detail data when changing view
+    setDetailData(null);
   };
 
   const orderData = [
@@ -71,11 +75,26 @@ function ProductionStaffPage() {
   const showDetail = (item) => {
     setSelectedItem(item);
     setShowDetailPopup(true);
+    
   };
 
   const hideDetail = () => {
     setShowDetailPopup(false);
   };
+
+  
+
+  const handleViewButtonClick = () => {
+    setShowDetailPopup(false); // Close the popup
+    // Save detail data before changing view
+    setDetailData(selectedItem);
+    setCurrentView("newView"); // Change current view to new div view
+  };
+
+  // Log detailData to console when it changes
+  React.useEffect(() => {
+    console.log("Detail Data:", detailData);
+  }, [detailData]);
 
   return (
     <div className="productionstaff-page">
@@ -129,6 +148,13 @@ function ProductionStaffPage() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+            )}
+            {currentView === "newView" && (
+              <div className="productionstaff-newview">
+                <div className="productionstaff-div">Div 1</div>
+                <div className="productionstaff-div">Div 2</div>
+                <div className="productionstaff-div">Div 3</div>
               </div>
             )}
           </div>
@@ -193,13 +219,19 @@ function ProductionStaffPage() {
                   <td>Status:</td>
                   <td>{selectedItem.status}</td>
                 </tr>
+                
+                <tr>
+                  <td colSpan="2">
+                    <button className="productionstaff-close-button" onClick={hideDetail}>
+                      Close
+                    </button>
+                    <button className="productionstaff-add-image-button" onClick={handleViewButtonClick}>
+                      View
+                    </button>
+                  </td>
+                </tr>
               </tbody>
             </table>
-            <div>
-              <button className="productionstaff-close-button" onClick={hideDetail}>
-                Close
-              </button>
-            </div>
           </div>
         </div>
       )}

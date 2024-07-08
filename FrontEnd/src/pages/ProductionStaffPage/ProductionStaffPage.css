@@ -149,3 +149,23 @@
   background-color: #e2e2e2; /* Màu nền khi hover */
   transition: background-color 0.3s; /* Hiệu ứng chuyển đổi màu nền */
 }
+
+.productionstaff-newview {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.productionstaff-div {
+  width: 32%;
+  height: 600px;
+  background-color: #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 15px;
+}
+
+
