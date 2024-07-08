@@ -2,6 +2,7 @@
 using JewelryProduction.Common;
 using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
+using JewelryProduction.Entities;
 using JewelryProduction.Interface;
 using JewelryProduction.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -211,6 +212,35 @@ namespace JewelryProduction.Controllers
 
             var GemWeight = await _orderService.CalculateGemstoneWeightInMonth(startDate, endDate);
             return Ok(GemWeight);
+        }
+        [HttpPut("UpdatePayment/{orderId}")]
+        public async Task<IActionResult> UpdatePayment(string orderId, decimal depositAmount)
+        {
+            var updateOrder = await _context.Orders.FindAsync(orderId);
+            if (updateOrder == null)
+            {
+                return BadRequest();
+            }
+            updateOrder.DepositAmount = depositAmount;
+            updateOrder.Status = "Wait for Design";
+            updateOrder.TotalPrice -= depositAmount;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!OrderExists(orderId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
         private decimal GetDeposit(decimal productCost)
         {

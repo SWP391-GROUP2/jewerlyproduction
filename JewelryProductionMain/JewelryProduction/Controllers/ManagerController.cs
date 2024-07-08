@@ -1,8 +1,10 @@
-﻿using JewelryProduction.DbContext;
+﻿using JewelryProduction.Common;
+using JewelryProduction.DbContext;
 using JewelryProduction.DTO.BasicDTO;
 using JewelryProduction.Entities;
 using JewelryProduction.Interface;
 using JewelryProduction.Services;
+using MailKit.Search;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -120,6 +122,45 @@ namespace JewelryProduction.Controllers
 
             order.ProductionStaffId = assignProductionStaffDTO.ProductionStaffId;
             _context.Orders.Update(order);
+            var inpsections1 = new Inspection
+            {
+                InspectionId = await IdGenerator.GenerateUniqueId<Inspection>(_context, "I", 6),
+                OrderId = assignProductionStaffDTO.OrderId,
+                InspectionDate = DateTime.Now,
+                ProductStaffId = assignProductionStaffDTO.ProductionStaffId,
+                Stage = "Material Checking",
+                Result = null,
+                Comment = null,
+
+
+            };
+            var inpsections2 = new Inspection
+            {
+                InspectionId = await IdGenerator.GenerateUniqueId<Inspection>(_context, "I", 6),
+                OrderId = assignProductionStaffDTO.OrderId,
+                InspectionDate = DateTime.Now,
+                ProductStaffId = assignProductionStaffDTO.ProductionStaffId,
+                Stage = "In Production Progress",
+                Result = null,
+                Comment = null,
+
+
+            };
+            var inpsections3 = new Inspection
+            {
+                InspectionId = await IdGenerator.GenerateUniqueId<Inspection>(_context, "I", 6),
+                OrderId = assignProductionStaffDTO.OrderId,
+                InspectionDate = DateTime.Now,
+                ProductStaffId = assignProductionStaffDTO.ProductionStaffId,
+                Stage = "Final Inspection",
+                Result = null,
+                Comment = null,
+
+
+            };
+            _context.Inspections.Add(inpsections1);
+            _context.Inspections.Add(inpsections2);
+            _context.Inspections.Add(inpsections3);
             await _context.SaveChangesAsync();
 
             return Ok("Production Staff assigned successfully.");
