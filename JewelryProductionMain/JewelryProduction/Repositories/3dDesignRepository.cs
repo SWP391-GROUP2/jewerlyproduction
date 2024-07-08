@@ -33,7 +33,7 @@ namespace JewelryProduction.Repositories
         public async Task<Get3dDesignDTO> Get_3Ddesign(string id)
         {
             var design = await _context._3ddesigns
-                .Include(d => d.CustomizeRequest)
+                .Include(d => d.OrderId)
                 .Include(d => d.ProductSample)
                 .Include(d => d.DesignStaff)
                 .Where(d => d._3dDesignId.Equals(id))
@@ -49,7 +49,7 @@ namespace JewelryProduction.Repositories
                 _3dDesignId = design._3dDesignId,
                 DesignName = design.DesignName,
                 Image = design.Image,
-                CustomizeRequestId = design.CustomizeRequestId,
+                OrderId = design.OrderId,
                 ProductSampleId = design.ProductSampleId,
                 DesignStaffId = design.DesignStaffId
             };
@@ -60,7 +60,7 @@ namespace JewelryProduction.Repositories
         public async Task<List<Get3dDesignDTO>> Get_3Ddesigns()
         {
             var designs = await _context._3ddesigns
-                .Include(d => d.CustomizeRequest)
+                .Include(d => d.OrderId)
                 .Include(d => d.ProductSample)
                 .Include(d => d.DesignStaff)
                 .ToListAsync();
@@ -70,7 +70,7 @@ namespace JewelryProduction.Repositories
                 _3dDesignId = design._3dDesignId,
                 DesignName = design.DesignName,
                 Image = design.Image,
-                CustomizeRequestId = design.CustomizeRequestId,
+                OrderId = design.OrderId,
                 ProductSampleId = design.ProductSampleId,
                 DesignStaffId = design.DesignStaffId
             }).ToList();

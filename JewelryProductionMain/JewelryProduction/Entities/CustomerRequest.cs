@@ -31,6 +31,4 @@ public partial class CustomerRequest
     public Gold Gold { get; set; } = null!;
 
     public Order? Order { get; set; }
-
-    public ICollection<_3ddesign> _3ddesigns { get; set; } = new List<_3ddesign>();
 }

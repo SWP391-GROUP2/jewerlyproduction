@@ -31,4 +31,6 @@ public partial class Order
     public AppUser ProductionStaff { get; set; } = null!;
     public AppUser DesignStaff { get; set; } = null!;
     public ICollection<Inspection> Inspections { get; set; } = new List<Inspection>();
+
+    public ICollection<_3ddesign> _3ddesigns { get; set; } = new List<_3ddesign>();
 }

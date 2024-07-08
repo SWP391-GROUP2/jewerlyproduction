@@ -251,36 +251,49 @@ namespace JewelryProduction.Migrations
                     b.ToTable("CustomerRequest", (string)null);
                 });
 
-            modelBuilder.Entity("JewelryProduction.Entities.ApprovalRequest", b =>
+            modelBuilder.Entity("JewelryProduction.Entities.Inspection", b =>
                 {
-                    b.Property<string>("ApprovalRequestId")
+                    b.Property<string>("InspectionId")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
-                        .HasColumnName("approvalRequestId");
+                        .HasColumnName("inspectionID");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("createdAt");
+                    b.Property<string>("Comment")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("comment");
 
-                    b.Property<string>("CustomerRequestId")
+                    b.Property<DateTime>("InspectionDate")
+                        .HasColumnType("datetime")
+                        .HasColumnName("inspectionDate");
+
+                    b.Property<string>("OrderId")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
-                        .HasColumnName("customerRequestId");
+                        .HasColumnName("orderID");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("money")
-                        .HasColumnName("price");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
+                    b.Property<string>("ProductStaffId")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
-                        .HasColumnName("status");
+                        .HasColumnName("productStaffID");
 
-                    b.HasKey("ApprovalRequestId");
+                    b.Property<bool?>("Result")
+                        .HasMaxLength(50)
+                        .HasColumnType("bit")
+                        .HasColumnName("result");
 
-                    b.ToTable("ApprovalRequest", (string)null);
+                    b.Property<string>("Stage")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("stage");
+
+                    b.HasKey("InspectionId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("Inspection", (string)null);
                 });
 
             modelBuilder.Entity("JewelryProduction.Entities.Notification", b =>
@@ -305,7 +318,6 @@ namespace JewelryProduction.Migrations
                         .HasColumnName("message");
 
                     b.Property<string>("SenderId")
-                        .IsRequired()
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("senderId");
@@ -323,6 +335,30 @@ namespace JewelryProduction.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Notification", (string)null);
+                });
+
+            modelBuilder.Entity("JewelryProduction.Entities.QualityCheckList", b =>
+                {
+                    b.Property<string>("ChecklistId")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("checklistID");
+
+                    b.Property<string>("ChecklistItem")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("checklistItem");
+
+                    b.Property<string>("Stage")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("stage");
+
+                    b.HasKey("ChecklistId");
+
+                    b.ToTable("QualityCheckList", (string)null);
                 });
 
             modelBuilder.Entity("JewelryProduction.Gemstone", b =>
@@ -501,6 +537,11 @@ namespace JewelryProduction.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("orderID");
 
+                    b.Property<string>("Address")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("address");
+
                     b.Property<string>("CustomizeRequestId")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
@@ -520,13 +561,9 @@ namespace JewelryProduction.Migrations
                         .HasColumnName("orderDate");
 
                     b.Property<string>("PaymentMethodId")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("paymentMethodID");
-
-                    b.Property<string>("ProductSampleId")
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("ProductionStaffId")
                         .HasMaxLength(450)
@@ -548,8 +585,6 @@ namespace JewelryProduction.Migrations
                     b.HasIndex("DesignStaffId");
 
                     b.HasIndex("PaymentMethodId");
-
-                    b.HasIndex("ProductSampleId");
 
                     b.HasIndex("ProductionStaffId");
 
@@ -641,11 +676,6 @@ namespace JewelryProduction.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("3dDesignID");
 
-                    b.Property<string>("CustomizeRequestId")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("customizeRequestID");
-
                     b.Property<string>("DesignName")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -664,6 +694,11 @@ namespace JewelryProduction.Migrations
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("Image");
 
+                    b.Property<string>("OrderId")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("orderID");
+
                     b.Property<string>("ProductSampleId")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
@@ -671,9 +706,9 @@ namespace JewelryProduction.Migrations
 
                     b.HasKey("_3dDesignId");
 
-                    b.HasIndex("CustomizeRequestId");
-
                     b.HasIndex("DesignStaffId");
+
+                    b.HasIndex("OrderId");
 
                     b.HasIndex("ProductSampleId");
 
@@ -709,37 +744,37 @@ namespace JewelryProduction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "5c286cde-97f7-4c86-98f2-b3a05413b0d7",
+                            Id = "d096a3ab-af97-45e9-bb6b-1f22a99caeb2",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "446e0457-d977-4186-9988-76313e39507e",
+                            Id = "20cd1d4d-d5b3-4719-baae-ad864ac6f76c",
                             Name = "SaleStaff",
                             NormalizedName = "SALESTAFF"
                         },
                         new
                         {
-                            Id = "c34f688a-9601-495e-aff6-7b2321bc57bf",
+                            Id = "8deb521e-64e3-4e90-8390-1b64065689e2",
                             Name = "ProductionStaff",
                             NormalizedName = "PRODUCTIONSTAFF"
                         },
                         new
                         {
-                            Id = "8d43a9cb-88c3-4202-9504-e9027f1f28b5",
+                            Id = "214f057e-faaf-47ad-8b2d-645a307333ce",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "619b74fc-9136-46f9-aaad-a1a8670f31d9",
+                            Id = "48b678d5-a3ec-4486-b4b5-09508af646a6",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "e103db46-ee35-4eaa-9683-5c2f196294f6",
+                            Id = "13b84743-bd04-4316-b75d-c2fe3aca3638",
                             Name = "DesignStaff",
                             NormalizedName = "DESIGNSTAFF"
                         });
@@ -899,13 +934,24 @@ namespace JewelryProduction.Migrations
                     b.Navigation("SaleStaff");
                 });
 
+            modelBuilder.Entity("JewelryProduction.Entities.Inspection", b =>
+                {
+                    b.HasOne("JewelryProduction.Order", "Order")
+                        .WithMany("Inspections")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_Inspection_Order");
+
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("JewelryProduction.Entities.Notification", b =>
                 {
                     b.HasOne("JewelryProduction.AppUser", "Sender")
                         .WithMany("SentNotifications")
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
                         .HasConstraintName("FK_Notification_Sender");
 
                     b.HasOne("JewelryProduction.AppUser", "User")
@@ -991,12 +1037,7 @@ namespace JewelryProduction.Migrations
                     b.HasOne("JewelryProduction.PaymentMethod", "PaymentMethod")
                         .WithMany("Orders")
                         .HasForeignKey("PaymentMethodId")
-                        .IsRequired()
                         .HasConstraintName("FK_Order_PaymentMethod");
-
-                    b.HasOne("JewelryProduction.ProductSample", null)
-                        .WithMany("Orders")
-                        .HasForeignKey("ProductSampleId");
 
                     b.HasOne("JewelryProduction.AppUser", "ProductionStaff")
                         .WithMany("OrderProductionStaffs")
@@ -1019,32 +1060,32 @@ namespace JewelryProduction.Migrations
                         .WithMany("ProductSamples")
                         .HasForeignKey("GoldId")
                         .IsRequired()
-                        .HasConstraintName("FK_ProductSample_Gold1");
+                        .HasConstraintName("FK_ProductSample_Gold");
 
                     b.Navigation("Gold");
                 });
 
             modelBuilder.Entity("JewelryProduction._3ddesign", b =>
                 {
-                    b.HasOne("JewelryProduction.CustomerRequest", "CustomizeRequest")
-                        .WithMany("_3ddesigns")
-                        .HasForeignKey("CustomizeRequestId")
-                        .HasConstraintName("FK_3DDesign_CustomerRequest");
-
                     b.HasOne("JewelryProduction.AppUser", "DesignStaff")
                         .WithMany("_3ddesigns")
                         .HasForeignKey("DesignStaffId")
                         .IsRequired()
                         .HasConstraintName("FK_3DDesign_User");
 
+                    b.HasOne("JewelryProduction.Order", "Order")
+                        .WithMany("_3ddesigns")
+                        .HasForeignKey("OrderId")
+                        .HasConstraintName("FK_3DDesign_Order");
+
                     b.HasOne("JewelryProduction.ProductSample", "ProductSample")
                         .WithMany("_3ddesigns")
                         .HasForeignKey("ProductSampleId")
                         .HasConstraintName("FK_3DDesign_ProductSample");
 
-                    b.Navigation("CustomizeRequest");
-
                     b.Navigation("DesignStaff");
+
+                    b.Navigation("Order");
 
                     b.Navigation("ProductSample");
                 });
@@ -1133,8 +1174,6 @@ namespace JewelryProduction.Migrations
                     b.Navigation("Gemstones");
 
                     b.Navigation("Order");
-
-                    b.Navigation("_3ddesigns");
                 });
 
             modelBuilder.Entity("JewelryProduction.Gold", b =>
@@ -1146,7 +1185,11 @@ namespace JewelryProduction.Migrations
 
             modelBuilder.Entity("JewelryProduction.Order", b =>
                 {
+                    b.Navigation("Inspections");
+
                     b.Navigation("Insurance");
+
+                    b.Navigation("_3ddesigns");
                 });
 
             modelBuilder.Entity("JewelryProduction.PaymentMethod", b =>
@@ -1157,8 +1200,6 @@ namespace JewelryProduction.Migrations
             modelBuilder.Entity("JewelryProduction.ProductSample", b =>
                 {
                     b.Navigation("Gemstones");
-
-                    b.Navigation("Orders");
 
                     b.Navigation("_3ddesigns");
                 });
