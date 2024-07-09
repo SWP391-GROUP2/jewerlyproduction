@@ -6,8 +6,10 @@ import ProductionStaffHeader from "../../components/ProductionStaffHeader/Produc
 function ProductionStaffPage() {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
   const [currentView, setCurrentView] = useState("");
-  const [selectedItem, setSelectedItem] = useState(null); // State to store selected item details
-  const [showDetailPopup, setShowDetailPopup] = useState(false); // State to manage popup visibility
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [showDetailPopup, setShowDetailPopup] = useState(false);
+  
+  const [detailData, setDetailData] = useState(null); // State to store detail data
 
   const OpenSidebar = () => {
     setOpenSidebarToggle(!openSidebarToggle);
@@ -15,6 +17,8 @@ function ProductionStaffPage() {
 
   const handleViewChange = (view) => {
     setCurrentView(view);
+    // Clear detail data when changing view
+    setDetailData(null);
   };
 
   const orderData = [
@@ -32,6 +36,7 @@ function ProductionStaffPage() {
       quotationdes: "Description for Q001",
       quantity: 2,
       status: "Pending",
+      image: "image1.jpg",
     },
     {
       customizeRequestID: 2,
@@ -47,6 +52,7 @@ function ProductionStaffPage() {
       quotationdes: "Description for Q002",
       quantity: 1,
       status: "Completed",
+      image: "image2.jpg",
     },
     {
       customizeRequestID: 3,
@@ -62,19 +68,33 @@ function ProductionStaffPage() {
       quotationdes: "Description for Q003",
       quantity: 3,
       status: "Pending",
+      image: "image3.jpg",
     },
   ];
 
-  // Function to handle showing the detail popup
   const showDetail = (item) => {
-    setSelectedItem(item); // Set selected item details
-    setShowDetailPopup(true); // Show the detail popup
+    setSelectedItem(item);
+    setShowDetailPopup(true);
+    
   };
 
-  // Function to hide the detail popup
   const hideDetail = () => {
     setShowDetailPopup(false);
   };
+
+  
+
+  const handleViewButtonClick = () => {
+    setShowDetailPopup(false); // Close the popup
+    // Save detail data before changing view
+    setDetailData(selectedItem);
+    setCurrentView("newView"); // Change current view to new div view
+  };
+
+  // Log detailData to console when it changes
+  React.useEffect(() => {
+    console.log("Detail Data:", detailData);
+  }, [detailData]);
 
   return (
     <div className="productionstaff-page">
@@ -86,11 +106,11 @@ function ProductionStaffPage() {
       <div className={`content ${showDetailPopup ? "blur" : ""}`}>
         <div className="productionstaff-container">
           <ProductionStaffHeader />
-          <div className="productionstaff-newdiv">
+          <div className="productionstaff-main-container">
             {currentView === "orderlist" && (
-              <div>
+              <div className="productionstaff-table-container">
                 <h2 className="productionstaff-table-title">Order List</h2>
-                <table className="custom-table">
+                <table className="productionstaff-table">
                   <thead>
                     <tr>
                       <th>Order ID</th>
@@ -106,12 +126,11 @@ function ProductionStaffPage() {
                       <th>Quotation Description</th>
                       <th>Quantity</th>
                       <th>Status</th>
-                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {orderData.map((item) => (
-                      <tr key={item.customizeRequestID}>
+                      <tr key={item.customizeRequestID} onClick={() => showDetail(item)}>
                         <td>{item.customizeRequestID}</td>
                         <td>{item.goldID}</td>
                         <td>{item.goldweight}</td>
@@ -125,25 +144,23 @@ function ProductionStaffPage() {
                         <td>{item.quotationdes}</td>
                         <td>{item.quantity}</td>
                         <td>{item.status}</td>
-                        <td>
-                          <button
-                            className="productionstaff-detail-button"
-                            onClick={() => showDetail(item)}
-                          >
-                            Detail
-                          </button>
-                        </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
             )}
+            {currentView === "newView" && (
+              <div className="productionstaff-newview">
+                <div className="productionstaff-div">Div 1</div>
+                <div className="productionstaff-div">Div 2</div>
+                <div className="productionstaff-div">Div 3</div>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Detail Popup */}
       {showDetailPopup && (
         <div className="productionstaff-detail-popup">
           <div className="productionstaff-detail-popup-content">
@@ -202,11 +219,19 @@ function ProductionStaffPage() {
                   <td>Status:</td>
                   <td>{selectedItem.status}</td>
                 </tr>
+                
+                <tr>
+                  <td colSpan="2">
+                    <button className="productionstaff-close-button" onClick={hideDetail}>
+                      Close
+                    </button>
+                    <button className="productionstaff-add-image-button" onClick={handleViewButtonClick}>
+                      View
+                    </button>
+                  </td>
+                </tr>
               </tbody>
             </table>
-            <button className="productionstaff-close-button" onClick={hideDetail}>
-              Close
-            </button>
           </div>
         </div>
       )}
