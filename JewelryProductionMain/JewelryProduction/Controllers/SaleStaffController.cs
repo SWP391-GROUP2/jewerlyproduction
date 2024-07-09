@@ -41,35 +41,15 @@ namespace JewelryProduction.Controllers
         }
 
         [HttpPost("send-approved")]
-        public async Task<ActionResult> SendForApproval(string CustomizeRequestId, double GoldWeight)
+        public async Task<IActionResult> SendForApproval(string customizeRequestId, double goldWeight)
         {
-            var customerRequest = await _context.CustomerRequests.FindAsync(CustomizeRequestId);
-            var gold = await _context.Golds.FindAsync(customerRequest.GoldId);
-            var gemstones = await _context.Gemstones
-            .Where(g => customerRequest.CustomizeRequestId.Contains(g.CustomizeRequestId))
-            .ToListAsync();
             var senderId = GetCurrentUserId();
-            if (customerRequest.GoldWeight == null)
+            var result = await _service.SendForApprovalAsync(customizeRequestId, goldWeight, senderId);
+            if (result)
             {
-                customerRequest.GoldWeight = GoldWeight;
+                return Ok("Approval request sent to the manager.");
             }
-            var price = await _service.CalculateProductCost(CustomizeRequestId);
-            var request = await _context.CustomerRequests.FindAsync(CustomizeRequestId);
-            var userId = request.ManagerId;
-            request.quotationDes = @$"
-Gemstone Price:             {gemstones.Sum(x => x.Price)}
-Gold Price:             {gold.PricePerGram * (decimal)customerRequest.GoldWeight}
-Production Cost:            40% Material Price
-Additional Fee:             0
-VAT:                        10%";
-            request.quotation = price;
-            request.Status = "Wait For Approval";
-            await _context.SaveChangesAsync();
-
-            // Send email or notification to manager
-            await _notificationService.SendNotificationToUserfAsync(userId, senderId, $"There is new request with ID: {CustomizeRequestId} that need to be approved.");
-
-            return Ok("Approval request sent to the manager.");
+            return BadRequest("Failed to send approval request.");
         }
 
         [HttpPost("updateCustomerRequestQuotation")]

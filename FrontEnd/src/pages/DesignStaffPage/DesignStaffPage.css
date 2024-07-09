@@ -1,68 +1,67 @@
 .designstaff-page {
-  text-align: left;
   display: flex;
-  flex-direction: row;
-  justify-content: center;
   min-height: 100vh;
   width: 100vw;
-  background-color: rgb(255, 255, 255);
-  background-size: cover;
-  background-position: center;
-  padding-bottom: 0px;
+  background-color: #f0f2f5;
+  font-family: Arial, sans-serif;
 }
 
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+
 .designstaff-container {
-  flex: 1; /* Make container take the remaining space */
-  /* Add other CSS properties if needed */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
 }
 
 .designstaff-main-container {
-  margin-top: 20px; /* Adjust the margin as needed */
-  flex-grow: 1; /* Make the main container grow to fill the remaining space */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
 }
 
 .designstaff-table-container {
-  margin: 20px; /* Add margin to the table container */
-  padding: 20px; /* Optional padding */
-  border: 1px solid #ddd; /* Optional border */
-  border-radius: 8px; /* Optional border radius */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional box shadow */
-  background-color: #fff; /* Optional background color */
+  flex: 1;
+  padding: 20px;
+  background-color: #f5f2f2;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  
+}
+
+.designstaff-tail-container table{
+  display: flex;
 }
 
 .designstaff-table-title {
-  text-align: center; /* Center the title */
-  margin-bottom: 20px; /* Add some space below the title */
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333333;
 }
 
 .designstaff-table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0;
-  font-size: 18px;
-  text-align: left;
+}
+
+.designstaff-tables-container {
+  display: flex;
+  gap: 10px; /* Adjust the gap as needed */
 }
 
 .designstaff-table th,
 .designstaff-table td {
-  padding: 12px 15px;
-  border: 1px solid #ddd;
-}
-
-.designstaff-table th {
-  background-color: #f2f2f2;
-}
-
-.designstaff-detail-button {
-  padding: 8px 12px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-.designstaff-detail-button:hover {
-  background-color: #45a049;
+  border: 1px solid #dddddd;
+  padding: 8px;
+  text-align: center;
 }
 
 .designstaff-detail-popup {
@@ -71,42 +70,127 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-  z-index: 1000; /* Ensure popup appears above other content */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
 }
 
-.designstaff-detail-popup-content {
-  background-color: #fff;
+.designstaff-detail-popup-content2{
+  background-color: #ffffff;
+  width: 100%;
   padding: 20px;
+  overflow-y: auto;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.designstaff-detail-popup-content1 {
+  background-color: #ffffff;
+  width: 80%;
+  padding: 20px;
   max-width: 80%;
-  overflow-y: auto; /* Enable scrolling if content exceeds popup height */
+  overflow-y: auto;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.designstaff-detail-table1{
+  width: 25%;
+  border-collapse: collapse
+}
+
+.designstaff-detail-table1 td {
+  border: 1px solid #dddddd;
+  padding: 8px;
+}
+
+.designstaff-detail-table2{
+  width: 75%;
+  border-collapse: collapse
+}
+
+.designstaff-detail-table2 td {
+  border: 1px solid #dddddd;
+  padding: 8px;
+}
+
+._3dDesign img{
+  size: 20%;
 }
 
 .designstaff-detail-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
 }
 
 .designstaff-detail-table td {
-  padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid #dddddd;
+  padding: 8px;
+}
+.designstaff-table tr:hover { /* Add this block to style rows on hover */
+  background-color: rgb(237, 225, 225); /* Add the background color you want on hover */
+  transition: background-color 0.3s; /* Add a transition for a smoother effect */
+}
+.designstaff-save-button {
+  margin-top: 10px; 
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  background-color: #4caf50;
+  color: white;
+  border-radius: 4px;
+  float: left; /* Add this line to float the save button to the left */
 }
 
 .designstaff-close-button {
   margin-top: 10px;
   padding: 8px 16px;
-  background-color: #f44336;
-  color: white;
   border: none;
   cursor: pointer;
+  background-color: #f44336;
+  color: white;
+  border-radius: 4px;
+  float: left; /* Add this line to float the close button to the left */
+  margin-left: 10px; /* Add this line to provide some spacing between the buttons */
 }
+
+.designstaff-save-button:hover {
+  background-color: #45a049;
+}
+
+
 
 .designstaff-close-button:hover {
   background-color: #d32f2f;
 }
+
+.uploaded-image-preview {
+  max-width: 100%;
+  max-height: 300px;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+.blur {
+  filter: blur(2px);
+}
+.designstaff-add-image-button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  background-color: #2196f3;
+  color: white;
+  border-radius: 4px;
+  float: right; /* Di chuyển nút sang phải */
+  margin-left: 10px; /* Để cách nút Save và Close một khoảng */
+}
+
+.designstaff-add-image-button:hover {
+  background-color: #0b7dda;
+}
+

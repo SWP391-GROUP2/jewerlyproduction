@@ -2,6 +2,7 @@
 using JewelryProduction.DTO;
 using JewelryProduction.Interface;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace JewelryProduction.Repositories
@@ -74,6 +75,19 @@ namespace JewelryProduction.Repositories
             }).ToList();
 
             return result;
+        }
+
+        public async Task DeleteDesignAsync(string id)
+        {
+            var design = await _context._3ddesigns.FindAsync(id);
+
+            if (design == null)
+            {
+                throw new Exception($"Design with ID {id} not found.");
+            }
+
+            _context._3ddesigns.Remove(design);
+            await _context.SaveChangesAsync();  
         }
     }
 }

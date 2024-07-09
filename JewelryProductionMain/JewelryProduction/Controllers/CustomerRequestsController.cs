@@ -17,11 +17,13 @@ namespace JewelryProduction.Controllers
     {
         private readonly JewelryProductionContext _context;
         private readonly ICustomerRequestService _requestService;
+        private readonly IProductSampleService _productSampleService;
 
-        public CustomerRequestsController(JewelryProductionContext context, ICustomerRequestService requestService)
+        public CustomerRequestsController(JewelryProductionContext context, ICustomerRequestService requestService, IProductSampleService productSampleService)
         {
             _context = context;
             _requestService = requestService;
+            _productSampleService = productSampleService;
         }
 
         // GET: api/CustomerRequests
@@ -120,67 +122,17 @@ namespace JewelryProduction.Controllers
         // POST: api/CustomerRequests
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<CustomerRequest>> PostCustomerRequest(CustomerRequestDTO customerRequestDTO)
+        public async Task<IActionResult> PostCustomerRequest([FromBody] CustomerRequestDTO customerRequestDTO)
         {
-            var primaryGemstone = await _context.Gemstones
-                    .Where(g =>
-                        customerRequestDTO.PrimaryGemstoneId.Contains(g.GemstoneId) &&
-                        g.ProductSample == null && g.CustomizeRequestId == null)
-                    .GroupBy(g => g.Name)
-                    .Select(g => g.FirstOrDefault())
-                    .OrderBy(_ => Guid.NewGuid())
-                    .Take(2)
-                    .ToListAsync();
-
-            var additionalGemstones = await _context.Gemstones
-                .Where(g => customerRequestDTO.AdditionalGemstone.Contains(g.GemstoneId))
-                .GroupBy(g => g.Name)
-                .Select(g => g.FirstOrDefault())
-                .OrderBy(_ => Guid.NewGuid())
-                .Take(2)
-                .ToListAsync();
-            var allSelectedGemstones = new List<Gemstone>(primaryGemstone);
-            allSelectedGemstones.AddRange(additionalGemstones);
-            var gold = await _context.Golds
-            .FirstOrDefaultAsync(g => g.GoldType == customerRequestDTO.GoldType);
-
-            if (gold == null)
-            {
-                return BadRequest("Gold type not found.");
-            }
-            var uniqueId = await IdGenerator.GenerateUniqueId<CustomerRequest>(_context, "REQ", 3);
-
-            var customerRequest = new CustomerRequest
-            {
-                CustomizeRequestId = uniqueId,
-                GoldId = gold.GoldId,
-                CustomerId = customerRequestDTO.CustomerId,
-                Type = customerRequestDTO.Type,
-                Style = customerRequestDTO.Style,
-                Size = customerRequestDTO.Size,
-                Quantity = customerRequestDTO.Quantity,
-                Gemstones = allSelectedGemstones,
-                Gold = gold,
-                Status = "Pending"
-            };
-            _context.CustomerRequests.Add(customerRequest);
             try
             {
-                await _context.SaveChangesAsync();
+                var customerRequest = await _requestService.CreateCustomerRequestAsync(customerRequestDTO);
+                return CreatedAtAction("GetCustomerRequest", new { id = customerRequest.CustomizeRequestId }, customerRequest);
             }
-            catch (DbUpdateException)
+            catch (Exception ex)
             {
-                if (CustomerRequestExists(customerRequest.CustomizeRequestId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(ex.Message);
             }
-
-            return CreatedAtAction("GetCustomerRequest", new { id = customerRequest.CustomizeRequestId }, customerRequest);
         }
 
         // DELETE: api/CustomerRequests/5
@@ -212,140 +164,51 @@ namespace JewelryProduction.Controllers
         [HttpGet("prefill")]
         public async Task<IActionResult> PrefillCustomizeRequest([FromQuery] string productSampleId)
         {
-            var productSample = await _context.ProductSamples
-                .Where(ps => ps.ProductSampleId == productSampleId)
-                .Select(ps => new
-                {
-                    Type = ps.Type,
-                    Style = ps.Style,
-                    GoldWeight = ps.GoldWeight,
-                    Quantity = 1, // Default quantity, adjust as necessary
-                    PrimaryGemstone = ps.Gemstones
-                        .Where(g => g.CaratWeight > 0.3)
-                        .Select(g => new AddGemstoneDTO
-                        {
-                            Name = g.Name,
-                            Clarity = g.Clarity,
-                            Color = g.Color,
-                            Shape = g.Shape,
-                            Size = g.Size,
-                            Cut = g.Cut,
-                            CaratWeight = g.CaratWeight,
-                        }).FirstOrDefault(),
-                        AdditionalGemstones = ps.Gemstones
-                        .Where(g => g.CaratWeight <= 0.3)
-                        .Select(g => new Gemstone
-                        {
-                            Name = g.Name,
-                            Clarity = g.Clarity,
-                            Color = g.Color,
-                            Shape = g.Shape,
-                            Size = g.Size,
-                            Cut = g.Cut,
-                            CaratWeight = g.CaratWeight,
-                        })
-                        .ToList(),
-                    GoldType = ps.Gold.GoldType,
-                })
-                .FirstOrDefaultAsync();
-
-            if (productSample == null)
+            try
             {
-                return NotFound("Product sample not found.");
+                var prefillDto = await _productSampleService.PrefillCustomizeRequestAsync(productSampleId);
+                return Ok(prefillDto);
             }
-
-            var customerRequest = new PrefillDTO
+            catch (KeyNotFoundException)
             {
-                Type = productSample.Type,
-                Style = productSample.Style,
-                Quantity = productSample.Quantity,
-                PrimaryGemstone = productSample.PrimaryGemstone,
-                AdditionalGemstone = productSample.AdditionalGemstones.Select(g => g.Name).ToList(),
-                GoldType = productSample.GoldType,
-            };
-
-            return Ok(customerRequest);
+                return NotFound($"Product sample with ID {productSampleId} not found.");
+            }
+            catch (Exception ex)
+            {
+                // Optionally log the exception
+                return StatusCode(500, "Internal server error.");
+            }
         }
         [HttpPost("approve/{customizeRequestId}")]
-        public async Task<IActionResult> ApproveCustomerRequest(string customizeRequestId, string paymentMethodId)
+        public async Task<IActionResult> ApproveCustomerRequest(string customizeRequestId, [FromQuery] string paymentMethodId)
         {
-            var customerRequest = await _context.CustomerRequests
-                .Include(cr => cr.Gemstones)
-                .Include(cr => cr.Gold)
-                .FirstOrDefaultAsync(cr => cr.CustomizeRequestId == customizeRequestId);
-
-            if (customerRequest == null)
+            try
+            {
+                var order = await _requestService.ApproveCustomerRequestAsync(customizeRequestId, paymentMethodId);
+                return Ok(order);
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound("Customer request not found.");
             }
-
-            if (customerRequest.quotation == null)
+            catch (InvalidOperationException)
             {
                 return BadRequest("Quotation is not available.");
             }
-
-            customerRequest.Status = "Request Approved";
-
-            var order = new Order
+            catch (Exception)
             {
-                OrderId = await IdGenerator.GenerateUniqueId<Order>(_context, "ORD", 6),
-                ProductionStaffId = null,
-                DesignStaffId = "DE001",
-                OrderDate = DateTime.Now,
-                DepositAmount = customerRequest.quotation.Value * 0.3M,
-                Status = "Pending",
-                CustomizeRequestId = customerRequest.CustomizeRequestId,
-                PaymentMethodId = paymentMethodId,
-                TotalPrice = customerRequest.quotation.Value
-            };
-
-            _context.Orders.Add(order);
-
-            using (var transaction = await _context.Database.BeginTransactionAsync())
-            {
-                try
-                {
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    // Log the exception
-                    Console.WriteLine($"Error: {ex.Message}");
-                    return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
-                }
+                // Optionally log the exception
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
             }
-
-            return Ok(order);
         }
         [HttpPost("reject/{customizeRequestId}")]
         public async Task<IActionResult> RejectCustomerRequest(string customizeRequestId)
         {
-            var customerRequest = await _context.CustomerRequests
-                .Include(cr => cr.Gemstones)
-                .FirstOrDefaultAsync(cr => cr.CustomizeRequestId == customizeRequestId);
-            if (customerRequest == null)
+            var result = await _requestService.RejectCustomerRequestAsync(customizeRequestId);
+
+            if (!result)
             {
                 return NotFound("Customer request not found.");
-            }
-            foreach (var gemstone in customerRequest.Gemstones)
-            {
-                gemstone.CustomizeRequestId = null;
-            }
-            customerRequest.Status = "Request Reject";
-            using (var transaction = await _context.Database.BeginTransactionAsync())
-            {
-                try
-                {
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                catch (Exception)
-                {
-                    await transaction.RollbackAsync();
-                    throw;
-                }
             }
 
             return NoContent();

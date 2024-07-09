@@ -1,7 +1,10 @@
 ﻿using JewelryProduction.Common;
 using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
+using JewelryProduction.Entities;
 using JewelryProduction.Interface;
+using JewelryProduction.Repositories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace JewelryProduction.Services
@@ -25,39 +28,13 @@ namespace JewelryProduction.Services
 
             return await query.ToListAsync();
         }
-        public async Task<Dictionary<string, double>> CalculateGoldWeightByTypeInMonth(DateTime startDate, DateTime endDate)
-        {
-            var totalGoldWeights = await (from cr in _context.CustomerRequests
-                                          join o in _context.Orders on cr.CustomizeRequestId equals o.CustomizeRequestId
-                                          join g in _context.Golds on cr.GoldId equals g.GoldId
-                                          where o.OrderDate >= startDate && o.OrderDate <= endDate
-                                          group cr by g.GoldType into grouped
-                                          select new
-                                          {
-                                              GoldType = grouped.Key,
-                                              TotalGoldWeight = grouped.Sum(cr => cr.GoldWeight) ?? 0
-                                          }).ToDictionaryAsync(g => g.GoldType, g => g.TotalGoldWeight);
-
-            return totalGoldWeights;
-        }
         public async Task<List<GemstoneWeightDto>> CalculateGemstoneWeightInMonth(DateTime startDate, DateTime endDate)
         {
-            var gemstoneWeights = await (from cr in _context.CustomerRequests
-                                         join o in _context.Orders on cr.CustomizeRequestId equals o.CustomizeRequestId
-                                         join g in _context.Gemstones on cr.CustomizeRequestId equals g.CustomizeRequestId
-                                         where o.OrderDate >= startDate && o.OrderDate <= endDate
-                                         group g by new { g.Name, g.Clarity, g.Color, g.Shape, g.Size, g.CaratWeight } into grouped
-                                         select new GemstoneWeightDto
-                                         {
-                                             Name = grouped.Key.Name,
-                                             Clarity = grouped.Key.Clarity,
-                                             Color = grouped.Key.Color,
-                                             Shape = grouped.Key.Shape,
-                                             Size = grouped.Key.Size,
-                                             CaratWeight = grouped.Key.CaratWeight,
-                                         }).ToListAsync();
-
-            return gemstoneWeights;
+            return await _repository.CalculateGemstoneWeightInMonthAsync(startDate, endDate);
+        }
+        public async Task<Dictionary<string, double>> CalculateGoldWeightByTypeInMonth(DateTime startDate, DateTime endDate)
+        {
+            return await _repository.CalculateGoldWeightByTypeInMonthAsync(startDate, endDate);
         }
         public async Task<PagedResult<Order>> GetAllPaging(OrderPagingRequest request)
         {
@@ -88,7 +65,42 @@ namespace JewelryProduction.Services
             return pagedResult;
 
         }
+        public async Task<IActionResult> RecordInspection(string orderId, string stage, InspectionDTO inspectionDto)
+        {
+            var order = await _repository.GetOrderByIdAsync(orderId);
+            if (order == null)
+            {
+                return new NotFoundObjectResult("Order not found");
+            }
 
+            var inspection = await _repository.GetInspectionAsync(orderId, stage);
+            if (inspection == null)
+            {
+                inspection = new Inspection { OrderId = orderId, Stage = stage };
+                _context.Inspections.Add(inspection);
+            }
+
+            inspection.Result = inspectionDto.Result;
+            inspection.Comment = inspectionDto.Comment;
+
+            if (inspection.Result == false)
+            {
+                return new OkObjectResult("Inspection recorded and sent to the manager.");
+            }
+
+            if (stage == "Final Inspection" && inspection.Result == true)
+            {
+                order.Status = "Completed";
+            }
+
+            await _repository.SaveChangesAsync();
+
+            return new OkObjectResult("Inspection recorded successfully");
+        }
+        public string GetManagerIdByOrderId(string orderId)
+        {
+            return _repository.GetManagerIdByOrderId(orderId);
+        }
         public async Task<List<OrderGetDTO>> GetOrders()
         {
             return await _repository.GetOrders();

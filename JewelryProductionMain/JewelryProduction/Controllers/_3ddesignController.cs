@@ -1,5 +1,6 @@
 ﻿using JewelryProduction.DTO;
 using JewelryProduction.Interface;
+using JewelryProduction.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JewelryProduction.Controllers
@@ -55,6 +56,13 @@ namespace JewelryProduction.Controllers
                 return NotFound();
 
             return Ok(result);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteDesign(string id)
+        {
+            await _designService.DeleteDesignAsync(id);
+            return NoContent();
         }
     }
 }

@@ -17,6 +17,11 @@ namespace JewelryProduction.Services
             _cloudinaryService = cloudinaryService;
         }
 
+        public async Task DeleteDesignAsync(string id)
+        {
+            await _repository.DeleteDesignAsync(id);
+        }
+
         public async Task<Get3dDesignDTO> Get_3Ddesign(string id) => await _repository.Get_3Ddesign(id);
 
         public async Task<List<Get3dDesignDTO>> Get_3Ddesigns() => await _repository.Get_3Ddesigns();

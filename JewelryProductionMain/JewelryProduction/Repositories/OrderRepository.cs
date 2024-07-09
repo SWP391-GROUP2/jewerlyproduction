@@ -1,5 +1,6 @@
 ﻿using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
+using JewelryProduction.Entities;
 using JewelryProduction.Interface;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,13 +13,28 @@ namespace JewelryProduction.Repositories
         {
             _context = context;
         }
+        public async Task<Order> GetOrderByIdAsync(string orderId)
+        {
+            return await _context.Orders
+                .Include(o => o.ProductionStaff)
+                .Include(o => o.CustomizeRequest)
+                .FirstOrDefaultAsync(o => o.OrderId == orderId);
+        }
+
+        public async Task<Inspection> GetInspectionAsync(string orderId, string stage)
+        {
+            return await _context.Inspections
+                .FirstOrDefaultAsync(i => i.OrderId == orderId && i.Stage == stage);
+        }
 
         public async Task<List<OrderGetDTO>> GetOrders()
         {
             var orders = await _context.Orders
+                .Include(o => o.CustomizeRequest)
                 .Include(o => o.CustomizeRequest.Customer)
                 .Include(o => o.CustomizeRequest.Manager)
                 .Include(o => o.CustomizeRequest.SaleStaff)
+                .Include(o => o.CustomizeRequest.Gold)
                 .Include(o => o.ProductionStaff)
                 .Include(o => o.DesignStaff)
                 .Include(o => o.PaymentMethod)
@@ -34,7 +50,15 @@ namespace JewelryProduction.Repositories
 
             return result;
         }
+        public string GetManagerIdByOrderId(string orderId)
+        {
+            var managerId = _context.Orders
+                .Where(o => o.OrderId == orderId)
+                .Select(o => o.CustomizeRequest.ManagerId)
+                .FirstOrDefault();
 
+            return managerId;
+        }
         public async Task<OrderGetDTO> GetOrder(string id)
         {
             var order = await _context.Orders
@@ -67,6 +91,63 @@ namespace JewelryProduction.Repositories
                 .FirstOrDefault();
 
             return order;
+        }
+        public async Task<Order> GetByIdAsync(object id)
+        {
+            return await _context.Orders.FindAsync(id);
+        }
+
+        public async Task<IEnumerable<Order>> GetAllAsync()
+        {
+            return await _context.Orders.ToListAsync();
+        }
+
+        public async Task AddAsync(Order entity)
+        {
+            await _context.Orders.AddAsync(entity);
+        }
+
+        public void Update(Order entity)
+        {
+            _context.Orders.Update(entity);
+        }
+        public async Task<Dictionary<string, double>> CalculateGoldWeightByTypeInMonthAsync(DateTime startDate, DateTime endDate)
+        {
+            var totalGoldWeights = await (from cr in _context.CustomerRequests
+                                          join o in _context.Orders on cr.CustomizeRequestId equals o.CustomizeRequestId
+                                          join g in _context.Golds on cr.GoldId equals g.GoldId
+                                          where o.OrderDate >= startDate && o.OrderDate <= endDate
+                                          group cr by g.GoldType into grouped
+                                          select new
+                                          {
+                                              GoldType = grouped.Key,
+                                              TotalGoldWeight = grouped.Sum(cr => cr.GoldWeight) ?? 0
+                                          }).ToDictionaryAsync(g => g.GoldType, g => g.TotalGoldWeight);
+
+            return totalGoldWeights;
+        }
+        public async Task<List<GemstoneWeightDto>> CalculateGemstoneWeightInMonthAsync(DateTime startDate, DateTime endDate)
+        {
+            var gemstoneWeights = await (from cr in _context.CustomerRequests
+                                         join o in _context.Orders on cr.CustomizeRequestId equals o.CustomizeRequestId
+                                         join g in _context.Gemstones on cr.CustomizeRequestId equals g.CustomizeRequestId
+                                         where o.OrderDate >= startDate && o.OrderDate <= endDate
+                                         group g by new { g.Name, g.Clarity, g.Color, g.Shape, g.Size, g.CaratWeight } into grouped
+                                         select new GemstoneWeightDto
+                                         {
+                                             Name = grouped.Key.Name,
+                                             Clarity = grouped.Key.Clarity,
+                                             Color = grouped.Key.Color,
+                                             Shape = grouped.Key.Shape,
+                                             Size = grouped.Key.Size,
+                                             CaratWeight = grouped.Key.CaratWeight,
+                                         }).ToListAsync();
+
+            return gemstoneWeights;
+        }
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
         }
     }
 }
