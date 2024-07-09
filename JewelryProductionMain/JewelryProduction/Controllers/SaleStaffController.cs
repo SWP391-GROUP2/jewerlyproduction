@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using JewelryProduction.DbContext;
+using JewelryProduction.DTO;
 using JewelryProduction.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -70,7 +71,7 @@ VAT:                        10%";
 
             return Ok("Approval request sent to the manager.");
         }
-        
+
         [HttpPost("updateCustomerRequestQuotation")]
         public async Task<IActionResult> UpdateCustomerRequestQuotation([FromBody] UpdateQuotationDTO updateQuotationDTO)
         {
@@ -82,7 +83,7 @@ VAT:                        10%";
             }
             return BadRequest("Failed to update quotation.");
         }
-        
+
         private string GetCurrentUserId()
         {
             var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sid);
