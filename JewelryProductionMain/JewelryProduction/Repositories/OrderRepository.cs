@@ -27,9 +27,7 @@ namespace JewelryProduction.Repositories
             var result = orders.Select(o => new OrderGetDTO
             {
                 Order = o,
-                ProductionStaffName = o.ProductionStaff.Name,
-                DesignStaffName = o.DesignStaff.Name,
-                PaymentMethodName = o.PaymentMethod.PaymentMethodName,
+                PaymentMethodName = o.PaymentMethod?.PaymentMethodName
             }).ToList();
 
             return result;
@@ -45,12 +43,15 @@ namespace JewelryProduction.Repositories
                 .Where(o => o.OrderId.Equals(id))
                 .FirstOrDefaultAsync();
 
+            if (order == null)
+            {
+                return null; // Hoặc xử lý theo cách khác phù hợp với logic của bạn
+            }
+
             var result = new OrderGetDTO
             {
                 Order = order,
-                ProductionStaffName = order.ProductionStaff.Name,
-                DesignStaffName = order.DesignStaff.Name,
-                PaymentMethodName = order.PaymentMethod.PaymentMethodName
+                PaymentMethodName = order.PaymentMethod?.PaymentMethodName
             };
 
             return result;

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using JewelryProduction.DbContext;
+using JewelryProduction.DTO;
 using JewelryProduction.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
