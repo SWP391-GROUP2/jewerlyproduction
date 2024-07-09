@@ -23,10 +23,14 @@ const CheckOutPage = () => {
   const [quotationDes, setQuotationDes] = useState("");
 
   const [GemstoneData, setGemstoneData] = useState([]);
+  const [orderID, setorderID] = useState("");
 
   const [showMethodPopup, setShowMethodPopup] = useState(false);
   const [createSuccessPopup, setcreateSuccessPopup] = useState(false);
   const [paymentMethodId, setPaymentMethodId] = useState(null);
+  const [OrderData, setOrderData] = useState([]);
+
+  const [price, setPrice] = useState(0);
 
   const fetchRequests = async () => {
     try {
@@ -73,11 +77,12 @@ const CheckOutPage = () => {
   useEffect(() => {
     if (RequestsCurrent.length > 0 && RequestsCurrent[0].customerRequest) {
       const quotation = RequestsCurrent[0].customerRequest.quotation;
-      const percentage = (quotation * 0.4).toFixed(2);
+      const percentage = (quotation * 0.3).toFixed(2);
       const totalafter = (quotation - percentage).toFixed(2);
 
       setTotal(totalafter);
       setQuotation(quotation);
+      setPrice(percentage);
       setQuotationPercentage(percentage);
       console.log("Quotation 40%:", percentage);
       const GT = RequestsCurrent[0].customerRequest.gold.goldType;
@@ -95,11 +100,38 @@ const CheckOutPage = () => {
     }
   }, [RequestsCurrent]);
 
-  if (error) return <div>Error: {error.message}</div>;
-
   const handleMethod = () => {
     setShowMethodPopup(true);
   };
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      try {
+        const response = await axios.get("http://localhost:5266/api/Orders");
+        console.log("Response Data:", response.data); // Kiểm tra dữ liệu phản hồi
+        setOrderData(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error); // Kiểm tra lỗi
+        setError(error);
+      }
+    };
+
+    fetchOrder();
+  }, []);
+
+  useEffect(() => {
+    const foundOrder = OrderData.find(
+      (order) =>
+        order.order.customizeRequest.customizeRequestId === customizeRequestId
+    );
+
+    if (foundOrder) {
+      console.log(`Found orderId: ${foundOrder.order.orderId}`);
+      setorderID(foundOrder.order.orderId);
+    } else {
+      console.log("OrderId not found for the given CustomizerequestId.");
+    }
+  }, [OrderData, customizeRequestId]);
 
   const handleMethodChoose = (method) => {
     setPaymentMethodId(method);
@@ -108,7 +140,7 @@ const CheckOutPage = () => {
   const approveRequest = async () => {
     try {
       const response = await axios.post(
-        `/api/CustomerRequests/approve/${customizeRequestId}`,
+        `http://localhost:5266/api/CustomerRequests/approve/${customizeRequestId}`,
         null,
         {
           params: {
@@ -133,7 +165,44 @@ const CheckOutPage = () => {
     setcreateSuccessPopup(true);
   };
 
+  const VNPpayment = async () => {
+    try {
+      // Kiểm tra giá trị của price và orderID
+      console.log("Price:", price);
+      console.log("OrderID:", orderID);
+
+      const response = await axios.post(
+        `http://localhost:5266/api/Payment/CreatePaymentUrl`,
+        null,
+        {
+          params: {
+            price: price, // giá trị price cần được định nghĩa trước hoặc lấy từ đâu đó
+            orderID: orderID, // giá trị orderID cần được định nghĩa trước hoặc lấy từ đâu đó
+          },
+        }
+      );
+      console.log("Response:", response.data);
+      // Chuyển hướng tới đường link thanh toán
+      window.location.href = response.data;
+    } catch (error) {
+      console.error("Error creating payment URL:", error);
+      if (error.response) {
+        // Server responded with a status other than 200 range
+        console.error("Response data:", error.response.data);
+        console.error("Response status:", error.response.status);
+        console.error("Response headers:", error.response.headers);
+      } else if (error.request) {
+        // Request was made but no response was received
+        console.error("Request data:", error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error("Error message:", error.message);
+      }
+    }
+  };
+
   const handleMethod002 = () => {
+    VNPpayment();
     setShowMethodPopup(false);
   };
 

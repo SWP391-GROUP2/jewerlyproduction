@@ -127,8 +127,7 @@ function UserProfile() {
   }, [fetchDataFlag, OrderData]);
 
   const OrderOfCustomer = OrderData.filter(
-    (OrderData) =>
-      OrderData.order.customizeRequest.customerId === customerId
+    (OrderData) => OrderData.order.customizeRequest.customerId === customerId
   );
 
   useEffect(() => {
@@ -384,12 +383,10 @@ function UserProfile() {
                     <th>ID</th>
                     <th>Customer</th>
                     <th>Sales Staff</th>
-                    <th>Design Staff</th> 
+                    <th>Design Staff</th>
                     <th>Production Staff</th>
                     <th>Price</th>
-                    <th>Status</th> 
-                    <th></th>
-                    <th></th>
+                    <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -398,21 +395,10 @@ function UserProfile() {
                       <td>{row.order.orderId}</td>
                       <td>{row.order.customizeRequest.customer.name}</td>
                       <td>{row.order.customizeRequest.saleStaff.name}</td>
-                      <td>{row.order.designStaff.name}</td>
-                      <td>{row.order.productionStaff.name}</td>
+                      <td>{row.order.designStaff?.name || ""}</td>
+                      <td>{row.order.productionStaff?.name || ""}</td>
                       <td>{row.order.totalPrice}</td>
                       <td>{row.order.status}</td>
-                      <td>
-                        <button
-                          className="detail-button-s"
-                          onClick={(e) => {
-                            e.stopPropagation(); // Ngăn chặn sự kiện click hàng
-                            // handle gì đó cho order để ở đây
-                          }}
-                        >
-                          Approve
-                        </button>
-                      </td>
                     </tr>
                   ))}
                 </tbody>
