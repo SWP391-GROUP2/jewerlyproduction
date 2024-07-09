@@ -6,6 +6,7 @@ using JewelryProduction.Interface;
 using JewelryProduction.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace JewelryProduction.Services
 {
@@ -96,6 +97,98 @@ namespace JewelryProduction.Services
             await _repository.SaveChangesAsync();
 
             return new OkObjectResult("Inspection recorded successfully");
+        }
+        public async Task<OrderStatDTO> GetOrderStats(DateTime? startDate, DateTime? endDate, string groupBy)
+        {
+            var orders = await _repository.GetOrdersWithinDateRange(startDate, endDate);
+            var totalOrders = orders.Count;
+            var totalRevenue = orders.Sum(o => o.TotalPrice + (o.DepositAmount ?? 0));
+            var totalMaterialPrice = orders.Sum(o =>
+            {
+                var gemstonesPrice = o.CustomizeRequest.Gemstones.Sum(g => g.Price);
+                var goldPrice = o.CustomizeRequest.Gold.PricePerGram * (decimal)(o.CustomizeRequest.GoldWeight ?? 0);
+                return gemstonesPrice + goldPrice;
+            });
+            var totalIncome = totalRevenue - totalMaterialPrice;
+            var averageOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
+
+            var orderDistribution = new Dictionary<string, Dictionary<string, int>>();
+            if (groupBy == "day")
+            {
+                orderDistribution["day"] = orders
+                    .GroupBy(o => o.OrderDate.ToString("yyyy-MM-dd"))
+                    .ToDictionary(g => g.Key, g => g.Count());
+            }
+            else if (groupBy == "week")
+            {
+                orderDistribution["week"] = orders
+                    .GroupBy(o => $"Week {CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(o.OrderDate, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday)}")
+                    .ToDictionary(g => g.Key, g => g.Count());
+            }
+            else if (groupBy == "month")
+            {
+                orderDistribution["month"] = orders
+                    .GroupBy(o => o.OrderDate.ToString("yyyy-MM"))
+                    .ToDictionary(g => g.Key, g => g.Count());
+            }
+            else if (groupBy == "year")
+            {
+                orderDistribution["year"] = orders
+                    .GroupBy(o => o.OrderDate.ToString("yyyy"))
+                    .ToDictionary(g => g.Key, g => g.Count());
+            }
+
+            return new OrderStatDTO
+            {
+                TotalOrders = totalOrders,
+                TotalRevenue = totalRevenue,
+                TotalMaterialPrice = totalMaterialPrice,
+                TotalIncome = totalIncome,
+                AverageOrderValue = averageOrderValue,
+                OrderDistribution = orderDistribution
+            };
+        }
+        public async Task<OrderComparisonDTO> CompareOrderStats(int year)
+        {
+            var orders = await _repository.GetAllAsync();
+            var ordersByYear = orders
+                .GroupBy(o => o.OrderDate.Year)
+                .Select(g => new
+                {
+                    Year = g.Key,
+                    TotalPrice = g.Sum(o => o.TotalPrice),
+                    NumberOfOrders = g.Count()
+                })
+                .ToList();
+
+            var currentYearStats = ordersByYear.FirstOrDefault(o => o.Year == year);
+
+            var currentYearTotalPrice = currentYearStats?.TotalPrice ?? 0;
+            var currentYearOrderCount = currentYearStats?.NumberOfOrders ?? 0;
+
+            var comparisons = ordersByYear
+                .Where(o => o.Year != year)
+                .Select(o => new OrderYearComparisonDTO
+                {
+                    Year = o.Year,
+                    TotalPrice = o.TotalPrice,
+                    NumberOfOrders = o.NumberOfOrders,
+                    TotalPriceDifference = currentYearTotalPrice - o.TotalPrice,
+                    OrderCountDifference = currentYearOrderCount - o.NumberOfOrders
+                })
+                .ToList();
+
+            return new OrderComparisonDTO
+            {
+                CurrentYear = year,
+                CurrentYearTotalPrice = currentYearTotalPrice,
+                CurrentYearOrderCount = currentYearOrderCount,
+                Comparisons = comparisons
+            };
+        }
+        public async Task<List<Order>> SearchOrders(string searchTerm)
+        {
+            return await _repository.SearchOrders(searchTerm);
         }
         public string GetManagerIdByOrderId(string orderId)
         {
