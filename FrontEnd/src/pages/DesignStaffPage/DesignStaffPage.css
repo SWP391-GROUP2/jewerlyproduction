@@ -119,7 +119,8 @@
 }
 
 ._3dDesign img{
-  size: 20%;
+  
+  border-radius: 10px;
 }
 
 .designstaff-detail-table {
@@ -192,5 +193,66 @@
 
 .designstaff-add-image-button:hover {
   background-color: #0b7dda;
+}
+
+/* Center the form popup */
+.designstaff-form-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 1000px;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+ 
+}
+
+.designstaff-form-popup-content {
+  background-color: #ffffff;
+  padding: 20px;
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group input[type="file"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.uploaded-image-preview {
+  max-width: 100%;
+  max-height: 300px;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+.designstaff-save-button,
+.designstaff-close-button {
+  float: none; /* Reset the float */
+  display: inline-block;
+  margin-right: 10px; /* Add spacing between buttons */
 }
 
