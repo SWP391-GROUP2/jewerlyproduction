@@ -165,5 +165,15 @@ namespace JewelryProduction.Repositories
         {
             await _context.SaveChangesAsync();
         }
+
+        public async Task<bool> ToPaymentPendingStatus(string orderId)
+        {
+            var order = await _context.Orders.FindAsync(orderId);
+            if (order == null) return false;
+
+            order.Status = "Payment Pending";
+            await _context.SaveChangesAsync(); // Save changes to the database
+            return true;
+        }
     }
 }
