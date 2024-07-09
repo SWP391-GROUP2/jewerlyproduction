@@ -9,6 +9,9 @@ function DesignStaffPage() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [showDetailPopup, setShowDetailPopup] = useState(false);
   const [uploadedImage, setUploadedImage] = useState(null);
+  const [showFormPopup, setShowFormPopup] = useState(false);
+  const [formImage, setFormImage] = useState(null);
+  const [designName, setDesignName] = useState("");
 
   const OpenSidebar = () => {
     setOpenSidebarToggle(!openSidebarToggle);
@@ -88,16 +91,34 @@ function DesignStaffPage() {
     });
   };
 
-  const handleSave = () => {
+  const handleAddImageClick = () => {
+    setShowDetailPopup(false);
+    setShowFormPopup(true);
+  };
+
+  const handleFormImageUpload = (e) => {
+    const file = e.target.files[0];
+    setFormImage(URL.createObjectURL(file));
+    setSelectedItem({
+      ...selectedItem,
+      image: file.name,
+    });
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
     const updatedOrderData = orderData.map((order) =>
       order.customizeRequestID === selectedItem.customizeRequestID
-        ? { ...order, image: selectedItem.image }
+        ? { ...order, image: selectedItem.image, designName: designName }
         : order
     );
-
-    // Update orderData state or send API request to save changes
     console.log(updatedOrderData); // Replace with actual state update or API call
-    setShowDetailPopup(false);
+    setShowFormPopup(false);
+  };
+
+  const handleCloseFormPopup = () => {
+    setShowFormPopup(false);
+    setShowDetailPopup(true);
   };
 
   return (
@@ -107,7 +128,7 @@ function DesignStaffPage() {
         OpenSidebar={OpenSidebar}
         handleViewChange={handleViewChange}
       />
-      <div className={`content ${showDetailPopup ? "blur" : ""}`}>
+      <div className={`content ${showDetailPopup || showFormPopup ? "blur" : ""}`}>
         <div className="designstaff-container">
           <DesignStaffHeader />
           <div className="designstaff-main-container">
@@ -130,7 +151,6 @@ function DesignStaffPage() {
                       <th>Quotation Description</th>
                       <th>Quantity</th>
                       <th>Status</th>
-                      
                     </tr>
                   </thead>
                   <tbody>
@@ -149,7 +169,6 @@ function DesignStaffPage() {
                         <td>{item.quotationdes}</td>
                         <td>{item.quantity}</td>
                         <td>{item.status}</td>
-                        
                       </tr>
                     ))}
                   </tbody>
@@ -218,28 +237,77 @@ function DesignStaffPage() {
                   <td>Status:</td>
                   <td>{selectedItem.status}</td>
                 </tr>
-                
                 {uploadedImage && (
-  <tr>
-    <td colSpan="2">
-      <img src={uploadedImage} alt="Uploaded Preview" className="uploaded-image-preview" />
-    </td>
-  </tr>
-)}
-<tr>
-  <td colSpan="2">
-      
-    <button className="designstaff-close-button" onClick={hideDetail}>
-      Close
-    </button>
-    <button className="designstaff-add-image-button" onClick={handleImageUpload}>
-      Add Image
-    </button>
-  </td>
-</tr>
-
+                  <tr>
+                    <td colSpan="2">
+                      <div className="uploaded-image-preview-container">
+                        <img
+                          src={uploadedImage}
+                          alt="Uploaded Preview"
+                          className="uploaded-image-preview"
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                )}
+                <tr>
+                  <td colSpan="2">
+                    <button className="designstaff-close-button" onClick={hideDetail}>
+                      Close
+                    </button>
+                    <button className="designstaff-add-image-button" onClick={handleAddImageClick}>
+                      Add Image
+                    </button>
+                  </td>
+                </tr>
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {showFormPopup && (
+        <div className="designstaff-form-popup">
+          <div className="designstaff-form-popup-content">
+            <h2>Add Image</h2>
+            <div className="form-container">
+              <form onSubmit={handleFormSubmit}>
+                <div className="form-group">
+                  <label>Order ID:</label>
+                  <input type="text" value={selectedItem.customizeRequestID} readOnly />
+                </div>
+                <div className="form-group">
+                  <label>Design Name:</label>
+                  <input
+                    type="text"
+                    value={designName}
+                    onChange={(e) => setDesignName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Upload Image:</label>
+                  <input type="file" onChange={handleFormImageUpload} />
+                </div>
+                {formImage && (
+                  <div className="form-group">
+                    <img src={formImage} alt="Form Preview" className="uploaded-image-preview" />
+                  </div>
+                )}
+                <div className="form-group">
+                  <button type="submit" className="designstaff-save-button">
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    className="designstaff-close-button"
+                    onClick={handleCloseFormPopup}
+                  >
+                    Close
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       )}
