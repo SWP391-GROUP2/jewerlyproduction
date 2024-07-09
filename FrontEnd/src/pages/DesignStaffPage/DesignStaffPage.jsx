@@ -182,7 +182,7 @@ function DesignStaffPage() {
                       <tr key={item.order.orderId} onClick={() => showDetail(item)}>
                         <td>{item.order.orderId}</td>
                         <td>{item.order.customizeRequest.customer.name}</td>
-                        <td>{item.order.customizeRequest.saleStaff.name}</td>
+                        <td>{item.order.customizeRequest.saleStaff.name ?? 'N/A'}</td>
                         <td>{item.order.designStaff?.name ?? 'N/A'}</td>
                         <td>{item.order.productionStaff?.name ?? 'N/A'}</td>
                         <td>{item.order.totalPrice}</td>
@@ -223,7 +223,7 @@ function DesignStaffPage() {
         </tr>
         <tr>
           <td>Sales</td>
-          <td>{selectedItem.order.customizeRequest.saleStaff.name}</td>
+          <td>{selectedItem.order.customizeRequest.saleStaff.name ?? 'N/A'}</td>
         </tr>
         <tr>
           <td>Designer</td>
