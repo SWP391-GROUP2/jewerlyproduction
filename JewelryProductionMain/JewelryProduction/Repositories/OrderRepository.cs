@@ -102,6 +102,21 @@ namespace JewelryProduction.Repositories
         {
             return await _context.Orders.ToListAsync();
         }
+        public async Task<List<Order>> GetOrdersWithinDateRange(DateTime? startDate, DateTime? endDate)
+        {
+            return await _context.Orders
+                .Include(o => o.CustomizeRequest)
+                .ThenInclude(cr => cr.Gemstones)
+                .Include(o => o.CustomizeRequest.Gold)
+                .Where(o => o.OrderDate >= startDate && o.OrderDate <= endDate)
+                .ToListAsync();
+        }
+        public async Task<List<Order>> SearchOrders(string searchTerm)
+        {
+            return await _context.Orders
+                .Where(o => o.OrderId.Contains(searchTerm) || o.CustomizeRequestId.Contains(searchTerm) || o.Status.Contains(searchTerm))
+                .ToListAsync();
+        }
 
         public async Task AddAsync(Order entity)
         {
