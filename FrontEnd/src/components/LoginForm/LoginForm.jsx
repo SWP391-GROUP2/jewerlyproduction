@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./LoginForm.css";
 import { Link, useNavigate } from "react-router-dom";
-import { FaUser, FaLock } from "react-icons/fa";
+import { FaUser, FaEyeSlash, FaEye } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { FaHome } from "react-icons/fa";
 import { IoReturnDownBack } from "react-icons/io5";
@@ -24,6 +24,7 @@ const clientId =
 function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -71,17 +72,29 @@ function LoginForm() {
             </div>
             <div className="input-box">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="password"
                 required
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <FaLock className="icon" />
+
+              <span
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: "absolute",
+                  top: "66%",
+                  transform: "translateY(-50%)",
+                  right: "16px",
+                  cursor: "pointer",
+                }}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
             </div>
+
             <div className="remember-forgot">
               <label>
-                <input type="checkbox" />
-                Remeber password
+                <label></label>
               </label>
               <Link to="/forget"> Forget password ? </Link>
             </div>

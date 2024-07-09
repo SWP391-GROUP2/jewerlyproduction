@@ -21,6 +21,7 @@ import DesignStaffPage from "../pages/DesignStaffPage/DesignStaffPage";
 import ManagerPage from "../pages/ManagerPage/ManagerPage";
 import ProductionStaffPage from "../pages/ProductionStaffPage/ProductionStaffPage";
 import CheckOutPage from "../pages/CheckOutPage/CheckOutPage";
+import CallBack from "../pages/CallBackPage/CallBackPage";
 
 const routes = [
   // Guest Routes
@@ -47,9 +48,10 @@ const routes = [
   { path: "/customer/resetpassword", element: <ResetPassword /> },
   { path: "/customer/checkoutpage", element: <CheckOutPage /> },
   {
-    path: "/customer/checkoutpage/:customizeRequestId",
-    element: <CheckOutPage />,
+    path: "/customer/callback",
+    element: <CallBack />,
   },
+  { path: "/customer/checkoutpage", element: <CheckOutPage /> },
 
   // Admin Routes
   { path: "/admin/home", element: <AdminPage /> },

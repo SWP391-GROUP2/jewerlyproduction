@@ -15,7 +15,7 @@ public partial class Order
     public decimal? DepositAmount { get; set; }
 
     public string Status { get; set; } = null!;
-    public string? Address { get; set; }
+    public string? Address { get; set; } = null!;
 
     public string? CustomizeRequestId { get; set; }
 
