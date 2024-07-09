@@ -1,11 +1,9 @@
-﻿using Firebase.Auth;
-using JewelryProduction.DbContext;
+﻿using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
 using JewelryProduction.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
 
 namespace JewelryProduction.Repositories
 {
