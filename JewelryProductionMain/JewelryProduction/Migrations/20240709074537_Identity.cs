@@ -79,6 +79,19 @@ namespace JewelryProduction.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "QualityCheckList",
+                columns: table => new
+                {
+                    checklistID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    stage = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    checklistItem = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_QualityCheckList", x => x.checklistID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new
                 {
@@ -310,7 +323,7 @@ namespace JewelryProduction.Migrations
                 {
                     notificationId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     userId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
-                    senderId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    senderId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
                     message = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     isRead = table.Column<bool>(type: "bit", nullable: false),
                     createdAt = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -403,7 +416,7 @@ namespace JewelryProduction.Migrations
                     orderDate = table.Column<DateTime>(type: "datetime", nullable: false),
                     depositAmount = table.Column<decimal>(type: "money", nullable: true),
                     status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    address = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    address = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     customizeRequestID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     paymentMethodID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     totalPrice = table.Column<decimal>(type: "money", nullable: false)
@@ -467,6 +480,29 @@ namespace JewelryProduction.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Inspection",
+                columns: table => new
+                {
+                    inspectionID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    productStaffID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    stage = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    inspectionDate = table.Column<DateTime>(type: "datetime", nullable: false),
+                    result = table.Column<bool>(type: "bit", maxLength: 50, nullable: true),
+                    comment = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    orderID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Inspection", x => x.inspectionID);
+                    table.ForeignKey(
+                        name: "FK_Inspection_Order",
+                        column: x => x.orderID,
+                        principalTable: "Order",
+                        principalColumn: "orderID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Insurance",
                 columns: table => new
                 {
@@ -490,12 +526,12 @@ namespace JewelryProduction.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "0db328b5-de2f-4a30-8300-1c9c19cc7b0c", null, "Manager", "MANAGER" },
-                    { "0e29acb9-460a-4ea8-8988-094f4d257cf1", null, "Admin", "ADMIN" },
-                    { "40f9b8a6-05ca-4108-90e7-e382024c9bf9", null, "DesignStaff", "DESIGNSTAFF" },
-                    { "7a8df558-cf61-42fd-a0c6-dc5e6018a32b", null, "ProductionStaff", "PRODUCTIONSTAFF" },
-                    { "a0291948-c667-4092-ac3c-926628051baa", null, "SaleStaff", "SALESTAFF" },
-                    { "fc5178bf-47a6-4301-affa-d3b392e245d2", null, "Customer", "CUSTOMER" }
+                    { "3bb80749-ec64-401e-a5e6-abb4e1a4e233", null, "Customer", "CUSTOMER" },
+                    { "40460f06-0fa7-485f-8c63-6f69821af57e", null, "ProductionStaff", "PRODUCTIONSTAFF" },
+                    { "4e1fb2c4-58ca-49b4-a7e5-595ed1c4fb34", null, "Manager", "MANAGER" },
+                    { "a2a3d3cd-3ca4-4b48-9c47-2b1b1ff9d667", null, "SaleStaff", "SALESTAFF" },
+                    { "bac0b18d-3bd2-4cab-ba57-12fcff9c9926", null, "Admin", "ADMIN" },
+                    { "c9e09b6e-ab94-452f-8963-6923957153f6", null, "DesignStaff", "DESIGNSTAFF" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -579,6 +615,11 @@ namespace JewelryProduction.Migrations
                 name: "IX_Gemstone_productSampleID",
                 table: "Gemstone",
                 column: "productSampleID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Inspection_orderID",
+                table: "Inspection",
+                column: "orderID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Insurance",
@@ -674,6 +715,9 @@ namespace JewelryProduction.Migrations
                 name: "Gemstone");
 
             migrationBuilder.DropTable(
+                name: "Inspection");
+
+            migrationBuilder.DropTable(
                 name: "Insurance");
 
             migrationBuilder.DropTable(
@@ -681,6 +725,9 @@ namespace JewelryProduction.Migrations
 
             migrationBuilder.DropTable(
                 name: "Notification");
+
+            migrationBuilder.DropTable(
+                name: "QualityCheckList");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

@@ -251,6 +251,51 @@ namespace JewelryProduction.Migrations
                     b.ToTable("CustomerRequest", (string)null);
                 });
 
+            modelBuilder.Entity("JewelryProduction.Entities.Inspection", b =>
+                {
+                    b.Property<string>("InspectionId")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("inspectionID");
+
+                    b.Property<string>("Comment")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("comment");
+
+                    b.Property<DateTime>("InspectionDate")
+                        .HasColumnType("datetime")
+                        .HasColumnName("inspectionDate");
+
+                    b.Property<string>("OrderId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("orderID");
+
+                    b.Property<string>("ProductStaffId")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("productStaffID");
+
+                    b.Property<bool?>("Result")
+                        .HasMaxLength(50)
+                        .HasColumnType("bit")
+                        .HasColumnName("result");
+
+                    b.Property<string>("Stage")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("stage");
+
+                    b.HasKey("InspectionId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("Inspection", (string)null);
+                });
+
             modelBuilder.Entity("JewelryProduction.Entities.Notification", b =>
                 {
                     b.Property<string>("NotificationId")
@@ -273,7 +318,6 @@ namespace JewelryProduction.Migrations
                         .HasColumnName("message");
 
                     b.Property<string>("SenderId")
-                        .IsRequired()
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("senderId");
@@ -291,6 +335,30 @@ namespace JewelryProduction.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Notification", (string)null);
+                });
+
+            modelBuilder.Entity("JewelryProduction.Entities.QualityCheckList", b =>
+                {
+                    b.Property<string>("ChecklistId")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("checklistID");
+
+                    b.Property<string>("ChecklistItem")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("checklistItem");
+
+                    b.Property<string>("Stage")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("stage");
+
+                    b.HasKey("ChecklistId");
+
+                    b.ToTable("QualityCheckList", (string)null);
                 });
 
             modelBuilder.Entity("JewelryProduction.Gemstone", b =>
@@ -470,7 +538,6 @@ namespace JewelryProduction.Migrations
                         .HasColumnName("orderID");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("address");
@@ -678,37 +745,37 @@ namespace JewelryProduction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "0e29acb9-460a-4ea8-8988-094f4d257cf1",
+                            Id = "bac0b18d-3bd2-4cab-ba57-12fcff9c9926",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "a0291948-c667-4092-ac3c-926628051baa",
+                            Id = "a2a3d3cd-3ca4-4b48-9c47-2b1b1ff9d667",
                             Name = "SaleStaff",
                             NormalizedName = "SALESTAFF"
                         },
                         new
                         {
-                            Id = "7a8df558-cf61-42fd-a0c6-dc5e6018a32b",
+                            Id = "40460f06-0fa7-485f-8c63-6f69821af57e",
                             Name = "ProductionStaff",
                             NormalizedName = "PRODUCTIONSTAFF"
                         },
                         new
                         {
-                            Id = "0db328b5-de2f-4a30-8300-1c9c19cc7b0c",
+                            Id = "4e1fb2c4-58ca-49b4-a7e5-595ed1c4fb34",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "fc5178bf-47a6-4301-affa-d3b392e245d2",
+                            Id = "3bb80749-ec64-401e-a5e6-abb4e1a4e233",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "40f9b8a6-05ca-4108-90e7-e382024c9bf9",
+                            Id = "c9e09b6e-ab94-452f-8963-6923957153f6",
                             Name = "DesignStaff",
                             NormalizedName = "DESIGNSTAFF"
                         });
@@ -868,13 +935,24 @@ namespace JewelryProduction.Migrations
                     b.Navigation("SaleStaff");
                 });
 
+            modelBuilder.Entity("JewelryProduction.Entities.Inspection", b =>
+                {
+                    b.HasOne("JewelryProduction.Order", "Order")
+                        .WithMany("Inspections")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_Inspection_Order");
+
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("JewelryProduction.Entities.Notification", b =>
                 {
                     b.HasOne("JewelryProduction.AppUser", "Sender")
                         .WithMany("SentNotifications")
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
                         .HasConstraintName("FK_Notification_Sender");
 
                     b.HasOne("JewelryProduction.AppUser", "User")
@@ -1109,6 +1187,8 @@ namespace JewelryProduction.Migrations
 
             modelBuilder.Entity("JewelryProduction.Order", b =>
                 {
+                    b.Navigation("Inspections");
+
                     b.Navigation("Insurance");
 
                     b.Navigation("_3ddesigns");
