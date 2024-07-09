@@ -87,5 +87,18 @@ namespace JewelryProduction.Repositories
         {
             await _context.SaveChangesAsync();
         }
+        public async Task<CustomerRequest> GetCustomerRequestWithDetailsAsync(string customizeRequestId)
+        {
+            return await _context.CustomerRequests
+                .Include(cr => cr.Gemstones)
+                .Include(cr => cr.Gold)
+                .FirstOrDefaultAsync(cr => cr.CustomizeRequestId == customizeRequestId);
+        }
+
+        public async Task UpdateCustomerRequestAsync(CustomerRequest customerRequest)
+        {
+            _context.CustomerRequests.Update(customerRequest);
+            await _context.SaveChangesAsync();
+        }
     }
 }

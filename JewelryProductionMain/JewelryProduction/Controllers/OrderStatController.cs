@@ -27,10 +27,20 @@ namespace JewelryProduction.Controllers
         [FromQuery] string groupBy)
         {
             var query = _context.Orders
+                .Include(o => o.CustomizeRequest)
+                .ThenInclude(cr => cr.Gemstones)
+                .Include(o => o.CustomizeRequest.Gold)
                .Where(o => o.OrderDate >= startDate && o.OrderDate <= endDate);
             var orders = await query.ToListAsync();
             var totalOrders = orders.Count;
-            var totalRevenue = orders.Sum(o => o.TotalPrice);
+            var totalRevenue = orders.Sum(o => o.TotalPrice + (o.DepositAmount ?? 0));
+            var totalMaterialPrice = orders.Sum(o =>
+            {
+                var gemstonesPrice = o.CustomizeRequest.Gemstones.Sum(g => g.Price);
+                var goldPrice = o.CustomizeRequest.Gold.PricePerGram * (decimal)(o.CustomizeRequest.GoldWeight ?? 0);
+                return gemstonesPrice + goldPrice;
+            });
+            var totalIncome = totalRevenue - totalMaterialPrice;
             var averageOrderValue = totalRevenue / totalOrders;
 
 
@@ -65,6 +75,8 @@ namespace JewelryProduction.Controllers
             {
                 totalOrders,
                 totalRevenue,
+                totalMaterialPrice,
+                totalIncome,
                 averageOrderValue,
                 orderDistribution
             });

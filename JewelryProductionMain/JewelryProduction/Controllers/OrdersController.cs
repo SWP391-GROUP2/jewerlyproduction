@@ -217,14 +217,36 @@ namespace JewelryProduction.Controllers
             return deposit;
         }
 
-        [HttpPost("change-status")]
-        public async Task<ActionResult> ChangeStatus(string orderID)
+        [HttpPost("change-status To Designer")]
+        public async Task<ActionResult> ChangeStatusToDesigner(string orderID)
         {
             var order = await _orderService.GetOrder(orderID);
             order.Order.Status = "Assigning Designer";
             _context.SaveChangesAsync();
             return Ok("Status has changed");
         }
+
+        [HttpPost("change-status To Production")]
+        public async Task<ActionResult> ChangeStatusTo(string orderID)
+        {
+            var order = await _orderService.GetOrder(orderID);
+            order.Order.Status = "Assigning Production";
+            _context.SaveChangesAsync();
+            return Ok("Status has changed");
+        }
+
+        [HttpPost("Design Pending")]
+        public async Task<ActionResult> DesignPending(string orderID, string designstaffID)
+        {
+            var order = await _orderService.GetOrder(orderID);
+            order.Order.DesignStaffId = designstaffID;
+            order.Order.Status = "Design Pending";
+            _context.SaveChangesAsync();
+            return Ok("Design assigned completed!");
+        }
+
+
+
         private bool OrderExists(string id)
         {
             return _context.Orders.Any(e => e.OrderId == id);
