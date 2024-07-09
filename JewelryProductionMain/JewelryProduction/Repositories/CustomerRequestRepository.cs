@@ -59,5 +59,46 @@ namespace JewelryProduction.Repositories
             };
             return result;
         }
+        public async Task<CustomerRequest> GetByIdAsync(object id)
+        {
+            return await _context.CustomerRequests.FindAsync(id);
+        }
+
+        public async Task<IEnumerable<CustomerRequest>> GetAllAsync()
+        {
+            return await _context.CustomerRequests.ToListAsync();
+        }
+
+        public async Task AddAsync(CustomerRequest entity)
+        {
+            await _context.CustomerRequests.AddAsync(entity);
+        }
+
+        public void Update(CustomerRequest entity)
+        {
+            _context.CustomerRequests.Update(entity);
+        }
+        public async Task<bool> ExistsAsync(string customizeRequestId)
+        {
+            return await _context.CustomerRequests.AnyAsync(cr => cr.CustomizeRequestId == customizeRequestId);
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
+        public async Task<CustomerRequest> GetCustomerRequestWithDetailsAsync(string customizeRequestId)
+        {
+            return await _context.CustomerRequests
+                .Include(cr => cr.Gemstones)
+                .Include(cr => cr.Gold)
+                .FirstOrDefaultAsync(cr => cr.CustomizeRequestId == customizeRequestId);
+        }
+
+        public async Task UpdateCustomerRequestAsync(CustomerRequest customerRequest)
+        {
+            _context.CustomerRequests.Update(customerRequest);
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -13,12 +13,50 @@ namespace JewelryProduction.Services
         private readonly JewelryProductionContext _context;
         private readonly ISaleStaffRepository _repository;
         private readonly INotificationService _notificationService;
+        private readonly ICustomerRequestRepository _customerRequestRepository;
+        private readonly IGoldRepository _goldRepository;
+        private readonly IGemstoneRepository _gemstoneRepository;
 
-        public SaleStaffService(JewelryProductionContext context, ISaleStaffRepository repository, INotificationService notificationService)
+        public SaleStaffService(JewelryProductionContext context, ISaleStaffRepository repository, INotificationService notificationService, ICustomerRequestRepository customerRequestRepository, IGoldRepository goldRepository, IGemstoneRepository gemstoneRepository)
         {
             _context = context;
             _repository = repository;
             _notificationService = notificationService;
+            _customerRequestRepository = customerRequestRepository;
+            _goldRepository = goldRepository;
+            _gemstoneRepository = gemstoneRepository;
+        }
+        public async Task<bool> SendForApprovalAsync(string customizeRequestId, double goldWeight, string senderId)
+        {
+            var customerRequest = await _customerRequestRepository.GetByIdAsync(customizeRequestId);
+            if (customerRequest == null)
+            {
+                throw new ArgumentNullException(nameof(customerRequest), "Customer request not found.");
+            }
+            var gold = await _goldRepository.GetByIdAsync(customerRequest.GoldId);
+            var gemstones = await _gemstoneRepository.GetByCustomizeRequestIdAsync(customizeRequestId);
+            if (customerRequest.GoldWeight == null)
+            {
+                customerRequest.GoldWeight = goldWeight;
+            }
+
+            var price = await CalculateProductCost(customizeRequestId);
+
+            customerRequest.quotationDes = @$"
+Gemstone Price:             {gemstones.Sum(x => x.Price)}
+Gold Price:                 {gold.PricePerGram * (decimal)customerRequest.GoldWeight}
+Production Cost:            40% Material Price
+Additional Fee:             0
+VAT:                        10%";
+            customerRequest.quotation = price;
+            customerRequest.Status = "Wait For Approval";
+
+            await _customerRequestRepository.SaveChangesAsync();
+
+            // Send email or notification to manager
+            await _notificationService.SendNotificationToUserfAsync(customerRequest.ManagerId, senderId, $"There is a new request with ID: {customizeRequestId} that needs to be approved.");
+
+            return true;
         }
 
         public async Task<decimal> CalculateProductCost(string CustomizeRequestId)
@@ -43,7 +81,7 @@ namespace JewelryProduction.Services
         {
             var customerRequest = await _context.CustomerRequests.FindAsync(customerRequestId);
 
-            if (customerRequest == null)
+            if (customerRequest == null || customerRequest.Status != "Quotation Rejected")
             {
                 return false;
             }

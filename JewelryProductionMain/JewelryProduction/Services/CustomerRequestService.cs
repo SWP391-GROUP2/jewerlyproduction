@@ -2,6 +2,7 @@
 using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
 using JewelryProduction.Interface;
+using JewelryProduction.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Drawing;
@@ -13,12 +14,53 @@ namespace JewelryProduction.Services
         private readonly JewelryProductionContext _context;
         private readonly INotificationService _notificationService;
         private readonly ICustomerRequestRepository _customerRequestRepository;
+        private readonly IGoldRepository _goldRepository;
+        private readonly IGemstoneRepository _gemstoneRepository;
+        private readonly IOrderRepository _orderRepository;
 
-        public CustomerRequestService(JewelryProductionContext context, INotificationService notificationService, ICustomerRequestRepository customerRequestRepository)
+        public CustomerRequestService(JewelryProductionContext context, INotificationService notificationService, ICustomerRequestRepository customerRequestRepository, IGoldRepository goldRepository, IGemstoneRepository gemstoneRepository, IOrderRepository orderRepository)
         {
             _context = context;
             _notificationService = notificationService;
             _customerRequestRepository = customerRequestRepository;
+            _goldRepository = goldRepository;
+            _gemstoneRepository = gemstoneRepository;
+            _orderRepository = orderRepository;
+        }
+        public async Task<CustomerRequest> CreateCustomerRequestAsync(CustomerRequestDTO customerRequestDTO)
+        {
+            var primaryGemstones = await _gemstoneRepository.GetPrimaryGemstonesAsync(customerRequestDTO.PrimaryGemstoneId);
+            var additionalGemstones = await _gemstoneRepository.GetAdditionalGemstonesAsync(customerRequestDTO.AdditionalGemstone);
+
+            var allSelectedGemstones = new List<Gemstone>(primaryGemstones);
+            allSelectedGemstones.AddRange(additionalGemstones);
+
+            var gold = await _goldRepository.GetByTypeAsync(customerRequestDTO.GoldType);
+            if (gold == null)
+            {
+                throw new Exception("Gold type not found.");
+            }
+
+            var uniqueId = await IdGenerator.GenerateUniqueId<CustomerRequest>(_context, "REQ", 3);
+
+            var customerRequest = new CustomerRequest
+            {
+                CustomizeRequestId = uniqueId,
+                GoldId = gold.GoldId,
+                CustomerId = customerRequestDTO.CustomerId,
+                Type = customerRequestDTO.Type,
+                Style = customerRequestDTO.Style,
+                Size = customerRequestDTO.Size,
+                Quantity = customerRequestDTO.Quantity,
+                Gemstones = allSelectedGemstones,
+                Gold = gold,
+                Status = "Pending"
+            };
+
+            await _customerRequestRepository.AddAsync(customerRequest);
+            await _customerRequestRepository.SaveChangesAsync();
+
+            return customerRequest;
         }
         public async Task<CustomerRequest> GetCustomerRequestWithQuotationsAsync(string customerRequestId)
         {
@@ -126,7 +168,84 @@ namespace JewelryProduction.Services
                 return false;
             }
         }
-    public async Task<PagedResult<CustomerRequest>> GetAllPaging(OrderPagingRequest request)
+        public async Task<Order> ApproveCustomerRequestAsync(string customizeRequestId, string paymentMethodId)
+        {
+            var customerRequest = await _customerRequestRepository.GetCustomerRequestWithDetailsAsync(customizeRequestId);
+
+            if (customerRequest == null)
+            {
+                throw new KeyNotFoundException("Customer request not found.");
+            }
+
+            if (customerRequest.quotation == null)
+            {
+                throw new InvalidOperationException("Quotation is not available.");
+            }
+
+            customerRequest.Status = "Request Approved";
+
+            var order = new Order
+            {
+                OrderId = await IdGenerator.GenerateUniqueId<Order>(_context, "ORD", 6),
+                ProductionStaffId = null,
+                DesignStaffId = null,
+                OrderDate = DateTime.Now,
+                DepositAmount = null,
+                Status = "Choosing Payment",
+                CustomizeRequestId = customerRequest.CustomizeRequestId,
+                PaymentMethodId = paymentMethodId,
+                TotalPrice = customerRequest.quotation.Value
+            };
+
+            using (var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    await _customerRequestRepository.UpdateCustomerRequestAsync(customerRequest);
+                    await _orderRepository.AddAsync(order);
+                    await transaction.CommitAsync();
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw; // Re-throw the exception to be handled in the controller
+                }
+            }
+
+            return order;
+        }
+        public async Task<bool> RejectCustomerRequestAsync(string customizeRequestId)
+        {
+            var customerRequest = await _customerRequestRepository.GetCustomerRequestWithDetailsAsync(customizeRequestId);
+
+            if (customerRequest == null)
+            {
+                return false;
+            }
+
+            foreach (var gemstone in customerRequest.Gemstones)
+            {
+                gemstone.CustomizeRequestId = null;
+            }
+
+            customerRequest.Status = "Request Reject";
+
+            using (var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    return true;
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            }
+        }
+            public async Task<PagedResult<CustomerRequest>> GetAllPaging(OrderPagingRequest request)
         {
 
             IQueryable<CustomerRequest> query = _context.CustomerRequests;
