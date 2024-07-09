@@ -26,8 +26,9 @@ namespace JewelryProduction.Controllers
         private readonly IDesignStaffService _designStaffService;
         private readonly IProductionStaffService _productionStaffService;
         private readonly IManagerService _managerService;
+        private readonly IOrderService _orderService;
 
-        public ManagerController(JewelryProductionContext context, UserManager<AppUser> userManager, ISaleStaffService saleStaffService, IHubContext<MyHub> myhub, INotificationService notificationService, ICustomerRequestService requestService, IDesignStaffService designstaffService, IProductionStaffService productionStaffService, IManagerService managerService)
+        public ManagerController(JewelryProductionContext context, UserManager<AppUser> userManager, ISaleStaffService saleStaffService, IHubContext<MyHub> myhub, INotificationService notificationService, ICustomerRequestService requestService, IDesignStaffService designstaffService, IProductionStaffService productionStaffService, IManagerService managerService, IOrderService orderService)
         {
             _context = context;
             _userManager = userManager;
@@ -38,6 +39,7 @@ namespace JewelryProduction.Controllers
             _designStaffService = designstaffService;
             _productionStaffService = productionStaffService;
             _managerService = managerService;
+            _orderService = orderService;
         }
         [HttpPost("approveQuotation/{customerRequestId}")]
         public async Task<IActionResult> ApproveCustomerRequest(string customerRequestId)
@@ -86,6 +88,17 @@ namespace JewelryProduction.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        [HttpPost("assignDesignStaff")]
+        public async Task<ActionResult> DesignPending(string orderID, string designstaffID)
+        {
+            var order = await _orderService.GetOrder(orderID);
+            order.Order.DesignStaffId = designstaffID;
+            order.Order.Status = "Design Pending";
+            _context.SaveChangesAsync();
+            return Ok("Design assigned completed!");
+        }
+
         [HttpPost("assignProductionStaff")]
         public async Task<IActionResult> AssignProductionStaff([FromBody] AssignProductionStaffDTO assignProductionStaffDTO)
         {

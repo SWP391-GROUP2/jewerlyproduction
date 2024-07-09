@@ -235,16 +235,13 @@ namespace JewelryProduction.Controllers
             return Ok("Status has changed");
         }
 
-        [HttpPost("Design Pending")]
-        public async Task<ActionResult> DesignPending(string orderID, string designstaffID)
+        [HttpPut("change-status to PaymendPending")]
+        public async Task<IActionResult> ChangePaymentPendingStatus(string orderID)
         {
-            var order = await _orderService.GetOrder(orderID);
-            order.Order.DesignStaffId = designstaffID;
-            order.Order.Status = "Design Pending";
-            _context.SaveChangesAsync();
-            return Ok("Design assigned completed!");
+            var check = await _orderService.ToPaymentPendingStatus(orderID);
+            if (check) return Ok("Changed to Payment Pending");
+            return BadRequest();
         }
-
 
 
         private bool OrderExists(string id)
