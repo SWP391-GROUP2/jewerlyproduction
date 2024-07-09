@@ -203,6 +203,7 @@ namespace JewelryProduction.Services
                 {
                     await _customerRequestRepository.UpdateCustomerRequestAsync(customerRequest);
                     await _orderRepository.AddAsync(order);
+                    await _customerRequestRepository.SaveChangesAsync();
                     await transaction.CommitAsync();
                 }
                 catch

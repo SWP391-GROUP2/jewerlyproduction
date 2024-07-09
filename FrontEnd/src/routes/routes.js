@@ -51,7 +51,10 @@ const routes = [
     path: "/customer/callback",
     element: <CallBack />,
   },
-  { path: "/customer/checkoutpage", element: <CheckOutPage /> },
+  {
+    path: "/customer/checkoutpage/:customizeRequestId",
+    element: <CheckOutPage />,
+  },
 
   // Admin Routes
   { path: "/admin/home", element: <AdminPage /> },
