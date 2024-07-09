@@ -63,7 +63,7 @@ namespace JewelryProduction.Controllers
             }
             return BadRequest("Failed to update quotation.");
         }
-        
+
         private string GetCurrentUserId()
         {
             var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sid);
