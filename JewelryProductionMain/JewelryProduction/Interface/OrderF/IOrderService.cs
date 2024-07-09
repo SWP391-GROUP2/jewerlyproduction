@@ -17,6 +17,6 @@ namespace JewelryProduction.Interface
         Task<List<GemstoneWeightDto>> CalculateGemstoneWeightInMonth(DateTime startDate, DateTime endDate);
         Task<List<OrderGetDTO>> GetOrders();
         Task<OrderGetDTO> GetOrder(string id);
-        Task<bool> ToPaymentPendingStatus(string orderId)
+        Task<bool> ToPaymentPendingStatus(string orderId);
     }
 }
