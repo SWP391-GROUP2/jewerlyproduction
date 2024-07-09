@@ -7,6 +7,9 @@ namespace JewelryProduction.Interface
     public interface IOrderService
     {
         string GetManagerIdByOrderId(string orderId);
+        Task<OrderStatDTO> GetOrderStats(DateTime? startDate, DateTime? endDate, string groupBy);
+        Task<OrderComparisonDTO> CompareOrderStats(int year);
+        Task<List<Order>> SearchOrders(string searchTerm);
         Task<IActionResult> RecordInspection(string orderId, string stage, InspectionDTO inspectionDto);
         Task<List<Order>> GetOrdersByYearSortedByPrice(int year);
         Task<PagedResult<Order>> GetAllPaging(OrderPagingRequest request);

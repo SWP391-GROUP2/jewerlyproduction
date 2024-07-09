@@ -183,8 +183,8 @@ function DesignStaffPage() {
                         <td>{item.order.orderId}</td>
                         <td>{item.order.customizeRequest.customer.name}</td>
                         <td>{item.order.customizeRequest.saleStaff.name}</td>
-                        <td>{item.order.designStaff.name}</td>
-                        <td>{item.order.productionStaff.name}</td>
+                        <td>{item.order.designStaff?.name ?? 'N/A'}</td>
+                        <td>{item.order.productionStaff?.name ?? 'N/A'}</td>
                         <td>{item.order.totalPrice}</td>
                         <td>{item.order.status}</td>
                       </tr>
@@ -222,8 +222,16 @@ function DesignStaffPage() {
           <td>{selectedItem.order.customizeRequest.customer.name}</td>
         </tr>
         <tr>
-          <td>Sales Staff</td>
+          <td>Sales</td>
           <td>{selectedItem.order.customizeRequest.saleStaff.name}</td>
+        </tr>
+        <tr>
+          <td>Designer</td>
+          <td>{selectedItem.order.designStaff?.name ?? 'N/A'}</td>
+        </tr>
+        <tr>
+          <td>Production</td>
+          <td>{selectedItem.order.productionStaff?.name ?? 'N/A'}</td>
         </tr>
         <tr>
           <td>Manager</td>
