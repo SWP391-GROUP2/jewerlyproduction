@@ -19,14 +19,10 @@ namespace JewelryProduction.Services
         }
         public async Task<List<ProductSampleDTO>> GetRecommendedSamples(string? type, string? style, double? size, string? goldType, List<string>? gemstoneName)
         {
-            var allSamples = await _context.ProductSamples
-             .Include(ps => ps.Gemstones)
-             .Include(ps => ps._3ddesigns)
-             .Include(ps => ps.Gold)
-             .ToListAsync();
+            var allSamples = await _productSampleRepository.GetAllAsync();
 
             var recommendedSamples = allSamples
-                .Select(sample => new 
+                .Select(sample => new
                 {
                     Sample = sample,
                     Similarity = CalculateSimilarity(type, style, size, goldType, gemstoneName, sample)
@@ -94,12 +90,8 @@ namespace JewelryProduction.Services
                 GoldType = productSample.Gold.GoldType,
             };
         }
-            public double CalculateSimilarity(string? type, string? style, double? size, string? goldType, List<string>? gemstoneName , ProductSample sample2)
+        public double CalculateSimilarity(string? type, string? style, double? size, string? goldType, List<string>? gemstoneName, ProductSample sample2)
         {
-            var gemstones =  _context.Gemstones
-            .Where(g => gemstoneName.Contains(g.Name))
-            .ToListAsync();
-
             double similarity = 0;
 
             if (sample2.Type is not null && type == sample2.Type) similarity += 1;
@@ -109,7 +101,7 @@ namespace JewelryProduction.Services
             {
                 similarity += 1;
             }
-            if (gemstones == sample2.Gemstones) similarity += 1;
+
             if (gemstoneName != null && gemstoneName.Any())
             {
                 var sample2GemstoneNames = sample2.Gemstones.Select(g => g.Name).ToList();
