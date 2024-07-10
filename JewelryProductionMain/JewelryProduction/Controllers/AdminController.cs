@@ -32,6 +32,8 @@ namespace JewelryProduction.Controllers
                     {
                         UserId = user.Id,
                         UserName = user.UserName,
+                        Email = user.Email,
+                        PhoneNumber = user.PhoneNumber,
                         Roles = roles.ToList()
                     });
                 }
@@ -52,6 +54,30 @@ namespace JewelryProduction.Controllers
             user.EmailConfirmed = false;
             await _userManager.UpdateAsync(user);
             return Ok(user);
+        }
+
+        [HttpGet("GetUserByRole")]
+        public async Task<ActionResult<IEnumerable<AppUser>>> GetUserByRole(string role)
+        {
+            var usersInRole = new List<UserWithRoleDTO>();
+
+            // Lấy tất cả người dùng trong vai trò cụ thể
+            var users = await _userManager.GetUsersInRoleAsync(role);
+
+            foreach (var user in users)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                usersInRole.Add(new UserWithRoleDTO
+                {
+                    UserId = user.Id,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber,
+                    Roles = roles.ToList()
+                });
+            }
+
+            return Ok(usersInRole);
         }
     }
 
