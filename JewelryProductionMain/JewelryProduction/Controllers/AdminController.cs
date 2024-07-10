@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using JewelryProduction.DTO;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,14 +21,19 @@ namespace JewelryProduction.Controllers
             //return await _userManager.Users.ToListAsync();
             var users = await _userManager.Users.ToListAsync();
 
-            var filteredUsers = new List<AppUser>();
+            var filteredUsers = new List<UserWithRoleDTO>();
 
             foreach (var user in users)
             {
                 var roles = await _userManager.GetRolesAsync(user);
                 if (!roles.Contains("Admin") && !roles.Contains("Customer"))
                 {
-                    filteredUsers.Add(user);
+                    filteredUsers.Add(new UserWithRoleDTO
+                    {
+                        UserId = user.Id,
+                        UserName = user.UserName,
+                        Roles = roles.ToList()
+                    });
                 }
             }
 
