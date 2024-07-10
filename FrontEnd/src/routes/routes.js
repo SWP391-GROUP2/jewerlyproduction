@@ -48,7 +48,7 @@ const routes = [
   { path: "/customer/resetpassword", element: <ResetPassword /> },
   { path: "/customer/checkoutpage", element: <CheckOutPage /> },
   {
-    path: "/customer/callback",
+    path: "/customer/callback/api/Payment/Check",
     element: <CallBack />,
   },
   {
