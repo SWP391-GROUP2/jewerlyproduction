@@ -17,14 +17,12 @@ function ManagerPage() {
   const [designStaffId, setAssignedDesignEmployee] = useState("");
   const [productionStaffId, setAssignedProductionEmployee] = useState("");
 
-
   const [currentView, setCurrentView] = useState("request");
   const [quotationView, setQuotationView] = useState("");
   const [detailPopupOpen, setDetailPopupOpen] = useState(false);
   const [PopupOpenDetail, setPopupOpenDetail] = useState(false);
 
   const [OrderdetailPopupOpen, setOrderDetailPopupOpen] = useState(false);
-  
 
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -40,13 +38,8 @@ function ManagerPage() {
   const [hasFetchedOrders, setHasFetchedOrders] = useState(false);
 
   const [assignDesignPopupOpen, setAssignDesignPopupOpen] = useState(false);
-  const [assignProductionPopupOpen, setAssignProductionPopupOpen] = useState(false);
-
-
-
-  
-
-  
+  const [assignProductionPopupOpen, setAssignProductionPopupOpen] =
+    useState(false);
 
   const user = useSelector((State) => State.auth.Login.currentUser);
 
@@ -195,8 +188,6 @@ function ManagerPage() {
     setAssignedProductionEmployee(selectedEmployeeId);
   };
 
-  
-
   const handleConfirmReject = () => {
     const updatedRequestData = requestData.filter(
       (_, index) => index !== customizeRequestId
@@ -339,8 +330,7 @@ function ManagerPage() {
 
   const handleRowOrderClick = (orderId) => {
     const selectedOrder = OrderData.find(
-      (order) =>
-        order.order.orderId === orderId
+      (order) => order.order.orderId === orderId
     );
     
     setSelectedOrder(selectedOrder);
@@ -516,7 +506,6 @@ function ManagerPage() {
     </table>
   </div>
 )}
-
         {currentView === "salesstaff" && (
           <div className="new-div">
             <h2 className="table-heading">Sales Staff List</h2>
@@ -847,7 +836,7 @@ function ManagerPage() {
           </div>
         </div>
       )}
-        
+
       {OrderdetailPopupOpen && (
   <div className="popup-overlay">
     <div className="popup">
@@ -977,8 +966,24 @@ function ManagerPage() {
                       designStaffId === staff.appUser.id ? "selected" : ""
                     }
                   >
-                    <td>{staff.appUser.name}</td>
-                    <td>{staff.appUser.id}</td>
+                    Assign Production Staff
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {assignProductionPopupOpen && (
+        <div className="popup-overlay">
+          <div className="popup">
+            <div className="popup-inner">
+              <h2>Assign Production Staff</h2>
+              <table className="employee-table">
+                <thead>
+                  <tr>
+                    <th>Employee Name</th>
+                    <th>Number of Quoted</th>
                   </tr>
                 ))}
               </tbody>

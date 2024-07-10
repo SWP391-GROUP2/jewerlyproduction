@@ -13,6 +13,7 @@ function SaleStaffPage() {
   const [goldWeight, setGoldWeight] = useState("");
   const [fetchDataFlag, setFetchDataFlag] = useState(false);
   const [hasFetchedOrders, setHasFetchedOrders] = useState(false);
+  const [OrderData, setOrderData] = useState([]);
 
   const user = useSelector((State) => State.auth.Login.currentUser);
 
@@ -37,7 +38,26 @@ function SaleStaffPage() {
       setFetchDataFlag(false);
       setHasFetchedOrders(true);
     }
-  }, [fetchDataFlag, requestData]);
+  }, [fetchDataFlag, requestData, hasFetchedOrders]);
+
+  const fetchOrder = async () => {
+    try {
+      const response = await axios.get("http://localhost:5266/api/Orders");
+      console.log("Response Data:", response.data); // Kiểm tra dữ liệu phản hồi
+      setOrderData(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error); // Kiểm tra lỗi
+      setError(error);
+    }
+  };
+
+  useEffect(() => {
+    if (!hasFetchedOrders && (fetchDataFlag || OrderData.length === 0)) {
+      fetchOrder();
+      setFetchDataFlag(false);
+      setHasFetchedOrders(true);
+    }
+  }, [fetchDataFlag, OrderData, hasFetchedOrders]);
 
   const handleSidebarToggle = () => {
     setOpenSidebarToggle(!openSidebarToggle);
@@ -85,9 +105,37 @@ function SaleStaffPage() {
     setGoldWeight(rowData.goldweight);
   };
 
-  // Gắn api ok sẽ qua trang update deposit và tạo 3 inspection
-  const handleCheckPayment = (rowData) => {
-    setDetailPopupData(rowData);
+  const changeStatusToDesigner = async (orderID, price) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:5266/api/Orders/change-status%20To%20Designer`,
+        null, // Body rỗng
+        {
+          params: { orderID, price },
+        }
+      );
+      if (response) {
+        console.log("Response:", response.data);
+        alert("Choose payment successful!");
+      } else {
+        alert("Choose payment failed!");
+      }
+    } catch (error) {
+      console.error(
+        "Error:",
+        error.response ? error.response.data : error.message
+      );
+      throw new Error(error.response ? error.response.data : error.message);
+    }
+  };
+
+  const handleCheckPayment = async (orderid, quotation) => {
+    try {
+      await changeStatusToDesigner(orderid, quotation * 0.3); // Sử dụng quotation để tính giá
+      await fetchOrder();
+    } catch (error) {
+      console.error("Error updating order status:", error);
+    }
   };
 
   const handleCloseDetailPopup = () => {
@@ -101,8 +149,10 @@ function SaleStaffPage() {
   const waitForApproveRequests = requestData.filter(
     (data) => data.customerRequest.status === "Wait For Approval"
   );
-  const paymentpendingRequests = requestData.filter(
-    (data) => data.customerRequest.status === "Payment Pending"
+  const paymentpendingOrder = OrderData.filter(
+    (OrderData) =>
+      (OrderData.order.status === "Payment Pending") &
+      (OrderData.order.paymentMethodId === "P001")
   );
   const rejectListData = requestData.filter(
     (data) => data.customerRequest.status === "Quotation Rejected"
@@ -215,40 +265,40 @@ function SaleStaffPage() {
 
             {currentView === "payment_pending" && (
               <div>
-                <h2 className="table-heading">Wait for Approve</h2>
+                <h2 className="table-heading">Payment Pending</h2>
                 <table className="custom-table">
                   <thead>
                     <tr>
-                      <th>Customize Request ID</th>
-                      <th>Customer Name</th>
-                      <th>Sales Staff Name</th>
-                      <th>Gold Type</th>
-                      <th>Type</th>
-                      <th>Style</th>
-                      <th>Size</th>
-                      <th>Quotation</th>
-                      <th>Quantity</th>
+                      <th>ID</th>
+                      <th>Customer</th>
+                      <th>Sales Staff</th>
+                      <th>Design Staff</th>
+                      <th>Production Staff</th>
+                      <th>Price</th>
                       <th>Status</th>
-                      <th>Check Payment</th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
-                    {paymentpendingRequests.map((row, index) => (
+                    {paymentpendingOrder.map((row, index) => (
                       <tr key={index}>
-                        <td>{row.customerRequest.customizeRequestId}</td>
-                        <td>{row.customerName}</td>
-                        <td>{row.saleStaffName}</td>
-                        <td>{row.customerRequest.gold.goldType}</td>
-                        <td>{row.customerRequest.type}</td>
-                        <td>{row.customerRequest.style}</td>
-                        <td>{row.customerRequest.size}</td>
-                        <td>{row.customerRequest.quotation}</td>
-                        <td>{row.customerRequest.quantity}</td>
-                        <td>{row.customerRequest.status}</td>
+                        <td>{row.order.orderId}</td>
+                        <td>{row.order.customizeRequest.customer.name}</td>
+                        <td>{row.order.customizeRequest.saleStaff.name}</td>
+                        <td>{row.order.designStaff?.name || ""}</td>
+                        <td>{row.order.productionStaff?.name || ""}</td>
+                        <td>{row.order.totalPrice}</td>
+                        <td>{row.order.status}</td>
                         <td>
                           <button
                             className="salestaff-detail-button"
-                            onClick={() => handleCheckPayment(row)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleCheckPayment(
+                                row.order.orderId,
+                                row.order.customizeRequest.quotation
+                              );
+                            }}
                           >
                             Already Paid
                           </button>
