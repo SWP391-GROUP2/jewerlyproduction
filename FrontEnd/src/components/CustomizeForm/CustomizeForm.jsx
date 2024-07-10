@@ -349,13 +349,25 @@ function CustomizeForm() {
     );
   });
 
+  const filteredSideGemstones = gemstones.filter((gemstone) => {
+    // Filter out the primary gemstone and gemstones with non-null productSampleID or customizeRequestID
+    return (
+      gemstone.gemstoneId !==
+        (PrimaryGemstone ? PrimaryGemstone.gemstoneId : null) &&
+      gemstone.productSampleId === null &&
+      gemstone.customizeRequestId === null
+    );
+  });
+
   const totalMainPages = Math.ceil(
     filteredMainGemstones.length / gemstonesPerPage
   );
   const totalMainPagessecond = Math.ceil(
     filteredGemstones.length / gemstonesPerPage
   );
-  const totalSidePages = Math.ceil(gemstones.length / gemstonesPerPage);
+  const totalSidePages = Math.ceil(
+    filteredSideGemstones.length / gemstonesPerPage
+  );
 
   const indexOfLastMainGemstone = currentMainPage * gemstonesPerPage;
   const indexOfFirstMainGemstone = indexOfLastMainGemstone - gemstonesPerPage;
@@ -375,7 +387,7 @@ function CustomizeForm() {
 
   const indexOfLastSideGemstone = currentSidePage * gemstonesPerPage;
   const indexOfFirstSideGemstone = indexOfLastSideGemstone - gemstonesPerPage;
-  const currentSideGemstones = gemstones.slice(
+  const currentSideGemstones = filteredSideGemstones.slice(
     indexOfFirstSideGemstone,
     indexOfLastSideGemstone
   );

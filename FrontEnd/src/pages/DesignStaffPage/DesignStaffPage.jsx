@@ -18,8 +18,19 @@ function DesignStaffPage() {
   const [hasFetchedOrders, setHasFetchedOrders] = useState(false);
   const [hasFetchedDesigns, setHasFetchedDesigns] = useState(false);
   const [selectedDesignId, setselectedDesignId] = useState("");
+
+
+ const [designName, setDesignName] = useState("");
+  const [formImage, setFormImage] = useState(null);
+
+  const [showFormPopup, setShowFormPopup] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  function chunkArray(array, size) {
+    return array.reduce((acc, _, index) => index % size ? acc : [...acc, array.slice(index, index + size)], []);
+  }
+  
 
   const OpenSidebar = () => {
     setOpenSidebarToggle(!openSidebarToggle);
@@ -86,6 +97,11 @@ function DesignStaffPage() {
     setFetchDataFlag(true);
   }
 
+  const handleCloseFormPopup = () => {
+    setShowFormPopup(false);
+    setShowDetailPopup(true);
+  };
+
   const delete3dDesign = async () => {
     try {
       const response = await axios.delete('http://localhost:5266/api/_3ddesign',
@@ -125,13 +141,19 @@ function DesignStaffPage() {
   };
 
   const handleImageUpload = (e) => {
+    setShowDetailPopup(false);
+      setShowFormPopup(true);
+  };
+  const handleFormImageUpload = (e) => {
     const file = e.target.files[0];
-    setUploadedImage(URL.createObjectURL(file)); // Store image preview URL
+    setFormImage(URL.createObjectURL(file));
     setSelectedItem({
       ...selectedItem,
-      image: file.name, // Update selected item with new image name
+      image: file.name,
     });
   };
+
+  
 
   
 
@@ -182,9 +204,9 @@ function DesignStaffPage() {
                       <tr key={item.order.orderId} onClick={() => showDetail(item)}>
                         <td>{item.order.orderId}</td>
                         <td>{item.order.customizeRequest.customer.name}</td>
-                        <td>{item.order.customizeRequest.saleStaff.name}</td>
-                        <td>{item.order.designStaff.name}</td>
-                        <td>{item.order.productionStaff.name}</td>
+                        <td>{item.order.customizeRequest.saleStaff?.name ?? 'N/A'}</td>
+                        <td>{item.order.designStaff?.name ?? 'N/A'}</td>
+                        <td>{item.order.productionStaff?.name ?? 'N/A'}</td>
                         <td>{item.order.totalPrice}</td>
                         <td>{item.order.status}</td>
                       </tr>
@@ -222,8 +244,16 @@ function DesignStaffPage() {
           <td>{selectedItem.order.customizeRequest.customer.name}</td>
         </tr>
         <tr>
-          <td>Sales Staff</td>
-          <td>{selectedItem.order.customizeRequest.saleStaff.name}</td>
+          <td>Sales</td>
+          <td>{selectedItem.order.customizeRequest.saleStaff?.name ?? 'N/A'}</td>
+        </tr>
+        <tr>
+          <td>Designer</td>
+          <td>{selectedItem.order.designStaff?.name ?? 'N/A'}</td>
+        </tr>
+        <tr>
+          <td>Production</td>
+          <td>{selectedItem.order.productionStaff?.name ?? 'N/A'}</td>
         </tr>
         <tr>
           <td>Manager</td>
@@ -253,15 +283,19 @@ function DesignStaffPage() {
     </table>
 
     <table className="designstaff-detail-table2">
-      <tbody className="_3dDesign">
-        {_3ddesigns.map(_3ddesigns => (
-        <tr key={_3ddesigns._3dDesignId}>
-          <td><img src= {_3ddesigns.image} alt="image" /></td>
-          <td><button onClick={() => handleDelete(_3ddesigns._3dDesignId)}>Delete</button></td>
-        </tr>
+  <tbody className="_3dDesign">
+    {chunkArray(_3ddesigns, 2).map((row, rowIndex) => (
+      <tr key={rowIndex}>
+        {row.map(_3ddesign => (
+          <td key={_3ddesign._3dDesignId} className="ImageTable">
+            <img src={_3ddesign.image} alt="image" />
+            <button className="designstaff-close-button" onClick={() => handleDelete(_3ddesign._3dDesignId)}>Delete</button>
+          </td>
         ))}
-      </tbody>
-    </table>
+      </tr>
+    ))}
+  </tbody>
+</table>
   </div>
   <div>
     <button className="designstaff-close-button" onClick={hideDetail}>Close</button>
@@ -269,14 +303,68 @@ function DesignStaffPage() {
   </div>
 </div>
 
+
 </div>
 
         </div>
+      )}{showFormPopup && (
+        <div className="designstaff-form-popup">
+          <div className="designstaff-form-popup-content">
+            <h2>Add Image</h2>
+            <div className="form-container">
+              <form >
+                <div className="form-group">
+                  <label>Order ID:</label>
+                  <input type="text" value={selectedItem.customizeRequestID} readOnly />
+                </div>
+                <div className="form-group">
+                  <label>Design Name:</label>
+                  <input
+                    type="text"
+                    value={designName}
+                    onChange={(e) => setDesignName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Upload Image:</label>
+                  <input type="file" onChange={handleFormImageUpload} />
+                </div>
+                {formImage && (
+                  <div className="form-group">
+                    <img src={formImage} alt="Form Preview" className="uploaded-image-preview" />
+                  </div>
+                )}
+                <div className="form-group">
+                  <button type="submit" className="designstaff-save-button">
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    className="designstaff-close-button"
+                    onClick={handleCloseFormPopup}
+                  >
+                    Close
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
       )}
+      
     </div>
   );
+  
 }
 
+
 export default DesignStaffPage;
+
+
+
+
+
+
 
 
