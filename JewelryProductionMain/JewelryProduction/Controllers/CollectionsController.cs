@@ -1,5 +1,6 @@
 ﻿using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
+using JewelryProduction.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,10 +11,12 @@ namespace JewelryProduction.Controllers
     public class CollectionsController : ControllerBase
     {
         private readonly JewelryProductionContext _context;
+        private readonly ICollectionService _collectionService;
 
-        public CollectionsController(JewelryProductionContext context)
+        public CollectionsController(JewelryProductionContext context, ICollectionService collectionService)
         {
             _context = context;
+            _collectionService = collectionService;
         }
 
         // GET: api/Collections
@@ -115,6 +118,47 @@ namespace JewelryProduction.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+        [HttpPost("add-samples-by-style")]
+        public async Task<IActionResult> AddProductSamplesToCollectionByStyle(string collectionId, string style)
+        {
+            if (string.IsNullOrWhiteSpace(collectionId))
+            {
+                return BadRequest("Collection ID cannot be null or empty");
+            }
+
+            if (string.IsNullOrWhiteSpace(style))
+            {
+                return BadRequest("Style cannot be null or empty");
+            }
+            try
+            {
+                await _collectionService.AddProductSamplesToCollectionByStyleAsync(collectionId, style);
+                return Ok("Product samples added successfully");
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions as needed
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost("add-samples-by-ids")]
+        public async Task<IActionResult> AddProductSamplesToCollection(AddProductSampleToCollectionDTO collectionDTO)
+        {
+            if (string.IsNullOrWhiteSpace(collectionDTO.collectionId))
+            {
+                return BadRequest("Collection ID cannot be null or empty");
+            }
+            try
+            {
+                await _collectionService.AddProductSamplesToCollectionAsync(collectionDTO);
+                return Ok("Product samples added successfully");
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions as needed
+                return BadRequest(ex.Message);
+            }
         }
 
         private bool CollectionExists(string id)
