@@ -154,6 +154,12 @@ function ManagerPage() {
   const waitapprove = requestData.filter(
     (requestData) => requestData.customerRequest.status === "Wait For Approval"
   );
+  const assigndesigner = OrderData.filter(
+    (OrderData) => OrderData.order.status === "Assigning Designer"
+  );
+
+
+
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -493,7 +499,7 @@ function ManagerPage() {
         </tr>
       </thead>
       <tbody>
-        {OrderData.map((row, index) => (
+        {assigndesigner.map((row, index) => (
           <tr key={index} 
             onClick={() => 
             handleRowOrderClick(row.order.orderId)
