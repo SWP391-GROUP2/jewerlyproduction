@@ -67,10 +67,17 @@ function DesignStaffPage() {
     }
   }, [fetchDataFlag, OrderData]);
 
-  const OrderOfCustomer = OrderData.filter(
-    (OrderData) =>
-      OrderData.order.designStaffId === designStaffId
-  );
+  const OrderOfCustomer = OrderData.filter((item) => {
+    // Check if designStaffId matches
+    const hasDesignStaff = item.order.designStaffId === designStaffId;
+  
+    // Check if status matches any of the specified values
+    const statusMatches = ["Design Pending"].includes(item.order.status);
+  
+    // Return true if both conditions are met
+    return hasDesignStaff && statusMatches;
+  });
+  
 
   const fetch3dDesign = async () => {
     try {
@@ -144,7 +151,7 @@ function DesignStaffPage() {
       }
     }, [fetchDataFlag]);
 
-    const handleUpload3dDesign = () => {
+    const handleUpload3dDesign = async () => {
       const formData = new FormData();
       formData.append("DesignName", designName);
       formData.append("OrderId", orderId)
@@ -154,7 +161,7 @@ function DesignStaffPage() {
         "Updating 3dDesign with data:",
         Object.fromEntries(formData.entries())
       );
-      upload3dDesign(formData);
+      await upload3dDesign(formData);
     };
 
     const upload3dDesign = async (formData) => {
@@ -179,6 +186,32 @@ function DesignStaffPage() {
         setLoading(false);
       }
     };
+
+    const desginCompleted = async () => {
+      try {
+        const res = await axios.put(`http://localhost:5266/api/Orders/change-status To Production?orderId=${orderId}`);
+        console.log(res)
+        console.log("Upload successfully:", res.data);
+        fetchOrder();
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError(error);
+      }
+    };
+    
+    const handleToProduction = async (orderID) => {
+      try {
+        await setOrderId(orderID);
+        handleToProduction2(orderID)
+      } catch (error) {
+        console.error("Error updating request:", error);
+      }
+    };
+  
+    const handleToProduction2 = (orderID) => {
+      desginCompleted(orderID);
+      fetchOrder();
+    }
 
   const hideDetail = () => {
     setShowDetailPopup(false);
@@ -255,16 +288,16 @@ function DesignStaffPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {OrderOfCustomer.map((item) => (
-                      <tr key={item.order.orderId} onClick={() => showDetail(item)}>
-                        <td>{item.order.orderId}</td>
-                        <td>{item.order.customizeRequest.customer.name}</td>
-                        <td>{item.order.customizeRequest.saleStaff?.name ?? 'N/A'}</td>
-                        <td>{item.order.designStaff?.name ?? 'N/A'}</td>
-                        <td>{item.order.productionStaff?.name ?? 'N/A'}</td>
-                        <td>{item.order.totalPrice}</td>
-                        <td>{item.order.status}</td>
-                        <td></td>
+                  {OrderOfCustomer.map((item) => (
+                    <tr key={item.order.orderId}>
+                      <td onClick={() => showDetail(item)}>{item.order.orderId}</td>
+                      <td onClick={() => showDetail(item)}>{item.order.customizeRequest.customer.name}</td>
+                      <td onClick={() => showDetail(item)}>{item.order.customizeRequest.saleStaff?.name ?? 'N/A'}</td>
+                      <td onClick={() => showDetail(item)}>{item.order.designStaff?.name ?? 'N/A'}</td>
+                      <td onClick={() => showDetail(item)}>{item.order.productionStaff?.name ?? 'N/A'}</td>
+                      <td onClick={() => showDetail(item)}>{item.order.totalPrice}</td>
+                      <td onClick={() => showDetail(item)}>{item.order.status}</td>
+                        <td><button onClick={(e) => {e.stopPropagation(); handleToProduction(item.order.orderId)}}>Send</button></td>
                       </tr>
                     ))}
                   </tbody>
