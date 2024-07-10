@@ -58,6 +58,7 @@ namespace JewelryProduction.Services
             if (!isProductionStaff) throw new InvalidOperationException("The user is not assigned the ProductionStaff role.");
 
             order.ProductionStaffId = assignProductionStaffDTO.ProductionStaffId;
+            order.Status = "In Production";
             _orderRepository.Update(order);
 
             var inspections = new List<Inspection>

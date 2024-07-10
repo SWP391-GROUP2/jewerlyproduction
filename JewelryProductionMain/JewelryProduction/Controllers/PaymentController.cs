@@ -31,5 +31,14 @@ namespace JewelryProduction.Controllers
 
             return Json(response);
         }
+
+        [HttpGet("CheckTotalPrice")]
+        public IActionResult PaymentCallbackV2()
+        {
+
+            var response = _vnPayService.PaymentExecuteV2(Request.Query);
+
+            return Json(response);
+        }
     }
 }

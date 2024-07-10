@@ -26,16 +26,8 @@ namespace JewelryProduction.Services
 
         public async Task<List<Get3dDesignDTO>> Get_3Ddesigns() => await _repository.Get_3Ddesigns();
 
-        public async Task<string> UploadDesignAsync(_3ddesignDTO design, string token)
+        public async Task<string> UploadDesignAsync(_3ddesignDTO design)
         {
-            var handler = new JwtSecurityTokenHandler();
-            JwtSecurityToken jwtToken = handler.ReadJwtToken(token);
-            var email = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "email")?.Value;
-            var user = await _repository.FindUserByEmailAsync(email);
-
-            if (user == null || string.IsNullOrWhiteSpace(token))
-                throw new ArgumentException("Invalid credentials");
-
             var folder = "3D Designs";
             var avatarUrl = await _cloudinaryService.UploadImageAsync(design.Image, folder);
             var url = avatarUrl.Url.ToString();
@@ -47,7 +39,7 @@ namespace JewelryProduction.Services
                 Image = url,
                 OrderId = design.OrderId,
                 ProductSampleId = design.ProductSampleId,
-                DesignStaffId = user.Id
+                DesignStaffId = design.DesignStaffId
             };
 
             await _repository.AddDesignAsync(designEntity);

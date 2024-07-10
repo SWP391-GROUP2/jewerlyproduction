@@ -18,8 +18,10 @@ function DesignStaffPage() {
   const [hasFetchedOrders, setHasFetchedOrders] = useState(false);
   const [hasFetchedDesigns, setHasFetchedDesigns] = useState(false);
   const [selectedDesignId, setselectedDesignId] = useState("");
+  const [orderId, setOrderId] = useState(null);
+  const [designImage, setDesignImage] = useState(null);
 
-  const [designName, setDesignName] = useState("");
+ const [designName, setDesignName] = useState("");
   const [formImage, setFormImage] = useState(null);
 
   const [showFormPopup, setShowFormPopup] = useState(false);
@@ -101,22 +103,19 @@ function DesignStaffPage() {
 
   const delete3dDesign = async () => {
     try {
-      const response = await axios.delete(
-        "http://localhost:5266/api/_3ddesign",
-        {
-          params: {
-            id: selectedDesignId,
-          },
-        }
-      );
-      console.log("Response Data:", response.data);
-      setDesignData(response.data);
+      await axios.delete('http://localhost:5266/api/_3ddesign', {
+        params: {
+          id: selectedDesignId,
+        },
+      });
+      // Remove the deleted design from the local state
+      setDesignData(prevDesigns => prevDesigns.filter(design => design._3dDesignId !== selectedDesignId));
+      console.log("Design deleted successfully");
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error deleting design:", error);
       setError(error);
     }
   };
-
   useEffect(() => {
     if (fetchDataFlag) {
       delete3dDesign();
@@ -130,14 +129,61 @@ function DesignStaffPage() {
     setUploadedImage(null); // Reset uploaded image state
   };
 
+    const handle3dDesign = async (orderId) => {
+      await handleUpload3dDesign;
+    } 
+
+    useEffect(() => {
+      if (fetchDataFlag) {
+        handleUpload3dDesign();
+        setFetchDataFlag(false);
+      }
+    }, [fetchDataFlag]);
+
+    const handleUpload3dDesign = () => {
+      const formData = new FormData();
+      formData.append("DesignName", designName);
+      formData.append("OrderId", orderId)
+      formData.append("DesignStaffId", designStaffId);
+      formData.append("Image", designImage);
+      console.log(
+        "Updating 3dDesign with data:",
+        Object.fromEntries(formData.entries())
+      );
+      upload3dDesign(formData);
+    };
+
+    const upload3dDesign = async (formData) => {
+      try {
+        const res = await axios.post(
+          `http://localhost:5266/api/_3ddesign/Upload`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            },
+          }
+        );
+        console.log(res)
+        console.log("Upload successfully:", res.data);
+        setDesignData(prevDesigns => prevDesigns.filter(design => design._3dDesignId !== selectedDesignId));
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError(error);
+      }
+      finally {
+        setLoading(false);
+      }
+    };
   const hideDetail = () => {
     setShowDetailPopup(false);
   };
 
-  const handleImageUpload = (e) => {
-    setShowDetailPopup(false);
-    setShowFormPopup(true);
+  const handleFileInputChange = (e) => {
+    handleFormImageUpload(e);
+    handleDesignChange(e);
   };
+
   const handleFormImageUpload = (e) => {
     const file = e.target.files[0];
     setFormImage(URL.createObjectURL(file));
@@ -145,6 +191,19 @@ function DesignStaffPage() {
       ...selectedItem,
       image: file.name,
     });
+  };
+  
+  const handleDesignChange = (e) => {
+    setDesignImage(e.target.files[0]);
+  };
+
+  const handleSetOrder = (index) => {
+    setOrderId(index);
+  }
+
+  const handleImageUpload = () => {
+    setShowDetailPopup(false);
+    setShowFormPopup(true);
   };
 
   const handleSave = () => {
@@ -189,15 +248,13 @@ function DesignStaffPage() {
                       <th>Design Staff</th>
                       <th>Production Staff</th>
                       <th>Price</th>
-                      <th>Status</th>
+                      <th>Status</th> 
+                      <th>Send Design</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {OrderData.map((item) => (
-                      <tr
-                        key={item.order.orderId}
-                        onClick={() => showDetail(item)}
-                      >
+                    {OrderOfCustomer.map((item) => (
+                      <tr key={item.order.orderId} onClick={() => showDetail(item)}>
                         <td>{item.order.orderId}</td>
                         <td>{item.order.customizeRequest.customer.name}</td>
                         <td>
@@ -207,6 +264,7 @@ function DesignStaffPage() {
                         <td>{item.order.productionStaff?.name ?? "N/A"}</td>
                         <td>{item.order.totalPrice}</td>
                         <td>{item.order.status}</td>
+                        <td></td>
                       </tr>
                     ))}
                   </tbody>
@@ -220,80 +278,90 @@ function DesignStaffPage() {
       {showDetailPopup && (
         <div className="designstaff-detail-popup">
           <div className="designstaff-detail-popup-content1">
-            <div className="designstaff-detail-popup-content2">
-              <h2>Detail Popup</h2>
-              <div className="designstaff-tables-container">
-                <table className="designstaff-detail-table1">
-                  <tbody>
-                    <tr>
-                      <td>ID</td>
-                      <td>{selectedItem.order.orderId}</td>
-                    </tr>
-                    <tr>
-                      <td>Gold</td>
-                      <td>
-                        {selectedItem.order.customizeRequest.gold.goldType}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Gold Weight</td>
-                      <td>{selectedItem.order.customizeRequest.goldWeight}</td>
-                    </tr>
-                    <tr>
-                      <td>Customer</td>
-                      <td>
-                        {selectedItem.order.customizeRequest.customer.name}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Sales</td>
-                      <td>
-                        {selectedItem.order.customizeRequest.saleStaff?.name ??
-                          "N/A"}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Designer</td>
-                      <td>{selectedItem.order.designStaff?.name ?? "N/A"}</td>
-                    </tr>
-                    <tr>
-                      <td>Production</td>
-                      <td>
-                        {selectedItem.order.productionStaff?.name ?? "N/A"}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Manager</td>
-                      <td>
-                        {selectedItem.order.customizeRequest.manager.name}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Type</td>
-                      <td>{selectedItem.order.customizeRequest.type}</td>
-                    </tr>
-                    <tr>
-                      <td>Style</td>
-                      <td>{selectedItem.order.customizeRequest.style}</td>
-                    </tr>
-                    <tr>
-                      <td>Size</td>
-                      <td>{selectedItem.order.customizeRequest.size}</td>
-                    </tr>
+          <div className="designstaff-detail-popup-content2">
+  <h2>Detail Popup</h2>
+  <div className="designstaff-tables-container">
+    <table className="designstaff-detail-table1">
+      <tbody>
+        <tr>
+          <td>ID</td>
+          <td>{selectedItem.order.orderId}</td>
+        </tr>
+        <tr>
+          <td>Gold</td>
+          <td>{selectedItem.order.customizeRequest.gold.goldType}</td>
+        </tr>
+        <tr>
+          <td>Gold Weight</td>
+          <td>{selectedItem.order.customizeRequest.goldWeight}</td>
+        </tr>
+        <tr>
+          <td>Customer</td>
+          <td>{selectedItem.order.customizeRequest.customer.name}</td>
+        </tr>
+        <tr>
+          <td>Sales</td>
+          <td>{selectedItem.order.customizeRequest.saleStaff?.name ?? 'N/A'}</td>
+        </tr>
+        <tr>
+          <td>Designer</td>
+          <td>{selectedItem.order.designStaff?.name ?? 'N/A'}</td>
+        </tr>
+        <tr>
+          <td>Production</td>
+          <td>{selectedItem.order.productionStaff?.name ?? 'N/A'}</td>
+        </tr>
+        <tr>
+          <td>Manager</td>
+          <td>{selectedItem.order.customizeRequest.manager?.name ?? 'N/A'}</td>
+        </tr>
+        <tr>
+          <td>Type</td>
+          <td>{selectedItem.order.customizeRequest.type}</td>
+        </tr>
+        <tr>
+          <td>Style</td>
+          <td>{selectedItem.order.customizeRequest.style}</td>
+        </tr>
+        <tr>
+          <td>Size</td>
+          <td>{selectedItem.order.customizeRequest.size}</td>
+        </tr>
+        
+        {uploadedImage && (
+          <tr>
+            <td colSpan="2">
+              <img src={uploadedImage} alt="Uploaded Preview" className="uploaded-image-preview" />
+            </td>
+          </tr>
+        )}
+      </tbody>
+    </table>
 
-                    {uploadedImage && (
-                      <tr>
-                        <td colSpan="2">
-                          <img
-                            src={uploadedImage}
-                            alt="Uploaded Preview"
-                            className="uploaded-image-preview"
-                          />
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+    <table className="designstaff-detail-table2">
+  <tbody className="_3dDesign">
+    {chunkArray(_3ddesigns, 2).map((row, rowIndex) => (
+      <tr key={rowIndex}>
+        {row.map(_3ddesign => (
+          <td key={_3ddesign._3dDesignId} className="ImageTable">
+            <img src={_3ddesign.image} alt="image" />
+            <button className="designstaff-close-button" onClick={() => handleDelete(_3ddesign._3dDesignId)}>Delete</button>
+          </td>
+        ))}
+      </tr>
+    ))}
+  </tbody>
+</table>
+  </div>
+  <div>
+    <button className="designstaff-close-button" onClick={hideDetail}>Close</button>
+    <button className="designstaff-add-image-button" onClick={() => { handleImageUpload(); handleSetOrder(selectedItem.order.orderId); }}>
+      Add Image
+    </button>  
+  </div>
+</div>
+
+</div>
 
                 <table className="designstaff-detail-table2">
                   <tbody className="_3dDesign">
@@ -343,15 +411,7 @@ function DesignStaffPage() {
           <div className="designstaff-form-popup-content">
             <h2>Add Image</h2>
             <div className="form-container">
-              <form>
-                <div className="form-group">
-                  <label>Order ID:</label>
-                  <input
-                    type="text"
-                    value={selectedItem.customizeRequestID}
-                    readOnly
-                  />
-                </div>
+              <form onSubmit={handleUpload3dDesign}>
                 <div className="form-group">
                   <label>Design Name:</label>
                   <input
@@ -363,19 +423,15 @@ function DesignStaffPage() {
                 </div>
                 <div className="form-group">
                   <label>Upload Image:</label>
-                  <input type="file" onChange={handleFormImageUpload} />
+                  <input type="file" onChange={(e) => handleFileInputChange(e)} />
                 </div>
                 {formImage && (
                   <div className="form-group">
-                    <img
-                      src={formImage}
-                      alt="Form Preview"
-                      className="uploaded-image-preview"
-                    />
+                    <img src={formImage} alt="Form Preview" className="uploaded-image-preview"/>
                   </div>
                 )}
                 <div className="form-group">
-                  <button type="submit" className="designstaff-save-button">
+                  <button type="submit" className="designstaff-save-button" onClick={() => handle3dDesign(selectedItem.order.orderId)}>
                     Save
                   </button>
                   <button

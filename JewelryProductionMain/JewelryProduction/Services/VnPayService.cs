@@ -72,7 +72,50 @@ namespace JewelryProduction.Services
             order.Status = "Assigning Designer";
             _context.SaveChangesAsync();
 
+            return new VnPaymentResponseModel()
+            {
+                Success = true,
+                PaymentMethod = "vnPay",
+                OrderDescription = vnp_OrderInfo,
+                OrderId = vnp_orderId.ToString(),
+                TransactionId = vnp_TransactionId.ToString(),
+                Token = vnp_SecureHash,
+                VnPayResponseCode = vnp_ResponseCode
+            };
+        }
 
+        public VnPaymentResponseModel PaymentExecuteV2(IQueryCollection collection) // chi moi tinh deposit amount.
+        {
+            var vnPay = new VnPayLibrary();
+
+            foreach (var (key, value) in collection)
+            {
+                if (!string.IsNullOrEmpty(key) && key.StartsWith("vnp_"))
+                {
+                    vnPay.AddResponseData(key, value.ToString());
+                }
+            }
+
+            var vnp_orderId = vnPay.GetResponseData("vnp_TxnRef");
+            var vnp_TransactionId = vnPay.GetResponseData("vnp_TransactionNo");
+            var vnp_SecureHash =
+                collection.FirstOrDefault(k => k.Key == "vnp_SecureHash").Value; //hash của dữ liệu trả về
+            var vnp_ResponseCode = vnPay.GetResponseData("vnp_ResponseCode");
+            var vnp_OrderInfo = vnPay.GetResponseData("vnp_OrderInfo");
+
+            var checkSignature =
+                vnPay.ValidateSignature(vnp_SecureHash, _config["VnPay:HashSecret"]); //check Signature
+
+            if (!checkSignature)
+                return new VnPaymentResponseModel()
+                {
+                    Success = false
+                };
+
+            //luu vao database
+            var order = _orderRepository.GetOrderOnly(vnp_OrderInfo);
+            order.Status = "Shipping";
+            _context.SaveChangesAsync();
 
             return new VnPaymentResponseModel()
             {
