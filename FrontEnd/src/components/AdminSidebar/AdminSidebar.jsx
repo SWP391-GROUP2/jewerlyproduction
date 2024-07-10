@@ -63,6 +63,14 @@ function AdminSidebar({
             <BsGrid1X2Fill className="admin-icon" /> Account List
           </button>
         </li>
+        <li className="admin-sidebar-list-item">
+          <button
+            className="admin-sidebar-button"
+            onClick={() => handleViewChange("createaccountlist")}
+          >
+            <BsGrid1X2Fill className="admin-icon" /> Create Account
+          </button>
+        </li>
       </ul>
     </aside>
   );

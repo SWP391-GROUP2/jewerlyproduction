@@ -4,6 +4,7 @@ import './AdminPage.css';
 import AdminSidebar from '../../components/AdminSidebar/AdminSidebar';
 import AdminHeader from '../../components/AdminHeader/AdminHeader';
 
+
 function AdminPage() {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
   const [activeView, setActiveView] = useState('');
@@ -14,14 +15,23 @@ function AdminPage() {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // State để xác định khi nào hiển thị popup xác nhận
+  const [userIdToDelete, setUserIdToDelete] = useState(null); // State để lưu userId cần xóa
+
   const [userAccounts, setUserAccounts] = useState([]);//
   const [selectedUser, setSelectedUser] = useState(null); // State để lưu thông tin user được chọn
   const itemsPerPage = 8;
+
+  
+
+  
+  
 
   const handleViewChange = (view) => {
     setActiveView(view);
     setSelectedItem(null);
   };
+  
 
   const OpenSidebar = () => {
     setOpenSidebarToggle(!openSidebarToggle);
@@ -126,6 +136,18 @@ const showUserDetails = (user) => {
 // Close popup
 const handleCloseUserPopup = () => {
   setSelectedUser(null);
+};
+
+// Show delete confirmation popup
+const showDeleteConfirmation = (userId) => {
+  setShowDeleteConfirm(true);
+  setUserIdToDelete(userId);
+};
+
+// Close delete confirmation popup
+const closeDeleteConfirmation = () => {
+  setShowDeleteConfirm(false);
+  setUserIdToDelete(null);
 };
   
 
@@ -243,7 +265,8 @@ const handleCloseUserPopup = () => {
                       <td>{user.email}</td>
                       <td>{user.role}</td>
                       <td>
-                        <button className='DElete_button_but' onClick={() => deleteUserAccount(user.userId)}>Delete</button>
+                      <button className='DElete_button_but' onClick={() => showDeleteConfirmation(user.userId)}>Delete</button>
+
                       </td>
                     </tr>
                   ))}
@@ -350,6 +373,19 @@ const handleCloseUserPopup = () => {
     </div>
   </div>
 )}
+{/* Xác nhận xóa người dùng */}
+{showDeleteConfirm && (
+            <div className='popup'>
+              <div className='popup-inner'>
+                <h2>Confirm Delete User</h2>
+                <p>Do you want to delete?</p>
+                <div className='button-container'>
+                  <button className='Confirm_button_but' onClick={() => deleteUserAccount(userIdToDelete)}>Confirm</button>
+                  <button className='DElete_button_but' onClick={closeDeleteConfirmation}>Close</button>
+                </div>
+              </div>
+            </div>
+          )}
 
         </div>
       </div>
