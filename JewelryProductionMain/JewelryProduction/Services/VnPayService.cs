@@ -10,8 +10,11 @@ namespace JewelryProduction.Services
         private readonly IConfiguration _config;
         private readonly JewelryProductionContext _context;
         private readonly IOrderRepository _orderRepository;
-
-        public VnPayService(IConfiguration config, JewelryProductionContext context, IOrderRepository orderRepository) { _config = config; _context = context; _orderRepository = orderRepository; }
+        private readonly ILogger<VnPayService> _logger;
+        public VnPayService(IConfiguration config, JewelryProductionContext context, IOrderRepository orderRepository, ILogger<VnPayService> logger)
+        {
+            _config = config; _context = context; _orderRepository = orderRepository; _logger = logger;
+        }
         public async Task<string> CreatePaymentUrl(HttpContext context, double price, string orderID)
         {
             var tick = DateTime.Now.Ticks.ToString();
@@ -25,13 +28,13 @@ namespace JewelryProduction.Services
             vnpay.AddRequestData("vnp_CurrCode", _config["VnPay:CurrCode"]);
             vnpay.AddRequestData("vnp_IpAddr", Utils.GetIpAddress(context));
             vnpay.AddRequestData("vnp_Locale", _config["VnPay:Locale"]);
-
-            vnpay.AddRequestData("vnp_OrderInfo", "Thanh toan don hang:" + orderID);
+            vnpay.AddRequestData("vnp_OrderInfo", orderID);
             vnpay.AddRequestData("vnp_OrderType", "order"); //default value: other
             vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:PaymentBackReturnUrl"]);
-
             vnpay.AddRequestData("vnp_TxnRef", tick); // Mã tham chiếu của giao dịch tại hệ thống của merchant.Mã này là duy nhất dùng để phân biệt các đơn hàng gửi sang VNPAY.Không được trùng lặp trong ngày
             var paymentUrl = vnpay.CreateRequestUrl(_config["VnPay:BaseUrl"], _config["VnPay:HashSecret"]);
+            _logger.LogInformation("Generated Payment URL: {PaymentUrl}", paymentUrl);
+
             return paymentUrl;
         }
 
@@ -63,10 +66,13 @@ namespace JewelryProduction.Services
                     Success = false
                 };
 
-            var order = _orderRepository.GetOrderOnly(vnp_orderId);
-            order.DepositAmount = Convert.ToDecimal(vnPay.GetResponseData("vnp_Amount"));
+            //luu vao database
+            var order = _orderRepository.GetOrderOnly(vnp_OrderInfo);
+            order.DepositAmount = Decimal.Parse(vnPay.GetResponseData("vnp_Amount"));
             order.Status = "Assigning Designer";
             _context.SaveChangesAsync();
+
+
 
             return new VnPaymentResponseModel()
             {
