@@ -34,6 +34,7 @@ namespace JewelryProduction.Controllers
                         UserName = user.UserName,
                         Email = user.Email,
                         PhoneNumber = user.PhoneNumber,
+                        EmailConfirmed = user.EmailConfirmed,
                         Roles = roles.ToList()
                     });
                 }
@@ -73,6 +74,7 @@ namespace JewelryProduction.Controllers
                     UserName = user.UserName,
                     Email = user.Email,
                     PhoneNumber = user.PhoneNumber,
+                    EmailConfirmed = user.EmailConfirmed,
                     Roles = roles.ToList()
                 });
             }
