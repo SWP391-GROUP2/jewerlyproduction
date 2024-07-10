@@ -4,6 +4,7 @@ using JewelryProduction.Interface;
 using JewelryProduction.Common;
 using Microsoft.EntityFrameworkCore;
 using JewelryProduction.Repositories;
+using NuGet.Protocol.Core.Types;
 
 namespace JewelryProduction.Services
 {
@@ -44,6 +45,10 @@ namespace JewelryProduction.Services
                 .ToList();
 
             return recommendedSamples;
+        }
+        public async Task<List<ProductSample>> GetProductSamplesByCollectionIdAsync(string collectionId)
+        {
+            return await _productSampleRepository.GetProductSamplesByCollectionIdAsync(collectionId);
         }
         public async Task<PrefillDTO> PrefillCustomizeRequestAsync(string productSampleId)
         {
