@@ -147,7 +147,21 @@
 }
 
 .DElete_button_but:hover {
-  background-color: #c0392b; /* Màu đỏ sậm khi đưa chuột vào */
+  background-color: #eb2323; /* Màu đỏ sậm khi đưa chuột vào */
+}
+  .Confirm_button_but {
+    background-color: #5fe030; /* Màu đỏ */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .Confirm_button_but:hover {
+    background-color: #21cf41; /* Màu đỏ sậm khi đưa chuột vào */
+  
 }
 .popup-container {
   position: fixed;
@@ -192,3 +206,5 @@
   flex-direction: column;
   align-items: center;
 }
+
+
