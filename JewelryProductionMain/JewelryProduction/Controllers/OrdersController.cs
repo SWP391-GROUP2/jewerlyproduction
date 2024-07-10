@@ -218,10 +218,11 @@ namespace JewelryProduction.Controllers
         }
 
         [HttpPut("change-status To Designer")]
-        public async Task<ActionResult> ChangeStatusToDesigner(string orderID)
+        public async Task<ActionResult> ChangeStatusToDesigner(string orderID, decimal price)
         {
             var order = await _orderService.GetOrder(orderID);
             order.Order.Status = "Assigning Designer";
+            order.Order.DepositAmount = price;
             _context.SaveChangesAsync();
             return Ok("Status has changed");
         }
