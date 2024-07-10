@@ -31,6 +31,17 @@ namespace JewelryProduction.Repositories
         {
             return  await _context.ProductSamples.FirstOrDefaultAsync(g => g.ProductSampleId.Equals(id));
         }
+        public async Task<List<ProductSample>> GetProductSamplesByListOfIdsAsync(List<string> productSampleIds)
+        {
+            if (productSampleIds == null || !productSampleIds.Any())
+            {
+                throw new ArgumentException("Product sample IDs cannot be null or empty");
+            }
+
+            return await _context.ProductSamples
+                .Where(ps => productSampleIds.Contains(ps.ProductSampleId))
+                .ToListAsync();
+        }
 
         public async Task<IEnumerable<ProductSample>> GetAllAsync()
         {
