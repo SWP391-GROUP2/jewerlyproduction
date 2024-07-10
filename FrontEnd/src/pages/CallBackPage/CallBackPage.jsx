@@ -1,23 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../components/Header/Header";
 import Navbar from "../../components/Navbar/navbar";
 import Footer from "../../components/Footer/Footer";
+import { Link, useLocation } from "react-router-dom";
+import axios from "axios";
 
 function CallBack() {
-  const [quotation, setQuotation] = useState(0);
-  const [total, setTotal] = useState(0);
+  const location = useLocation(); // Lấy đối tượng location từ react-router để truy cập query params từ URL
+  const [response, setResponse] = useState(null); // Khởi tạo state để lưu trữ phản hồi từ API
+  const [error, setError] = useState(null); // Thêm state để lưu trữ lỗi
 
-  const [goldType, setgoldType] = useState("");
-  const [goldWeight, setgoldWeight] = useState(0);
-  const [type, settype] = useState("");
-  const [style, setstyle] = useState("");
-  const [size, setsize] = useState(0);
-  const [quantity, setquantity] = useState(0);
-  const [quotationDes, setQuotationDes] = useState("");
-  const [quotationPercentage, setQuotationPercentage] = useState(0);
-  const [GemstoneData, setGemstoneData] = useState([]);
+  useEffect(() => {
+    // Hàm async để gọi API xử lý thanh toán
+    const executePayment = async () => {
+      try {
+        // Gọi API với phương thức GET và gửi query params trong phần body
+        const response = await axios.get(
+          `http://localhost:5266/api/Payment/Check${location.search}`
+        );
 
-  const handlePlaceOrder = () => {};
+        setResponse(response.data); // Cập nhật state với dữ liệu phản hồi từ API
+      } catch (error) {
+        console.error("Error executing payment:", error); // In ra lỗi nếu có vấn đề xảy ra khi gọi API
+        setError(error); // Lưu trữ lỗi vào state
+      }
+    };
+
+    executePayment(); // Gọi hàm thực thi thanh toán khi component được mount hoặc khi location thay đổi
+  }, [location.search]);
 
   return (
     <div className="checkout-page">
@@ -27,102 +37,64 @@ function CallBack() {
       </div>
 
       <div className="order-summary">
-        <h2>Your Qotation Summary</h2>
-        <div className="order-total">
-          <div className="total-item">
-            <span>
-              <strong>Subtotal</strong>
-            </span>
-            <span>{quotation} đ</span>
+        <h2>Transaction Detail</h2>
+        {response ? (
+          <div className="order-total">
+            <div className="total-item">
+              <span>
+                <strong>Success</strong>
+              </span>
+              <span>{response.success ? "Yes" : "No"}</span>
+            </div>
+            <hr className="divider" />
+            <div className="shipping">
+              <span>
+                <strong>PaymentMethod </strong>
+              </span>
+              <span>{response.paymentMethod}</span>
+            </div>
+            <hr className="divider" />
+            <div className="total-amount">
+              <span>
+                <strong>OrderId</strong>
+              </span>
+              <span>{response.orderId}</span>
+            </div>
+            <hr className="divider" />
+            <div className="total-amount">
+              <span>
+                <strong>TransactionId </strong>
+              </span>
+              <span>{response.transactionId}</span>
+            </div>
+            <hr className="divider" />
+            <div className="total-amount">
+              <span>
+                <strong>VnPayResponseCode </strong>
+              </span>
+              <span>{response.vnPayResponseCode}</span>
+            </div>
+            <hr className="divider" />
+            <strong>Order Description </strong>
+            <textarea
+              name="notes"
+              value={response.orderDescription}
+              placeholder="Write any notes for your order, e.g., special delivery instructions."
+              readOnly
+            />
           </div>
-          <div className="shipping">
-            <span>
-              <strong>Deposit Amount</strong>
-            </span>
-            <span>{quotationPercentage} đ</span>
+        ) : error ? (
+          <div className="error-message">
+            <p>Error fetching transaction details: {error.message}</p>
           </div>
-          <hr className="divider" />
-          <div className="total-amount">
-            <span>
-              <strong>Total</strong>
-            </span>
-            <span>{total} ₫</span>
+        ) : (
+          <div className="loading-message">
+            <p>Loading transaction details...</p>
           </div>
-          <hr className="divider" />
-        </div>
-
-        <h2>Your Order Detail</h2>
-        <div className="order-total">
-          <div className="total-item">
-            <span>
-              <strong>Order ID</strong>
-            </span>
-            <span>//Order ID</span>
-          </div>
-          <hr className="divider" />
-          <div className="shipping">
-            <span>
-              <strong>Gold Type</strong>
-            </span>
-            <span>{goldType}</span>
-          </div>
-          <hr className="divider" />
-          <div className="total-amount">
-            <span>
-              <strong>Gold Weight</strong>
-            </span>
-            <span>{goldWeight} gram</span>
-          </div>
-          <hr className="divider" />
-          <div className="total-amount">
-            <span>
-              <strong>Type</strong>
-            </span>
-            <span>{type}</span>
-          </div>
-          <hr className="divider" />
-          <div className="total-amount">
-            <span>
-              <strong>Style</strong>
-            </span>
-            <span>{style}</span>
-          </div>
-          <hr className="divider" />
-          <div className="total-amount">
-            <span>
-              <strong>Size</strong>
-            </span>
-            <span>size {size}</span>
-          </div>
-          <hr className="divider" />
-          <div className="total-amount">
-            <span>
-              <strong>Quantity</strong>
-            </span>
-            <span>{quantity}</span>
-          </div>
-          <hr className="divider" />
-          <div className="total-amount">
-            <span>
-              <strong>Gemstones</strong>
-            </span>
-            <ul>
-              {GemstoneData.map((gemstone) => (
-                <li key={gemstone.gemstoneId}>{gemstone.name}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        <textarea
-          name="notes"
-          value={quotationDes}
-          placeholder="Write any notes for your order, e.g., special delivery instructions."
-        />
-
-        <button className="place-order" onClick={handlePlaceOrder}>
-          PLACE ORDER
-        </button>
+        )}
+        <Link to="/customer/profile">
+          <button className="place-order">Complete</button>
+        </Link>
       </div>
 
       <Footer />
