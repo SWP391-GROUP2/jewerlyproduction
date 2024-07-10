@@ -55,6 +55,14 @@ function AdminSidebar({
             <BsGrid1X2Fill className="admin-icon" /> Product Sample List
           </button>
         </li>
+        <li className="admin-sidebar-list-item">
+          <button
+            className="admin-sidebar-button"
+            onClick={() => handleViewChange("accountlist")}
+          >
+            <BsGrid1X2Fill className="admin-icon" /> Account List
+          </button>
+        </li>
       </ul>
     </aside>
   );
