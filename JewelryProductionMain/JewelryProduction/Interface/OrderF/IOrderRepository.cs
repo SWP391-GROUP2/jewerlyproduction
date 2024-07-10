@@ -15,6 +15,7 @@ namespace JewelryProduction.Interface
         Order GetOrderOnly(string id);
         Task<Dictionary<string, double>> CalculateGoldWeightByTypeInMonthAsync(DateTime startDate, DateTime endDate);
         Task<List<GemstoneWeightDto>> CalculateGemstoneWeightInMonthAsync(DateTime startDate, DateTime endDate);
+        Task<bool> ToPaymentPendingStatus(string orderId);
     }
 }
 

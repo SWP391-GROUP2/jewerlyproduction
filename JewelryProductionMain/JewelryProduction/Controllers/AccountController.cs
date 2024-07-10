@@ -50,7 +50,7 @@ namespace JewelryProduction.Controllers
                     UserName = registerDTO.Email,
                     Name = registerDTO.Name,
                     PhoneNumber = registerDTO.PhoneNumber,
-                    TwoFactorEnabled = false
+                    EmailConfirmed = true
                 };
 
                 var result = await _userManager.CreateAsync(user, registerDTO.Password);
