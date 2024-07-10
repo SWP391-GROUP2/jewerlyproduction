@@ -21,7 +21,7 @@
   background-color: #f0f0f0;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  height: 700px;
+  height: 900px;
 }
 
 .gemstone-grid {
@@ -115,3 +115,98 @@
   border-radius: 8px;
   margin-bottom: 20px;
 }
+.user-account-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.user-account-table th, .user-account-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.user-account-table th {
+  background-color: #f2f2f2;
+}
+
+/* Hover effect */
+.user-account-table tbody tr:hover {
+  background-color: #e8e1e1;
+  cursor: pointer;
+}
+.DElete_button_but {
+  background-color: #e74c3c; /* Màu đỏ */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.DElete_button_but:hover {
+  background-color: #eb2323; /* Màu đỏ sậm khi đưa chuột vào */
+}
+  .Confirm_button_but {
+    background-color: #5fe030; /* Màu đỏ */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .Confirm_button_but:hover {
+    background-color: #21cf41; /* Màu đỏ sậm khi đưa chuột vào */
+  
+}
+.popup-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-account {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  position: relative;
+  width: 500px;
+  max-width: 90%;
+}
+
+.close-popup-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #f44336;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.close-popup-button:hover {
+  background-color: #d32f2f;
+}
+
+.popup-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.trashlabel {
+  text-align: left;
+}
+
