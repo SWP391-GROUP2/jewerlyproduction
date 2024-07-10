@@ -420,7 +420,13 @@ function CustomizeForm() {
         "http://localhost:5266/api/CustomerRequests",
         customize
       );
-      return response.data;
+
+      if (response) {
+        console.log("Response:", response.data);
+        alert("Customize Request create successful!");
+      } else {
+        alert("Customize Request create failed!");
+      }
     } catch (error) {
       // Xử lý lỗi từ server nếu có
       if (error.response) {
