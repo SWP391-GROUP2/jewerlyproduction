@@ -35,7 +35,7 @@ namespace JewelryProduction.Controllers
         }
 
 
-        [HttpDelete("DeleteUser")]
+        [HttpPut("DeleteUser")]
         public async Task<IActionResult> DeleteUser(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
@@ -44,7 +44,7 @@ namespace JewelryProduction.Controllers
                 return NotFound(new { Message = "User not found" });
             }
             user.EmailConfirmed = false;
-            _userManager.UpdateAsync(user);
+            await _userManager.UpdateAsync(user);
             return Ok(user);
         }
     }
