@@ -217,7 +217,7 @@ namespace JewelryProduction.Controllers
             return deposit;
         }
 
-        [HttpPost("change-status To Designer")]
+        [HttpPut("change-status To Designer")]
         public async Task<ActionResult> ChangeStatusToDesigner(string orderID)
         {
             var order = await _orderService.GetOrder(orderID);
@@ -226,7 +226,7 @@ namespace JewelryProduction.Controllers
             return Ok("Status has changed");
         }
 
-        [HttpPost("change-status To Production")]
+        [HttpPut("change-status To Production")]
         public async Task<ActionResult> ChangeStatusTo(string orderID)
         {
             var order = await _orderService.GetOrder(orderID);
