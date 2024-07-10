@@ -9,6 +9,7 @@ function AdminPage() {
   const [activeView, setActiveView] = useState('');
   const [gemstones, setGemstones] = useState([]);
   const [productSamples, setProductSamples] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,6 +17,7 @@ function AdminPage() {
 
   const handleViewChange = (view) => {
     setActiveView(view);
+    setSelectedItem(null);
   };
 
   const OpenSidebar = () => {
@@ -28,7 +30,7 @@ function AdminPage() {
       setLoading(true);
       try {
         const response = await axios.get('http://localhost:5266/api/Gemstones');
-        setGemstones(response.data); // Assuming API returns an array of gemstones
+        setGemstones(response.data);
         setLoading(false);
       } catch (error) {
         setError(error);
@@ -45,7 +47,7 @@ function AdminPage() {
       setLoading(true);
       try {
         const response = await axios.get('http://localhost:5266/api/ProductSamples');
-        setProductSamples(response.data); // Assuming API returns an array of product samples
+        setProductSamples(response.data);
         setLoading(false);
       } catch (error) {
         setError(error);
@@ -70,6 +72,16 @@ function AdminPage() {
   const totalItems = activeView === 'orderlist' ? gemstones.length : productSamples.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
+  // Handle item click
+  const handleItemClick = (item) => {
+    setSelectedItem(item);
+  };
+
+  // Handle popup close
+  const handleClosePopup = () => {
+    setSelectedItem(null);
+  };
+
   return (
     <div className='admin-page'>
       <AdminSidebar openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar} handleViewChange={handleViewChange} />
@@ -88,13 +100,18 @@ function AdminPage() {
                 <>
                   <div className='gemstone-grid'>
                     {currentItems.map((gemstone, index) => (
-                      <div key={index} className='gemstone-item'>
+                      <div key={index} className='gemstone-item' onClick={() => handleItemClick(gemstone)}>
                         <img
                           src={require(`../../components/Assets/${gemstone.image}.jpg`)}
                           alt={gemstone.name}
                           className="gemstone-product-image"
                         />
-                        <p>{gemstone.name}</p>
+                        {/* <p>{gemstone.name}</p> */}
+                        <div className="details-container">
+                  <div className="detail-box">
+                    <strong> {gemstone.name}</strong>
+                  </div>
+                  </div>
                       </div>
                     ))}
                   </div>
@@ -102,12 +119,12 @@ function AdminPage() {
                   <ul className='pagination'>
                     {Array.from({ length: totalPages }, (_, i) => (
                       <li key={i} className={`page-item ${currentPage === i + 1 ? 'active' : ''}`}>
-                      <button
-  onClick={() => paginate(i + 1)}
-  className={`page-link ${currentPage === i + 1 ? 'active' : ''}`}
->
-  {i + 1}
-</button>
+                        <button
+                          onClick={() => paginate(i + 1)}
+                          className={`page-link ${currentPage === i + 1 ? 'active' : ''}`}
+                        >
+                          {i + 1}
+                        </button>
                       </li>
                     ))}
                   </ul>
@@ -126,13 +143,19 @@ function AdminPage() {
                 <>
                   <div className='gemstone-grid'>
                     {currentItems.map((product, index) => (
-                      <div key={index} className='gemstone-item'>
+                      <div key={index} className='gemstone-item' onClick={() => handleItemClick(product)}>
                         <img
                           src={require(`../../components/Assets/${product.image}.jpg`)}
                           alt={product.productName}
                           className="gemstone-product-image"
                         />
-                        <p>{product.productName}</p>
+                        {/* <p>{product.productName}</p> */}
+                        <div className="details-container">
+                  <div className="detail-box">
+                    <strong> {product.productName}</strong>
+                  </div>
+                  </div>
+                        
                       </div>
                     ))}
                   </div>
@@ -140,12 +163,12 @@ function AdminPage() {
                   <ul className='pagination'>
                     {Array.from({ length: totalPages }, (_, i) => (
                       <li key={i} className={`page-item ${currentPage === i + 1 ? 'active' : ''}`}>
-                      <button
-  onClick={() => paginate(i + 1)}
-  className={`page-link ${currentPage === i + 1 ? 'active' : ''}`}
->
-  {i + 1}
-</button>
+                        <button
+                          onClick={() => paginate(i + 1)}
+                          className={`page-link ${currentPage === i + 1 ? 'active' : ''}`}
+                        >
+                          {i + 1}
+                        </button>
                       </li>
                     ))}
                   </ul>
@@ -153,8 +176,72 @@ function AdminPage() {
               )}
             </div>
           )}
-          {/* Additional content */}
-          
+          {selectedItem && activeView === 'orderlist' && (
+          <div className='item-popup'>
+            <div className='item-popup-content'>
+              <button className='close-popup-button' onClick={handleClosePopup}>Close</button>
+              <div className='popup-details'>
+                <h3>{selectedItem.name}</h3>
+                <img
+                  src={require(`../../components/Assets/${selectedItem.image}.jpg`)}
+                  alt={selectedItem.name}
+                  className="popup-product-image"
+                />
+                <div className="details-container">
+                  <div className="detail-box">
+                    <strong>ID: {selectedItem.gemstoneId}</strong>
+                  </div>
+                  <div className="detail-box">
+                    <strong>Size: {selectedItem.size}</strong>
+                  </div>
+                  <div className="detail-box">
+                    <strong>Color: {selectedItem.color}</strong>
+                  </div>
+                  <div className="detail-box">
+                    <strong>Carat Weight: {selectedItem.caratWeight}</strong>
+                  </div>
+                  <div className="detail-box">
+                    <strong>Price: {selectedItem.price}</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Popup for selected product */}
+        {selectedItem && activeView === 'productlist' && (
+          <div className='item-popup'>
+            <div className='item-popup-content'>
+              <button className='close-popup-button' onClick={handleClosePopup}>Close</button>
+              <div className='popup-details'>
+                <h3>{selectedItem.productName}</h3>
+                <img
+                  src={require(`../../components/Assets/${selectedItem.image}.jpg`)}
+                  alt={selectedItem.productName}
+                  className="popup-product-image"
+                />
+                <div className="details-container">
+                  <div className="detail-box">
+                    <strong>Product Sample ID: {selectedItem.productSampleId}</strong>
+                  </div>
+                  <div className="detail-box">
+                    <strong>Type: {selectedItem.type}</strong>
+                  </div>
+                  <div className="detail-box">
+                    <strong>Description: {selectedItem.description}</strong>
+                  </div>
+                  <div className="detail-box">
+                    <strong>Price: {selectedItem.price}</strong>
+                  </div>
+                  <div className="detail-box">
+                    <strong>Gold Type: {selectedItem.goldType}</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         </div>
       </div>
     </div>
