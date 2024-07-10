@@ -91,7 +91,7 @@ useEffect(() => {
   const fetchUserAccounts = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:5266/api/UserAccounts');
+      const response = await axios.get('http://localhost:5266/api/Admin/GetAllUser');
       setUserAccounts(response.data);
       setLoading(false);
     } catch (error) {
@@ -238,12 +238,12 @@ const handleCloseUserPopup = () => {
                 <tbody>
                   {userAccounts.map((user) => (
                     <tr key={user.userId} onClick={() => showUserDetails(user)}>
-                      <td>{user.userId}</td>
-                      <td>{user.username}</td>
+                      <td>{user.id}</td>
+                      <td>{user.name}</td>
                       <td>{user.email}</td>
                       <td>{user.role}</td>
                       <td>
-                        <button onClick={() => deleteUserAccount(user.userId)}>Delete</button>
+                        <button className='DElete_button_but' onClick={() => deleteUserAccount(user.userId)}>Delete</button>
                       </td>
                     </tr>
                   ))}
@@ -315,20 +315,42 @@ const handleCloseUserPopup = () => {
             </div>
           )}
           {/* Popup for selected user details */}
-          {selectedUser && (
-        <div className='popup-account'>
-          <div className='popup-account-content'>
-            <button className='close-popup-button' onClick={handleCloseUserPopup}>Close</button>
-            <div className='popup-details'>
-              <h3>User Details</h3>
-              <p><strong>User ID:</strong> {selectedUser.userId}</p>
-              <p><strong>Username:</strong> {selectedUser.username}</p>
-              <p><strong>Email:</strong> {selectedUser.email}</p>
-              <p><strong>Role:</strong> {selectedUser.role}</p>
-            </div>
-          </div>
+          
+{selectedUser && (
+  <div className='popup-container'>
+    <div className='popup-account'>
+      <div className='popup-account-content'>
+        <button className='close-popup-button' onClick={handleCloseUserPopup}>Close</button>
+        <div className='popup-details'>
+          <h3>User Details</h3>
+          {/* <p><strong>User ID:</strong> {selectedUser.id}</p>
+          <p><strong>Username:</strong> {selectedUser.name}</p>
+          <p><strong>Email:</strong> {selectedUser.email}</p>
+          <p><strong>Role:</strong> {selectedUser.role}</p> */}
+          <div className="details-container">
+                    <div className="detail-box">
+                      <strong>User ID: {selectedUser.id}</strong>
+                    </div>
+                    <div className="detail-box">
+                      <strong>Username: {selectedUser.name}</strong>
+                    </div>
+                    <div className="detail-box">
+                      <strong>Email: {selectedUser.email}</strong>
+                    </div>
+                    <div className="detail-box">
+                      <strong>Role: {selectedUser.role}</strong>
+                    </div>
+                    <div className="detail-box">
+                      <strong>Phone Number: {selectedUser.phoneNumber}</strong>
+                    </div>
+                    
+              </div>
         </div>
-      )}
+      </div>
+    </div>
+  </div>
+)}
+
         </div>
       </div>
     </div>
