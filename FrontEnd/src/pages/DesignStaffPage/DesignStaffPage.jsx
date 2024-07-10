@@ -79,9 +79,7 @@ function DesignStaffPage() {
       setDesignData(response.data);
     } catch (error) {
       console.error("Error fetching data:", error); // Kiểm tra lỗi
-setError(error);
-    } finally {
-      setLoading(false);
+      setError(error);
     }
   };
 
