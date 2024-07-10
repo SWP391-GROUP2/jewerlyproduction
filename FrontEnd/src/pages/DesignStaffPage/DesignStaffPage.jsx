@@ -80,8 +80,6 @@ function DesignStaffPage() {
     } catch (error) {
       console.error("Error fetching data:", error); // Kiểm tra lỗi
       setError(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -194,7 +192,7 @@ function DesignStaffPage() {
     setFormImage(URL.createObjectURL(file));
     setSelectedItem({
       ...selectedItem,
-      image: file.name,
+image: file.name,
     });
   };
 
@@ -279,7 +277,7 @@ function DesignStaffPage() {
         <div className="designstaff-detail-popup">
           <div className="designstaff-detail-popup-content1">
           <div className="designstaff-detail-popup-content2">
-  <h2>Detail Popup</h2>
+<h2>Detail Popup</h2>
   <div className="designstaff-tables-container">
     <table className="designstaff-detail-table1">
       <tbody>
@@ -375,7 +373,7 @@ function DesignStaffPage() {
                   <input
                     type="text"
                     value={designName}
-                    onChange={(e) => setDesignName(e.target.value)}
+onChange={(e) => setDesignName(e.target.value)}
                     required
                   />
                 </div>
