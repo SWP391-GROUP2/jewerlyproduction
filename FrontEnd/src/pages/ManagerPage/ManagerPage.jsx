@@ -11,7 +11,7 @@ function ManagerPage() {
   const [popupOpen, setPopupOpen] = useState(false);
   const [confirmationPopupOpen, setConfirmationPopupOpen] = useState(false); // State for confirmation popup
   const [customizeRequestId, setSelectedRow] = useState(null);
-
+  const [orderId, setSelectedOrderRow] = useState(null);
 
   const [saleStaffId, setAssignedEmployee] = useState("");
   const [designStaffId, setAssignedDesignEmployee] = useState("");
@@ -36,7 +36,6 @@ function ManagerPage() {
   const [SaleStaff, setSaleStaff] = useState([]);
   const [DesignStaff, setDesignStaff] = useState([]);
   const [ProductionStaff, setProductionStaff] = useState([]);
-
   const [fetchDataFlag, setFetchDataFlag] = useState(false);
   const [hasFetchedOrders, setHasFetchedOrders] = useState(false);
 
@@ -74,20 +73,20 @@ function ManagerPage() {
     }
   }, [fetchDataFlag, requestData]); // Thêm requestData vào dependency để cập nhật khi requestData thay đổi
 
-  useEffect(() => {
-    const fetchOrder = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5266/api/Orders"
-        );
-        setOrderData(response.data);
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchOrder = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5266/api/Orders"
+      );
+      setOrderData(response.data);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchOrder();
     console.log("Your Order", OrderData);
   }, []);
@@ -168,6 +167,16 @@ function ManagerPage() {
     setPopupOpen(true);
   };
 
+  const handleAssignClickOrderProduction = (index) => {
+    setSelectedOrderRow(index);
+    setAssignProductionPopupOpen(true);
+  };
+
+  const handleAssignClickOrderDesign = (index) => {
+    setSelectedOrderRow(index);
+    setAssignDesignPopupOpen(true);
+  };
+
   const handleAssignedEmployee = (selectedEmployeeId) => {
     setAssignedEmployee(selectedEmployeeId);
   };
@@ -222,7 +231,7 @@ function ManagerPage() {
     setDetailPopupOpen(false);
   };
 
-  const fetchAssign = async (assignsalestaff) => {
+  const fetchAssignSales = async (assignsalestaff) => {
     try {
       const response = await axios.post(
         "http://localhost:5266/api/Manager/assignSaleStaff",
@@ -238,7 +247,7 @@ function ManagerPage() {
     }
   };
 
-  const handleAssign = async () => {
+  const handleAssignSales = async () => {
     const decodedToken = jwtDecode(user.token);
     const managerId = decodedToken.sid;
 
@@ -249,8 +258,64 @@ function ManagerPage() {
     };
 
     try {
-      await fetchAssign(assignStaff);
+      await fetchAssignSales(assignStaff);
       await fetchRequests(); // Cập nhật lại requestData sau khi assign thành công
+      setPopupOpen(false);
+    } catch (error) {
+      console.error("Error assigning staff:", error);
+    }
+  };
+
+  const fetchAssignProduction = async (assignProductionStaff) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5266/api/Manager/assignProductionStaff",
+        assignProductionStaff,
+      );
+
+      // Xử lý dữ liệu nhận được từ API (nếu cần)
+      return response.data;
+    } catch (error) {
+      // Xử lý lỗi (nếu cần)
+      console.error("There was a problem with the fetch operation:", error);
+      throw error;
+    }
+  };
+
+  const handleAssignProduction = async () => {
+    const assignProductionStaff = {
+      OrderId: orderId,
+      ProductionStaffId: productionStaffId,
+    };
+
+    try {
+      await fetchAssignProduction(assignProductionStaff);
+      await fetchOrder(); // Cập nhật lại requestData sau khi assign thành công
+      setPopupOpen(false);
+    } catch (error) {
+      console.error("Error assigning staff:", error);
+    }
+  };
+
+  const fetchAssignDesign = async (orderId, designStaffId) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:5266/api/Manager/assignDesignStaff?orderID=${orderId}&designstaffID=${designStaffId}`
+      );
+
+      // Xử lý dữ liệu nhận được từ API (nếu cần)
+      return response.data;
+    } catch (error) {
+      // Xử lý lỗi (nếu cần)
+      console.error("There was a problem with the fetch operation:", error);
+      throw error;
+    }
+  };
+
+  const handleAssignDesign = async () => {
+    try {
+      await fetchAssignDesign(orderId, designStaffId);
+      await fetchOrder(); // Cập nhật lại orderData sau khi assign thành công
       setPopupOpen(false);
     } catch (error) {
       console.error("Error assigning staff:", error);
@@ -271,6 +336,7 @@ function ManagerPage() {
       (order) =>
         order.order.orderId === orderId
     );
+    
     setSelectedOrder(selectedOrder);
     setOrderDetailPopupOpen(true);
     console.log("selectOrder", selectedOrder);
@@ -428,11 +494,14 @@ function ManagerPage() {
       </thead>
       <tbody>
         {OrderData.map((row, index) => (
-          <tr key={index} onClick={() => handleRowOrderClick(row.order.orderId)}>
+          <tr key={index} 
+            onClick={() => 
+            handleRowOrderClick(row.order.orderId)
+            }>
             <td>{row.order.orderId}</td>
             <td>{row.order.customizeRequest.customer.name}</td>
-            <td>{row.order.designStaff.name}</td>
-            <td>{row.order.productionStaff.name}</td>
+            <td>{row.order.designStaff?.name ?? 'N/A'}</td>
+            <td>{row.order.productionStaff?.name ?? 'N/A'}</td>
             <td>{row.order.totalPrice}</td>
             <td>{row.order.status}</td>
           </tr>
@@ -580,7 +649,7 @@ function ManagerPage() {
                 ))}
               </tbody>
             </table>
-            <button className="popup_button" onClick={handleAssign}>
+            <button className="popup_button" onClick={handleAssignSales}>
               Assign
             </button>
             <button
@@ -790,11 +859,11 @@ function ManagerPage() {
             </div>
             <div className="detail-box">
               <strong>Design Staff Name:</strong>{" "}
-              {selectedOrder.order.designStaff.name}
+              {selectedOrder.order.designStaff?.name ?? 'N/A'}
             </div>
             <div className="detail-box">
               <strong>Production Staff Name:</strong>{" "}
-              {selectedOrder.order.productionStaff.name}
+              {selectedOrder.order.productionStaff?.name ?? 'N/A'}
             </div>
             <div className="detail-box">
               <strong>Total Price:</strong>{" "}
@@ -826,13 +895,14 @@ function ManagerPage() {
           Close
           </button>
           <div className="assign-buttons">
-            <button className="popup_button" onClick={() => setAssignDesignPopupOpen(true)}>
+            <button className="popup_button" onClick={() => handleAssignClickOrderDesign(selectedOrder.order.orderId)}>
               Assign Design Staff
             </button>
-            <button className="popup_button" onClick={() => setAssignProductionPopupOpen(true)}>
-      Assign Production Staff
-    </button>
-                </div>
+            <button className="popup_button" onClick={() => handleAssignClickOrderProduction(selectedOrder.order.orderId)}>
+              Assign Production Staff
+            </button>
+
+          </div>
         </div>
         
         
@@ -867,7 +937,7 @@ function ManagerPage() {
                 ))}
               </tbody>
             </table>
-            <button className="popup_button" onClick={handleAssign}>
+            <button className="popup_button" onClick={handleAssignProduction}>
               Assign
             </button>
             <button
@@ -907,7 +977,7 @@ function ManagerPage() {
                 ))}
               </tbody>
             </table>
-            <button className="popup_button" onClick={handleAssign}>
+            <button className="popup_button" onClick={handleAssignDesign}>
               Assign
             </button>
             <button

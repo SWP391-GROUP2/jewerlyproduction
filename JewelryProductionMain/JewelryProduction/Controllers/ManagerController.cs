@@ -92,11 +92,18 @@ namespace JewelryProduction.Controllers
         [HttpPost("assignDesignStaff")]
         public async Task<ActionResult> DesignPending(string orderID, string designstaffID)
         {
-            var order = await _orderService.GetOrder(orderID);
-            order.Order.DesignStaffId = designstaffID;
-            order.Order.Status = "Design Pending";
-            _context.SaveChangesAsync();
-            return Ok("Design assigned completed!");
+            try
+            {
+                var order = await _orderService.GetOrder(orderID);
+                order.Order.DesignStaffId = designstaffID;
+                order.Order.Status = "Design Pending";
+                await _context.SaveChangesAsync();
+                return Ok("Design assigned completed!");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpPost("assignProductionStaff")]

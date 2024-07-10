@@ -200,7 +200,7 @@ function DesignStaffPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {OrderData.map((item) => (
+                    {OrderOfCustomer.map((item) => (
                       <tr key={item.order.orderId} onClick={() => showDetail(item)}>
                         <td>{item.order.orderId}</td>
                         <td>{item.order.customizeRequest.customer.name}</td>
@@ -257,7 +257,7 @@ function DesignStaffPage() {
         </tr>
         <tr>
           <td>Manager</td>
-          <td>{selectedItem.order.customizeRequest.manager.name}</td>
+          <td>{selectedItem.order.customizeRequest.manager?.name ?? 'N/A'}</td>
         </tr>
         <tr>
           <td>Type</td>
