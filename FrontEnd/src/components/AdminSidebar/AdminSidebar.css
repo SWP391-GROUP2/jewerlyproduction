@@ -1,61 +1,61 @@
-#sidebar {
+#admin-sidebar {
     width: 260px;
-    height: 100%; /* Chiều cao của sidebar bằng chiều cao của viewport */
+    max-height: 100%;
     padding: 20px;
-    background-color: #f0f0f0;
+    background-color: #f8f3ed;
     transition: width 0.3s ease;
     border-radius: 15px;
-    overflow-y: auto; /* Cho phép cuộn thanh sidebar nếu nội dung vượt quá */
-}
-
-.sidebar-avatar {
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+  }
+  
+  .admin-sidebar-avatar {
     display: flex;
     flex-direction: column;
     align-items: center;
-    
-}
-
-.avatar-image {
+  }
+  
+  .admin-avatar-image {
     width: 100px;
     height: 100px;
     border-radius: 50%;
     object-fit: cover;
     margin-bottom: 10px;
-    margin-top: 20px;
-}
-
-.user-details {
+    margin-top: 10px;
+  }
+  
+  .admin-user-details {
     text-align: center;
-}
-
-.user-name {
-    font-size: 16px;
+  }
+  
+  .admin-user-name {
+    font-size: 18px;
     font-weight: bold;
     margin-bottom: 3px;
-    color: #000;
-}
-
-.user-role {
+    color: #333;
+  }
+  
+  .admin-user-role {
     font-size: 14px;
     color: #666;
     margin-bottom: 10px;
-}
-
-.sidebar-list {
+  }
+  
+  .admin-sidebar-list {
     list-style-type: none;
     padding: 0;
     margin: 0;
-}
-
-.sidebar-list-item {
+    width: 212px;
+  }
+  
+  .admin-sidebar-list-item {
     display: flex;
-    justify-content: flex-start;
-    margin: 10px 0;
-    width: 100%;
-    text-indent: 0; /* Đặt lại text-indent nếu đã có */
-}
-
-.sidebar-list-item a {
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .admin-sidebar-button {
     display: block;
     text-decoration: none;
     color: #000;
@@ -63,39 +63,36 @@
     border-radius: 5px;
     transition: background-color 0.3s ease;
     width: 100%;
-}
-
-.sidebar-list-item a:hover {
-    background-color: #ddd;
-}
-
-.menu-icon {
+  }
+  
+  .admin-sidebar-button:hover {
+    background-color: #d9d4d4;
+  }
+  
+  .admin-menu-icon {
     display: none;
-}
-
-
-
-
-
-.sidebar-brand {
+  }
+  
+  .admin-sidebar-brand {
     margin-top: 15px;
     font-size: 20px;
     font-weight: 700;
     color: #000;
-}
-
-.sidebar-list-item:hover {
+  }
+  
+  .admin-sidebar-list-item:hover {
     background-color: rgba(255, 255, 255, 0.2);
     cursor: pointer;
-}
-
-.logo-container {
+  }
+  
+  .admin-logo-container {
     flex: 1;
     display: flex;
     justify-content: center;
-}
-
-.logo-image {
+  }
+  
+  .admin-logo-image {
     width: 200px;
     height: auto;
-}
+  }
+  

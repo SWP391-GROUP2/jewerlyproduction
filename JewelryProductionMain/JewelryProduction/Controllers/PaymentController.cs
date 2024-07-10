@@ -19,12 +19,14 @@ namespace JewelryProduction.Controllers
         public async Task<IActionResult> CreatePaymentUrl(double price, string orderID)
         {
             var url = await _vnPayService.CreatePaymentUrl(HttpContext, price, orderID);
+
             return Ok(url);
         }
 
-        [HttpGet("PaymentCallback")]
+        [HttpGet("Check")]
         public IActionResult PaymentCallback()
         {
+
             var response = _vnPayService.PaymentExecute(Request.Query);
 
             return Json(response);
