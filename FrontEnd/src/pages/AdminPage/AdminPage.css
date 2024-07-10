@@ -115,3 +115,24 @@
   border-radius: 8px;
   margin-bottom: 20px;
 }
+.user-account-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.user-account-table th, .user-account-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.user-account-table th {
+  background-color: #f2f2f2;
+}
+
+/* Hover effect */
+.user-account-table tbody tr:hover {
+  background-color: #e8e1e1;
+  cursor: pointer;
+}
