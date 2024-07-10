@@ -85,7 +85,7 @@ const CheckOutPage = () => {
       setQuotation(quotation);
       setPrice(percentage);
       setQuotationPercentage(percentage);
-      console.log("Quotation 40%:", percentage);
+      console.log("Quotation 30%:", percentage);
       const GT = RequestsCurrent[0].customerRequest.gold.goldType;
       setgoldWeight(RequestsCurrent[0].customerRequest.goldWeight);
       settype(RequestsCurrent[0].customerRequest.type);
@@ -117,6 +117,22 @@ const CheckOutPage = () => {
     }
   };
 
+  useEffect(() => {
+    if (dataFetched) {
+      const foundOrder = OrderData.find(
+        (order) =>
+          order.order.customizeRequest.customizeRequestId === customizeRequestId
+      );
+
+      if (foundOrder) {
+        console.log(`Found orderId: ${foundOrder.order.orderId}`);
+        setorderID(foundOrder.order.orderId);
+      } else {
+        console.log("OrderId not found for the given CustomizerequestId.");
+      }
+    }
+  }, [dataFetched, OrderData]);
+
   const handleMethodChoose = (method) => {
     setPaymentMethodId(method);
   };
@@ -134,9 +150,9 @@ const CheckOutPage = () => {
       );
       if (response) {
         console.log("Response:", response.data);
-        alert("Choose method successful!");
+        alert("Choose payment successful!");
       } else {
-        alert("Choose method failed!");
+        alert("Choose payment failed!");
       }
       // Handle success
     } catch (error) {
@@ -167,11 +183,23 @@ const CheckOutPage = () => {
     }
   };
 
+  useEffect(() => {
+    if (orderID) {
+      CashPayment(orderID);
+    }
+  }, [orderID]);
+
+  useEffect(() => {
+    if (orderID) {
+      VNPpayment(price, orderID);
+    }
+  }, [price, orderID]);
+
   const handleMethod001 = () => {
     setcreateSuccessPopup(true);
   };
 
-  const VNPpayment = async () => {
+  const VNPpayment = async (price, orderID) => {
     try {
       // Kiểm tra giá trị của price và orderID
       console.log("Price:", price);
@@ -209,37 +237,12 @@ const CheckOutPage = () => {
 
   const handleMethod002 = async () => {
     await fetchOrder();
-    const foundOrder = OrderData.find(
-      (order) =>
-        order.order.customizeRequest.customizeRequestId === customizeRequestId
-    );
-
-    if (foundOrder) {
-      console.log(`Found orderId: ${foundOrder.order.orderId}`);
-      setorderID(foundOrder.order.orderId);
-      await VNPpayment();
-    } else {
-      console.log("OrderId not found for the given CustomizerequestId.");
-    }
 
     setShowMethodPopup(false);
   };
 
   const CashStatus = async () => {
     await fetchOrder();
-    const foundOrder = OrderData.find(
-      (order) =>
-        order.order.customizeRequest.customizeRequestId === customizeRequestId
-    );
-
-    if (foundOrder) {
-      console.log(`Found orderId: ${foundOrder.order.orderId}`);
-      setorderID(foundOrder.order.orderId);
-      await CashPayment(orderID);
-    } else {
-      console.log("OrderId not found for the given CustomizerequestId.");
-    }
-
     setcreateSuccessPopup(false);
   };
 

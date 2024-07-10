@@ -11,15 +11,12 @@ function CallBack() {
   const [error, setError] = useState(null); // Thêm state để lưu trữ lỗi
 
   useEffect(() => {
-    const query = new URLSearchParams(location.search); // Tạo đối tượng URLSearchParams để phân tích cú pháp query params từ URL
-    const params = Object.fromEntries(query.entries()); // Chuyển đổi query params thành đối tượng JavaScript
-
     // Hàm async để gọi API xử lý thanh toán
     const executePayment = async () => {
       try {
         // Gọi API với phương thức GET và gửi query params trong phần body
         const response = await axios.get(
-          "http://localhost:5266/api/Payment/PaymentCallback"
+          `http://localhost:5266/api/Payment/Check${location.search}`
         );
 
         setResponse(response.data); // Cập nhật state với dữ liệu phản hồi từ API
@@ -30,7 +27,7 @@ function CallBack() {
     };
 
     executePayment(); // Gọi hàm thực thi thanh toán khi component được mount hoặc khi location thay đổi
-  }, [location]);
+  }, [location.search]);
 
   return (
     <div className="checkout-page">
@@ -47,7 +44,7 @@ function CallBack() {
               <span>
                 <strong>Success</strong>
               </span>
-              <span>{response.success}</span>
+              <span>{response.success ? "Yes" : "No"}</span>
             </div>
             <hr className="divider" />
             <div className="shipping">
@@ -73,13 +70,6 @@ function CallBack() {
             <hr className="divider" />
             <div className="total-amount">
               <span>
-                <strong>Token </strong>
-              </span>
-              <span>{response.token}</span>
-            </div>
-            <hr className="divider" />
-            <div className="total-amount">
-              <span>
                 <strong>VnPayResponseCode </strong>
               </span>
               <span>{response.vnPayResponseCode}</span>
@@ -90,6 +80,7 @@ function CallBack() {
               name="notes"
               value={response.orderDescription}
               placeholder="Write any notes for your order, e.g., special delivery instructions."
+              readOnly
             />
           </div>
         ) : error ? (

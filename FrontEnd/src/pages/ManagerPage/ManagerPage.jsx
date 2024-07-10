@@ -12,11 +12,9 @@ function ManagerPage() {
   const [confirmationPopupOpen, setConfirmationPopupOpen] = useState(false); // State for confirmation popup
   const [customizeRequestId, setSelectedRow] = useState(null);
 
-
   const [saleStaffId, setAssignedEmployee] = useState("");
   const [designStaffId, setAssignedDesignEmployee] = useState("");
   const [productionStaffId, setAssignedProductionEmployee] = useState("");
-
 
   const [currentView, setCurrentView] = useState("request");
   const [quotationView, setQuotationView] = useState("");
@@ -24,7 +22,6 @@ function ManagerPage() {
   const [PopupOpenDetail, setPopupOpenDetail] = useState(false);
 
   const [OrderdetailPopupOpen, setOrderDetailPopupOpen] = useState(false);
-  
 
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -41,13 +38,8 @@ function ManagerPage() {
   const [hasFetchedOrders, setHasFetchedOrders] = useState(false);
 
   const [assignDesignPopupOpen, setAssignDesignPopupOpen] = useState(false);
-  const [assignProductionPopupOpen, setAssignProductionPopupOpen] = useState(false);
-
-
-
-  
-
-  
+  const [assignProductionPopupOpen, setAssignProductionPopupOpen] =
+    useState(false);
 
   const user = useSelector((State) => State.auth.Login.currentUser);
 
@@ -77,9 +69,7 @@ function ManagerPage() {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5266/api/Orders"
-        );
+        const response = await axios.get("http://localhost:5266/api/Orders");
         setOrderData(response.data);
       } catch (error) {
         setError(error);
@@ -180,8 +170,6 @@ function ManagerPage() {
     setAssignedProductionEmployee(selectedEmployeeId);
   };
 
-  
-
   const handleConfirmReject = () => {
     const updatedRequestData = requestData.filter(
       (_, index) => index !== customizeRequestId
@@ -268,8 +256,7 @@ function ManagerPage() {
 
   const handleRowOrderClick = (orderId) => {
     const selectedOrder = OrderData.find(
-      (order) =>
-        order.order.orderId === orderId
+      (order) => order.order.orderId === orderId
     );
     setSelectedOrder(selectedOrder);
     setOrderDetailPopupOpen(true);
@@ -413,34 +400,37 @@ function ManagerPage() {
           </div>
         )}
         {currentView === "orderlist" && (
-  <div className="new-div">
-    <h2 className="table-heading">Order List</h2>
-    <table className="custom-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Customer</th>
-          <th>Design Staff</th>
-          <th>Production Staff</th>
-          <th>Price</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {OrderData.map((row, index) => (
-          <tr key={index} onClick={() => handleRowOrderClick(row.order.orderId)}>
-            <td>{row.order.orderId}</td>
-            <td>{row.order.customizeRequest.customer.name}</td>
-            <td>{row.order.designStaff.name}</td>
-            <td>{row.order.productionStaff.name}</td>
-            <td>{row.order.totalPrice}</td>
-            <td>{row.order.status}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-)}
+          <div className="new-div">
+            <h2 className="table-heading">Order List</h2>
+            <table className="custom-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Customer</th>
+                  <th>Design Staff</th>
+                  <th>Production Staff</th>
+                  <th>Price</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {OrderData.map((row, index) => (
+                  <tr
+                    key={index}
+                    onClick={() => handleRowOrderClick(row.order.orderId)}
+                  >
+                    <td>{row.order.orderId}</td>
+                    <td>{row.order.customizeRequest.customer.name}</td>
+                    <td>{row.order.designStaff.name}</td>
+                    <td>{row.order.productionStaff.name}</td>
+                    <td>{row.order.totalPrice}</td>
+                    <td>{row.order.status}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
         {currentView === "salesstaff" && (
           <div className="new-div">
@@ -772,154 +762,158 @@ function ManagerPage() {
           </div>
         </div>
       )}
-        
-      {OrderdetailPopupOpen && (
-  <div className="popup-overlay">
-    <div className="popup">
-      <div className="popup-inner">
-        <h2>Order Detail</h2>
-        {selectedOrder && ( 
-          <div className="details-container">
-            <div className="detail-box">
-              <strong>Order ID:</strong>{" "}
-              {selectedOrder.order.orderId}
-            </div>
-            <div className="detail-box">
-              <strong>Customer Name:</strong>{" "}
-              {selectedOrder.order.customizeRequest.customer.name}
-            </div>
-            <div className="detail-box">
-              <strong>Design Staff Name:</strong>{" "}
-              {selectedOrder.order.designStaff.name}
-            </div>
-            <div className="detail-box">
-              <strong>Production Staff Name:</strong>{" "}
-              {selectedOrder.order.productionStaff.name}
-            </div>
-            <div className="detail-box">
-              <strong>Total Price:</strong>{" "}
-              {selectedOrder.order.totalPrice}
-            </div>
-            <div className="detail-box">
-              <strong>Customize Request ID:</strong>{" "}
-              {selectedOrder.order.customizeRequest.customizeRequestId}
-            </div>
-            <div className="detail-box">
-              <strong>Status:</strong>{" "}
-              {selectedOrder.order.status}
-            </div>
-            <div className="detail-box">
-              <strong>Order Date:</strong>{" "}
-              {selectedOrder.order.orderDate}
-            </div>
-            
-            {/* Thêm các thông tin chi tiết khác của yêu cầu nếu cần */}
-          </div>
-        )}
 
-        
-        <div className="Full-Button">
-        <button
-          className="popup_button"
-            onClick={() => setOrderDetailPopupOpen(false)}
-          >   
-          Close
-          </button>
-          <div className="assign-buttons">
-            <button className="popup_button" onClick={() => setAssignDesignPopupOpen(true)}>
-              Assign Design Staff
-            </button>
-            <button className="popup_button" onClick={() => setAssignProductionPopupOpen(true)}>
-      Assign Production Staff
-    </button>
+      {OrderdetailPopupOpen && (
+        <div className="popup-overlay">
+          <div className="popup">
+            <div className="popup-inner">
+              <h2>Order Detail</h2>
+              {selectedOrder && (
+                <div className="details-container">
+                  <div className="detail-box">
+                    <strong>Order ID:</strong> {selectedOrder.order.orderId}
+                  </div>
+                  <div className="detail-box">
+                    <strong>Customer Name:</strong>{" "}
+                    {selectedOrder.order.customizeRequest.customer.name}
+                  </div>
+                  <div className="detail-box">
+                    <strong>Design Staff Name:</strong>{" "}
+                    {selectedOrder.order.designStaff.name}
+                  </div>
+                  <div className="detail-box">
+                    <strong>Production Staff Name:</strong>{" "}
+                    {selectedOrder.order.productionStaff.name}
+                  </div>
+                  <div className="detail-box">
+                    <strong>Total Price:</strong>{" "}
+                    {selectedOrder.order.totalPrice}
+                  </div>
+                  <div className="detail-box">
+                    <strong>Customize Request ID:</strong>{" "}
+                    {selectedOrder.order.customizeRequest.customizeRequestId}
+                  </div>
+                  <div className="detail-box">
+                    <strong>Status:</strong> {selectedOrder.order.status}
+                  </div>
+                  <div className="detail-box">
+                    <strong>Order Date:</strong> {selectedOrder.order.orderDate}
+                  </div>
+
+                  {/* Thêm các thông tin chi tiết khác của yêu cầu nếu cần */}
                 </div>
+              )}
+
+              <div className="Full-Button">
+                <button
+                  className="popup_button"
+                  onClick={() => setOrderDetailPopupOpen(false)}
+                >
+                  Close
+                </button>
+                <div className="assign-buttons">
+                  <button
+                    className="popup_button"
+                    onClick={() => setAssignDesignPopupOpen(true)}
+                  >
+                    Assign Design Staff
+                  </button>
+                  <button
+                    className="popup_button"
+                    onClick={() => setAssignProductionPopupOpen(true)}
+                  >
+                    Assign Production Staff
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        
-        
-      </div>
-    </div>
-  </div>
-)}
-{assignProductionPopupOpen && (
-  <div className="popup-overlay">
-    <div className="popup">
-      <div className="popup-inner">
-        <h2>Assign Production Staff</h2>
-        <table className="employee-table">
-              <thead>
-                <tr>
-                  <th>Employee Name</th>
-                  <th>Number of Quoted</th>
-                </tr>
-              </thead>
-              <tbody>
-                {ProductionStaff.map((staff, index) => (
-                  <tr
-                    key={index}
-                    onClick={() => handleAssignedProductionEmployee(staff.appUser.id)}
-                    className={
-                      productionStaffId === staff.appUser.id ? "selected" : ""
-                    }
-                  >
-                    <td>{staff.appUser.name}</td>
-                    <td>{staff.appUser.id}</td>
+      )}
+      {assignProductionPopupOpen && (
+        <div className="popup-overlay">
+          <div className="popup">
+            <div className="popup-inner">
+              <h2>Assign Production Staff</h2>
+              <table className="employee-table">
+                <thead>
+                  <tr>
+                    <th>Employee Name</th>
+                    <th>Number of Quoted</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-            <button className="popup_button" onClick={handleAssign}>
-              Assign
-            </button>
-            <button
-              className="popup_button"
-              onClick={() => setAssignProductionPopupOpen(false)}
-            >
-              Close
-            </button>
-      </div>
-    </div>
-  </div>
-)}
-{assignDesignPopupOpen  && (
-  <div className="popup-overlay">
-    <div className="popup">
-      <div className="popup-inner">
-        <h2>Assign Design Staff</h2>
-        <table className="employee-table">
-              <thead>
-                <tr>
-                  <th>Employee Name</th>
-                  <th>Number of Quoted</th>
-                </tr>
-              </thead>
-              <tbody>
-                {DesignStaff.map((staff, index) => (
-                  <tr
-                    key={index}
-                    onClick={() => handleAssignedDesignEmployee(staff.appUser.id)}
-                    className={
-                      designStaffId === staff.appUser.id ? "selected" : ""
-                    }
-                  >
-                    <td>{staff.appUser.name}</td>
-                    <td>{staff.appUser.id}</td>
+                </thead>
+                <tbody>
+                  {ProductionStaff.map((staff, index) => (
+                    <tr
+                      key={index}
+                      onClick={() =>
+                        handleAssignedProductionEmployee(staff.appUser.id)
+                      }
+                      className={
+                        productionStaffId === staff.appUser.id ? "selected" : ""
+                      }
+                    >
+                      <td>{staff.appUser.name}</td>
+                      <td>{staff.appUser.id}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <button className="popup_button" onClick={handleAssign}>
+                Assign
+              </button>
+              <button
+                className="popup_button"
+                onClick={() => setAssignProductionPopupOpen(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {assignDesignPopupOpen && (
+        <div className="popup-overlay">
+          <div className="popup">
+            <div className="popup-inner">
+              <h2>Assign Design Staff</h2>
+              <table className="employee-table">
+                <thead>
+                  <tr>
+                    <th>Employee Name</th>
+                    <th>Number of Quoted</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-            <button className="popup_button" onClick={handleAssign}>
-              Assign
-            </button>
-            <button
-              className="popup_button"
-              onClick={() => setAssignDesignPopupOpen(false)}
-            >
-              Close
-            </button>
-      </div>
-    </div>
-  </div>
-)}
+                </thead>
+                <tbody>
+                  {DesignStaff.map((staff, index) => (
+                    <tr
+                      key={index}
+                      onClick={() =>
+                        handleAssignedDesignEmployee(staff.appUser.id)
+                      }
+                      className={
+                        designStaffId === staff.appUser.id ? "selected" : ""
+                      }
+                    >
+                      <td>{staff.appUser.name}</td>
+                      <td>{staff.appUser.id}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <button className="popup_button" onClick={handleAssign}>
+                Assign
+              </button>
+              <button
+                className="popup_button"
+                onClick={() => setAssignDesignPopupOpen(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
