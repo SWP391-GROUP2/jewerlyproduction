@@ -29,6 +29,7 @@ const CheckOutPage = () => {
   const [createSuccessPopup, setcreateSuccessPopup] = useState(false);
   const [paymentMethodId, setPaymentMethodId] = useState(null);
   const [OrderData, setOrderData] = useState([]);
+  const [dataFetched, setDataFetched] = useState(false);
 
   const [price, setPrice] = useState(0);
 
@@ -104,34 +105,17 @@ const CheckOutPage = () => {
     setShowMethodPopup(true);
   };
 
-  useEffect(() => {
-    const fetchOrder = async () => {
-      try {
-        const response = await axios.get("http://localhost:5266/api/Orders");
-        console.log("Response Data:", response.data); // Kiểm tra dữ liệu phản hồi
-        setOrderData(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error); // Kiểm tra lỗi
-        setError(error);
-      }
-    };
-
-    fetchOrder();
-  }, []);
-
-  useEffect(() => {
-    const foundOrder = OrderData.find(
-      (order) =>
-        order.order.customizeRequest.customizeRequestId === customizeRequestId
-    );
-
-    if (foundOrder) {
-      console.log(`Found orderId: ${foundOrder.order.orderId}`);
-      setorderID(foundOrder.order.orderId);
-    } else {
-      console.log("OrderId not found for the given CustomizerequestId.");
+  const fetchOrder = async () => {
+    try {
+      const response = await axios.get("http://localhost:5266/api/Orders");
+      console.log("Response Data:", response.data); // Kiểm tra dữ liệu phản hồi
+      setOrderData(response.data);
+      setDataFetched(true); // Đánh dấu rằng dữ liệu đã được tải
+    } catch (error) {
+      console.error("Error fetching data:", error); // Kiểm tra lỗi
+      setError(error);
     }
-  }, [OrderData, customizeRequestId]);
+  };
 
   const handleMethodChoose = (method) => {
     setPaymentMethodId(method);
@@ -148,7 +132,12 @@ const CheckOutPage = () => {
           },
         }
       );
-      console.log("Response:", response.data);
+      if (response) {
+        console.log("Response:", response.data);
+        alert("Choose method successful!");
+      } else {
+        alert("Choose method failed!");
+      }
       // Handle success
     } catch (error) {
       console.error("Error approving request:", error);
@@ -159,6 +148,23 @@ const CheckOutPage = () => {
   const handleSubmitMethodChoose = () => {
     approveRequest();
     setShowMethodPopup(false);
+  };
+
+  const CashPayment = async (orderID) => {
+    try {
+      console.log("OrderID:", orderID);
+
+      const response = await axios.put(
+        "http://localhost:5266/api/Orders/change-status to PaymendPending",
+        null,
+        {
+          params: { orderID },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response ? error.response.data : error.message);
+    }
   };
 
   const handleMethod001 = () => {
@@ -201,9 +207,40 @@ const CheckOutPage = () => {
     }
   };
 
-  const handleMethod002 = () => {
-    VNPpayment();
+  const handleMethod002 = async () => {
+    await fetchOrder();
+    const foundOrder = OrderData.find(
+      (order) =>
+        order.order.customizeRequest.customizeRequestId === customizeRequestId
+    );
+
+    if (foundOrder) {
+      console.log(`Found orderId: ${foundOrder.order.orderId}`);
+      setorderID(foundOrder.order.orderId);
+      await VNPpayment();
+    } else {
+      console.log("OrderId not found for the given CustomizerequestId.");
+    }
+
     setShowMethodPopup(false);
+  };
+
+  const CashStatus = async () => {
+    await fetchOrder();
+    const foundOrder = OrderData.find(
+      (order) =>
+        order.order.customizeRequest.customizeRequestId === customizeRequestId
+    );
+
+    if (foundOrder) {
+      console.log(`Found orderId: ${foundOrder.order.orderId}`);
+      setorderID(foundOrder.order.orderId);
+      await CashPayment(orderID);
+    } else {
+      console.log("OrderId not found for the given CustomizerequestId.");
+    }
+
+    setcreateSuccessPopup(false);
   };
 
   const handlePlaceOrder = () => {
@@ -218,10 +255,6 @@ const CheckOutPage = () => {
 
   const closePopup = () => {
     setShowMethodPopup(false);
-  };
-
-  const closePopupPM = () => {
-    setcreateSuccessPopup(false);
   };
 
   return (
@@ -391,9 +424,7 @@ const CheckOutPage = () => {
 
               <div className="popup_acction_close">
                 <div>
-                  <Link to="/customer/profile">
-                    <button onClick={closePopupPM}>Close</button>
-                  </Link>
+                  <button onClick={CashStatus}>Close</button>
                 </div>
               </div>
             </div>
