@@ -1,7 +1,7 @@
 .admin-page {
   text-align: center;
   display: flex;
-  flex-direction: row; /* Đổi thành row để các phần tử con nằm cạnh nhau */
+  flex-direction: row;
   justify-content: center;
   min-height: 100vh;
   width: 100vw;
@@ -12,6 +12,106 @@
 }
 
 .admin-container {
-  flex: 1; /* Để container chiếm phần còn lại của trang */
-  /* Thêm các thuộc tính CSS khác tại đây nếu cần */
+  flex: 1;
+}
+
+.additional-content {
+  margin: 20px;
+  padding: 20px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 700px;
+}
+
+.gemstone-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.gemstone-item {
+  background-color: #f0f0f0;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+}
+
+.pagination {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.page-link {
+  background-color: transparent;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  padding: 8px 12px;
+  margin: 0 4px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.page-link:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.item-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.item-popup-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  position: relative;
+  width: 500px;
+  max-width: 90%;
+}
+
+.close-popup-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #f44336;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.close-popup-button:hover {
+  background-color: #d32f2f;
+}
+
+.popup-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.popup-product-image {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 20px;
 }

@@ -6,7 +6,6 @@ using JewelryProduction.Interface;
 using JewelryProduction.Repositories;
 using JewelryProduction.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

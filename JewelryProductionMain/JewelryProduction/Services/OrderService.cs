@@ -203,6 +203,12 @@ namespace JewelryProduction.Services
         {
             return await _repository.GetOrder(id);
         }
+
+        public async Task<bool> ToPaymentPendingStatus(string orderId)
+        {
+            bool check = await _repository.ToPaymentPendingStatus(orderId);
+            return check;
+        }
     }
 
 }

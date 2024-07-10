@@ -8,16 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="ZaloPayHelper\**" />
-    <Content Remove="ZaloPayHelper\**" />
-    <EmbeddedResource Remove="ZaloPayHelper\**" />
-    <None Remove="ZaloPayHelper\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Remove="Controllers\HomeController.cs" />
-    <Compile Remove="Controllers\ZaloPayController.cs" />
-    <Compile Remove="Services\ZaloPayService.cs" />
   </ItemGroup>
 
   <ItemGroup>
