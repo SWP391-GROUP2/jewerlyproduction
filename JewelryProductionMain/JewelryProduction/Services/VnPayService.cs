@@ -84,7 +84,7 @@ namespace JewelryProduction.Services
             };
         }
 
-        public VnPaymentResponseModel PaymentExecuteV2(IQueryCollection collection) // chi moi tinh deposit amount.
+        public VnPaymentResponseModel PaymentExecuteV2(IQueryCollection collection)
         {
             var vnPay = new VnPayLibrary();
 
