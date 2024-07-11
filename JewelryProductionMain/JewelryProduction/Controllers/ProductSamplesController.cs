@@ -130,8 +130,12 @@ namespace JewelryProduction.Controllers
             }
             return NotFound();
         }
-
-
+        [HttpGet("CollectionSample")]
+        public async Task<IActionResult> GetProductSamples(string collectionId)
+        {
+            var productSamples = await _productSampleService.GetProductSamplesByCollectionIdAsync(collectionId);
+            return Ok(productSamples); 
+        }
 
 
 

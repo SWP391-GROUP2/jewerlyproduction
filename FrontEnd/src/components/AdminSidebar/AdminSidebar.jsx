@@ -55,20 +55,21 @@ function AdminSidebar({
             <BsGrid1X2Fill className="admin-icon" /> Product Sample List
           </button>
         </li>
+        
         <li className="admin-sidebar-list-item">
-          <button
-            className="admin-sidebar-button"
-            onClick={() => handleViewChange("accountlist")}
+        
+          <button className="admin-sidebar-button"
+           onClick={() => handleViewChange('createaccount')}
           >
-            <BsGrid1X2Fill className="admin-icon" /> Account List
+            <BsGrid1X2Fill className="admin-icon" /> Create Account
           </button>
         </li>
         <li className="admin-sidebar-list-item">
-          <button
-            className="admin-sidebar-button"
-            onClick={() => handleViewChange("createaccountlist")}
+        
+          <button className="admin-sidebar-button"
+           onClick={() => handleViewChange('searchaccount')}
           >
-            <BsGrid1X2Fill className="admin-icon" /> Create Account
+            <BsGrid1X2Fill className="admin-icon" /> Search Account
           </button>
         </li>
       </ul>

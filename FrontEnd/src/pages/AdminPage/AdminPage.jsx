@@ -15,23 +15,28 @@ function AdminPage() {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // State để xác định khi nào hiển thị popup xác nhận
-  const [userIdToDelete, setUserIdToDelete] = useState(null); // State để lưu userId cần xóa
-
-  const [userAccounts, setUserAccounts] = useState([]);//
   const [selectedUser, setSelectedUser] = useState(null); // State để lưu thông tin user được chọn
+
+  const [searchRole, setSearchRole] = useState(''); // State để lưu role từ input
+  const [similarAccounts, setSimilarAccounts] = useState([]); // State để lưu danh sách tài khoản tương tự
+  const [loadingSimilarAccounts, setLoadingSimilarAccounts] = useState(false); // State để xử lý trạng thái loading khi fetch API
+  const [errorSimilarAccounts, setErrorSimilarAccounts] = useState(null); // State để xử lý trạng thái lỗi khi fetch API
+
   const itemsPerPage = 8;
 
-  
-
-  
-  
-
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    name: '',
+    phoneNumber: '',
+    role: '',
+  }); 
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+ 
   const handleViewChange = (view) => {
     setActiveView(view);
     setSelectedItem(null);
   };
-  
 
   const OpenSidebar = () => {
     setOpenSidebarToggle(!openSidebarToggle);
@@ -96,42 +101,20 @@ function AdminPage() {
     setSelectedItem(null);
   };
 
-// Fetch user accounts data from API
-useEffect(() => {
-  const fetchUserAccounts = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get('http://localhost:5266/api/Admin/GetAllUser');
-      setUserAccounts(response.data);
-      setLoading(false);
-    } catch (error) {
-      setError(error);
-      setLoading(false);
-    }
-  };
-
-  fetchUserAccounts();
-}, []);
-
-
-
-  const deleteUserAccount = async (userId) => {
-    setLoading(true);
-    try {
-      await axios.delete(`http://localhost:5266/api/UserAccounts/${userId}`);
-      // Refresh user accounts after deletion
-      const response = await axios.get('http://localhost:5266/api/UserAccounts');
-      setUserAccounts(response.data);
-      setLoading(false);
-    } catch (error) {
-      setError(error);
-      setLoading(false);
-    }
-  };
-// Show user details in popup
-const showUserDetails = (user) => {
-  setSelectedUser(user);
+// Xóa tài khoản người dùng
+const handleDeleteUser = async (userId) => {
+  try {
+      const response = await axios.put(`http://localhost:5266/api/Admin/DeleteUser?id=${userId}`);
+      alert(response.data.message || 'User deleted successfully');
+       // Cập nhật danh sách similarAccounts
+       setSimilarAccounts((prevAccounts) => 
+        prevAccounts.filter((account) => account.userId !== userId)
+    );
+  } catch (error) {
+      alert(error.response?.data?.message || 'Error deleting user');
+  }
 };
+
 
 // Close popup
 const handleCloseUserPopup = () => {
@@ -139,17 +122,56 @@ const handleCloseUserPopup = () => {
 };
 
 // Show delete confirmation popup
-const showDeleteConfirmation = (userId) => {
-  setShowDeleteConfirm(true);
-  setUserIdToDelete(userId);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  try {
+    await axios.post('http://localhost:5266/api/Account/register/Staff', formData);
+    setFormData({
+      email: '',
+      password: '',
+      name: '',
+      phoneNumber: '',
+      role: '',
+    });
+    setLoading(false);
+    setShowSuccessPopup(true);
+  } catch (error) {
+    setError(error);
+    setLoading(false);
+    alert('Error creating user');
+  }
 };
-
-// Close delete confirmation popup
-const closeDeleteConfirmation = () => {
-  setShowDeleteConfirm(false);
-  setUserIdToDelete(null);
+const handleInputChange = (e) => {
+  const { name, value } = e.target;
+  setFormData({
+    ...formData,
+    [name]: value,
+  });
 };
   
+const handleCloseSuccessPopup = () => {
+  setShowSuccessPopup(false);
+};
+const fetchSimilarAccounts = async () => {
+  setLoadingSimilarAccounts(true);
+  try {
+    let response;
+    if (searchRole === '') {
+      // Call GetAllUser API if searchRole is empty
+      response = await axios.get('http://localhost:5266/api/Admin/GetAllUser');
+    } else {
+      // Call GetUserByRole API if searchRole is selected
+      response = await axios.get(`http://localhost:5266/api/Admin/GetUserByRole?role=${searchRole}`);
+    }
+    setSimilarAccounts(response.data);
+    setLoadingSimilarAccounts(false);
+  } catch (error) {
+    setErrorSimilarAccounts(error);
+    setLoadingSimilarAccounts(false);
+  }
+};
+
 
   
 
@@ -181,7 +203,7 @@ const closeDeleteConfirmation = () => {
                           <div className="detail-box">
                             <strong>{gemstone.name}</strong>
                           </div>
-                        </div>
+                        </div>  
                       </div>
                     ))}
                   </div>
@@ -244,36 +266,8 @@ const closeDeleteConfirmation = () => {
               )}
             </div>
           )}
-          {activeView === 'accountlist' && (
-            <div className='user-account-list'>
-              <h2>User Account List</h2>
-              <table className='user-account-table'>
-                <thead>
-                  <tr>
-                    <th>User ID</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {userAccounts.map((user) => (
-                    <tr key={user.userId} onClick={() => showUserDetails(user)}>
-                      <td>{user.id}</td>
-                      <td>{user.name}</td>
-                      <td>{user.email}</td>
-                      <td>{user.role}</td>
-                      <td>
-                      <button className='DElete_button_but' onClick={() => showDeleteConfirmation(user.userId)}>Delete</button>
 
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+
           {selectedItem && activeView === 'orderlist' && (
             <div className='item-popup'>
               <div className='item-popup-content'>
@@ -337,8 +331,124 @@ const closeDeleteConfirmation = () => {
               </div>
             </div>
           )}
+          {activeView === 'createaccount' && (
+            <div className='create-account-form'>
+              <h2>Create Account</h2>
+              <form onSubmit={handleSubmit}>
+                <div className='form-group'>
+                  <label className='trashlabel' htmlFor='email'>Email:</label>
+                  <input
+                    type='email'
+                    id='email'
+                    name='email'
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className='form-group'>
+                  <label className='trashlabel' htmlFor='password'>Password:</label>
+                  <input
+                    type='password'
+                    id='password'
+                    name='password'
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className='form-group'>
+                  <label className='trashlabel' htmlFor='name'>Name:</label>
+                  <input
+                    type='text'
+                    id='name'
+                    name='name'
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className='form-group'>
+                  <label className='trashlabel' htmlFor='phoneNumber'>Phone Number:</label>
+                  <input
+                    type='text'
+                    id='phoneNumber'
+                    name='phoneNumber'
+                    value={formData.phoneNumber}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className='form-group'>
+                  <label className='trashlabel' htmlFor='role'>Role:</label>
+                  <input
+                    type='text'
+                    id='role'
+                    name='role'
+                    value={formData.role}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className='form-group'>
+                  <button type='submit' className='create-button'>
+                    Create
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
           {/* Popup for selected user details */}
-          
+
+          {activeView === 'searchaccount' && (
+  <div className='search-account-form'>
+    <h2>Search Account</h2>
+    <select value={searchRole} onChange={(e) => setSearchRole(e.target.value)}>
+      <option value="">All</option>
+      <option value="manager">Manager</option>
+      <option value="designstaff">Design Staff</option>
+      <option value="productionstaff">Production Staff</option>
+      <option value="salestaff">Sale Staff</option>
+    </select>
+    <button className='siucapvipro' onClick={fetchSimilarAccounts}>Search</button>
+
+    {loadingSimilarAccounts ? (
+      <p>Loading...</p>
+    ) : errorSimilarAccounts ? (
+      <p>Error: {errorSimilarAccounts.message}</p>
+    ) : (
+      <div className="similar-accounts">
+        <table className='user-account-table'>
+          <thead>
+            <tr>
+              <th>User ID</th>
+              <th>Username</th>
+              <th>Role</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {similarAccounts.map((account) => (
+              // Kiểm tra emailConfirmed của từng account trước khi hiển thị
+              account.emailConfirmed && (
+                <tr key={account.userId}>
+                  <td>{account.userId}</td>
+                  <td>{account.userName}</td>
+                  <td>{account.roles}</td>
+                  <td>
+                  <button className='siucapvipro' onClick={() => handleDeleteUser(account.userId)}>Delete</button>
+                  </td>
+                </tr>
+              )
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )}
+  </div>
+)}
+
+
 {selectedUser && (
   <div className='popup-container'>
     <div className='popup-account'>
@@ -352,20 +462,16 @@ const closeDeleteConfirmation = () => {
           <p><strong>Role:</strong> {selectedUser.role}</p> */}
           <div className="details-container">
                     <div className="detail-box">
-                      <strong>User ID: {selectedUser.id}</strong>
+                      <strong>User ID: {selectedUser.userId}</strong>
                     </div>
                     <div className="detail-box">
-                      <strong>Username: {selectedUser.name}</strong>
+                      <strong>Username: {selectedUser.userName}</strong>
                     </div>
+                    
                     <div className="detail-box">
-                      <strong>Email: {selectedUser.email}</strong>
+                      <strong>Role: {selectedUser.roles}</strong>
                     </div>
-                    <div className="detail-box">
-                      <strong>Role: {selectedUser.role}</strong>
-                    </div>
-                    <div className="detail-box">
-                      <strong>Phone Number: {selectedUser.phoneNumber}</strong>
-                    </div>
+                    
                     
               </div>
         </div>
@@ -373,20 +479,20 @@ const closeDeleteConfirmation = () => {
     </div>
   </div>
 )}
-{/* Xác nhận xóa người dùng */}
-{showDeleteConfirm && (
-            <div className='popup'>
-              <div className='popup-inner'>
-                <h2>Confirm Delete User</h2>
-                <p>Do you want to delete?</p>
-                <div className='button-container'>
-                  <button className='Confirm_button_but' onClick={() => deleteUserAccount(userIdToDelete)}>Confirm</button>
-                  <button className='DElete_button_but' onClick={closeDeleteConfirmation}>Close</button>
+{showSuccessPopup && (
+                <div className='popup'>
+                  <div className='popup-content'>
+                    <button className='DElete_button_but' onClick={handleCloseSuccessPopup}>
+                      X
+                    </button>
+                    <h2>Account Created Successfully!</h2>
+                    <p>The new account has been successfully created.</p>
+                  </div>
                 </div>
-              </div>
-            </div>
-          )}
+              )}
+{/* Xác nhận xóa người dùng */}
 
+          
         </div>
       </div>
     </div>

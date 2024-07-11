@@ -19,15 +19,9 @@ namespace JewelryProduction.Controllers
         [HttpPost("Upload")]
         public async Task<IActionResult> UploadImage(_3ddesignDTO design)
         {
-            var authorizationHeader = HttpContext.Request.Headers["Authorization"].ToString();
-            var token = authorizationHeader.Substring("Bearer ".Length).Trim();
-
-            if (string.IsNullOrWhiteSpace(token))
-                return BadRequest("Token is required");
-
             try
             {
-                var result = await _designService.UploadDesignAsync(design, token);
+                var result = await _designService.UploadDesignAsync(design);
                 return Ok(result);
             }
             catch (ArgumentException ex)
