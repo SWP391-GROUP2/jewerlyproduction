@@ -14,11 +14,12 @@ namespace JewelryProduction.Services
     {
         private readonly JewelryProductionContext _context;
         private readonly IOrderRepository _repository;
-
-        public OrderService(JewelryProductionContext context, IOrderRepository repository)
+        private readonly IInspectionRepository _inspectionrepository;
+        public OrderService(JewelryProductionContext context, IOrderRepository repository, IInspectionRepository inspectionrepository)
         {
             _context = context;
             _repository = repository;
+            _inspectionrepository = inspectionrepository;
         }
 
         public async Task<List<Order>> GetOrdersByYearSortedByPrice(int year)
@@ -77,8 +78,10 @@ namespace JewelryProduction.Services
             var inspection = await _repository.GetInspectionAsync(orderId, stage);
             if (inspection == null)
             {
-                inspection = new Inspection { OrderId = orderId, Stage = stage };
-                _context.Inspections.Add(inspection);
+                var uniqueId = await IdGenerator.GenerateUniqueId<Inspection>(_context, "I", 4);
+                inspection = new Inspection { InspectionId = uniqueId, OrderId = orderId, Stage = stage, InspectionDate = DateTime.Now, ProductStaffId = order.ProductionStaffId };
+                await _inspectionrepository.AddAsync(inspection);
+                _inspectionrepository.SaveChangesAsync();
             }
 
             inspection.Result = inspectionDto.Result;
