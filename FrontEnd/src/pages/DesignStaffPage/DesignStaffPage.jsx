@@ -25,16 +25,13 @@ function DesignStaffPage() {
   const [formImage, setFormImage] = useState(null);
 
   const [showFormPopup, setShowFormPopup] = useState(false);
-
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   function chunkArray(array, size) {
-    return array.reduce(
-      (acc, _, index) =>
-        index % size ? acc : [...acc, array.slice(index, index + size)],
-      []
-    );
+    return array.reduce((acc, _, index) => index % size ? acc : [...acc, array.slice(index, index + size)], []);
   }
+  
 
   const OpenSidebar = () => {
     setOpenSidebarToggle(!openSidebarToggle);
@@ -57,6 +54,8 @@ function DesignStaffPage() {
     } catch (error) {
       console.error("Error fetching data:", error); // Kiểm tra lỗi
       setError(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -68,9 +67,17 @@ function DesignStaffPage() {
     }
   }, [fetchDataFlag, OrderData]);
 
-  const OrderOfCustomer = OrderData.filter(
-    (OrderData) => OrderData.order.designStaffId === designStaffId
-  );
+  const OrderOfCustomer = OrderData.filter((item) => {
+    // Check if designStaffId matches
+    const hasDesignStaff = item.order.designStaffId === designStaffId;
+  
+    // Check if status matches any of the specified values
+    const statusMatches = ["Design Pending"].includes(item.order.status);
+  
+    // Return true if both conditions are met
+    return hasDesignStaff && statusMatches;
+  });
+  
 
   const fetch3dDesign = async () => {
     try {
@@ -94,7 +101,7 @@ function DesignStaffPage() {
   const handleDelete = (id) => {
     setselectedDesignId(id);
     setFetchDataFlag(true);
-  };
+  }
 
   const handleCloseFormPopup = () => {
     setShowFormPopup(false);
@@ -114,6 +121,8 @@ function DesignStaffPage() {
     } catch (error) {
       console.error("Error deleting design:", error);
       setError(error);
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -140,7 +149,7 @@ function DesignStaffPage() {
       }
     }, [fetchDataFlag]);
 
-    const handleUpload3dDesign = () => {
+    const handleUpload3dDesign = async () => {
       const formData = new FormData();
       formData.append("DesignName", designName);
       formData.append("OrderId", orderId)
@@ -150,7 +159,7 @@ function DesignStaffPage() {
         "Updating 3dDesign with data:",
         Object.fromEntries(formData.entries())
       );
-      upload3dDesign(formData);
+      await upload3dDesign(formData);
     };
 
     const upload3dDesign = async (formData) => {
@@ -175,6 +184,33 @@ function DesignStaffPage() {
         setLoading(false);
       }
     };
+
+    const desginCompleted = async () => {
+      try {
+        const res = await axios.put(`http://localhost:5266/api/Orders/change-status To Production?orderId=${orderId}`);
+        console.log(res)
+        console.log("Upload successfully:", res.data);
+        fetchOrder();
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError(error);
+      }
+    };
+    
+    const handleToProduction = async (orderID) => {
+      try {
+        await setOrderId(orderID);
+        handleToProduction2(orderID)
+      } catch (error) {
+        console.error("Error updating request:", error);
+      }
+    };
+  
+    const handleToProduction2 = (orderID) => {
+      desginCompleted(orderID);
+      fetchOrder();
+    }
+
   const hideDetail = () => {
     setShowDetailPopup(false);
   };
@@ -189,10 +225,10 @@ function DesignStaffPage() {
     setFormImage(URL.createObjectURL(file));
     setSelectedItem({
       ...selectedItem,
-      image: file.name,
+image: file.name,
     });
   };
-  
+
   const handleDesignChange = (e) => {
     setDesignImage(e.target.files[0]);
   };
@@ -218,12 +254,9 @@ function DesignStaffPage() {
     setShowDetailPopup(false);
   };
 
-  const _3ddesigns =
-    selectedItem && selectedItem.order
-      ? DesignData.filter(
-          (design) => design.orderId === selectedItem.order.orderId
-        )
-      : [];
+  const _3ddesigns = selectedItem && selectedItem.order
+  ? DesignData.filter((design) => design.orderId === selectedItem.order.orderId)
+  : [];
 
   return (
     <div className="designstaff-page">
@@ -245,7 +278,7 @@ function DesignStaffPage() {
                       <th>ID</th>
                       <th>Customer</th>
                       <th>Sales Staff</th>
-                      <th>Design Staff</th>
+                      <th>Design Staff</th> 
                       <th>Production Staff</th>
                       <th>Price</th>
                       <th>Status</th> 
@@ -253,18 +286,16 @@ function DesignStaffPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {OrderOfCustomer.map((item) => (
-                      <tr key={item.order.orderId} onClick={() => showDetail(item)}>
-                        <td>{item.order.orderId}</td>
-                        <td>{item.order.customizeRequest.customer.name}</td>
-                        <td>
-                          {item.order.customizeRequest.saleStaff?.name ?? "N/A"}
-                        </td>
-                        <td>{item.order.designStaff?.name ?? "N/A"}</td>
-                        <td>{item.order.productionStaff?.name ?? "N/A"}</td>
-                        <td>{item.order.totalPrice}</td>
-                        <td>{item.order.status}</td>
-                        <td></td>
+                  {OrderOfCustomer.map((item) => (
+                    <tr key={item.order.orderId}>
+                      <td onClick={() => showDetail(item)}>{item.order.orderId}</td>
+                      <td onClick={() => showDetail(item)}>{item.order.customizeRequest.customer.name}</td>
+                      <td onClick={() => showDetail(item)}>{item.order.customizeRequest.saleStaff?.name ?? 'N/A'}</td>
+                      <td onClick={() => showDetail(item)}>{item.order.designStaff?.name ?? 'N/A'}</td>
+                      <td onClick={() => showDetail(item)}>{item.order.productionStaff?.name ?? 'N/A'}</td>
+                      <td onClick={() => showDetail(item)}>{item.order.totalPrice}</td>
+                      <td onClick={() => showDetail(item)}>{item.order.status}</td>
+                        <td><button onClick={(e) => {e.stopPropagation(); handleToProduction(item.order.orderId)}}>Send</button></td>
                       </tr>
                     ))}
                   </tbody>
@@ -279,7 +310,7 @@ function DesignStaffPage() {
         <div className="designstaff-detail-popup">
           <div className="designstaff-detail-popup-content1">
           <div className="designstaff-detail-popup-content2">
-  <h2>Detail Popup</h2>
+<h2>Detail Popup</h2>
   <div className="designstaff-tables-container">
     <table className="designstaff-detail-table1">
       <tbody>
@@ -363,50 +394,8 @@ function DesignStaffPage() {
 
 </div>
 
-                <table className="designstaff-detail-table2">
-                  <tbody className="_3dDesign">
-                    {chunkArray(_3ddesigns, 2).map((row, rowIndex) => (
-                      <tr key={rowIndex}>
-                        {row.map((_3ddesign) => (
-                          <td
-                            key={_3ddesign._3dDesignId}
-                            className="ImageTable"
-                          >
-                            <img src={_3ddesign.image} alt="image" />
-                            <button
-                              className="designstaff-close-button"
-                              onClick={() =>
-                                handleDelete(_3ddesign._3dDesignId)
-                              }
-                            >
-                              Delete
-                            </button>
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <div>
-                <button
-                  className="designstaff-close-button"
-                  onClick={hideDetail}
-                >
-                  Close
-                </button>
-                <button
-                  className="designstaff-add-image-button"
-                  onClick={handleImageUpload}
-                >
-                  Add Image
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
-      )}
-      {showFormPopup && (
+      )}{showFormPopup && (
         <div className="designstaff-form-popup">
           <div className="designstaff-form-popup-content">
             <h2>Add Image</h2>
@@ -417,7 +406,7 @@ function DesignStaffPage() {
                   <input
                     type="text"
                     value={designName}
-                    onChange={(e) => setDesignName(e.target.value)}
+onChange={(e) => setDesignName(e.target.value)}
                     required
                   />
                 </div>
@@ -447,8 +436,11 @@ function DesignStaffPage() {
           </div>
         </div>
       )}
+      
     </div>
   );
+  
 }
+
 
 export default DesignStaffPage;

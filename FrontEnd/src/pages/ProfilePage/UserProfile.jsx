@@ -36,6 +36,13 @@ function UserProfile() {
 
   const [approveSelectedRequest, setapproveSelectedRequest] = useState(false);
 
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [uploadedImage, setUploadedImage] = useState(null);
+  const [showDetailPopup, setShowDetailPopup] = useState(false);
+  const [hasFetchedDesigns, setHasFetchedDesigns] = useState(false);
+
+  const [DesignData, setDesignData] = useState([]);
+
   const navigate = useNavigate();
 
   const user = useSelector((State) => State.auth.Login.currentUser);
@@ -73,6 +80,9 @@ function UserProfile() {
     setapproveSelectedRequest(approveSelectedRequest);
     setApprovePopupOpen(true);
   };
+  const hideDetail = () => {
+    setShowDetailPopup(false);
+  };
 
   const fetchRequests = async () => {
     try {
@@ -88,6 +98,9 @@ function UserProfile() {
       setLoading(false);
     }
   };
+  function chunkArray(array, size) {
+    return array.reduce((acc, _, index) => index % size ? acc : [...acc, array.slice(index, index + size)], []);
+  }
 
   useEffect(() => {
     if (!hasFetchedOrders && (fetchDataFlag || requestData.length === 0)) {
@@ -129,6 +142,32 @@ function UserProfile() {
   const OrderOfCustomer = OrderData.filter(
     (OrderData) => OrderData.order.customizeRequest.customerId === customerId
   );
+  const showDetail = (item) => {
+    setSelectedItem(item);
+    setShowDetailPopup(true);
+    setUploadedImage(null); // Reset uploaded image state
+  };
+
+  const fetch3dDesign = async () => {
+    try {
+      const response = await axios.get("http://localhost:5266/api/_3ddesign");
+      console.log("Response Data:", response.data); // Kiểm tra dữ liệu phản hồi
+      setDesignData(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error); // Kiểm tra lỗi
+setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!hasFetchedDesigns && (fetchDataFlag || DesignData.length === 0)) {
+      fetch3dDesign();
+      setFetchDataFlag(false);
+      setHasFetchedDesigns(true);
+    }
+  }, [fetchDataFlag, DesignData]);
 
   useEffect(() => {
     if (user && user.token) {
@@ -176,6 +215,7 @@ function UserProfile() {
       );
     }
   };
+  
 
   const handleUpdateProfile = (e) => {
     e.preventDefault();
@@ -199,6 +239,10 @@ function UserProfile() {
   const handleAvatarChange = (e) => {
     setAvatar(e.target.files[0]);
   };
+
+  const _3ddesigns = selectedItem && selectedItem.order
+  ? DesignData.filter((design) => design.orderId === selectedItem.order.orderId)
+  : [];
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -375,35 +419,37 @@ function UserProfile() {
           )}
 
           {currentView === "order" && (
-            <div className="new-div">
-              <h2 className="table-heading">Order List</h2>
-              <table className="custom-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Customer</th>
-                    <th>Sales Staff</th>
-                    <th>Design Staff</th>
-                    <th>Production Staff</th>
-                    <th>Price</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {OrderOfCustomer.map((row, index) => (
-                    <tr key={index} onClick={() => handleRowClick(index)}>
-                      <td>{row.order.orderId}</td>
-                      <td>{row.order.customizeRequest.customer.name}</td>
-                      <td>{row.order.customizeRequest.saleStaff.name}</td>
-                      <td>{row.order.designStaff?.name || ""}</td>
-                      <td>{row.order.productionStaff?.name || ""}</td>
-                      <td>{row.order.totalPrice}</td>
-                      <td>{row.order.status}</td>
+            <div className="designstaff-table-container">
+                <h2 className="designstaff-table-title">Order List</h2>
+                <table className="designstaff-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Customer</th>
+                      <th>Sales Staff</th>
+                      <th>Design Staff</th> 
+                      <th>Production Staff</th>
+                      <th>Price</th>
+                      <th>Status</th> 
+                      
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {OrderOfCustomer.map((item) => (
+                      <tr key={item.order.orderId} onClick={() => showDetail(item)}>
+                        <td>{item.order.orderId}</td>
+                        <td>{item.order.customizeRequest.customer.name}</td>
+                        <td>{item.order.customizeRequest.saleStaff?.name ?? 'N/A'}</td>
+                        <td>{item.order.designStaff?.name ?? 'N/A'}</td>
+                        <td>{item.order.productionStaff?.name ?? 'N/A'}</td>
+                        <td>{item.order.totalPrice}</td>
+                        <td>{item.order.status}</td>
+                        
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
           )}
         </div>
         {ApprovePopupOpen && (
@@ -519,6 +565,94 @@ function UserProfile() {
             </div>
           </div>
         )}
+        {showDetailPopup && (
+        <div className="designstaff-detail-popup">
+          <div className="designstaff-detail-popup-content1">
+          <div className="designstaff-detail-popup-content2">
+<h2>Detail Popup</h2>
+  <div className="designstaff-tables-container">
+    <table className="designstaff-detail-table1">
+      <tbody>
+        <tr>
+          <td>ID</td>
+          <td>{selectedItem.order.orderId}</td>
+        </tr>
+        <tr>
+          <td>Gold</td>
+          <td>{selectedItem.order.customizeRequest.gold.goldType}</td>
+        </tr>
+        <tr>
+          <td>Gold Weight</td>
+          <td>{selectedItem.order.customizeRequest.goldWeight}</td>
+        </tr>
+        <tr>
+          <td>Customer</td>
+          <td>{selectedItem.order.customizeRequest.customer.name}</td>
+        </tr>
+        <tr>
+          <td>Sales</td>
+          <td>{selectedItem.order.customizeRequest.saleStaff?.name ?? 'N/A'}</td>
+        </tr>
+        <tr>
+          <td>Designer</td>
+          <td>{selectedItem.order.designStaff?.name ?? 'N/A'}</td>
+        </tr>
+        <tr>
+          <td>Production</td>
+          <td>{selectedItem.order.productionStaff?.name ?? 'N/A'}</td>
+        </tr>
+        <tr>
+          <td>Manager</td>
+          <td>{selectedItem.order.customizeRequest.manager?.name ?? 'N/A'}</td>
+        </tr>
+        <tr>
+          <td>Type</td>
+          <td>{selectedItem.order.customizeRequest.type}</td>
+        </tr>
+        <tr>
+          <td>Style</td>
+          <td>{selectedItem.order.customizeRequest.style}</td>
+        </tr>
+        <tr>
+          <td>Size</td>
+          <td>{selectedItem.order.customizeRequest.size}</td>
+        </tr>
+        
+        {uploadedImage && (
+          <tr>
+            <td colSpan="2">
+              <img src={uploadedImage} alt="Uploaded Preview" className="uploaded-image-preview" />
+            </td>
+          </tr>
+        )}
+      </tbody>
+    </table>
+
+    <table className="designstaff-detail-table2">
+  <tbody className="_3dDesign">
+    {chunkArray(_3ddesigns, 2).map((row, rowIndex) => (
+      <tr key={rowIndex}>
+        {row.map(_3ddesign => (
+          <td key={_3ddesign._3dDesignId} className="ImageTable">
+            <img src={_3ddesign.image} alt="image" />
+            
+          </td>
+        ))}
+      </tr>
+    ))}
+  </tbody>
+</table>
+  </div>
+  <div>
+    <button className="designstaff-close-button" onClick={hideDetail}>Close</button>
+    
+  </div>
+</div>
+
+</div>
+
+        </div>
+      )}
       </div>
     </>
   );
