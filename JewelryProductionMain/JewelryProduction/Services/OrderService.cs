@@ -94,7 +94,7 @@ namespace JewelryProduction.Services
 
             if (stage == "Final Inspection" && inspection.Result == true)
             {
-                order.Status = "Completed";
+                order.Status = "Choosing Payment";
             }
 
             await _repository.SaveChangesAsync();
