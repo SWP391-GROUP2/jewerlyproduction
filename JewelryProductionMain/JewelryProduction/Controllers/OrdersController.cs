@@ -228,10 +228,10 @@ namespace JewelryProduction.Controllers
         }
 
         [HttpPut("change-status To Production")]
-        public async Task<ActionResult> ChangeStatusTo(string orderID)
+        public async Task<ActionResult> ChangeStatusToProduction(string orderId)
         {
-            var order = await _orderService.GetOrder(orderID);
-            order.Order.Status = "Assigning Production";
+            var order = await _orderService.GetOrder(orderId);
+            order.Order.Status= "Assigning Production";
             await _context.SaveChangesAsync();
             return Ok("Status has changed");
         }

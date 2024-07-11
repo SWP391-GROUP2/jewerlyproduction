@@ -30,6 +30,7 @@ const CheckOutPage = () => {
   const [paymentMethodId, setPaymentMethodId] = useState(null);
   const [OrderData, setOrderData] = useState([]);
   const [dataFetched, setDataFetched] = useState(false);
+
   const [shouldCallCashPayment, setShouldCallCashPayment] = useState(false);
   const [shouldCallVNPpayment, setShouldCallVNPpayment] = useState(false);
 

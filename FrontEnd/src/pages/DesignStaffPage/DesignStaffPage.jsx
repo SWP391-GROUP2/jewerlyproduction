@@ -25,6 +25,8 @@ function DesignStaffPage() {
   const [formImage, setFormImage] = useState(null);
 
   const [showFormPopup, setShowFormPopup] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   function chunkArray(array, size) {
     return array.reduce(
@@ -54,6 +56,9 @@ function DesignStaffPage() {
       setOrderData(response.data);
     } catch (error) {
       console.error("Error fetching data:", error); // Kiểm tra lỗi
+      setError(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -65,9 +70,16 @@ function DesignStaffPage() {
     }
   }, [fetchDataFlag, OrderData]);
 
-  const OrderOfCustomer = OrderData.filter(
-    (OrderData) => OrderData.order.designStaffId === designStaffId
-  );
+  const OrderOfCustomer = OrderData.filter((item) => {
+    // Check if designStaffId matches
+    const hasDesignStaff = item.order.designStaffId === designStaffId;
+
+    // Check if status matches any of the specified values
+    const statusMatches = ["Design Pending"].includes(item.order.status);
+
+    // Return true if both conditions are met
+    return hasDesignStaff && statusMatches;
+  });
 
   const fetch3dDesign = async () => {
     try {
@@ -111,6 +123,9 @@ function DesignStaffPage() {
       console.log("Design deleted successfully");
     } catch (error) {
       console.error("Error deleting design:", error);
+      setError(error);
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -137,7 +152,7 @@ function DesignStaffPage() {
     }
   }, [fetchDataFlag]);
 
-  const handleUpload3dDesign = () => {
+  const handleUpload3dDesign = async () => {
     const formData = new FormData();
     formData.append("DesignName", designName);
     formData.append("OrderId", orderId);
@@ -147,7 +162,7 @@ function DesignStaffPage() {
       "Updating 3dDesign with data:",
       Object.fromEntries(formData.entries())
     );
-    upload3dDesign(formData);
+    await upload3dDesign(formData);
   };
 
   const upload3dDesign = async (formData) => {
@@ -168,7 +183,38 @@ function DesignStaffPage() {
       );
     } catch (error) {
       console.error("Error fetching data:", error);
+      setError(error);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const desginCompleted = async () => {
+    try {
+      const res = await axios.put(
+        `http://localhost:5266/api/Orders/change-status To Production?orderId=${orderId}`
+      );
+      console.log(res);
+      console.log("Upload successfully:", res.data);
+      fetchOrder();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setError(error);
+    }
+  };
+
+  const handleToProduction = async (orderID) => {
+    try {
+      await setOrderId(orderID);
+      handleToProduction2(orderID);
+    } catch (error) {
+      console.error("Error updating request:", error);
+    }
+  };
+
+  const handleToProduction2 = (orderID) => {
+    desginCompleted(orderID);
+    fetchOrder();
   };
 
   const hideDetail = () => {
@@ -200,6 +246,18 @@ function DesignStaffPage() {
   const handleImageUpload = () => {
     setShowDetailPopup(false);
     setShowFormPopup(true);
+  };
+
+  const handleSave = () => {
+    const updatedOrderData = OrderData.map((order) =>
+      order.customizeRequestID === selectedItem.customizeRequestID
+        ? { ...order, image: selectedItem.image }
+        : order
+    );
+
+    // Update orderData state or send API request to save changes
+    console.log(updatedOrderData); // Replace with actual state update or API call
+    setShowDetailPopup(false);
   };
 
   const _3ddesigns =
@@ -238,20 +296,38 @@ function DesignStaffPage() {
                   </thead>
                   <tbody>
                     {OrderOfCustomer.map((item) => (
-                      <tr
-                        key={item.order.orderId}
-                        onClick={() => showDetail(item)}
-                      >
-                        <td>{item.order.orderId}</td>
-                        <td>{item.order.customizeRequest.customer.name}</td>
-                        <td>
+                      <tr key={item.order.orderId}>
+                        <td onClick={() => showDetail(item)}>
+                          {item.order.orderId}
+                        </td>
+                        <td onClick={() => showDetail(item)}>
+                          {item.order.customizeRequest.customer.name}
+                        </td>
+                        <td onClick={() => showDetail(item)}>
                           {item.order.customizeRequest.saleStaff?.name ?? "N/A"}
                         </td>
-                        <td>{item.order.designStaff?.name ?? "N/A"}</td>
-                        <td>{item.order.productionStaff?.name ?? "N/A"}</td>
-                        <td>{item.order.totalPrice}</td>
-                        <td>{item.order.status}</td>
-                        <td></td>
+                        <td onClick={() => showDetail(item)}>
+                          {item.order.designStaff?.name ?? "N/A"}
+                        </td>
+                        <td onClick={() => showDetail(item)}>
+                          {item.order.productionStaff?.name ?? "N/A"}
+                        </td>
+                        <td onClick={() => showDetail(item)}>
+                          {item.order.totalPrice}
+                        </td>
+                        <td onClick={() => showDetail(item)}>
+                          {item.order.status}
+                        </td>
+                        <td>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleToProduction(item.order.orderId);
+                            }}
+                          >
+                            Send
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
