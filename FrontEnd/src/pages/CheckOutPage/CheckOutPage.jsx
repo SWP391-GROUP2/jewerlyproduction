@@ -30,6 +30,8 @@ const CheckOutPage = () => {
   const [paymentMethodId, setPaymentMethodId] = useState(null);
   const [OrderData, setOrderData] = useState([]);
   const [dataFetched, setDataFetched] = useState(false);
+  const [shouldCallCashPayment, setShouldCallCashPayment] = useState(false);
+  const [shouldCallVNPpayment, setShouldCallVNPpayment] = useState(false);
 
   const [price, setPrice] = useState(0);
 
@@ -184,16 +186,18 @@ const CheckOutPage = () => {
   };
 
   useEffect(() => {
-    if (orderID) {
+    if (orderID && shouldCallCashPayment) {
       CashPayment(orderID);
+      setShouldCallCashPayment(false);
     }
-  }, [orderID]);
+  }, [orderID, shouldCallCashPayment]);
 
   useEffect(() => {
-    if (orderID) {
+    if (orderID && shouldCallVNPpayment) {
       VNPpayment(price, orderID);
+      setShouldCallVNPpayment(false);
     }
-  }, [price, orderID]);
+  }, [price, orderID, shouldCallVNPpayment]);
 
   const handleMethod001 = () => {
     setcreateSuccessPopup(true);
@@ -237,12 +241,13 @@ const CheckOutPage = () => {
 
   const handleMethod002 = async () => {
     await fetchOrder();
-
+    setShouldCallVNPpayment(true);
     setShowMethodPopup(false);
   };
 
   const CashStatus = async () => {
     await fetchOrder();
+    setShouldCallCashPayment(true);
     setcreateSuccessPopup(false);
   };
 

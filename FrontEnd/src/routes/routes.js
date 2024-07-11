@@ -22,6 +22,7 @@ import ManagerPage from "../pages/ManagerPage/ManagerPage";
 import ProductionStaffPage from "../pages/ProductionStaffPage/ProductionStaffPage";
 import CheckOutPage from "../pages/CheckOutPage/CheckOutPage";
 import CallBack from "../pages/CallBackPage/CallBackPage";
+import CheckOutLast from "../pages/CheckOutLast/CheckOutLast";
 
 const routes = [
   // Guest Routes
@@ -47,12 +48,17 @@ const routes = [
   { path: "/customer/customize/:productId", element: <CustomizePage /> },
   { path: "/customer/resetpassword", element: <ResetPassword /> },
   { path: "/customer/checkoutpage", element: <CheckOutPage /> },
+  { path: "/customer/checkoutlast", element: <CheckOutLast /> },
   {
     path: "/customer/callback/api/Payment/Check",
     element: <CallBack />,
   },
   {
     path: "/customer/checkoutpage/:customizeRequestId",
+    element: <CheckOutPage />,
+  },
+  {
+    path: "/customer/checkoutlast/:orderId",
     element: <CheckOutPage />,
   },
 
