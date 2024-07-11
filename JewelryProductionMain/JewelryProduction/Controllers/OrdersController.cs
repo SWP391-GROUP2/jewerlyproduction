@@ -245,6 +245,29 @@ namespace JewelryProduction.Controllers
         }
 
 
+        [HttpPut("Update address")]
+        public async Task<IActionResult> UpdateStatus(string orderID, string address)
+        {
+            var order = await _orderService.GetOrder(orderID);
+            order.Order.Address = address;
+            order.Order.Status = "Done";
+            _context.SaveChangesAsync();
+            return Ok();
+        }
+
+
+        [HttpPut("change-status to Shipping")]
+        public async Task<IActionResult> ChangeToShipping(string orderID)
+        {
+            var order = await _orderService.GetOrder(orderID);
+            order.Order.Status = "Shipping";
+            _context.SaveChangesAsync();
+            return Ok("Status has changed");
+        }
+
+
+
+
         private bool OrderExists(string id)
         {
             return _context.Orders.Any(e => e.OrderId == id);
