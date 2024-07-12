@@ -25,6 +25,7 @@ jobs:
         run: |
           cd FrontEnd
           npm install
+          npm audit fix
           npm run build --if-present
           npm run test --if-present
       
