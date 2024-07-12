@@ -23,10 +23,10 @@ jobs:
           include-prerelease: true
 
       - name: Build with dotnet
-        run: dotnet build "D:\GitHub\DemoHost\JewelryProductionMain\JewelryProduction\JewelryProduction.csproj" --configuration Release
+        run: dotnet build "JewelryProduction.csproj" --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish "D:\GitHub\DemoHost\JewelryProductionMain\JewelryProduction\JewelryProduction.csproj"  -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish "JewelryProduction.csproj"  -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
