@@ -105,36 +105,43 @@ function SaleStaffPage() {
     setGoldWeight(rowData.goldweight);
   };
 
-  const changeStatusToDesigner = async (orderID, price) => {
+  const handleCheckPayment = async (orderid, quotation) => {
     try {
-      const response = await axios.post(
-        `http://localhost:5266/api/Orders/change-status%20To%20Designer`,
-        null, // Body rỗng
-        {
-          params: { orderID, price },
-        }
-      );
-      if (response) {
-        console.log("Response:", response.data);
-        alert("Choose payment successful!");
-      } else {
-        alert("Choose payment failed!");
+      if (isNaN(quotation) || quotation <= 0) {
+        throw new Error("Invalid quotation value.");
       }
+
+      const price = quotation * 0.3;
+
+      if (isNaN(price)) {
+        throw new Error("Calculated price is not a valid number.");
+      }
+
+      await changeStatusToDesigner(orderid, price);
+      await fetchOrder(); // Cập nhật lại dữ liệu sau khi gọi API
     } catch (error) {
-      console.error(
-        "Error:",
-        error.response ? error.response.data : error.message
-      );
-      throw new Error(error.response ? error.response.data : error.message);
+      console.error("Error updating order status:", error.message);
+      console.error("Full error object:", error);
     }
   };
 
-  const handleCheckPayment = async (orderid, quotation) => {
+  const changeStatusToDesigner = async (orderid, price) => {
     try {
-      await changeStatusToDesigner(orderid, quotation * 0.3); // Sử dụng quotation để tính giá
-      await fetchOrder();
+      const response = await axios.put(
+        `http://localhost:5266/api/Orders/change-status%20To%20Designer?orderID=${orderid}&price=${price}`
+      );
+      console.log("Order status changed successfully:", response.data);
+
+      // Cập nhật state sau khi gọi API thành công
+      setOrderData((prevOrders) =>
+        prevOrders.map((order) =>
+          order.orderID === orderid
+            ? { ...order, status: "Designer", price }
+            : order
+        )
+      );
     } catch (error) {
-      console.error("Error updating order status:", error);
+      console.error("Error changing order status:", error);
     }
   };
 
@@ -151,8 +158,8 @@ function SaleStaffPage() {
   );
   const paymentpendingOrder = OrderData.filter(
     (OrderData) =>
-      (OrderData.order.status === "Payment Pending") &
-      (OrderData.order.paymentMethodId === "P001")
+      OrderData.order.status === "Payment Pending" &&
+      OrderData.order.paymentMethodId === "P001"
   );
   const rejectListData = requestData.filter(
     (data) => data.customerRequest.status === "Quotation Rejected"
@@ -292,13 +299,12 @@ function SaleStaffPage() {
                         <td>
                           <button
                             className="salestaff-detail-button"
-                            onClick={(e) => {
-                              e.stopPropagation();
+                            onClick={() =>
                               handleCheckPayment(
                                 row.order.orderId,
                                 row.order.customizeRequest.quotation
-                              );
-                            }}
+                              )
+                            }
                           >
                             Already Paid
                           </button>

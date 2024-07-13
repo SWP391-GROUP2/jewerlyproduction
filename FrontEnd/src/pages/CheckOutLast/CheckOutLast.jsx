@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import Header from "../../components/Header/Header";
 import Navbar from "../../components/Navbar/navbar";
 import Footer from "../../components/Footer/Footer";
-import "./CheckOutPage.css";
+import "../CheckOutPage/CheckOutPage.css";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 
-const CheckOutPage = () => {
+const CheckOutLast = () => {
   const { customizeRequestId } = useParams();
   const [RequestData, setRequestData] = useState([]);
   const [error, setError] = useState(null);
@@ -30,24 +30,10 @@ const CheckOutPage = () => {
   const [paymentMethodId, setPaymentMethodId] = useState(null);
   const [OrderData, setOrderData] = useState([]);
   const [dataFetched, setDataFetched] = useState(false);
-
   const [shouldCallCashPayment, setShouldCallCashPayment] = useState(false);
   const [shouldCallVNPpayment, setShouldCallVNPpayment] = useState(false);
 
   const [price, setPrice] = useState(0);
-
-  const fetchRequests = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:5266/api/CustomerRequests"
-      );
-      console.log("Response Data:", response.data);
-      setRequestData(response.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      setError(error);
-    }
-  };
 
   const fetchGemstone = async () => {
     try {
@@ -61,7 +47,6 @@ const CheckOutPage = () => {
   };
 
   useEffect(() => {
-    fetchRequests();
     fetchGemstone();
   }, [customizeRequestId]);
 
@@ -446,4 +431,4 @@ const CheckOutPage = () => {
   );
 };
 
-export default CheckOutPage;
+export default CheckOutLast;
