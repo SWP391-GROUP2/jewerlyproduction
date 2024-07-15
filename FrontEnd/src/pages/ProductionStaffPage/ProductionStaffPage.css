@@ -151,9 +151,10 @@
 }
 
 .productionstaff-newview {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .productionstaff-div {
@@ -168,4 +169,28 @@
   border-radius: 15px;
 }
 
+.inspection-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
 
+.inspection-table th,
+.inspection-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.inspection-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.inspection-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.inspection-table tr:hover {
+  background-color: #f1f1f1;
+}

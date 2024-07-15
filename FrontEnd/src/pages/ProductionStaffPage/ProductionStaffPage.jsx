@@ -6,72 +6,108 @@ import axios from "axios";
 
 function ProductionStaffPage() {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
-  const [currentView, setCurrentView] = useState("");
+  const [currentView, setCurrentView] = useState("orderlist"); // Default view
   const [selectedItem, setSelectedItem] = useState(null);
   const [showDetailPopup, setShowDetailPopup] = useState(false);
 
   const [detailData, setDetailData] = useState(null); // State to store detail data
-
-  const OpenSidebar = () => {
-    setOpenSidebarToggle(!openSidebarToggle);
-  };
-
-  const handleViewChange = (view) => {
-    setCurrentView(view);
-    // Clear detail data when changing view
-    setDetailData(null);
-  };
+  const [inspectionData, setInspectionData] = useState(null); // State to store inspection data
 
   const [orderData, setOrderData] = useState([]);
 
-  const fetchOrder = async () => {
+  // Fetch orders from API
+  const fetchOrders = async () => {
     try {
       const response = await axios.get("http://localhost:5266/api/Orders");
       setOrderData(response.data);
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
+
+  // Fetch inspection data for a specific order
+  const fetchOrderInspection = async (orderId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5266/api/Inspection/order/${orderId}`
+      );
+      setInspectionData(response.data);
+    } catch (error) {
+      console.error("Error fetching inspection data:", error);
+    }
   };
 
   useEffect(() => {
-    fetchOrder();
-    console.log("Your Order", orderData);
+    fetchOrders();
   }, []);
 
-  const inproduction = orderData.filter(
-    (data) => data.order.status === "In Production"
-  );
+  // Handle input change in inspection data
+  const handleInputChange = (index, field, value) => {
+    const newInspectionData = [...inspectionData];
+    newInspectionData[index][field] = value;
+    setInspectionData(newInspectionData);
+  };
 
+  // Handle submission of inspection data
+  const handleSubmit = async (inspection) => {
+    const { orderId, stage, result, comment } = inspection;
+    try {
+      await axios.put(
+        `http://localhost:5266/api/ProductionStaff/record-inspection?orderId=${orderId}&stage=${encodeURIComponent(
+          stage
+        )}`,
+        {
+          result,
+          comment,
+        }
+      );
+      alert("Data submitted successfully");
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        console.error("Order not found:", error.response.data);
+        alert("Order not found. Please check the orderId and stage.");
+      } else {
+        console.error("Error submitting data:", error);
+        alert("Failed to submit data. Please try again later.");
+      }
+    }
+  };
+
+  // Show details of an order
   const showDetail = (item) => {
     setSelectedItem(item);
     setShowDetailPopup(true);
+    fetchOrderInspection(item.order.orderId); // Fetch inspection data for selected order
   };
 
+  // Hide order details popup
   const hideDetail = () => {
     setShowDetailPopup(false);
   };
 
-  const handleViewButtonClick = () => {
+  // Handle view button click (e.g., to view inspection details)
+  const handleViewButtonClick = async () => {
     setShowDetailPopup(false); // Close the popup
-    // Save detail data before changing view
-    setDetailData(selectedItem);
-    setCurrentView("newView"); // Change current view to new div view
+    setDetailData(selectedItem); // Save detail data before changing view
+    setCurrentView("newView"); // Change current view to 'newView'
+    await fetchOrderInspection(selectedItem.order.orderId); // Fetch inspection data for selected order
   };
-
-  // Log detailData to console when it changes
-  React.useEffect(() => {
-    console.log("Detail Data:", detailData);
-  }, [detailData]);
+  const inproduction = orderData.filter(
+    (data) => data.order.status === "In Production"
+  );
 
   return (
     <div className="productionstaff-page">
       <ProductionStaffSidebar
         openSidebarToggle={openSidebarToggle}
-        OpenSidebar={OpenSidebar}
-        handleViewChange={handleViewChange}
+        setOpenSidebarToggle={setOpenSidebarToggle}
+        handleViewChange={setCurrentView}
       />
       <div className={`content ${showDetailPopup ? "blur" : ""}`}>
         <div className="productionstaff-container">
           <ProductionStaffHeader />
           <div className="productionstaff-main-container">
+            {/* Render order list view */}
             {currentView === "orderlist" && (
               <div className="productionstaff-table-container">
                 <h2 className="productionstaff-table-title">Order List</h2>
@@ -87,6 +123,7 @@ function ProductionStaffPage() {
                     </tr>
                   </thead>
                   <tbody>
+                    {/* Map through orders in production */}
                     {inproduction.map((item) => (
                       <tr
                         key={item.customizeRequestID}
@@ -104,17 +141,76 @@ function ProductionStaffPage() {
                 </table>
               </div>
             )}
+            {/* Render detailed inspection view */}
             {currentView === "newView" && (
               <div className="productionstaff-newview">
-                <div className="productionstaff-div">Div 1</div>
-                <div className="productionstaff-div">Div 2</div>
-                <div className="productionstaff-div">Div 3</div>
+                <table className="inspection-table">
+                  <thead>
+                    <tr>
+                      <th>Inspection ID</th>
+                      <th>Stage</th>
+                      <th>Inspection Date</th>
+                      <th>Result</th>
+                      <th>Comment</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {/* Map through inspection data */}
+                    {inspectionData &&
+                      inspectionData.map((inspection, index) => (
+                        <tr key={inspection.inspectionId}>
+                          <td>{inspection.inspectionId}</td>
+                          <td>{inspection.stage}</td>
+                          <td>
+                            {new Date(
+                              inspection.inspectionDate
+                            ).toLocaleString()}
+                          </td>
+                          <td>
+                            <select
+                              value={inspection.result}
+                              onChange={(e) =>
+                                handleInputChange(
+                                  index,
+                                  "result",
+                                  e.target.value === "true"
+                                )
+                              }
+                            >
+                              <option value="true">True</option>
+                              <option value="false">False</option>
+                            </select>
+                          </td>
+                          <td>
+                            <input
+                              type="text"
+                              value={inspection.comment ?? ""}
+                              onChange={(e) =>
+                                handleInputChange(
+                                  index,
+                                  "comment",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </td>
+                          <td>
+                            <button onClick={() => handleSubmit(inspection)}>
+                              Submit
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
               </div>
             )}
           </div>
         </div>
       </div>
 
+      {/* Render detail popup */}
       {showDetailPopup && (
         <div className="productionstaff-detail-popup">
           <div className="productionstaff-detail-popup-content">

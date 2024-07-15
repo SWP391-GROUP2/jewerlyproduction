@@ -7,188 +7,50 @@ import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 
 const CheckOutLast = () => {
-  const { customizeRequestId } = useParams();
-  const [RequestData, setRequestData] = useState([]);
-  const [error, setError] = useState(null);
-  const [quotationPercentage, setQuotationPercentage] = useState(0);
-  const [quotation, setQuotation] = useState(0);
-  const [total, setTotal] = useState(0);
-
-  const [goldType, setgoldType] = useState("");
-  const [goldWeight, setgoldWeight] = useState(0);
-  const [type, settype] = useState("");
-  const [style, setstyle] = useState("");
-  const [size, setsize] = useState(0);
-  const [quantity, setquantity] = useState(0);
-  const [quotationDes, setQuotationDes] = useState("");
-
-  const [GemstoneData, setGemstoneData] = useState([]);
-  const [orderID, setorderID] = useState("");
+  const { orderId } = useParams();
 
   const [showMethodPopup, setShowMethodPopup] = useState(false);
   const [createSuccessPopup, setcreateSuccessPopup] = useState(false);
   const [paymentMethodId, setPaymentMethodId] = useState(null);
   const [OrderData, setOrderData] = useState([]);
-  const [dataFetched, setDataFetched] = useState(false);
   const [shouldCallCashPayment, setShouldCallCashPayment] = useState(false);
   const [shouldCallVNPpayment, setShouldCallVNPpayment] = useState(false);
+  const [selectedOrder, setSelectedRequest] = useState(null);
 
   const [price, setPrice] = useState(0);
 
-  const fetchGemstone = async () => {
-    try {
-      const response = await axios.get("http://localhost:5266/api/Gemstones");
-      console.log("Gemstone Data:", response.data);
-      setGemstoneData(response.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      setError(error);
-    }
-  };
-
+  //lấy list order
   useEffect(() => {
-    fetchGemstone();
-  }, [customizeRequestId]);
+    const fetchOrder = async () => {
+      try {
+        const response = await axios.get("http://localhost:5266/api/Orders");
+        console.log("Response Data:", response.data);
+        setOrderData(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
-  const RequestsCurrent = RequestData.filter(
-    (RequestData) =>
-      RequestData.customerRequest.customizeRequestId === customizeRequestId
-  );
+    fetchOrder();
+  }, []);
 
-  const GemstoneCurrent = GemstoneData.filter(
-    (GemstoneData) => GemstoneData.customizeRequestId === customizeRequestId
-  );
-
-  console.log("RequestsCurrent Data:", RequestsCurrent);
-  console.log("GemstoneCurrent Data:", GemstoneCurrent);
-
-  // Kiểm tra nếu mảng RequestsCurrent có phần tử và `customerRequest` tồn tại
+  //chọn selectedOrder để lấy thông tin
   useEffect(() => {
-    if (RequestsCurrent.length > 0 && RequestsCurrent[0].customerRequest) {
-      const quotation = RequestsCurrent[0].customerRequest.quotation;
-      const percentage = (quotation * 0.3).toFixed(2);
-      const totalafter = (quotation - percentage).toFixed(2);
-
-      setTotal(totalafter);
-      setQuotation(quotation);
-      setPrice(percentage);
-      setQuotationPercentage(percentage);
-      console.log("Quotation 30%:", percentage);
-      const GT = RequestsCurrent[0].customerRequest.gold.goldType;
-      setgoldWeight(RequestsCurrent[0].customerRequest.goldWeight);
-      settype(RequestsCurrent[0].customerRequest.type);
-      setstyle(RequestsCurrent[0].customerRequest.style);
-      setsize(RequestsCurrent[0].customerRequest.size);
-      setquantity(RequestsCurrent[0].customerRequest.quantity);
-      setQuotationDes(RequestsCurrent[0].customerRequest.quotationDes);
-      setgoldType(GT);
-    } else {
-      console.log(
-        "No requests found with the given customizeRequestId or customerRequest is undefined."
-      );
-    }
-  }, [RequestsCurrent]);
-
-  const handleMethod = () => {
-    setShowMethodPopup(true);
-  };
-
-  const fetchOrder = async () => {
-    try {
-      const response = await axios.get("http://localhost:5266/api/Orders");
-      console.log("Response Data:", response.data); // Kiểm tra dữ liệu phản hồi
-      setOrderData(response.data);
-      setDataFetched(true); // Đánh dấu rằng dữ liệu đã được tải
-    } catch (error) {
-      console.error("Error fetching data:", error); // Kiểm tra lỗi
-      setError(error);
-    }
-  };
-
-  useEffect(() => {
-    if (dataFetched) {
-      const foundOrder = OrderData.find(
-        (order) =>
-          order.order.customizeRequest.customizeRequestId === customizeRequestId
-      );
-
-      if (foundOrder) {
-        console.log(`Found orderId: ${foundOrder.order.orderId}`);
-        setorderID(foundOrder.order.orderId);
+    if (OrderData.length > 0) {
+      const order = OrderData.find((order) => order.order.orderId === orderId);
+      if (order) {
+        setSelectedRequest(order);
       } else {
-        console.log("OrderId not found for the given CustomizerequestId.");
+        console.warn(`Order with ID ${orderId} not found.`);
       }
     }
-  }, [dataFetched, OrderData]);
-
-  const handleMethodChoose = (method) => {
-    setPaymentMethodId(method);
-  };
-
-  const approveRequest = async () => {
-    try {
-      const response = await axios.post(
-        `http://localhost:5266/api/CustomerRequests/approve/${customizeRequestId}`,
-        null,
-        {
-          params: {
-            paymentMethodId: paymentMethodId,
-          },
-        }
-      );
-      if (response) {
-        console.log("Response:", response.data);
-        alert("Choose payment successful!");
-      } else {
-        alert("Choose payment failed!");
-      }
-      // Handle success
-    } catch (error) {
-      console.error("Error approving request:", error);
-      // Handle error
-    }
-  };
-
-  const handleSubmitMethodChoose = () => {
-    approveRequest();
-    setShowMethodPopup(false);
-  };
-
-  const CashPayment = async (orderID) => {
-    try {
-      console.log("OrderID:", orderID);
-
-      const response = await axios.put(
-        "http://localhost:5266/api/Orders/change-status to PaymendPending",
-        null,
-        {
-          params: { orderID },
-        }
-      );
-      return response.data;
-    } catch (error) {
-      throw new Error(error.response ? error.response.data : error.message);
-    }
-  };
+  }, [OrderData, orderId]);
 
   useEffect(() => {
-    if (orderID && shouldCallCashPayment) {
-      CashPayment(orderID);
-      setShouldCallCashPayment(false);
-    }
-  }, [orderID, shouldCallCashPayment]);
+    console.log("selectedOrder Data:", selectedOrder);
+  }, [selectedOrder]);
 
-  useEffect(() => {
-    if (orderID && shouldCallVNPpayment) {
-      VNPpayment(price, orderID);
-      setShouldCallVNPpayment(false);
-    }
-  }, [price, orderID, shouldCallVNPpayment]);
-
-  const handleMethod001 = () => {
-    setcreateSuccessPopup(true);
-  };
-
+  //api VNpay
   const VNPpayment = async (price, orderID) => {
     try {
       // Kiểm tra giá trị của price và orderID
@@ -225,18 +87,52 @@ const CheckOutLast = () => {
     }
   };
 
-  const handleMethod002 = async () => {
-    await fetchOrder();
+  //thanh toan bang cash
+  const CashPayment = async (orderID) => {
+    try {
+      console.log("OrderID:", orderID);
+
+      const response = await axios.put(
+        "http://localhost:5266/api/Orders/change-status to Shipping",
+        null,
+        {
+          params: { orderID },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response ? error.response.data : error.message);
+    }
+  };
+
+  //Mở popup chọn method
+  const handleMethod = () => {
+    setShowMethodPopup(true);
+  };
+
+  //set Payment Method Id
+  const handleMethodChoose = (method) => {
+    setPaymentMethodId(method);
+  };
+
+  //Mở popup yes no cho Cash
+  const handleMethod001 = () => {
+    setcreateSuccessPopup(true);
+  };
+
+  //Chạy lại list order -> để dùng effect chạy api
+  const handleMethod002 = () => {
     setShouldCallVNPpayment(true);
     setShowMethodPopup(false);
   };
 
-  const CashStatus = async () => {
-    await fetchOrder();
+  //Chạy lại list order -> để dùng effect chạy api
+  const CashStatus = () => {
     setShouldCallCashPayment(true);
     setcreateSuccessPopup(false);
   };
 
+  //handle thay đổi theo method
   const handlePlaceOrder = () => {
     if (paymentMethodId === "P001") {
       handleMethod001();
@@ -247,9 +143,38 @@ const CheckOutLast = () => {
     }
   };
 
+  //Đóng submit vì ko cần chạy api method
   const closePopup = () => {
     setShowMethodPopup(false);
   };
+
+  // Effect để gọi API VNPpayment khi shouldCallVNPpayment thay đổi
+  useEffect(() => {
+    if (shouldCallVNPpayment) {
+      VNPpayment(selectedOrder.order.totalPrice, selectedOrder.order.orderId);
+      setShouldCallVNPpayment(false); // Đặt lại để không gọi lại API nữa
+    }
+  }, [shouldCallVNPpayment, selectedOrder]);
+
+  // Effect để gọi API CashPayment khi shouldCallCashPayment thay đổi
+  useEffect(() => {
+    const callCashPayment = async () => {
+      try {
+        if (shouldCallCashPayment && selectedOrder) {
+          await CashPayment(selectedOrder.order.orderId);
+          console.log("Cash payment success.");
+          // Thực hiện các xử lý cần thiết khi thanh toán bằng tiền mặt thành công
+        }
+      } catch (error) {
+        console.error("Error while processing cash payment:", error);
+        // Xử lý lỗi khi thanh toán bằng tiền mặt thất bại
+      } finally {
+        setShouldCallCashPayment(false); // Đặt lại để không gọi lại API nữa
+      }
+    };
+
+    callCashPayment();
+  }, [shouldCallCashPayment, selectedOrder]);
 
   return (
     <div className="checkout-page">
@@ -259,98 +184,73 @@ const CheckOutLast = () => {
       </div>
 
       <div className="order-summary">
-        <h2>Your Qotation Summary</h2>
-        <div className="order-total">
-          <div className="total-item">
-            <span>
-              <strong>Subtotal</strong>
-            </span>
-            <span>{quotation} đ</span>
-          </div>
-          <div className="shipping">
-            <span>
-              <strong>Deposit Amount</strong>
-            </span>
-            <span>{quotationPercentage} đ</span>
-          </div>
-          <hr className="divider" />
-          <div className="total-amount">
-            <span>
-              <strong>Total</strong>
-            </span>
-            <span>{total} ₫</span>
-          </div>
-          <hr className="divider" />
-        </div>
-
         <h2>Your Order Detail</h2>
         <div className="order-total">
           <div className="total-item">
             <span>
-              <strong>Customize Request ID</strong>
+              <strong>Order ID</strong>
             </span>
-            <span>{customizeRequestId}</span>
+            <span>{orderId}</span>
           </div>
           <hr className="divider" />
           <div className="shipping">
             <span>
-              <strong>Gold Type</strong>
+              <strong>Customer</strong>
             </span>
-            <span>{goldType}</span>
+            <span>
+              {selectedOrder
+                ? selectedOrder.order.customizeRequest.customer.name
+                : "N/A"}
+            </span>
           </div>
           <hr className="divider" />
           <div className="total-amount">
             <span>
-              <strong>Gold Weight</strong>
+              <strong>Sale Staff</strong>
             </span>
-            <span>{goldWeight} gram</span>
+            <span>
+              {selectedOrder
+                ? selectedOrder.order.customizeRequest.saleStaff.name
+                : "N/A"}
+            </span>
           </div>
           <hr className="divider" />
           <div className="total-amount">
             <span>
-              <strong>Type</strong>
+              <strong>Design Staff</strong>
             </span>
-            <span>{type}</span>
+            <span>
+              {selectedOrder ? selectedOrder.order.designStaff?.name : "N/A"}
+            </span>
           </div>
           <hr className="divider" />
           <div className="total-amount">
             <span>
-              <strong>Style</strong>
+              <strong>Production Staff</strong>
             </span>
-            <span>{style}</span>
+            <span>
+              {selectedOrder
+                ? selectedOrder.order.productionStaff?.name
+                : "N/A"}
+            </span>
           </div>
           <hr className="divider" />
           <div className="total-amount">
             <span>
-              <strong>Size</strong>
+              <strong>Total Price</strong>
             </span>
-            <span>size {size}</span>
+            <span>
+              {selectedOrder ? selectedOrder.order.totalPrice : "N/A"}
+            </span>
           </div>
           <hr className="divider" />
           <div className="total-amount">
             <span>
-              <strong>Quantity</strong>
+              <strong>Status</strong>
             </span>
-            <span>{quantity}</span>
-          </div>
-          <hr className="divider" />
-          <div className="total-amount">
-            <span>
-              <strong>Gemstones</strong>
-            </span>
-            <ul>
-              {GemstoneCurrent.map((gemstone) => (
-                <li key={gemstone.gemstoneId}>{gemstone.name}</li>
-              ))}
-            </ul>
+            <span>{selectedOrder ? selectedOrder.order.status : "N/A"}</span>
           </div>
         </div>
-
-        <textarea
-          name="notes"
-          value={quotationDes}
-          placeholder="Write any notes for your order, e.g., special delivery instructions."
-        />
         <div className="payment-method">
           <button className="payment-method-button" onClick={handleMethod}>
             <h4>Choose Payment Method</h4>
@@ -399,7 +299,7 @@ const CheckOutLast = () => {
               </table>
               <div className="popup_acction_close">
                 <div>
-                  <button onClick={handleSubmitMethodChoose}>Submit</button>
+                  <button onClick={closePopup}>Submit</button>
                 </div>
                 <div>
                   <button onClick={closePopup}>Close</button>
