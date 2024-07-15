@@ -38,7 +38,7 @@ function Navbar() {
                 onChange={handleCustomer}
                 defaultValue=""
               >
-                <option value="" disabled>
+                <option value="" disabled hidden>
                   Customize Request
                 </option>
                 <option value="/customer/customize">Ring</option>

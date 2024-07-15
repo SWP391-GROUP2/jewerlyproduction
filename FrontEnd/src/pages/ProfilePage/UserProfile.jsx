@@ -10,6 +10,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import ProfileSidebar from "../../components/ProfileSibar/ProfileSidebar";
 import { jwtDecode } from "jwt-decode";
+import Notify from "../../components/Alert/Alert";
 
 function UserProfile() {
   const [Name, setName] = useState("");
@@ -40,6 +41,7 @@ function UserProfile() {
   const [uploadedImage, setUploadedImage] = useState(null);
   const [showDetailPopup, setShowDetailPopup] = useState(false);
   const [hasFetchedDesigns, setHasFetchedDesigns] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState(null);
 
   const [DesignData, setDesignData] = useState([]);
 
@@ -215,7 +217,6 @@ setError(error);
       );
     }
   };
-  
 
   const handleUpdateProfile = (e) => {
     e.preventDefault();
@@ -237,7 +238,15 @@ setError(error);
   };
 
   const handleAvatarChange = (e) => {
-    setAvatar(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file) {
+      setAvatar(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatarPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const _3ddesigns = selectedItem && selectedItem.order
@@ -273,18 +282,24 @@ setError(error);
 
                 <div
                   className="user-profile-avatar-wrapper"
-                  onClick={() =>
-                    document.getElementById("avatar-upload").click()
-                  }
+                  onClick={() => document.getElementById("avatar-upload").click()}
                 >
-                  {Avatar ? (
+                  {avatarPreview ? (
                     <img
-                      src={Avatar}
-                      alt="Avatar"
+                      src={avatarPreview}
+                      alt="Avatar Preview"
                       className="user-profile-avatar"
                     />
                   ) : (
-                    <FaUserCircle className="user-profile-avatar-placeholder" />
+                    Avatar ? (
+                      <img
+                        src={Avatar}
+                        alt="Avatar"
+                        className="user-profile-avatar"
+                      />
+                    ) : (
+                      <FaUserCircle className="user-profile-avatar-placeholder" />
+                    )
                   )}
                   <input
                     type="file"
@@ -338,7 +353,7 @@ setError(error);
                   <MdDriveFileRenameOutline className="user-profile-icon" />
                 </div>
 
-                <button type="submit" className="btn-submit">
+                <button type="submit" className="btn-submit" onClick={() => Notify.success("Profile updated successfully")}>
                   Save Profile
                 </button>
 
