@@ -37,6 +37,11 @@ namespace JewelryProduction.Controllers
             }
             return await _orderService.RecordInspection(orderId, stage, inspectionDto);
         }
+        [HttpPut("updateStatus")]
+        public async Task<IActionResult> UpdateOrderStatus([FromQuery] string orderId, [FromQuery] string stage)
+        {
+            return await _orderService.UpdateFinalInspection(orderId, stage);
+        }
         [HttpGet("quality-checklist/{stage}")]
         public async Task<IActionResult> GetQualityChecklist(string stage)
         {

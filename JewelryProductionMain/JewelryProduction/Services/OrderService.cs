@@ -4,6 +4,7 @@ using JewelryProduction.DTO;
 using JewelryProduction.Entities;
 using JewelryProduction.Interface;
 using JewelryProduction.Repositories;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
@@ -81,7 +82,7 @@ namespace JewelryProduction.Services
                 var uniqueId = await IdGenerator.GenerateUniqueId<Inspection>(_context, "I", 4);
                 inspection = new Inspection { InspectionId = uniqueId, OrderId = orderId, Stage = stage, InspectionDate = DateTime.Now, ProductStaffId = order.ProductionStaffId };
                 await _inspectionrepository.AddAsync(inspection);
-                _inspectionrepository.SaveChangesAsync();
+                await _inspectionrepository.SaveChangesAsync();
             }
 
             inspection.Result = inspectionDto.Result;
@@ -91,15 +92,31 @@ namespace JewelryProduction.Services
             {
                 return new OkObjectResult("Inspection recorded and sent to the manager.");
             }
+            await _repository.SaveChangesAsync();
 
-            if (stage == "Final Inspection" && inspection.Result == true)
+            return new OkObjectResult("Inspection recorded successfully");
+        }
+        public async Task<IActionResult> UpdateFinalInspection(string orderId, string stage)
+        {
+            var order = await _repository.GetOrderByIdAsync(orderId);
+            if (order == null)
+            { 
+                return new NotFoundObjectResult("Order not found");
+            }
+
+            var inspection = await _repository.GetInspectionAsync(orderId, stage);
+            if (inspection.Stage == "Final Inspection" && inspection.Result == true && order.Status == "In Production")
             {
                 order.Status = "Choosing Payment";
+            }
+            else
+            {
+                return new NotFoundObjectResult("The inspection is not complete or you have already update status");
             }
 
             await _repository.SaveChangesAsync();
 
-            return new OkObjectResult("Inspection recorded successfully");
+            return new OkObjectResult("Order status update successfully");
         }
         public async Task<OrderStatDTO> GetOrderStats(DateTime? startDate, DateTime? endDate, string groupBy)
         {
