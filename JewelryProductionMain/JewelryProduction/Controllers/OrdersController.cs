@@ -229,7 +229,7 @@ namespace JewelryProduction.Controllers
             var order = await _orderService.GetOrder(orderID);
             order.Order.Address = address;
             order.Order.Status = "Done";
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return Ok();
         }
 
@@ -239,7 +239,7 @@ namespace JewelryProduction.Controllers
         {
             var order = await _orderService.GetOrder(orderID);
             order.Order.Status = "Shipping";
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return Ok("Status has changed");
         }
 
