@@ -61,7 +61,7 @@ const routes = [
   },
   {
     path: "/customer/checkoutlast/:orderId",
-    element: <CheckOutPage />,
+    element: <CheckOutLast />,
   },
 
   // Admin Routes

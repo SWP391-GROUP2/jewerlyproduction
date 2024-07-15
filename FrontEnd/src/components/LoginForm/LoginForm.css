@@ -132,3 +132,7 @@
 .home-button:hover {
   color: #007bff;
 }
+.error-message {
+  color: red;
+  margin-top: 10px;
+}

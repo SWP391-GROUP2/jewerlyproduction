@@ -58,7 +58,7 @@ function CallBack() {
               <span>
                 <strong>OrderId</strong>
               </span>
-              <span>{response.orderId}</span>
+              <span>{response.orderDescription}</span>
             </div>
             <hr className="divider" />
             <div className="total-amount">
@@ -78,7 +78,7 @@ function CallBack() {
             <strong>Order Description </strong>
             <textarea
               name="notes"
-              value={response.orderDescription}
+              value={response.orderId}
               placeholder="Write any notes for your order, e.g., special delivery instructions."
               readOnly
             />

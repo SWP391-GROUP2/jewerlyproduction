@@ -157,6 +157,8 @@ namespace JewelryProduction.Repositories
                                              Shape = grouped.Key.Shape,
                                              Size = grouped.Key.Size,
                                              CaratWeight = grouped.Key.CaratWeight,
+                                             TotalCaratWeight = grouped.Sum(g => g.CaratWeight),
+                                             GemstoneCount = grouped.Count()
                                          }).ToListAsync();
 
             return gemstoneWeights;

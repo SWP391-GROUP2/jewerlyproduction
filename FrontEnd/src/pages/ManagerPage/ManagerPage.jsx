@@ -86,14 +86,6 @@ function ManagerPage() {
   }, []);
 
   useEffect(() => {
-    if (!hasFetchedOrders && (fetchDataFlag || OrderData.length === 0)) {
-      fetchOrder();
-      setFetchDataFlag(false);
-      setHasFetchedOrders(true);
-    }
-  }, [fetchDataFlag, OrderData]);
-
-  useEffect(() => {
     const fetchSaleStaff = async () => {
       try {
         const response = await axios.get(
