@@ -8,5 +8,7 @@
         public string Shape { get; set; }
         public double? Size { get; set; }
         public double CaratWeight { get; set; }
+        public double TotalCaratWeight { get; set; }
+        public int GemstoneCount { get; set; }
     }
 }

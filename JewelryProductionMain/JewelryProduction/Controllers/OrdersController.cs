@@ -189,28 +189,6 @@ namespace JewelryProduction.Controllers
 
             return Ok(new { order.OrderId, order.Status });
         }
-        [HttpGet("CalculateGoldWeightUsedInMonth")]
-        public async Task<IActionResult> CalculateGoldWeightUsedInMonth([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
-        {
-            if (startDate > endDate)
-            {
-                return BadRequest("Start date cannot be later than end date.");
-            }
-
-            var totalGoldWeight = await _orderService.CalculateGoldWeightByTypeInMonth(startDate, endDate);
-            return Ok(totalGoldWeight);
-        }
-        [HttpGet("CalculateGemstoneWeightUsedInMonth")]
-        public async Task<IActionResult> CalculateGemstoneWeightInMonth([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
-        {
-            if (startDate > endDate)
-            {
-                return BadRequest("Start date cannot be later than end date.");
-            }
-
-            var GemWeight = await _orderService.CalculateGemstoneWeightInMonth(startDate, endDate);
-            return Ok(GemWeight);
-        }
         private decimal GetDeposit(decimal productCost)
         {
             decimal deposit = productCost * 0.3M;
@@ -251,7 +229,7 @@ namespace JewelryProduction.Controllers
             var order = await _orderService.GetOrder(orderID);
             order.Order.Address = address;
             order.Order.Status = "Done";
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return Ok();
         }
 
@@ -261,7 +239,7 @@ namespace JewelryProduction.Controllers
         {
             var order = await _orderService.GetOrder(orderID);
             order.Order.Status = "Shipping";
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return Ok("Status has changed");
         }
 

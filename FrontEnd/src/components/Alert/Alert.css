@@ -1,0 +1,39 @@
+.alert {
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Center items vertically */
+    padding: 20px 25px;
+    margin: 10px;
+    border-radius: 5px;
+    color: white;
+    position: fixed;
+    top: 20px; /* Position from the top */
+    right: 20px;
+    transition: opacity 0.5s;
+    font-size: large;
+    z-index: 1;
+}
+
+.success {
+    background-color: rgb(61, 197, 61);
+}
+
+.fail {
+    background-color: red;
+}
+
+.warning {
+    background-color: orange;
+}
+
+.info {
+    background-color: blue;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    margin-left: 20px;
+    cursor: pointer;
+}
