@@ -32,8 +32,6 @@ namespace JewelryProduction.Controllers
                 var userId = _orderService.GetManagerIdByOrderId(orderId);
                 var senderId = GetCurrentUserId();
                 await _notificationService.SendNotificationToUserfAsync(userId, senderId, inspectionDto.Comment);
-
-                return new OkObjectResult("Inspection recorded and sent to the manager.");
             }
             return await _orderService.RecordInspection(orderId, stage, inspectionDto);
         }

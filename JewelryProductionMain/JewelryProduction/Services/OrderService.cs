@@ -73,7 +73,7 @@ namespace JewelryProduction.Services
             var order = await _repository.GetOrderByIdAsync(orderId);
             if (order == null)
             {
-                return new NotFoundObjectResult("Order not found");
+                throw new KeyNotFoundException("Order not found");
             }
 
             var inspection = await _repository.GetInspectionAsync(orderId, stage);
@@ -87,13 +87,16 @@ namespace JewelryProduction.Services
 
             inspection.Result = inspectionDto.Result;
             inspection.Comment = inspectionDto.Comment;
-
+            if (!inspection.Result.HasValue)
+            {
+                throw new InvalidOperationException("Inspection result cannot be null");
+            }
+            _inspectionrepository.Update(inspection);
+            await _repository.SaveChangesAsync();
             if (inspection.Result == false)
             {
                 return new OkObjectResult("Inspection recorded and sent to the manager.");
             }
-            await _repository.SaveChangesAsync();
-
             return new OkObjectResult("Inspection recorded successfully");
         }
         public async Task<IActionResult> UpdateFinalInspection(string orderId, string stage)
