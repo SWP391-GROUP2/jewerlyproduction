@@ -4,7 +4,7 @@ import Navbar from "../../components/Navbar/navbar";
 import Footer from "../../components/Footer/Footer";
 import "../CheckOutPage/CheckOutPage.css";
 import axios from "axios";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const CheckOutLast = () => {
   const { orderId } = useParams();

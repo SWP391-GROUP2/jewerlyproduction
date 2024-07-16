@@ -15,7 +15,7 @@ function CustomizePage() {
           src={
             "https://file.hstatic.net/200000103143/file/1640_x_250_1_92795b1e4d2148c399d851f7dce7c7b7.gif"
           }
-          alt=""
+          alt="head"
           className="l1"
         />
       </div>
