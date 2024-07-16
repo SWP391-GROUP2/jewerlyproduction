@@ -6,7 +6,7 @@ export class DetailsThumb extends Component {
     return (
       <div className="thumb" ref={myRef}>
         {images.map((img, index) => (
-          <img src={img} alt="" key={index} onClick={() => tab(index)} />
+          <img src={img} alt="img1" key={index} onClick={() => tab(index)} />
         ))}
       </div>
     );

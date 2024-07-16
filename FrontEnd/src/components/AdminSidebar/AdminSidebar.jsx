@@ -1,20 +1,11 @@
 import React from "react";
-import {
-  BsGrid1X2Fill,
-  BsFillArchiveFill,
-  BsFillGrid3X3GapFill,
-  BsPeopleFill,
-} from "react-icons/bs";
+import { BsGrid1X2Fill } from "react-icons/bs";
 import "./AdminSidebar.css"; // Thay đổi tên file CSS
 
 import avatarImage from "../../components/Assets/icon-128x128.png";
 import logoImage from "../../components/Assets/Logoqueen.png";
 
-function AdminSidebar({
-  openSidebarToggle,
-  OpenSidebar,
-  handleViewChange,
-}) {
+function AdminSidebar({ openSidebarToggle, OpenSidebar, handleViewChange }) {
   const userName = "USER NAME";
   const userRole = "Admin"; // Thay đổi tên role nếu cần
 
@@ -27,11 +18,7 @@ function AdminSidebar({
         <div className="admin-logo-container">
           <img src={logoImage} alt="Logo" className="admin-logo-image" />
         </div>
-        <img
-          src={avatarImage}
-          alt="Avatar"
-          className="admin-avatar-image"
-        />
+        <img src={avatarImage} alt="Avatar" className="admin-avatar-image" />
         <div className="admin-user-details">
           <p className="admin-user-name">{userName}</p>
           <p className="admin-user-role">{userRole}</p>
@@ -55,19 +42,19 @@ function AdminSidebar({
             <BsGrid1X2Fill className="admin-icon" /> Product Sample List
           </button>
         </li>
-        
+
         <li className="admin-sidebar-list-item">
-        
-          <button className="admin-sidebar-button"
-           onClick={() => handleViewChange('createaccount')}
+          <button
+            className="admin-sidebar-button"
+            onClick={() => handleViewChange("createaccount")}
           >
             <BsGrid1X2Fill className="admin-icon" /> Create Account
           </button>
         </li>
         <li className="admin-sidebar-list-item">
-        
-          <button className="admin-sidebar-button"
-           onClick={() => handleViewChange('searchaccount')}
+          <button
+            className="admin-sidebar-button"
+            onClick={() => handleViewChange("searchaccount")}
           >
             <BsGrid1X2Fill className="admin-icon" /> Search Account
           </button>
