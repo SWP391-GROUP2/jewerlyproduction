@@ -51,5 +51,27 @@ namespace JewelryProduction.Controllers
             var orderComparison = await _orderService.CompareOrderStats(year);
             return Ok(orderComparison);
         }
+        [HttpGet("CalculateGoldWeightUsedInMonth")]
+        public async Task<IActionResult> CalculateGoldWeightUsedInMonth([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+        {
+            if (startDate > endDate)
+            {
+                return BadRequest("Start date cannot be later than end date.");
+            }
+
+            var totalGoldWeight = await _orderService.CalculateGoldWeightByTypeInMonth(startDate, endDate);
+            return Ok(totalGoldWeight);
+        }
+        [HttpGet("CalculateGemstoneWeightUsedInMonth")]
+        public async Task<IActionResult> CalculateGemstoneWeightInMonth([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+        {
+            if (startDate > endDate)
+            {
+                return BadRequest("Start date cannot be later than end date.");
+            }
+
+            var GemWeight = await _orderService.CalculateGemstoneWeightInMonth(startDate, endDate);
+            return Ok(GemWeight);
+        }
     }
 }

@@ -4,12 +4,11 @@ import Navbar from "../../components/Navbar/navbar";
 import Footer from "../../components/Footer/Footer";
 import "./CheckOutPage.css";
 import axios from "axios";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const CheckOutPage = () => {
   const { customizeRequestId } = useParams();
   const [RequestData, setRequestData] = useState([]);
-  const [error, setError] = useState(null);
   const [quotationPercentage, setQuotationPercentage] = useState(0);
   const [quotation, setQuotation] = useState(0);
   const [total, setTotal] = useState(0);
@@ -45,7 +44,6 @@ const CheckOutPage = () => {
       setRequestData(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
-      setError(error);
     }
   };
 
@@ -56,7 +54,6 @@ const CheckOutPage = () => {
       setGemstoneData(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
-      setError(error);
     }
   };
 
@@ -116,7 +113,6 @@ const CheckOutPage = () => {
       setDataFetched(true); // Đánh dấu rằng dữ liệu đã được tải
     } catch (error) {
       console.error("Error fetching data:", error); // Kiểm tra lỗi
-      setError(error);
     }
   };
 
