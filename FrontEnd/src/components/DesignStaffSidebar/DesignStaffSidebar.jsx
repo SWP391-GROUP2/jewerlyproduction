@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  BsGrid1X2Fill,
-  BsFillArchiveFill,
-  BsFillGrid3X3GapFill,
-  BsPeopleFill,
-} from "react-icons/bs";
+import { BsGrid1X2Fill } from "react-icons/bs";
 import "./DesignStaffSidebar.css"; // Import file CSS
 
 import avatarImage from "../../components/Assets/icon-128x128.png"; // Adjust the path as per your actual folder structure
