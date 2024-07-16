@@ -200,8 +200,6 @@ const CheckOutPage = () => {
     }
   }, [price, orderID, shouldCallVNPpayment]);
 
-  
-
   const handleMethod001 = () => {
     setcreateSuccessPopup(true);
   };
@@ -253,7 +251,6 @@ const CheckOutPage = () => {
     setShouldCallCashPayment(true);
     setcreateSuccessPopup(false);
   };
-
 
   const handlePlaceOrder = () => {
     if (paymentMethodId === "P001") {

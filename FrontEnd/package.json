@@ -54,5 +54,10 @@
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "axios": "axios/dist/node/axios.cjs"
+    }
   }
 }

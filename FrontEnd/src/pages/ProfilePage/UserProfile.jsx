@@ -10,6 +10,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import ProfileSidebar from "../../components/ProfileSibar/ProfileSidebar";
 import { jwtDecode } from "jwt-decode";
+import Notify from "../../components/Alert/Alert";
 
 function UserProfile() {
   const [Name, setName] = useState("");
@@ -40,6 +41,7 @@ function UserProfile() {
   const [uploadedImage, setUploadedImage] = useState(null);
   const [showDetailPopup, setShowDetailPopup] = useState(false);
   const [hasFetchedDesigns, setHasFetchedDesigns] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState(null);
 
   const [DesignData, setDesignData] = useState([]);
 
@@ -62,6 +64,9 @@ function UserProfile() {
 
   const navigateToProductDetail = (customizeRequestId) => {
     navigate(`/customer/checkoutpage/${customizeRequestId}`); // Chuyển hướng đến trang chi tiết sản phẩm
+  };
+  const navigateToOrdeDetail = (orderId) => {
+    navigate(`/customer/checkoutlast/${orderId}`); // Chuyển hướng đến trang chi tiết sản phẩm
   };
 
   const handleRejectClick = (index) => {
@@ -99,7 +104,11 @@ function UserProfile() {
     }
   };
   function chunkArray(array, size) {
-    return array.reduce((acc, _, index) => index % size ? acc : [...acc, array.slice(index, index + size)], []);
+    return array.reduce(
+      (acc, _, index) =>
+        index % size ? acc : [...acc, array.slice(index, index + size)],
+      []
+    );
   }
 
   useEffect(() => {
@@ -155,7 +164,7 @@ function UserProfile() {
       setDesignData(response.data);
     } catch (error) {
       console.error("Error fetching data:", error); // Kiểm tra lỗi
-setError(error);
+      setError(error);
     } finally {
       setLoading(false);
     }
@@ -215,7 +224,6 @@ setError(error);
       );
     }
   };
-  
 
   const handleUpdateProfile = (e) => {
     e.preventDefault();
@@ -237,12 +245,23 @@ setError(error);
   };
 
   const handleAvatarChange = (e) => {
-    setAvatar(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file) {
+      setAvatar(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatarPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
-  const _3ddesigns = selectedItem && selectedItem.order
-  ? DesignData.filter((design) => design.orderId === selectedItem.order.orderId)
-  : [];
+  const _3ddesigns =
+    selectedItem && selectedItem.order
+      ? DesignData.filter(
+          (design) => design.orderId === selectedItem.order.orderId
+        )
+      : [];
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -273,18 +292,24 @@ setError(error);
 
                 <div
                   className="user-profile-avatar-wrapper"
-                  onClick={() =>
-                    document.getElementById("avatar-upload").click()
-                  }
+                  onClick={() => document.getElementById("avatar-upload").click()}
                 >
-                  {Avatar ? (
+                  {avatarPreview ? (
                     <img
-                      src={Avatar}
-                      alt="Avatar"
+                      src={avatarPreview}
+                      alt="Avatar Preview"
                       className="user-profile-avatar"
                     />
                   ) : (
-                    <FaUserCircle className="user-profile-avatar-placeholder" />
+                    Avatar ? (
+                      <img
+                        src={Avatar}
+                        alt="Avatar"
+                        className="user-profile-avatar"
+                      />
+                    ) : (
+                      <FaUserCircle className="user-profile-avatar-placeholder" />
+                    )
                   )}
                   <input
                     type="file"
@@ -338,7 +363,7 @@ setError(error);
                   <MdDriveFileRenameOutline className="user-profile-icon" />
                 </div>
 
-                <button type="submit" className="btn-submit">
+                <button type="submit" className="btn-submit" onClick={() => Notify.success("Profile updated successfully")}>
                   Save Profile
                 </button>
 
@@ -361,7 +386,6 @@ setError(error);
                     <th>Sales Staff Name</th>
                     <th>Quotation</th>
                     <th>Status</th>
-                    <th></th>
                     <th></th>
                   </tr>
                 </thead>
@@ -405,6 +429,22 @@ setError(error);
                             </button>
                           </td>
                         </>
+                      ) : row.customerRequest.status === "Request Approved" ? (
+                        <>
+                          <td>
+                            <button
+                              className="detail-button-s"
+                              onClick={(e) => {
+                                e.stopPropagation(); // Ngăn chặn sự kiện click hàng
+                                navigateToProductDetail(
+                                  row.customerRequest.customizeRequestId
+                                );
+                              }}
+                            >
+                              Continue Paying
+                            </button>
+                          </td>
+                        </>
                       ) : (
                         <>
                           <td></td>
@@ -420,36 +460,72 @@ setError(error);
 
           {currentView === "order" && (
             <div className="designstaff-table-container">
-                <h2 className="designstaff-table-title">Order List</h2>
-                <table className="designstaff-table">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Customer</th>
-                      <th>Sales Staff</th>
-                      <th>Design Staff</th> 
-                      <th>Production Staff</th>
-                      <th>Price</th>
-                      <th>Status</th> 
-                      
+              <h2 className="designstaff-table-title">Order List</h2>
+              <table className="designstaff-table">
+                <thead>
+                  <tr
+                    style={{
+                      backgroundColor: "#f2f2f2",
+                      color: "#333",
+                      borderBottom: "1px solid #ddd",
+                      textAlign: "left",
+                    }}
+                  >
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Sales Staff</th>
+                    <th>Design Staff</th>
+                    <th>Production Staff</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th>Approve</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {OrderOfCustomer.map((item) => (
+                    <tr
+                      key={item.order.orderId}
+                      onClick={() => showDetail(item)}
+                    >
+                      <td>{item.order.orderId}</td>
+                      <td>{item.order.customizeRequest.customer.name}</td>
+                      <td>
+                        {item.order.customizeRequest.saleStaff?.name ?? "N/A"}
+                      </td>
+                      <td>{item.order.designStaff?.name ?? "N/A"}</td>
+                      <td>{item.order.productionStaff?.name ?? "N/A"}</td>
+                      <td>{item.order.totalPrice}</td>
+                      <td>
+                        {item.order.designStaff || item.order.productionStaff
+                          ? item.order.status
+                          : "In Process"}
+                      </td>
+                      {item.order.status === "Choosing Payment" &&
+                      item.order.designStaff &&
+                      item.order.productionStaff ? (
+                        <>
+                          <td>
+                            <button
+                              className="detail-button-s"
+                              onClick={(e) => {
+                                e.stopPropagation(); // Ngăn chặn sự kiện click hàng
+                                navigateToOrdeDetail(item.order.orderId);
+                              }}
+                            >
+                              Approve
+                            </button>
+                          </td>
+                        </>
+                      ) : (
+                        <>
+                          <td></td>
+                        </>
+                      )}
                     </tr>
-                  </thead>
-                  <tbody>
-                    {OrderOfCustomer.map((item) => (
-                      <tr key={item.order.orderId} onClick={() => showDetail(item)}>
-                        <td>{item.order.orderId}</td>
-                        <td>{item.order.customizeRequest.customer.name}</td>
-                        <td>{item.order.customizeRequest.saleStaff?.name ?? 'N/A'}</td>
-                        <td>{item.order.designStaff?.name ?? 'N/A'}</td>
-                        <td>{item.order.productionStaff?.name ?? 'N/A'}</td>
-                        <td>{item.order.totalPrice}</td>
-                        <td>{item.order.status}</td>
-                        
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
         {ApprovePopupOpen && (
@@ -566,93 +642,115 @@ setError(error);
           </div>
         )}
         {showDetailPopup && (
-        <div className="designstaff-detail-popup">
-          <div className="designstaff-detail-popup-content1">
-          <div className="designstaff-detail-popup-content2">
-<h2>Detail Popup</h2>
-  <div className="designstaff-tables-container">
-    <table className="designstaff-detail-table1">
-      <tbody>
-        <tr>
-          <td>ID</td>
-          <td>{selectedItem.order.orderId}</td>
-        </tr>
-        <tr>
-          <td>Gold</td>
-          <td>{selectedItem.order.customizeRequest.gold.goldType}</td>
-        </tr>
-        <tr>
-          <td>Gold Weight</td>
-          <td>{selectedItem.order.customizeRequest.goldWeight}</td>
-        </tr>
-        <tr>
-          <td>Customer</td>
-          <td>{selectedItem.order.customizeRequest.customer.name}</td>
-        </tr>
-        <tr>
-          <td>Sales</td>
-          <td>{selectedItem.order.customizeRequest.saleStaff?.name ?? 'N/A'}</td>
-        </tr>
-        <tr>
-          <td>Designer</td>
-          <td>{selectedItem.order.designStaff?.name ?? 'N/A'}</td>
-        </tr>
-        <tr>
-          <td>Production</td>
-          <td>{selectedItem.order.productionStaff?.name ?? 'N/A'}</td>
-        </tr>
-        <tr>
-          <td>Manager</td>
-          <td>{selectedItem.order.customizeRequest.manager?.name ?? 'N/A'}</td>
-        </tr>
-        <tr>
-          <td>Type</td>
-          <td>{selectedItem.order.customizeRequest.type}</td>
-        </tr>
-        <tr>
-          <td>Style</td>
-          <td>{selectedItem.order.customizeRequest.style}</td>
-        </tr>
-        <tr>
-          <td>Size</td>
-          <td>{selectedItem.order.customizeRequest.size}</td>
-        </tr>
-        
-        {uploadedImage && (
-          <tr>
-            <td colSpan="2">
-              <img src={uploadedImage} alt="Uploaded Preview" className="uploaded-image-preview" />
-            </td>
-          </tr>
+          <div className="designstaff-detail-popup">
+            <div className="designstaff-detail-popup-content1">
+              <div className="designstaff-detail-popup-content2">
+                <h2>Detail Popup</h2>
+                <div className="designstaff-tables-container">
+                  <table className="designstaff-detail-table1">
+                    <tbody>
+                      <tr>
+                        <strong>ID :</strong>
+                        <td>{selectedItem.order.orderId}</td>
+                      </tr>
+                      <tr>
+                        <strong>Gold :</strong>
+                        <td>
+                          {selectedItem.order.customizeRequest.gold.goldType}
+                        </td>
+                      </tr>
+                      <tr>
+                        <strong>Gold Weight :</strong>
+                        <td>
+                          {selectedItem.order.customizeRequest.goldWeight}
+                        </td>
+                      </tr>
+                      <tr>
+                        <strong>Customer :</strong>
+                        <td>
+                          {selectedItem.order.customizeRequest.customer.name}
+                        </td>
+                      </tr>
+                      <tr>
+                        <strong>Sales :</strong>
+                        <td>
+                          {selectedItem.order.customizeRequest.saleStaff
+                            ?.name ?? "N/A"}
+                        </td>
+                      </tr>
+                      <tr>
+                        <strong>Designer :</strong>
+                        <td>{selectedItem.order.designStaff?.name ?? "N/A"}</td>
+                      </tr>
+                      <tr>
+                        <strong>Production :</strong>
+                        <td>
+                          {selectedItem.order.productionStaff?.name ?? "N/A"}
+                        </td>
+                      </tr>
+                      <tr>
+                        <strong>Manager :</strong>
+                        <td>
+                          {selectedItem.order.customizeRequest.manager?.name ??
+                            "N/A"}
+                        </td>
+                      </tr>
+                      <tr>
+                        <strong>Type :</strong>
+                        <td>{selectedItem.order.customizeRequest.type}</td>
+                      </tr>
+                      <tr>
+                        <strong>Style :</strong>
+                        <td>{selectedItem.order.customizeRequest.style}</td>
+                      </tr>
+                      <tr>
+                        <strong>Size :</strong>
+                        <td>{selectedItem.order.customizeRequest.size}</td>
+                      </tr>
+
+                      {uploadedImage && (
+                        <tr>
+                          <td colSpan="2">
+                            <img
+                              src={uploadedImage}
+                              alt="Uploaded Preview"
+                              className="uploaded-image-preview"
+                            />
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+
+                  <table className="designstaff-detail-table2">
+                    <tbody className="_3dDesign">
+                      {chunkArray(_3ddesigns, 2).map((row, rowIndex) => (
+                        <tr key={rowIndex}>
+                          {row.map((_3ddesign) => (
+                            <td
+                              key={_3ddesign._3dDesignId}
+                              className="ImageTable"
+                            >
+                              <img src={_3ddesign.image} alt="image" />
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div>
+                  <button
+                    className="designstaff-close-button"
+                    onClick={hideDetail}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
-      </tbody>
-    </table>
-
-    <table className="designstaff-detail-table2">
-  <tbody className="_3dDesign">
-    {chunkArray(_3ddesigns, 2).map((row, rowIndex) => (
-      <tr key={rowIndex}>
-        {row.map(_3ddesign => (
-          <td key={_3ddesign._3dDesignId} className="ImageTable">
-            <img src={_3ddesign.image} alt="image" />
-            
-          </td>
-        ))}
-      </tr>
-    ))}
-  </tbody>
-</table>
-  </div>
-  <div>
-    <button className="designstaff-close-button" onClick={hideDetail}>Close</button>
-    
-  </div>
-</div>
-
-</div>
-
-        </div>
-      )}
       </div>
     </>
   );

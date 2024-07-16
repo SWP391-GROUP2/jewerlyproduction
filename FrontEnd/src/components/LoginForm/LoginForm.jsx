@@ -28,13 +28,19 @@ function LoginForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const [error, setError] = useState(""); // Error state
+
+  const handleLogin = async (e) => {
     e.preventDefault();
     const newUser = {
       email: email,
       password: password,
     };
-    loginUser(newUser, dispatch, navigate);
+    try {
+      await loginUser(newUser, dispatch, navigate);
+    } catch (err) {
+      setError("Account does not exist or login failed"); // Set error message
+    }
   };
 
   const onGoogleSuccess = (response) => {
@@ -91,7 +97,8 @@ function LoginForm() {
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
-
+            {error && <div className="error-message">{error}</div>}{" "}
+            {/* Display error message */}
             <div className="remember-forgot">
               <label>
                 <label></label>
@@ -118,7 +125,6 @@ function LoginForm() {
                 </button>
               )}
             />
-
             <div className="register-link">
               <p>
                 Have you got any account ? <Link to="/register">Register</Link>
