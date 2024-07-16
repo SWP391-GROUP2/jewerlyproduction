@@ -1,4 +1,5 @@
-﻿using Google.Apis.Auth;
+﻿using Firebase.Auth.Requests;
+using Google.Apis.Auth;
 using JewelryProduction.DTO.Account;
 using JewelryProduction.Interface;
 using Microsoft.AspNetCore.Http;
@@ -66,7 +67,7 @@ namespace JewelryProduction.Controllers
         }
 
         [HttpPost("google-setPassword")]
-        public async Task<IActionResult> GoogleSetPassword([FromBody] SetPasswordDTO setPasswordDTO, [FromHeader(Name = "Authorization")] string authorizationHeader)
+        public async Task<IActionResult> GoogleSetPassword([FromBody] SetPasswordDTO2 setPasswordDTO, [FromHeader(Name = "Authorization")] string authorizationHeader)
         {
             if (string.IsNullOrEmpty(authorizationHeader) || !authorizationHeader.StartsWith("Bearer "))
             {
@@ -116,7 +117,22 @@ namespace JewelryProduction.Controllers
                 return BadRequest("Failed to set password");
             }
 
-            return Ok("Password set successfully");
+            var refreshToken = _tokenService.CreateRefreshToken();
+            await _userManager.SetAuthenticationTokenAsync(user, "JewelryProduction", "RefreshToken", refreshToken);
+
+            return Ok(new NewUserDTO
+            {
+                Email = email,
+                isPasswordSet = true,
+                Token = await _tokenService.CreateAccessToken(user),
+                RefreshToken = refreshToken
+            });
+        }
+
+        public class SetPasswordDTO2
+        {
+            public string Password { get; set; }
+            public string ConfirmPassword { get; set; }
         }
 
     }

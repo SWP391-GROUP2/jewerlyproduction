@@ -38,7 +38,7 @@ function Navbar() {
                 onChange={handleCustomer}
                 defaultValue=""
               >
-                <option value="" disabled>
+                <option value="" disabled hidden>
                   Customize Request
                 </option>
                 <option value="/customer/customize">Ring</option>
@@ -72,7 +72,7 @@ function Navbar() {
       )}
       <div className="search-box">
         <input type="text" placeholder="Search" />
-        <img src={search_icon} alt="" />
+        <img src={search_icon} alt="search" />
       </div>
     </div>
   );

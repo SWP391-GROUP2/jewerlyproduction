@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  BsGrid1X2Fill,
-  BsFillArchiveFill,
-  BsFillGrid3X3GapFill,
-  BsPeopleFill,
-} from "react-icons/bs";
+import { BsGrid1X2Fill } from "react-icons/bs";
 import "./ProductionStaffSidebar.css"; // Import file CSS
 
 import avatarImage from "../../components/Assets/icon-128x128.png"; // Adjust the path as per your actual folder structure
@@ -25,7 +20,11 @@ function ProductionStaffSidebar({
     >
       <div className="productionstaff-sidebar-avatar">
         <div className="productionstaff-logo-container">
-          <img src={logoImage} alt="Logo" className="productionstaff-logo-image" />
+          <img
+            src={logoImage}
+            alt="Logo"
+            className="productionstaff-logo-image"
+          />
         </div>
         <img
           src={avatarImage}
@@ -52,7 +51,8 @@ function ProductionStaffSidebar({
             className="salestaff-sidebar-button"
             onClick={() => handleViewChange("orderlist")}
           >
-            <BsGrid1X2Fill className="productionstaff-icon" /> Product Sample List
+            <BsGrid1X2Fill className="productionstaff-icon" /> Product Sample
+            List
           </button>
         </li>
       </ul>

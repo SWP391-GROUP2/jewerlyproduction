@@ -11,6 +11,7 @@ namespace JewelryProduction.Interface
         Task<OrderComparisonDTO> CompareOrderStats(int year);
         Task<List<Order>> SearchOrders(string searchTerm);
         Task<IActionResult> RecordInspection(string orderId, string stage, InspectionDTO inspectionDto);
+        Task<IActionResult> UpdateFinalInspection(string orderId, string stage);
         Task<List<Order>> GetOrdersByYearSortedByPrice(int year);
         Task<PagedResult<Order>> GetAllPaging(OrderPagingRequest request);
         Task<Dictionary<string, double>> CalculateGoldWeightByTypeInMonth(DateTime startDate, DateTime endDate);
