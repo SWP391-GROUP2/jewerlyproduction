@@ -217,7 +217,7 @@ namespace JewelryProduction.Services
         {
             return _repository.GetManagerIdByOrderId(orderId);
         }
-        public async Task<List<OrderGetDTO>> GetOrders()
+        public async Task<List<GetAllOrdersDTO>> GetOrders()
         {
             return await _repository.GetOrders();
         }

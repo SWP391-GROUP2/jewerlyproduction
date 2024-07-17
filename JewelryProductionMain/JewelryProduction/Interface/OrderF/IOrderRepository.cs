@@ -10,7 +10,7 @@ namespace JewelryProduction.Interface
         Task<List<Order>> SearchOrders(string searchTerm);
         Task<Order> GetOrderByIdAsync(string orderId);
         Task<Inspection> GetInspectionAsync(string orderId, string stage);
-        Task<List<OrderGetDTO>> GetOrders();
+        Task<List<GetAllOrdersDTO>> GetOrders();
         Task<OrderGetDTO> GetOrder(string id);
         Order GetOrderOnly(string id);
         Task<Dictionary<string, double>> CalculateGoldWeightByTypeInMonthAsync(DateTime startDate, DateTime endDate);
