@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  BsGrid1X2Fill,
-  BsFillArchiveFill,
-  BsFillGrid3X3GapFill,
-  BsPeopleFill,
-} from "react-icons/bs";
+import { BsGrid1X2Fill, BsFillArchiveFill } from "react-icons/bs";
 import "./SaleStaffSidebar.css";
 import avatarImage from "../../components/Assets/icon-128x128.png";
 import logoImage from "../../components/Assets/Logoqueen.png";

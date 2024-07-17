@@ -5,7 +5,7 @@ namespace JewelryProduction.Interface
     public interface IVnPayService
     {
         public Task<string> CreatePaymentUrl(HttpContext context, double price, string orderID);
-        VnPaymentResponseModel PaymentExecute(IQueryCollection collection);
-        VnPaymentResponseModel PaymentExecuteV2(IQueryCollection collection);
+        Task<VnPaymentResponseModel> PaymentExecute(IQueryCollection collection);
+        //VnPaymentResponseModel PaymentExecuteV2(IQueryCollection collection);
     }
 }

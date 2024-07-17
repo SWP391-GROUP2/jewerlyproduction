@@ -1,17 +1,8 @@
 import React from "react";
-import {
-  BsGrid1X2Fill,
-  BsFillArchiveFill,
-  BsFillGrid3X3GapFill,
-  BsPeopleFill,
-} from "react-icons/bs";
+import { BsGrid1X2Fill } from "react-icons/bs";
 import "./AdminSidebar.css"; // Thay đổi tên file CSS
 
-function AdminSidebar({
-  openSidebarToggle,
-  OpenSidebar,
-  handleViewChange,
-}) {
+function AdminSidebar({ openSidebarToggle, OpenSidebar, handleViewChange }) {
   const userName = "USER NAME";
   const userRole = "Admin"; // Thay đổi tên role nếu cần
 
@@ -52,21 +43,37 @@ function AdminSidebar({
             <BsGrid1X2Fill className="admin-icon" /> Product Sample List
           </button>
         </li>
-        
+
         <li className="admin-sidebar-list-item">
-        
-          <button className="admin-sidebar-button"
-           onClick={() => handleViewChange('createaccount')}
+          <button
+            className="admin-sidebar-button"
+            onClick={() => handleViewChange("createaccount")}
           >
             <BsGrid1X2Fill className="admin-icon" /> Create Account
           </button>
         </li>
         <li className="admin-sidebar-list-item">
-        
-          <button className="admin-sidebar-button"
-           onClick={() => handleViewChange('searchaccount')}
+          <button
+            className="admin-sidebar-button"
+            onClick={() => handleViewChange("searchaccount")}
           >
             <BsGrid1X2Fill className="admin-icon" /> Search Account
+          </button>
+        </li>
+        <li className="admin-sidebar-list-item">
+          <button
+            className="admin-sidebar-button"
+            onClick={() => handleViewChange("uploadgemstone")}
+          >
+            <BsGrid1X2Fill className="admin-icon" /> Upload Gemstone 
+          </button>
+        </li>
+        <li className="admin-sidebar-list-item">
+          <button
+            className="admin-sidebar-button"
+            onClick={() => handleViewChange("uploadproduct")}
+          >
+            <BsGrid1X2Fill className="admin-icon" /> Upload Product 
           </button>
         </li>
       </ul>

@@ -10,7 +10,6 @@ function ProductionStaffPage() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [showDetailPopup, setShowDetailPopup] = useState(false);
 
-  const [detailData, setDetailData] = useState(null); // State to store detail data
   const [inspectionData, setInspectionData] = useState(null); // State to store inspection data
 
   const [orderData, setOrderData] = useState([]);
@@ -88,7 +87,6 @@ function ProductionStaffPage() {
   // Handle view button click (e.g., to view inspection details)
   const handleViewButtonClick = async () => {
     setShowDetailPopup(false); // Close the popup
-    setDetailData(selectedItem); // Save detail data before changing view
     setCurrentView("newView"); // Change current view to 'newView'
     await fetchOrderInspection(selectedItem.order.orderId); // Fetch inspection data for selected order
   };

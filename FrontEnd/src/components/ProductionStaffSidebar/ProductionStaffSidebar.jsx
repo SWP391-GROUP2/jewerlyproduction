@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  BsGrid1X2Fill,
-  BsFillArchiveFill,
-  BsFillGrid3X3GapFill,
-  BsPeopleFill,
-} from "react-icons/bs";
+import { BsGrid1X2Fill } from "react-icons/bs";
 import "./ProductionStaffSidebar.css";
 
 function ProductionStaffSidebar({
@@ -49,7 +44,8 @@ function ProductionStaffSidebar({
             className="salestaff-sidebar-button"
             onClick={() => handleViewChange("orderlist")}
           >
-            <BsGrid1X2Fill className="productionstaff-icon" /> Product Sample List
+            <BsGrid1X2Fill className="productionstaff-icon" /> Product Sample
+            List
           </button>
         </li>
       </ul>

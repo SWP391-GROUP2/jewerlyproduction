@@ -1,11 +1,6 @@
 import React from "react";
-import {
-  BsGrid1X2Fill,
-  BsFillArchiveFill,
-  BsFillGrid3X3GapFill,
-  BsPeopleFill,
-} from "react-icons/bs";
-import "./DesignStaffSidebar.css";
+import { BsGrid1X2Fill } from "react-icons/bs";
+import "./DesignStaffSidebar.css"; // Import file CSS
 
 function DesignStaffSidebar({
   openSidebarToggle,
