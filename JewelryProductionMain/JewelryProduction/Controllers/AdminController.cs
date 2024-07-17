@@ -81,6 +81,40 @@ namespace JewelryProduction.Controllers
 
             return Ok(usersInRole);
         }
+
+        [HttpGet("total")]
+        public async Task<IActionResult> GetTotalUsers()
+        {
+            var totalUsers = await _userManager.Users.CountAsync();
+            return Ok(totalUsers);
+        }
+
+        [HttpGet("email-confirmed")]
+        public async Task<IActionResult> GetEmailConfirmedUsers()
+        {
+            var emailConfirmedUsers = await _userManager.Users
+                .Where(u => u.EmailConfirmed)
+                .CountAsync();
+            return Ok(emailConfirmedUsers);
+        }
+
+        [HttpGet("locked-out")]
+        public async Task<IActionResult> GetLockedOutUsers()
+        {
+            var lockedOutUsers = await _userManager.Users
+                .Where(u => u.LockoutEnd.HasValue && u.LockoutEnd > DateTimeOffset.UtcNow)
+                .CountAsync();
+            return Ok(lockedOutUsers);
+        }
+        [HttpGet("phone-number-confirmed")]
+        public async Task<IActionResult> GetPhoneNumberConfirmedUsers()
+        {
+            var phoneNumberConfirmedUsers = await _userManager.Users
+                .Where(u => u.PhoneNumberConfirmed)
+                .CountAsync();
+            return Ok(phoneNumberConfirmedUsers);
+        }
+
     }
 
 }
