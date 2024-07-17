@@ -32,10 +32,13 @@ namespace JewelryProduction.Controllers
                 var userId = _orderService.GetManagerIdByOrderId(orderId);
                 var senderId = GetCurrentUserId();
                 await _notificationService.SendNotificationToUserfAsync(userId, senderId, inspectionDto.Comment);
-
-                return new OkObjectResult("Inspection recorded and sent to the manager.");
             }
             return await _orderService.RecordInspection(orderId, stage, inspectionDto);
+        }
+        [HttpPut("updateStatus")]
+        public async Task<IActionResult> UpdateOrderStatus([FromQuery] string orderId, [FromQuery] string stage)
+        {
+            return await _orderService.UpdateFinalInspection(orderId, stage);
         }
         [HttpGet("quality-checklist/{stage}")]
         public async Task<IActionResult> GetQualityChecklist(string stage)

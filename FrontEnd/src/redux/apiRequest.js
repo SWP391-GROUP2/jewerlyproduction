@@ -89,6 +89,10 @@ export const loginWithGoogle = async (credential, dispatch, navigate) => {
         },
       }
     );
+    if (!res.data.isPasswordSet){
+      navigate("/setpasswordaftergoogle", { state: { token: res.data.token } });
+    }
+    else{
     dispatch(loginSuccess(res.data));
     const tokenrole = jwtDecode(res.data.token);
     const role = tokenrole.role.toLowerCase();
@@ -113,6 +117,7 @@ export const loginWithGoogle = async (credential, dispatch, navigate) => {
         navigate("/home");
         break;
     }
+  }
   } catch (err) {
     console.error("Google login Failed", err);
     dispatch(loginFalsed());

@@ -189,28 +189,6 @@ namespace JewelryProduction.Controllers
 
             return Ok(new { order.OrderId, order.Status });
         }
-        [HttpGet("CalculateGoldWeightUsedInMonth")]
-        public async Task<IActionResult> CalculateGoldWeightUsedInMonth([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
-        {
-            if (startDate > endDate)
-            {
-                return BadRequest("Start date cannot be later than end date.");
-            }
-
-            var totalGoldWeight = await _orderService.CalculateGoldWeightByTypeInMonth(startDate, endDate);
-            return Ok(totalGoldWeight);
-        }
-        [HttpGet("CalculateGemstoneWeightUsedInMonth")]
-        public async Task<IActionResult> CalculateGemstoneWeightInMonth([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
-        {
-            if (startDate > endDate)
-            {
-                return BadRequest("Start date cannot be later than end date.");
-            }
-
-            var GemWeight = await _orderService.CalculateGemstoneWeightInMonth(startDate, endDate);
-            return Ok(GemWeight);
-        }
         private decimal GetDeposit(decimal productCost)
         {
             decimal deposit = productCost * 0.3M;
@@ -223,16 +201,16 @@ namespace JewelryProduction.Controllers
             var order = await _orderService.GetOrder(orderID);
             order.Order.Status = "Assigning Designer";
             order.Order.DepositAmount = price;
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return Ok("Status has changed");
         }
 
         [HttpPut("change-status To Production")]
-        public async Task<ActionResult> ChangeStatusTo(string orderID)
+        public async Task<ActionResult> ChangeStatusToProduction(string orderId)
         {
-            var order = await _orderService.GetOrder(orderID);
-            order.Order.Status = "Assigning Production";
-            _context.SaveChangesAsync();
+            var order = await _orderService.GetOrder(orderId);
+            order.Order.Status= "Assigning Production";
+            await _context.SaveChangesAsync();
             return Ok("Status has changed");
         }
 
@@ -243,6 +221,29 @@ namespace JewelryProduction.Controllers
             if (check) return Ok("Changed to Payment Pending");
             return BadRequest();
         }
+
+
+        [HttpPut("Update address")]
+        public async Task<IActionResult> UpdateStatus(string orderID, string address)
+        {
+            var order = await _orderService.GetOrder(orderID);
+            order.Order.Address = address;
+            order.Order.Status = "Done";
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+
+        [HttpPut("change-status to Shipping")]
+        public async Task<IActionResult> ChangeToShipping(string orderID)
+        {
+            var order = await _orderService.GetOrder(orderID);
+            order.Order.Status = "Shipping";
+            await _context.SaveChangesAsync();
+            return Ok("Status has changed");
+        }
+
+
 
 
         private bool OrderExists(string id)

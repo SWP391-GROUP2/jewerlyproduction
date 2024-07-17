@@ -59,6 +59,24 @@ function ManagerSidebar({ openSidebarToggle, setCurrentView }) {
         <li className="manager-sidebar-list-item">
           <button
             className="manager-sidebar-button"
+            onClick={() => setCurrentView("assigndesign")}
+          >
+            <BsFillGrid3X3GapFill className="manager-icon" />
+            Assign Design Staff
+          </button>
+        </li>
+        <li className="manager-sidebar-list-item">
+          <button
+            className="manager-sidebar-button"
+            onClick={() => setCurrentView("assignproduction")}
+          >
+            <BsFillGrid3X3GapFill className="manager-icon" />
+            Assign Production Staff
+          </button>
+        </li>
+        <li className="manager-sidebar-list-item">
+          <button
+            className="manager-sidebar-button"
             onClick={() => setCurrentView("salesstaff")}
           >
             <BsPeopleFill className="manager-icon" />
