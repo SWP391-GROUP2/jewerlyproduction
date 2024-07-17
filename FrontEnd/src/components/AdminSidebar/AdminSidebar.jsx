@@ -2,9 +2,6 @@ import React from "react";
 import { BsGrid1X2Fill } from "react-icons/bs";
 import "./AdminSidebar.css"; // Thay đổi tên file CSS
 
-import avatarImage from "../../components/Assets/icon-128x128.png";
-import logoImage from "../../components/Assets/Logoqueen.png";
-
 function AdminSidebar({ openSidebarToggle, OpenSidebar, handleViewChange }) {
   const userName = "USER NAME";
   const userRole = "Admin"; // Thay đổi tên role nếu cần
@@ -16,9 +13,13 @@ function AdminSidebar({ openSidebarToggle, OpenSidebar, handleViewChange }) {
     >
       <div className="admin-sidebar-avatar">
         <div className="admin-logo-container">
-          <img src={logoImage} alt="Logo" className="admin-logo-image" />
+          <img src="https://res.cloudinary.com/dfvplhyjj/image/upload/v1721198532/Logoqueen_obg194.png" alt="Logo" className="admin-logo-image" />
         </div>
-        <img src={avatarImage} alt="Avatar" className="admin-avatar-image" />
+        <img
+          src="https://res.cloudinary.com/dfvplhyjj/image/upload/v1721198614/icon-128x128_nfr77b.png"
+          alt="Avatar"
+          className="admin-avatar-image"
+        />
         <div className="admin-user-details">
           <p className="admin-user-name">{userName}</p>
           <p className="admin-user-role">{userRole}</p>
@@ -57,6 +58,22 @@ function AdminSidebar({ openSidebarToggle, OpenSidebar, handleViewChange }) {
             onClick={() => handleViewChange("searchaccount")}
           >
             <BsGrid1X2Fill className="admin-icon" /> Search Account
+          </button>
+        </li>
+        <li className="admin-sidebar-list-item">
+          <button
+            className="admin-sidebar-button"
+            onClick={() => handleViewChange("uploadgemstone")}
+          >
+            <BsGrid1X2Fill className="admin-icon" /> Upload Gemstone 
+          </button>
+        </li>
+        <li className="admin-sidebar-list-item">
+          <button
+            className="admin-sidebar-button"
+            onClick={() => handleViewChange("uploadproduct")}
+          >
+            <BsGrid1X2Fill className="admin-icon" /> Upload Product 
           </button>
         </li>
       </ul>

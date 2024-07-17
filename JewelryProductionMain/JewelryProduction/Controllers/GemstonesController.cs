@@ -1,5 +1,6 @@
 ﻿using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
+using JewelryProduction.Interface.GemstoneF;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,31 +11,28 @@ namespace JewelryProduction.Controllers
     public class GemstonesController : ControllerBase
     {
         private readonly JewelryProductionContext _context;
+        private readonly IGemstoneService _service;
 
-        public GemstonesController(JewelryProductionContext context)
+        public GemstonesController(JewelryProductionContext context, IGemstoneService service)
         {
             _context = context;
+            _service = service;
         }
 
         // GET: api/Gemstones
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Gemstone>>> GetGemstones()
         {
-            return await _context.Gemstones.ToListAsync();
+            var result = await _service.GetGemstones();
+            return Ok(result);
         }
 
         // GET: api/Gemstones/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Gemstone>> GetGemstone(string id)
         {
-            var gemstone = await _context.Gemstones.FindAsync(id);
-
-            if (gemstone == null)
-            {
-                return NotFound();
-            }
-
-            return gemstone;
+            var result = await _service.GetGemstone(id);
+            return Ok(result);
         }
 
         // PUT: api/Gemstones/5
@@ -81,41 +79,21 @@ namespace JewelryProduction.Controllers
         // POST: api/Gemstones
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Gemstone>> PostGemstone(GemstoneDTO gemstoneDTO)
+        public async Task<IActionResult> PostGemstone(AddGemstoneDTO gemstone)
         {
-
-            Gemstone gemstone = new Gemstone
-            {
-                GemstoneId = gemstoneDTO.GemstoneId,
-                Name = gemstoneDTO.Name,
-                Color = gemstoneDTO.Color,
-                CaratWeight = gemstoneDTO.CaratWeight,
-                Cut = gemstoneDTO.Cut,
-                Clarity = gemstoneDTO.Clarity,
-                Shape = gemstoneDTO.Shape,
-                Size = gemstoneDTO.Size,
-                Price = gemstoneDTO.Price,
-                ProductSampleId = gemstoneDTO.ProductSampleId,
-                CustomizeRequestId = gemstoneDTO.CustomizeRequestId,
-
-            };
             try
             {
-                await _context.SaveChangesAsync();
+                var result = await _service.UploadGemstoneAsync(gemstone);
+                return Ok(result);
             }
-            catch (DbUpdateException)
+            catch (ArgumentException ex)
             {
-                if (GemstoneExists(gemstone.GemstoneId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(ex.Message);
             }
-
-            return CreatedAtAction("GetGemstone", new { id = gemstone.GemstoneId }, gemstone);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         // DELETE: api/Gemstones/5
@@ -133,6 +111,7 @@ namespace JewelryProduction.Controllers
 
             return NoContent();
         }
+
         [HttpPost("find")]
         public async Task<ActionResult<List<Gemstone>>> FindGemstones([FromBody] GemstoneDTO gemstoneDTO)
         {

@@ -233,5 +233,238 @@
   transform: translateY(5px);
   transition: 200ms;
 }
+.gemstone-upload-form {
+  width: 800px; /* Độ rộng của form */
+  margin: auto; /* Căn giữa form */
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.gemstone-form-group {
+  margin-bottom: 15px; /* Khoảng cách giữa các nhóm input */
+}
+
+.gemstone-label {
+  
+  width: 120px; /* Độ rộng của nhãn */
+  text-align: left; /* Căn chỉnh văn bản sang trái */
+  
+}
+
+.product-upload-form {
+  width: 800px; /* Độ rộng của form */
+  margin: auto; /* Căn giữa form */
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.product-form-group {
+  margin-bottom: 15px; /* Khoảng cách giữa các nhóm input */
+}
+
+.product-label {
+  
+  width: 120px; /* Độ rộng của nhãn */
+  text-align: left; /* Căn chỉnh văn bản sang trái */
+  
+}
+.gemstone-upload-button {
+  float: left; /* Đẩy button Upload về bên trái */
+  margin-right: 10px; /* Khoảng cách giữa các button */
+}
+
+.gemstone-clear-button {
+  float: right; /* Đẩy button Clear về bên phải */
+}
 
 
+/* */
+
+.gemstone-upload-button {
+  --color: #1686b6;
+  font-family: inherit;
+  display: inline-block;
+  width: 8em;
+  height: 2.6em;
+  line-height: 2.5em;
+  margin: 20px;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid var(--color);
+  transition: color .5s;
+  z-index: 1;
+  font-size: 17px;
+  border-radius: 6px;
+  font-weight: 500;
+  color: var(--color);
+ }
+ 
+ .gemstone-upload-button:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: var(--color);
+  height: 150px;
+  width: 200px;
+  border-radius: 50%;
+ }
+ 
+ .gemstone-upload-button:hover {
+  color: #fff;
+ }
+ 
+ .gemstone-upload-button:before {
+  top: 100%;
+  left: 100%;
+  transition: all .7s;
+ }
+ 
+ .gemstone-upload-button:hover:before {
+  top: -30px;
+  left: -30px;
+ }
+ 
+ .gemstone-upload-button:active:before {
+  background: #0f63b1;
+  transition: background 0s;
+ }
+
+ /* */
+
+ .gemstone-clear-button {
+  --color: #cb1717;
+  font-family: inherit;
+  display: inline-block;
+  width: 8em;
+  height: 2.6em;
+  line-height: 2.5em;
+  margin: 20px;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid var(--color);
+  transition: color .5s;
+  z-index: 1;
+  font-size: 17px;
+  border-radius: 6px;
+  font-weight: 500;
+  color: var(--color);
+ }
+ 
+ .gemstone-clear-button:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: var(--color);
+  height: 150px;
+  width: 200px;
+  border-radius: 50%;
+ }
+ 
+ .gemstone-clear-button:hover {
+  color: #fff;
+ }
+ 
+ .gemstone-clear-button:before {
+  top: 100%;
+  left: 100%;
+  transition: all .7s;
+ }
+ 
+ .gemstone-clear-button:hover:before {
+  top: -30px;
+  left: -30px;
+ }
+ 
+ .gemstone-clear-button:active:before {
+  background: #c31414;
+  transition: background 0s;
+ }
+
+ /* */
+
+.selectgemstonebutton {
+  --color: #1bcd27;
+  font-family: inherit;
+  display: inline-block;
+  width: 8em;
+  height: 2.6em;
+  line-height: 2.5em;
+  margin: 20px;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid var(--color);
+  transition: color .5s;
+  z-index: 1;
+  font-size: 17px;
+  border-radius: 6px;
+  font-weight: 500;
+  color: var(--color);
+ }
+ 
+ .selectgemstonebutton:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: var(--color);
+  height: 150px;
+  width: 200px;
+  border-radius: 50%;
+ }
+ 
+ .selectgemstonebutton:hover {
+  color: #fff;
+ }
+ 
+ .selectgemstonebutton:before {
+  top: 100%;
+  left: 100%;
+  transition: all .7s;
+ }
+ 
+ .selectgemstonebutton:hover:before {
+  top: -30px;
+  left: -30px;
+ }
+ 
+ .selectgemstonebutton:active:before {
+  background: #14c32f;
+  transition: background 0s;
+ }
+
+ .gemstone-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border: 1px solid #ccc;
+  z-index: 1000;
+  width: 600px; /* Kích thước của popup */
+  height: 600px;
+  overflow-y: auto; /* Cho phép cuộn nếu nội dung quá dài */
+}
+
+.gemstone-popup ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.gemstone-popup ul li {
+  margin-bottom: 10px;
+}
+
+.gemstone-popup button {
+  margin-top: 10px;
+}
+
+.closeclose {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
