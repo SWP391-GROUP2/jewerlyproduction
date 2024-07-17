@@ -1,6 +1,5 @@
 import React from "react";
 import "./navbar.css";
-import search_icon from "../Assets/search-b.png";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -72,7 +71,7 @@ function Navbar() {
       )}
       <div className="search-box">
         <input type="text" placeholder="Search" />
-        <img src={search_icon} alt="" />
+        <img src="https://res.cloudinary.com/dfvplhyjj/image/upload/v1721208176/search-b_va9gst.png" alt="" />
       </div>
     </div>
   );

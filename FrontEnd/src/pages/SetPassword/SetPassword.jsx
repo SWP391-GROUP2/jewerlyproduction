@@ -5,6 +5,7 @@ import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { jwtDecode } from "jwt-decode";
+import Notify from "../../components/Alert/Alert";
 import {
     loginSuccess
 } from "../../redux/authSlice";
@@ -65,7 +66,7 @@ function SetPassword(){
     const updatePassword = (e) => {
         e.preventDefault();
         if (newPassword !== confirmPassword) {
-            alert("New password and confirm password do not match!");
+            Notify.fail("The passwords must match!");
             return;
         }
         const newPass = {

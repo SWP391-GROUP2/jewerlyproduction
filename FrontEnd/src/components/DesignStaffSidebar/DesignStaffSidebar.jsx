@@ -5,10 +5,7 @@ import {
   BsFillGrid3X3GapFill,
   BsPeopleFill,
 } from "react-icons/bs";
-import "./DesignStaffSidebar.css"; // Import file CSS
-
-import avatarImage from "../../components/Assets/icon-128x128.png"; // Adjust the path as per your actual folder structure
-import logoImage from "../../components/Assets/Logoqueen.png"; // Đường dẫn đến tệp ảnh logo
+import "./DesignStaffSidebar.css";
 
 function DesignStaffSidebar({
   openSidebarToggle,
@@ -25,10 +22,10 @@ function DesignStaffSidebar({
     >
       <div className="designstaff-sidebar-avatar">
         <div className="designstaff-logo-container">
-          <img src={logoImage} alt="Logo" className="designstaff-logo-image" />
+          <img src="https://res.cloudinary.com/dfvplhyjj/image/upload/v1721198532/Logoqueen_obg194.png" alt="Logo" className="designstaff-logo-image" />
         </div>
         <img
-          src={avatarImage}
+          src="https://res.cloudinary.com/dfvplhyjj/image/upload/v1721198614/icon-128x128_nfr77b.png"
           alt="Avatar"
           className="designstaff-avatar-image"
         />

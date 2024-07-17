@@ -7,9 +7,6 @@ import {
 } from "react-icons/bs";
 import "./AdminSidebar.css"; // Thay đổi tên file CSS
 
-import avatarImage from "../../components/Assets/icon-128x128.png";
-import logoImage from "../../components/Assets/Logoqueen.png";
-
 function AdminSidebar({
   openSidebarToggle,
   OpenSidebar,
@@ -25,10 +22,10 @@ function AdminSidebar({
     >
       <div className="admin-sidebar-avatar">
         <div className="admin-logo-container">
-          <img src={logoImage} alt="Logo" className="admin-logo-image" />
+          <img src="https://res.cloudinary.com/dfvplhyjj/image/upload/v1721198532/Logoqueen_obg194.png" alt="Logo" className="admin-logo-image" />
         </div>
         <img
-          src={avatarImage}
+          src="https://res.cloudinary.com/dfvplhyjj/image/upload/v1721198614/icon-128x128_nfr77b.png"
           alt="Avatar"
           className="admin-avatar-image"
         />
