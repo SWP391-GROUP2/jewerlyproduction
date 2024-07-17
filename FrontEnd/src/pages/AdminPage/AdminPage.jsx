@@ -24,6 +24,65 @@ function AdminPage() {
 
   const itemsPerPage = 8;
 
+  const initialProductData = {
+    name: '',
+    description: '',
+    type: '',
+    style: '',
+    size: '',
+    price: '',
+    gold: '',
+    goldweight: '',
+    gemstoneList: '',
+    image: null,
+  };
+
+  const [productData, setProductData] = useState(initialProductData);
+  const [showGemstonePopup, setShowGemstonePopup] = useState(false); // State để quản lý hiển thị popup
+  
+  const handleProductInputChange = (e) => {
+    const { name, value } = e.target;
+    setProductData({ ...productData, [name]: value });
+  };
+
+  const handleProductFileChange = (e) => {
+    const file = e.target.files[0];
+    setProductData({ ...productData, image: file });
+  };
+
+  const handleProductClear = () => {
+    setProductData(initialProductData);
+  };
+
+  const handleProductSubmit = (e) => {
+    e.preventDefault();
+    // Add your logic to handle form submission (e.g., API call, etc.)
+    console.log('Submitting product data:', productData);
+    // Reset form after submission if needed
+    setProductData(initialProductData);
+  };
+  const handleGemstoneSelection = (selectedGemstone) => {
+    // Add selected gemstone to the gemstoneList field
+    setProductData({ ...productData, gemstoneList: productData.gemstoneList + `, ${selectedGemstone}` });
+    setShowGemstonePopup(false); // Close the popup after selection
+  };
+
+  // Define options for style dropdown based on type selection
+  const getStyleOptions = () => {
+    switch (productData.type) {
+      case 'Ring':
+        return ['Solitaire', 'Three Stone', 'Pave'];
+      case 'Bracelet':
+        return ['Chain', 'Pearl', 'Bar'];
+      case 'Necklace':
+        return ['Chain', 'Pearl', 'Station', 'Initial'];
+      case 'Earrings':
+        return ['Stud', 'Jacket', 'Ear Spike'];
+      default:
+        return [];
+    }
+  };
+
   const handleGemstoneClear = () => {
     setGemstoneData({
       name: '',
@@ -726,7 +785,161 @@ const fetchSimilarAccounts = async () => {
     </div>
   </div>
 )}
-
+{activeView === 'uploadproduct' && (
+  <div className='productdiv'>
+      <div className='product-upload-form'>
+        <h2>Upload Product</h2>
+        <form onSubmit={handleProductSubmit}>
+          <div className='product-form-group'>
+            <label className='product-label' htmlFor='name'>Name:</label>
+            <input
+              type='text'
+              id='name'
+              name='name'
+              value={productData.name}
+              onChange={handleProductInputChange}
+              required
+            />
+          </div>
+          <div className='product-form-group'>
+            <label className='product-label' htmlFor='description'>Description:</label>
+            <textarea
+              id='description'
+              name='description'
+              value={productData.description}
+              onChange={handleProductInputChange}
+              required
+            ></textarea>
+          </div>
+          <div className='product-form-group'>
+            <label className='product-label' htmlFor='type'>Type:</label>
+            <select
+              id='type'
+              name='type'
+              value={productData.type}
+              onChange={handleProductInputChange}
+              required
+            >
+              <option value=''>Select type</option>
+              <option value='Ring'>Ring</option>
+              <option value='Necklace'>Necklace</option>
+              <option value='Bracelet'>Bracelet</option>
+              <option value='Earrings'>Earrings</option>
+            </select>
+          </div>
+          <div className='product-form-group'>
+            <label className='product-label' htmlFor='style'>Style:</label>
+            <select
+              id='style'
+              name='style'
+              value={productData.style}
+              onChange={handleProductInputChange}
+              required
+            >
+              <option value=''>Select style</option>
+              {/* Options sẽ được thêm dựa vào loại sản phẩm (Ring, Necklace, Bracelet, Earrings) */}
+              {getStyleOptions(productData.type).map((styleOption, index) => (
+                <option key={index} value={styleOption}>
+                  {styleOption}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className='product-form-group'>
+            <label className='product-label' htmlFor='size'>Size:</label>
+            <input
+              type='text'
+              id='size'
+              name='size'
+              value={productData.size}
+              onChange={handleProductInputChange}
+              required
+            />
+          </div>
+          <div className='product-form-group'>
+            <label className='product-label' htmlFor='price'>Price:</label>
+            <input
+              type='text'
+              id='price'
+              name='price'
+              value={productData.price}
+              onChange={handleProductInputChange}
+              required
+            />
+          </div>
+          <div className='product-form-group'>
+            <label className='product-label' htmlFor='gold'>Gold:</label>
+            <select
+              id='gold'
+              name='gold'
+              value={productData.gold}
+              onChange={handleProductInputChange}
+              required
+            >
+              <option value=''>Select gold</option>
+              <option value='Gold 9999'>Gold 9999</option>
+              <option value='Gold 999.9'>Gold 999.9</option>
+              <option value='Gold 24k'>Gold 24k</option>
+              <option value='Gold 99'>Gold 99</option>
+              <option value='Gold 18k'>Gold 18k</option>
+              <option value='White 16k'>White 16k</option>
+              <option value='Gold 15k'>Gold 15k</option>
+              <option value='Italy 10k'>Italy 10k</option>
+            </select>
+          </div>
+          <div className='product-form-group'>
+            <label className='product-label' htmlFor='goldweight'>Gold Weight:</label>
+            <input
+              type='text'
+              id='goldweight'
+              name='goldweight'
+              value={productData.goldweight}
+              onChange={handleProductInputChange}
+              required
+            />
+          </div>
+          <div className='product-form-group'>
+            <label className='product-label' htmlFor='gemstoneList'>Gemstone List:</label>
+            <div>
+              <button className='selectgemstonebutton' type='button' onClick={() => setShowGemstonePopup(true)}>Select Gemstones</button>
+            </div>
+            {showGemstonePopup && (
+              <div className='gemstone-popup'>
+                {/* Nội dung popup chọn gemstone */}
+                <h3>Select Gemstones</h3>
+                <ul>
+                  {/* Các gemstone sẽ được render */}
+                  <li><button onClick={() => handleGemstoneSelection('Gemstone1')}>Gemstone1</button></li>
+                  <li><button onClick={() => handleGemstoneSelection('Gemstone2')}>Gemstone2</button></li>
+                  <li><button onClick={() => handleGemstoneSelection('Gemstone3')}>Gemstone3</button></li>
+                  {/* Thêm các gemstone option khác nếu cần */}
+                </ul>
+                <button className='closeclose' onClick={() => setShowGemstonePopup(false)}>Close</button>
+              </div>
+            )}
+          </div>
+          <div className='product-form-group'>
+            <label className='product-label' htmlFor='image'>Image:</label>
+            <input
+              type='file'
+              id='image'
+              name='image'
+              onChange={handleProductFileChange}
+              required
+            />
+          </div>
+          <div className='product-form-group'>
+            <button type='submit' className='gemstone-upload-button'>
+              Upload
+            </button>
+            <button type='button' className='gemstone-clear-button' onClick={handleProductClear}>
+              Clear
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )}
 
 
 

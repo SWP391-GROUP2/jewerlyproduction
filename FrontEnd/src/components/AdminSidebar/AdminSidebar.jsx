@@ -67,6 +67,14 @@ function AdminSidebar({ openSidebarToggle, OpenSidebar, handleViewChange }) {
             <BsGrid1X2Fill className="admin-icon" /> Upload Gemstone 
           </button>
         </li>
+        <li className="admin-sidebar-list-item">
+          <button
+            className="admin-sidebar-button"
+            onClick={() => handleViewChange("uploadproduct")}
+          >
+            <BsGrid1X2Fill className="admin-icon" /> Upload Product 
+          </button>
+        </li>
       </ul>
     </aside>
   );
