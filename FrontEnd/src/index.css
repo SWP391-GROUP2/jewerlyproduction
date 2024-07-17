@@ -15,7 +15,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: url(./components/Assets/pexels-leah-newhouse-50725-691046.jpg)
+  background: url("https://res.cloudinary.com/dfvplhyjj/image/upload/v1721209132/pexels-leah-newhouse-50725-691046_qva0xb.jpg")
     no-repeat;
   background-size: cover;
   background-position: center;

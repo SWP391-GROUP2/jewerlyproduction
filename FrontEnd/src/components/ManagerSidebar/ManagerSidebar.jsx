@@ -6,8 +6,6 @@ import {
   BsPeopleFill,
 } from "react-icons/bs";
 import "./ManagerSidebar.css";
-import avatarImage from "../../components/Assets/icon-128x128.png";
-import logoImage from "../../components/Assets/Logoqueen.png";
 
 function ManagerSidebar({ openSidebarToggle, setCurrentView }) {
   const userName = "USER NAME";
@@ -20,9 +18,9 @@ function ManagerSidebar({ openSidebarToggle, setCurrentView }) {
     >
       <div className="manager-sidebar-avatar">
         <div className="manager-logo-container">
-          <img src={logoImage} alt="Logo" className="manager-logo-image" />
+          <img src="https://res.cloudinary.com/dfvplhyjj/image/upload/v1721198532/Logoqueen_obg194.png" alt="Logo" className="manager-logo-image" />
         </div>
-        <img src={avatarImage} alt="Avatar" className="manager-avatar-image" />
+        <img src="https://res.cloudinary.com/dfvplhyjj/image/upload/v1721198614/icon-128x128_nfr77b.png" alt="Avatar" className="manager-avatar-image" />
         <div className="manager-user-details">
           <p className="manager-user-name">{userName}</p>
           <p className="manager-user-role">{userRole}</p>

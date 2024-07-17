@@ -623,7 +623,7 @@ function ManagerPage() {
                         src={
                           row.appUser.avatar
                             ? row.appUser.avatar
-                            : "https://res.cloudinary.com/dfvplhyjj/image/upload/v1719657663/txeadynuhg4akiyaww34.jpg"
+                            : "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721198614/icon-128x128_nfr77b.png"
                         }
                         alt="avatar"
                       />
@@ -660,7 +660,7 @@ function ManagerPage() {
                         src={
                           row.appUser.avatar
                             ? row.appUser.avatar
-                            : "https://res.cloudinary.com/dfvplhyjj/image/upload/v1719657663/txeadynuhg4akiyaww34.jpg"
+                            : "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721198614/icon-128x128_nfr77b.png"
                         }
                         alt="avatar"
                       />
@@ -696,7 +696,7 @@ function ManagerPage() {
                         src={
                           row.appUser.avatar
                             ? row.appUser.avatar
-                            : "https://res.cloudinary.com/dfvplhyjj/image/upload/v1719657663/txeadynuhg4akiyaww34.jpg"
+                            : "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721198614/icon-128x128_nfr77b.png"
                         }
                         alt="avatar"
                       />
