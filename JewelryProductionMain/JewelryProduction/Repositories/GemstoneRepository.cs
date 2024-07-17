@@ -1,4 +1,5 @@
 ﻿using JewelryProduction.DbContext;
+using JewelryProduction.DTO;
 using JewelryProduction.Interface;
 using Microsoft.EntityFrameworkCore;
 
@@ -67,5 +68,68 @@ namespace JewelryProduction.Repositories
                 .ToListAsync();
         }
 
+        public async Task<List<GetGemstoneDTO>> GetGemstones()
+        {
+            var gemstones = await _context.Gemstones
+                .Include(g => g.CustomizeRequestIdNavigation)
+                .Include(g => g.Category)
+                .Include(g => g.ProductSample)
+                .ToListAsync();
+
+            var result = gemstones.Select(gemstone => new GetGemstoneDTO
+            {
+                GemstoneId = gemstone.GemstoneId,
+                Name = gemstone.Name,
+                Shape = gemstone.Shape,
+                Size = gemstone.Size,
+                Color = gemstone.Color,
+                CaratWeight = gemstone.CaratWeight,
+                Cut = gemstone.Cut,
+                Clarity = gemstone.Clarity,
+                Price = gemstone.Price,
+                Image = gemstone.Image,
+                ProductSampleId = gemstone.ProductSampleId,
+                CustomizeRequestId = gemstone.CustomizeRequestId,
+                CategoryId = gemstone.CategoryId,
+            }).ToList();
+            return result;
+        }
+
+        public async Task AddGemstoneAsync(Gemstone gemstone)
+        {
+            _context.Gemstones.Add(gemstone);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<GetGemstoneDTO> GetGemstone(string id)
+        {
+            var gemstone = await _context.Gemstones
+                .Include(g => g.CustomizeRequestIdNavigation)
+                .Include(g => g.Category)
+                .Include(g => g.ProductSample)
+                .FirstOrDefaultAsync();
+
+            if (gemstone == null)
+                throw new Exception($"Gemstone with ID {id} not found.");
+
+            var result = new GetGemstoneDTO
+            {
+                GemstoneId = gemstone.GemstoneId,
+                Name = gemstone.Name,
+                Shape = gemstone.Shape,
+                Size = gemstone.Size,
+                Color = gemstone.Color,
+                CaratWeight = gemstone.CaratWeight,
+                Cut = gemstone.Cut,
+                Clarity = gemstone.Clarity,
+                Price = gemstone.Price,
+                Image = gemstone.Image,
+                ProductSampleId = gemstone.ProductSampleId,
+                CustomizeRequestId = gemstone.CustomizeRequestId,
+                CategoryId = gemstone.CategoryId,
+            };
+
+            return result;
+        }
     }
 }
