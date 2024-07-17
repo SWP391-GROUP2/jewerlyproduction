@@ -51,13 +51,6 @@ namespace JewelryProduction.Repositories
                 .Include(ps => ps.Gold)
                 .ToListAsync();
         }
-        public async Task<List<ProductSample>> GetProductSamplesByCollectionIdAsync(string collectionId)
-        {
-            return await _context.Collections
-                                 .Where(c => c.CollectionId == collectionId)
-                                 .SelectMany(c => c.ProductSamples)
-                                 .ToListAsync();
-        }
         public async Task AddAsync(ProductSample entity)
         {
             await _context.ProductSamples.AddAsync(entity);

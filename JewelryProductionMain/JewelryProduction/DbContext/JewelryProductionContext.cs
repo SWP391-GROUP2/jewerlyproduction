@@ -18,8 +18,6 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
 
     public DbSet<Category> Categories { get; set; }
 
-    public DbSet<Collection> Collections { get; set; }
-
     public DbSet<CustomerRequest> CustomerRequests { get; set; }
 
     public DbSet<Gemstone> Gemstones { get; set; }
@@ -83,44 +81,6 @@ public partial class JewelryProductionContext : IdentityDbContext<AppUser>
             entity.Property(e => e.Description)
                 .HasMaxLength(50)
                 .HasColumnName("description");
-        });
-
-        modelBuilder.Entity<Collection>(entity =>
-        {
-            entity.ToTable("Collection");
-
-            entity.Property(e => e.CollectionId)
-                .HasMaxLength(50)
-                .HasColumnName("collectionID");
-            entity.Property(e => e.CollectionName)
-                .HasMaxLength(50)
-                .HasColumnName("collectionName");
-            entity.Property(e => e.Description)
-                .HasMaxLength(50)
-                .HasColumnName("description");
-
-            entity.HasMany(d => d.ProductSamples).WithMany(p => p.Collections)
-                .UsingEntity<Dictionary<string, object>>(
-                    "CollectionProduct",
-                    r => r.HasOne<ProductSample>().WithMany()
-                        .HasForeignKey("ProductSampleId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Collectio__produ__4316F928"),
-                    l => l.HasOne<Collection>().WithMany()
-                        .HasForeignKey("CollectionId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Collectio__colle__4222D4EF"),
-                    j =>
-                    {
-                        j.HasKey("CollectionId", "ProductSampleId").HasName("PK__Collecti__15A109788FBE69CC");
-                        j.ToTable("CollectionProduct");
-                        j.IndexerProperty<string>("CollectionId")
-                            .HasMaxLength(50)
-                            .HasColumnName("collectionID");
-                        j.IndexerProperty<string>("ProductSampleId")
-                            .HasMaxLength(50)
-                            .HasColumnName("productSampleID");
-                    });
         });
 
         modelBuilder.Entity<CustomerRequest>(entity =>

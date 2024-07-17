@@ -46,10 +46,6 @@ namespace JewelryProduction.Services
 
             return recommendedSamples;
         }
-        public async Task<List<ProductSample>> GetProductSamplesByCollectionIdAsync(string collectionId)
-        {
-            return await _productSampleRepository.GetProductSamplesByCollectionIdAsync(collectionId);
-        }
         public async Task<PrefillDTO> PrefillCustomizeRequestAsync(string productSampleId)
         {
             var productSample = await _productSampleRepository.GetProductSampleByIdAsync(productSampleId);
