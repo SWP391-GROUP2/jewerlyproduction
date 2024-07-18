@@ -57,8 +57,8 @@ function ProductDetails() {
           <div className="big-img">
             {/* Hiển thị hình ảnh sản phẩm */}
             <img
-              src={require(`../../components/Assets/${product.productSample.image}.jpg`)}
-              alt={product.productSample.productName}
+                          src={product.productSample.image || "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"}
+                          alt={product.productSample.productName}
             />
           </div>
 

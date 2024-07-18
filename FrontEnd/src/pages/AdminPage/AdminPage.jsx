@@ -407,7 +407,7 @@ const fetchSimilarAccounts = async () => {
                     {currentItems.map((product, index) => (
                       <div key={index} className='gemstone-item' onClick={() => handleItemClick(product)}>
                         <img
-                          src={require(`../../components/Assets/${product.image}.jpg`)}
+                          src={product.image || "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"}
                           alt={product.productName}
                           className="gemstone-product-image"
                         />
@@ -445,8 +445,8 @@ const fetchSimilarAccounts = async () => {
                 <div className='popup-details'>
                   <h3>{selectedItem.name}</h3>
                   <img
-                    src={require(`../../components/Assets/${selectedItem.image}.jpg`)}
-                    alt={selectedItem.name}
+                          src={selectedItem.image || "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"}
+                          alt={selectedItem.name}
                     className="popup-product-image"
                   />
                   <div className="details-container">
@@ -479,8 +479,8 @@ const fetchSimilarAccounts = async () => {
                 <div className='popup-details'>
                   <h3>{selectedItem.productName}</h3>
                   <img
-                    src={require(`../../components/Assets/${selectedItem.image}.jpg`)}
-                    alt={selectedItem.productName}
+                          src={selectedItem.image || "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"}
+                          alt={selectedItem.productName}
                     className="popup-product-image"
                   />
                   <div className="details-container">
