@@ -188,16 +188,14 @@ const Sidebar = () => {
           <ul>
             {products.map((product) => (
               <div
-                className="gemstone-product-card"
+                className="gemstone-product-card" 
                 key={product.id}
                 onClick={() => navigateToProductDetail(product.gemstoneId)}
               >
                 <img
-                  src={
-                    product.image ||
-                    "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"
-                  }
-                  alt={product.name}
+                          src={product.image || "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"}
+                          alt={product.name}
+
                   className="gemstone-product-image"
                 />
                 <h3 className="gemstone-product-name">{product.name}</h3>
