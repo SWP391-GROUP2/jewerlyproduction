@@ -3,6 +3,7 @@ using JewelryProduction.DTO.Account;
 using JewelryProduction.Entities;
 using JewelryProduction.Helper;
 using JewelryProduction.Interface;
+using JewelryProduction.Interface.GemstoneF;
 using JewelryProduction.Repositories;
 using JewelryProduction.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -54,18 +55,18 @@ namespace JewelryProduction
             builder.Services.AddScoped<I3dDesignRepository, _3dDesignRepository>();
             builder.Services.AddScoped<I3dDesignService, _3dDesignService>();
             builder.Services.AddScoped<IGemstoneRepository, GemstoneRepository>();
+            builder.Services.AddScoped<IGemstoneService, GemstoneService>();
             builder.Services.AddScoped<IGoldRepository, GoldRepository>();
             builder.Services.AddScoped<IManagerService, ManagerService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IInspectionRepository, InspectionRepository>();
+            builder.Services.AddScoped<IInspectionService, InspectionService>();
             builder.Services.AddScoped<IProductSampleRepository, ProductSampleRepository>();
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-            builder.Services.AddScoped<ICollectionService, CollectionService>();
-            builder.Services.AddScoped<ICollectionRepository, CollectionRepository>();
             builder.Services.AddScoped<IInsuranceRepository, InsuranceRepository>();
             builder.Services.AddScoped<IInsuranceService, InsuranceService>();
-            //builder.Services.AddScoped<I3dDesignRepository, _3dDesignRepository>();
-            //builder.Services.AddScoped<I3dDesignService, _3dDesignService>();
+            builder.Services.AddScoped<I3dDesignRepository, _3dDesignRepository>();
+            builder.Services.AddScoped<I3dDesignService, _3dDesignService>();
 
 
 

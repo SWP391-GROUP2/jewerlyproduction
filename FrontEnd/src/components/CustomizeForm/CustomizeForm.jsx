@@ -5,6 +5,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { jwtDecode } from "jwt-decode";
+import Notify from "../Alert/Alert";
 
 function CustomizeForm() {
   const { productId } = useParams();
@@ -423,9 +424,9 @@ function CustomizeForm() {
 
       if (response) {
         console.log("Response:", response.data);
-        alert("Customize Request create successful!");
+        Notify.success("Customize Request create successful!");
       } else {
-        alert("Customize Request create failed!");
+        Notify.fail("Customize Request create failed!");
       }
     } catch (error) {
       // Xử lý lỗi từ server nếu có
@@ -1221,8 +1222,8 @@ function CustomizeForm() {
                   } // Chuyển hướng khi nhấp vào sản phẩm
                 >
                   <img
-                    src={require(`../Assets/${product.image}.jpg`)}
-                    alt={product.productName}
+                          src={product.image || "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"}
+                          alt={product.productName}
                     className="product-image"
                   />
                   <h3 className="product-name">{product.productName}</h3>

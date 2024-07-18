@@ -2,7 +2,7 @@
 {
     public class GemstoneDTO
     {
-        public string GemstoneId { get; set; } = null!;
+        public string GemstoneId { get; set; } = null;
 
         public string Name { get; set; } = null!;
 

@@ -27,11 +27,11 @@ namespace JewelryProduction.Repositories
                 .FirstOrDefaultAsync(i => i.OrderId == orderId && i.Stage == stage);
         }
 
-        public async Task<List<OrderGetDTO>> GetOrders()
+        public async Task<List<GetAllOrdersDTO>> GetOrders()
         {
             var orders = await _context.Orders
                 .Include(o => o.CustomizeRequest)
-                .Include(o => o.CustomizeRequest.Customer)
+                .ThenInclude(cr => cr.Customer)
                 .Include(o => o.CustomizeRequest.Manager)
                 .Include(o => o.CustomizeRequest.SaleStaff)
                 .Include(o => o.CustomizeRequest.Gold)
@@ -40,10 +40,29 @@ namespace JewelryProduction.Repositories
                 .Include(o => o.PaymentMethod)
                 .ToListAsync();
 
-            var result = orders.Select(o => new OrderGetDTO
+            var result = orders.Select(o => new GetAllOrdersDTO
             {
-                Order = o,
-                PaymentMethodName = o.PaymentMethod?.PaymentMethodName
+                OrderId = o.OrderId,
+                OrderDate = o.OrderDate,
+                CustomerId = o.CustomizeRequest.Customer.Id,
+                CustomerName = o.CustomizeRequest.Customer.Name,
+                ManagerId = o.CustomizeRequest.Manager.Id,
+                ManagerName = o.CustomizeRequest.Manager.Name,
+                SaleStaffId = o.CustomizeRequest.SaleStaff.Id,
+                SaleStaffName = o.CustomizeRequest.SaleStaff.Name,
+                CustomizeRequestId = o.CustomizeRequestId ?? "Unknown",
+                PaymentMethodId = o.PaymentMethodId,
+                GoldType = o.CustomizeRequest.Gold.GoldType,
+                GoldWeight = o.CustomizeRequest.GoldWeight ?? 0,
+                ProductionStaffName = o.ProductionStaff?.Name ?? "Unknown",
+                DesignStaffName = o.DesignStaff?.Name ?? "Unknown",
+                PaymentMethodName = o.PaymentMethod.PaymentMethodName,
+                Address = o.Address,
+                Status = o.Status,
+                quotation = o.CustomizeRequest.quotation ?? 0,
+                quotationDes = o.CustomizeRequest.quotationDes,
+                Deposit = o.DepositAmount,
+                TotalPrice = o.TotalPrice
             }).ToList();
 
             return result;

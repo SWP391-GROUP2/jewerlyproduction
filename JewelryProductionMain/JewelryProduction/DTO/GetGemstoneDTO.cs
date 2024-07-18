@@ -1,8 +1,8 @@
 ﻿namespace JewelryProduction.DTO
 {
-    public class AddGemstoneDTO
+    public class GetGemstoneDTO
     {
-        public string GemstoneId { get; set; } = GenerateGemstoneId();
+        public string GemstoneId { get; set; }
 
         public string Name { get; set; } = null!;
 
@@ -20,19 +20,14 @@
 
         public decimal Price { get; set; }
 
-        public IFormFile Image { get; set; }
+        public string Image { get; set; }
 
         public string? ProductSampleId { get; set; }
 
         public string? CustomizeRequestId { get; set; }
 
         public string? CategoryId { get; set; }
-
-        private static string GenerateGemstoneId()
-        {
-            Random random = new Random();
-            int randomNumber = random.Next(10000, 99999);
-            return $"GS{randomNumber}";
-        }
+        
+        public string? CategoryName { get; set; }
     }
 }

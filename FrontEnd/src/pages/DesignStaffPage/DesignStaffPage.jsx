@@ -25,8 +25,6 @@ function DesignStaffPage() {
   const [formImage, setFormImage] = useState(null);
 
   const [showFormPopup, setShowFormPopup] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   function chunkArray(array, size) {
     return array.reduce(
@@ -56,9 +54,6 @@ function DesignStaffPage() {
       setOrderData(response.data);
     } catch (error) {
       console.error("Error fetching data:", error); // Kiểm tra lỗi
-      setError(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -123,9 +118,6 @@ function DesignStaffPage() {
       console.log("Design deleted successfully");
     } catch (error) {
       console.error("Error deleting design:", error);
-      setError(error);
-    } finally {
-      setLoading(false);
     }
   };
   useEffect(() => {
@@ -183,9 +175,6 @@ function DesignStaffPage() {
       );
     } catch (error) {
       console.error("Error fetching data:", error);
-      setError(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -199,7 +188,6 @@ function DesignStaffPage() {
       fetchOrder();
     } catch (error) {
       console.error("Error fetching data:", error);
-      setError(error);
     }
   };
 
@@ -246,18 +234,6 @@ function DesignStaffPage() {
   const handleImageUpload = () => {
     setShowDetailPopup(false);
     setShowFormPopup(true);
-  };
-
-  const handleSave = () => {
-    const updatedOrderData = OrderData.map((order) =>
-      order.customizeRequestID === selectedItem.customizeRequestID
-        ? { ...order, image: selectedItem.image }
-        : order
-    );
-
-    // Update orderData state or send API request to save changes
-    console.log(updatedOrderData); // Replace with actual state update or API call
-    setShowDetailPopup(false);
   };
 
   const _3ddesigns =
@@ -426,7 +402,7 @@ function DesignStaffPage() {
                             key={_3ddesign._3dDesignId}
                             className="ImageTable"
                           >
-                            <img src={_3ddesign.image} alt="image" />
+                            <img src={_3ddesign.image} alt="image3d" />
                             <button
                               className="designstaff-close-button"
                               onClick={() =>
