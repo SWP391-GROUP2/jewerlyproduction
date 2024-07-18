@@ -195,6 +195,7 @@ const Sidebar = () => {
                 <img
                           src={product.image || "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"}
                           alt={product.name}
+
                   className="gemstone-product-image"
                 />
                 <h3 className="gemstone-product-name">{product.name}</h3>

@@ -1,5 +1,8 @@
-﻿using JewelryProduction.DbContext;
+﻿using Google.Api.Gax.ResourceNames;
+using JewelryProduction.DbContext;
+using JewelryProduction.DTO;
 using JewelryProduction.Interface;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace JewelryProduction.Repositories
@@ -66,5 +69,72 @@ namespace JewelryProduction.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task AddSampleAsync(AddProductSampleDTO productSample)
+        {
+            var sampleEntity = new ProductSample()
+            {
+                ProductSampleId = productSample.ProductSampleId,
+                ProductName = productSample.ProductName,
+                Description = productSample.Description,
+                Type = productSample.Type,
+                Style = productSample.Style,
+                Size = productSample.Size,
+                Price = productSample.Price,
+                GoldId = productSample.GoldId,
+                GoldWeight = productSample.GoldWeight,
+            };
+            _context.ProductSamples.Add(sampleEntity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<GetProductSampleDTO>> GetSamples()
+        {
+            var samples = await _context.ProductSamples
+                .Include(d => d.Gold)
+                .ToListAsync();
+
+            var result = samples.Select(samples => new GetProductSampleDTO
+            {
+                ProductSampleId = samples.ProductSampleId,
+                ProductName = samples.ProductName,
+                Description = samples.Description,
+                Type = samples.Type,
+                Style = samples.Style,
+                Size = samples.Size,
+                Price = samples.Price,
+                GoldId = samples.GoldId,
+                GoldType = samples.Gold.GoldType,
+                GoldWeight = samples.GoldWeight,
+            }).ToList();
+
+            return result;
+        }
+
+        public async Task<GetProductSampleDTO> GetSample(string id)
+        {
+            var sample = await _context.ProductSamples
+                .Where(d => d.ProductSampleId == id)
+                .Include(d => d.Gold)
+                .FirstOrDefaultAsync();
+
+            if (sample == null)
+                throw new Exception($"Gemstone with ID {id} not found.");
+
+            var result = new GetProductSampleDTO
+            {
+                ProductSampleId = sample.ProductSampleId,
+                ProductName = sample.ProductName,
+                Description = sample.Description,
+                Type = sample.Type,
+                Style = sample.Style,
+                Size = sample.Size,
+                Price = sample.Price,
+                GoldId = sample.GoldId,
+                GoldType = sample.Gold.GoldType,
+                GoldWeight = sample.GoldWeight,
+            };
+
+            return result;
+        }
     }
 }

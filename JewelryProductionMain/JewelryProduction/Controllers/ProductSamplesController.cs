@@ -24,22 +24,7 @@ namespace JewelryProduction.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductSampleDTO>>> GetProductSamplesWithGoldType()
         {
-            var result = await _context.ProductSamples
-                .Include(ps => ps.Gold)
-                .Select(ps => new ProductSampleDTO
-                {
-                    ProductSampleId = ps.ProductSampleId,
-                    ProductName = ps.ProductName,
-                    Description = ps.Description,
-                    Type = ps.Type,
-                    Style = ps.Style,
-                    Size = ps.Size,
-                    Price = ps.Price,
-                    GoldType = _context.Golds.Where(g => g.GoldId.Equals(ps.GoldId)).Select(g => g.GoldType).FirstOrDefault(),
-                    Image = _context._3ddesigns.Where(i => i.ProductSampleId.Equals(ps.ProductSampleId)).Select(i => i.Image).FirstOrDefault()
-                })
-                .ToListAsync();
-
+            var result = await _productSampleService.GetSamples();
             return Ok(result);
         }
 
@@ -47,39 +32,8 @@ namespace JewelryProduction.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductSample>> GetProductSample(string id)
         {
-            //var productSample = await _context.ProductSamples.FindAsync(id);
-
-            //if (productSample == null)
-            //{
-            //    return NotFound();
-            //}
-
-            var result = _context.ProductSamples
-                .Include(ps => ps.Gold)
-                .Where(ps => ps.ProductSampleId == id)
-                .Select(ps => new ProductDetailDTO
-                {
-                    ProductSampleId = ps.ProductSampleId,
-                    ProductName = ps.ProductName,
-                    Description = ps.Description,
-                    Type = ps.Type,
-                    Style = ps.Style,
-                    Size = ps.Size,
-                    Price = ps.Price,
-                    GoldType = _context.Golds.Where(g => g.GoldId.Equals(ps.GoldId)).Select(g => g.GoldType).FirstOrDefault(),
-                    Image = _context._3ddesigns.Where(i => i.ProductSampleId.Equals(ps.ProductSampleId)).Select(i => i.Image).ToList()
-               
-                })
-                .First();
-
-            var gemstone = await _context.Gemstones.Where(g => g.ProductSampleId.Equals(id)).ToListAsync();
-
-            var result2 = new ProductDetailsWithGemstone()
-            {
-                productSample = result,
-                gemstones = gemstone
-            };
-            return Ok(result2);
+            var result = await _productSampleService.GetSample(id);
+            return Ok(result);
         }
 
         // GET: api/ProductSamples/5
@@ -171,39 +125,21 @@ namespace JewelryProduction.Controllers
         // POST: api/ProductSamples
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ProductSample>> PostProductSample(ProductSampleDTO productSampleDTO)
+        public async Task<ActionResult<ProductSample>> PostProductSample(AddProductSampleDTO productSample)
         {
-            var uniqueId = await IdGenerator.GenerateUniqueId<CustomerRequest>(_context, "PS", 3);
-
-            var productSample = new ProductSample
-            {
-                ProductSampleId = uniqueId,
-                ProductName = productSampleDTO.ProductName,
-                Description = productSampleDTO.Description,
-                Type = productSampleDTO.Type,
-                Style = productSampleDTO.Style,
-                Size = productSampleDTO.Size,
-                Price = productSampleDTO.Price,
-                GoldId = productSampleDTO.GoldId,
-            };
-            _context.ProductSamples.Add(productSample);
             try
             {
-                await _context.SaveChangesAsync();
+                var result = await _productSampleService.AddSampleAsync(productSample);
+                return Ok(result);
             }
-            catch (DbUpdateException)
+            catch (ArgumentException ex)
             {
-                if (ProductSampleExists(productSample.ProductSampleId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(ex.Message);
             }
-
-            return CreatedAtAction("GetProductSample", new { id = productSample.ProductSampleId }, productSample);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}"); 
+            }
         }
 
         // DELETE: api/ProductSamples/5
@@ -232,17 +168,5 @@ namespace JewelryProduction.Controllers
         {
             return _context.ProductSamples.Any(e => e.ProductSampleId == id);
         }
-    }
-
-    public class ProductSamplesWithGemstone()
-    {
-        public ProductSampleDTO productSample { get; set; }
-        public List<Gemstone> gemstones { get; set; }
-    }
-
-    public class ProductDetailsWithGemstone()
-    {
-        public ProductDetailDTO productSample { get; set; }
-        public List<Gemstone> gemstones { get; set; }
     }
 }
