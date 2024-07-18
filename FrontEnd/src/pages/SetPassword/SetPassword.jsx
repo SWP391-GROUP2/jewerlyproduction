@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./SetPassword.css";
-import { useSelector } from "react-redux";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
