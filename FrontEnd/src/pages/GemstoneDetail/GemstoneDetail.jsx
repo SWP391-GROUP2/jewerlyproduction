@@ -53,8 +53,8 @@ function GemstoneDetail() {
             {/* Hiển thị hình ảnh sản phẩm */}
 
             <img
-              src={require(`../../components/Assets/${gemstone.image}.jpg`)}
-              alt={gemstone.name}
+                          src={gemstone.image || "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"}
+                          alt={gemstone.name}
             />
           </div>
 

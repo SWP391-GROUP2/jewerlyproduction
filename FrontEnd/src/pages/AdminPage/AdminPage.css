@@ -468,3 +468,63 @@
   border: none;
   cursor: pointer;
 }
+.gemstone-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  width: 800px;
+  border-radius: 8px;
+}
+
+.gemstone-popup h3 {
+  margin-top: 0;
+  text-align: center;
+}
+
+.gemstone-popup table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.gemstone-popup th,
+.gemstone-popup td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+  cursor: pointer; /* Add cursor pointer for clickable rows */
+}
+
+.gemstone-popup th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.gemstone-popup tbody tr:hover {
+  background-color: #f1f1f1; /* Add hover effect for table rows */
+}
+
+.gemstone-popup button {
+  background-color: rgb(237, 61, 61); 
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.gemstone-popup button:hover {
+  background-color: rgb(255, 0, 0);
+}
+
+
