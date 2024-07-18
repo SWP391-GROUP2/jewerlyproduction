@@ -1,13 +1,10 @@
 import React from "react";
 import Header from "../../components/Header/Header";
-import "./HomePage.css"; // Bạn có thể tạo và tùy chỉnh CSS cho HomePage nếu cần
+import "./HomePage.css";
 import Navbar from "../../components/Navbar/navbar";
 import Slideshow from "../../components/Slideshow/Slideshow";
 import Footer from "../../components/Footer/Footer";
-import Image1 from "../../components/Assets/p1.png";
-import Image2 from "../../components/Assets/p2.png";
 import ImageButtons from "../../components/ImageButtons/ImageButtons";
-import La from "../../components/Assets/l1.png";
 
 function HomePage() {
   return (
@@ -22,8 +19,8 @@ function HomePage() {
       </div>
 
       <div className="image-container">
-        <img src={Image1} alt="" className="image" />
-        <img src={Image2} alt="" className="image" />
+        <img src="https://res.cloudinary.com/dfvplhyjj/image/upload/v1721208584/p1_gmqhyd.png" alt="" className="image" />
+        <img src="https://res.cloudinary.com/dfvplhyjj/image/upload/v1721208586/p2_hvxt9f.png" alt="" className="image" />
       </div>
       <div className="content">
         <h2>Welcome to NB Jewelry Store</h2>
@@ -32,7 +29,7 @@ function HomePage() {
           collections, providing you with the finest shopping experience.
         </p>
       </div>
-      <img src={La} alt="" className="l1" />
+      <img src="https://res.cloudinary.com/dfvplhyjj/image/upload/v1721208627/l1_dhrcig.png" alt="" className="l1" />
       <h2 className="h2">Jewelry Style</h2>
       <ImageButtons />
       <img

@@ -292,7 +292,9 @@ function UserProfile() {
 
                 <div
                   className="user-profile-avatar-wrapper"
-                  onClick={() => document.getElementById("avatar-upload").click()}
+                  onClick={() =>
+                    document.getElementById("avatar-upload").click()
+                  }
                 >
                   {avatarPreview ? (
                     <img
@@ -300,16 +302,14 @@ function UserProfile() {
                       alt="Avatar Preview"
                       className="user-profile-avatar"
                     />
+                  ) : Avatar ? (
+                    <img
+                      src={Avatar}
+                      alt="Avatar"
+                      className="user-profile-avatar"
+                    />
                   ) : (
-                    Avatar ? (
-                      <img
-                        src={Avatar}
-                        alt="Avatar"
-                        className="user-profile-avatar"
-                      />
-                    ) : (
-                      <FaUserCircle className="user-profile-avatar-placeholder" />
-                    )
+                    <FaUserCircle className="user-profile-avatar-placeholder" />
                   )}
                   <input
                     type="file"
@@ -363,7 +363,11 @@ function UserProfile() {
                   <MdDriveFileRenameOutline className="user-profile-icon" />
                 </div>
 
-                <button type="submit" className="btn-submit" onClick={() => Notify.success("Profile updated successfully")}>
+                <button
+                  type="submit"
+                  className="btn-submit"
+                  onClick={() => Notify.success("Profile updated successfully")}
+                >
                   Save Profile
                 </button>
 
@@ -386,6 +390,7 @@ function UserProfile() {
                     <th>Sales Staff Name</th>
                     <th>Quotation</th>
                     <th>Status</th>
+                    <th></th>
                     <th></th>
                   </tr>
                 </thead>
@@ -426,22 +431,6 @@ function UserProfile() {
                               }}
                             >
                               Reject
-                            </button>
-                          </td>
-                        </>
-                      ) : row.customerRequest.status === "Request Approved" ? (
-                        <>
-                          <td>
-                            <button
-                              className="detail-button-s"
-                              onClick={(e) => {
-                                e.stopPropagation(); // Ngăn chặn sự kiện click hàng
-                                navigateToProductDetail(
-                                  row.customerRequest.customizeRequestId
-                                );
-                              }}
-                            >
-                              Continue Paying
                             </button>
                           </td>
                         </>

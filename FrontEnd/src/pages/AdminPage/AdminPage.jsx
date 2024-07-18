@@ -3,6 +3,7 @@ import axios from 'axios';
 import './AdminPage.css';
 import AdminSidebar from '../../components/AdminSidebar/AdminSidebar';
 import AdminHeader from '../../components/AdminHeader/AdminHeader';
+import Notify from '../../components/Alert/Alert';
 
 
 function AdminPage() {
@@ -34,8 +35,20 @@ function AdminPage() {
     gold: '',
     goldweight: '',
     gemstoneList: '',
-    image: null,
   };
+
+  const [gemstoneData, setGemstoneData] = useState({
+    name: '',
+    shape: '',
+    size: '',
+    color: '',
+    caratWeight: '',
+    cut: '',
+    clarity: '',
+    price: '',
+    image: null,
+    categoryID: '',
+  });
 
   const [productData, setProductData] = useState(initialProductData);
   const [showGemstonePopup, setShowGemstonePopup] = useState(false); // State để quản lý hiển thị popup
@@ -61,6 +74,7 @@ function AdminPage() {
     // Reset form after submission if needed
     setProductData(initialProductData);
   };
+
   const handleGemstoneSelection = (selectedGemstone) => {
     // Add selected gemstone to the gemstoneList field
     setProductData({ ...productData, gemstoneList: productData.gemstoneList + `, ${selectedGemstone}` });
@@ -96,21 +110,12 @@ function AdminPage() {
       categoryID: '',
       image: null  // If 'image' is a file input, reset to null or ''
     });
-  };
-  
 
-  const [gemstoneData, setGemstoneData] = useState({
-    name: '',
-    shape: '',
-    size: '',
-    color: '',
-    caratWeight: '',
-    cut: '',
-    clarity: '',
-    price: '',
-    categoryID: '',
-    image: null,
-  });
+    const fileInput = document.getElementById('image'); // Make sure this ID matches your input
+    if (fileInput) {
+        fileInput.value = null; // Clear the file input
+    }
+  };
 
   const handleGemstoneInputChange = (e) => {
     const { name, value } = e.target;
@@ -136,12 +141,6 @@ function AdminPage() {
       ...gemstoneData,
       image: file,
     });
-  };
-
-  const handleGemstoneSubmit = (event) => {
-    event.preventDefault();
-    // Handle form submission, e.g., send gemstoneData to the server
-    console.log(gemstoneData);
   };
 
   const [formData, setFormData] = useState({
@@ -179,7 +178,6 @@ function AdminPage() {
     fetchGemstones();
   }, []);
 
-
   // Fetch product samples data from API
   useEffect(() => {
     const fetchProductSamples = async () => {
@@ -196,6 +194,48 @@ function AdminPage() {
 
     fetchProductSamples();
   }, []);
+
+  const handleGemstoneSubmit = async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData();
+    formData.append("Name", gemstoneData.name);
+    formData.append("Shape", gemstoneData.shape);
+    formData.append("Size", gemstoneData.size);
+    formData.append("Color", gemstoneData.color);
+    formData.append("CaratWeight", gemstoneData.caratWeight);
+    formData.append("Cut", gemstoneData.cut);
+    formData.append("Clarity", gemstoneData.clarity);
+    formData.append("Price", gemstoneData.price);
+    formData.append("Image", gemstoneData.image);
+    formData.append("CategoryId", gemstoneData.categoryID);
+
+    console.log("Updating Gemstone with data:", Object.fromEntries(formData.entries()));
+
+    try {
+        setLoading(true);
+        const res = await axios.post(
+            `http://localhost:5266/api/Gemstones`,
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            }
+        );
+        console.log(res);
+        console.log("Upload successfully:", res.data);
+        setGemstoneData(res.data);
+        Notify.success("Gemstone added successfully");
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        setError(error);
+        Notify.error("Gemstone added unsuccessfully");
+    } finally {
+        handleGemstoneClear();
+        setLoading(false);
+    }
+  };
 
   // Paginate function for both gemstones and product samples
   const paginate = (pageNumber) => {
@@ -315,7 +355,7 @@ const fetchSimilarAccounts = async () => {
                     {currentItems.map((gemstone, index) => (
                       <div key={index} className='gemstone-item' onClick={() => handleItemClick(gemstone)}>
                         <img
-                          src={require(`../../components/Assets/${gemstone.image}.jpg`)}
+                          src={gemstone.image || "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"}
                           alt={gemstone.name}
                           className="gemstone-product-image"
                         />
@@ -917,16 +957,6 @@ const fetchSimilarAccounts = async () => {
                 <button className='closeclose' onClick={() => setShowGemstonePopup(false)}>Close</button>
               </div>
             )}
-          </div>
-          <div className='product-form-group'>
-            <label className='product-label' htmlFor='image'>Image:</label>
-            <input
-              type='file'
-              id='image'
-              name='image'
-              onChange={handleProductFileChange}
-              required
-            />
           </div>
           <div className='product-form-group'>
             <button type='submit' className='gemstone-upload-button'>
