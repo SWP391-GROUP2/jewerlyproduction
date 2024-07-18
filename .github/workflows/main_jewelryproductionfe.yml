@@ -28,7 +28,7 @@ jobs:
       - name: Zip artifact for deployment
         run: |
           cd FrontEnd/build
-          zip -r ../../release.zip .
+          Compress-Archive -Path * -DestinationPath ../../release.zip
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
