@@ -22,6 +22,50 @@ function AdminPage() {
   const [errorSimilarAccounts, setErrorSimilarAccounts] = useState(null);
   const itemsPerPage = 8;
 
+  const [showGemstoneDetailPopup, setShowGemstoneDetailPopup] = useState(false);
+  const [selectedGemstone, setSelectedGemstone] = useState(null);
+  const [notification, setNotification] = useState({ message: '', type: '' });
+
+  const handleGemstoneDetailSelection = (gemstone) => {
+    setSelectedGemstone(gemstone);
+    setShowGemstoneDetailPopup(true);
+  };
+
+  useEffect(() => {
+    // Fetch gemstones data
+    fetch('http://localhost:5266/api/Gemstones')
+      .then((response) => response.json())
+      .then((data) => {
+        setGemstones(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error.message);
+        setLoading(false);
+      });
+  }, []);
+  
+  const handleChooseGemstone = () => {
+    try {
+      setProductData((prevData) => {
+        const updatedData = {
+          ...prevData,
+          gemstoneList: selectedGemstone.name, // Update this according to your needs
+        };
+        console.log('Updated Product Data:', updatedData); // Log the updated product data
+        return updatedData;
+      });
+      setNotification({ message: 'Gemstone chosen successfully!', type: 'success' });
+      setShowGemstoneDetailPopup(false);
+    } catch (err) {
+      setNotification({ message: 'Failed to choose gemstone. Please try again.', type: 'error' });
+    }
+  };
+
+  setTimeout(() => {
+    setNotification({ message: '', type: '' });
+  }, 10000); // Dismiss notification after 5 seconds
+
   const initialProductData = {
     name: '',
     description: '',
@@ -92,13 +136,7 @@ function AdminPage() {
     });
   };
 
-  const handleGemstoneSelection = (selectedGemstone) => {
-    setProductData({
-      ...productData,
-      gemstoneList: productData.gemstoneList + `, ${selectedGemstone}`,
-    });
-    setShowGemstonePopup(false);
-  };
+  
 
   const getStyleOptions = () => {
     switch (productData.type) {
@@ -971,7 +1009,7 @@ const fetchSimilarAccounts = async () => {
               </thead>
               <tbody>
                 {gemstones.map((gemstone) => (
-                  <tr key={gemstone.gemstoneId} onClick={() => handleGemstoneSelection(gemstone.name)}>
+                  <tr key={gemstone.gemstoneId} onClick={() => handleGemstoneDetailSelection(gemstone)}>
                     <td>{gemstone.gemstoneId}</td>
                     <td>{gemstone.name}</td>
                     <td>{gemstone.categoryId}</td>
@@ -980,9 +1018,27 @@ const fetchSimilarAccounts = async () => {
               </tbody>
             </table>
           )}
-          <button className='closeclose' onClick={() => setShowGemstonePopup(false)}>Close</button>
+          <button className='closeclose' onClick={() => setShowGemstonePopup(false)}>X</button>
         </div>
-)}
+      )}
+
+      {showGemstoneDetailPopup && selectedGemstone && (
+        <div className='gemstone-detail-popup'>
+          <h3>Gemstone Details</h3>
+          <p>ID: {selectedGemstone.gemstoneId}</p>
+          <p>Name: {selectedGemstone.name}</p>
+          <p>Category: {selectedGemstone.categoryId}</p>
+          <img src={selectedGemstone.image || "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"} 
+          alt={selectedGemstone.name} />
+          <button className='choose-button' onClick={handleChooseGemstone}>Choose</button>
+          <button className='closeclose' onClick={() => setShowGemstoneDetailPopup(false)}>X</button>
+        </div>
+      )}
+      {notification.message && (
+        <div className={`notification ${notification.type}`}>
+          {notification.message}
+        </div>
+      )}
           </div>
           <div className='product-form-group'>
             <label className='product-label' htmlFor='image'>Image:</label>
