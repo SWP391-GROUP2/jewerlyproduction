@@ -44,8 +44,11 @@ namespace JewelryProduction.Repositories
             {
                 OrderId = o.OrderId,
                 OrderDate = o.OrderDate,
+                CustomerId = o.CustomizeRequest.Customer.Id,
                 CustomerName = o.CustomizeRequest.Customer.Name,
+                ManagerId = o.CustomizeRequest.Manager.Id,
                 ManagerName = o.CustomizeRequest.Manager.Name,
+                SaleStaffId = o.CustomizeRequest.SaleStaff.Id,
                 SaleStaffName = o.CustomizeRequest.SaleStaff.Name,
                 CustomizeRequestId = o.CustomizeRequestId ?? "Unknown",
                 PaymentMethodId = o.PaymentMethodId,

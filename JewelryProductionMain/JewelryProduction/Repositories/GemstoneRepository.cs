@@ -91,6 +91,7 @@ namespace JewelryProduction.Repositories
                 ProductSampleId = gemstone.ProductSampleId,
                 CustomizeRequestId = gemstone.CustomizeRequestId,
                 CategoryId = gemstone.CategoryId,
+                CategoryName = gemstone.Category.CategoryName,
             }).ToList();
             return result;
         }
@@ -104,6 +105,7 @@ namespace JewelryProduction.Repositories
         public async Task<GetGemstoneDTO> GetGemstone(string id)
         {
             var gemstone = await _context.Gemstones
+                .Where(g => g.GemstoneId == id)
                 .Include(g => g.CustomizeRequestIdNavigation)
                 .Include(g => g.Category)
                 .Include(g => g.ProductSample)
@@ -127,6 +129,7 @@ namespace JewelryProduction.Repositories
                 ProductSampleId = gemstone.ProductSampleId,
                 CustomizeRequestId = gemstone.CustomizeRequestId,
                 CategoryId = gemstone.CategoryId,
+                CategoryName = gemstone.Category?.CategoryName,
             };
 
             return result;
