@@ -22,15 +22,29 @@ namespace JewelryProduction.Repositories
                 .Include(cr => cr.SaleStaff)
                 .Include(cr => cr.Manager)
                 .Include(cr => cr.Gold)
+                .Include(cr => cr.Gemstones)
                 .ToListAsync();
 
             var result = requests.Select(r => new CustomerRequestGetDTO
             {
-                CustomerRequest = r,
+                CustomizeRequestId = r.CustomizeRequestId,
+                CustomerId = r.CustomerId,
                 CustomerName = r.Customer.Name,
-                SaleStaffName = r.SaleStaff?.Name,
-                ManagerName = r.Manager?.Name,
-                GoldType = r.Gold.GoldType
+                SaleStaffId = r.SaleStaffId,
+                SaleStaffName = r.SaleStaff?.Name ?? "Unknown",
+                ManagerId = r.ManagerId,
+                ManagerName = r.Manager?.Name ?? "Unknown",
+                GoldId = r.GoldId,
+                GoldType = r.Gold.GoldType,
+                GoldWeight = r.GoldWeight ?? 0,
+                Quantity = r.Quantity,
+                Size = r.Size,
+                Style = r.Style,
+                Type = r.Type,
+                Gemstones = r.Gemstones.ToList(),
+                quotation = r.quotation ?? 0,
+                quotationDes = r.quotationDes ??"None",
+                Status = r.Status
             }).ToList();
 
             return result;
@@ -43,19 +57,32 @@ namespace JewelryProduction.Repositories
                 .Include(cr => cr.SaleStaff)
                 .Include(cr => cr.Manager)
                 .Include(cr => cr.Gold)
+                .Include(cr => cr.Gemstones)
                 .Where(cr => cr.CustomizeRequestId.Equals(id))
                 .FirstOrDefaultAsync();
 
             if (customerRequest == null)
                 return null;
-
             var result = new CustomerRequestGetDTO
             {
-                CustomerRequest = customerRequest,
+                CustomizeRequestId = customerRequest.CustomizeRequestId,
+                CustomerId = customerRequest.CustomerId,
                 CustomerName = customerRequest.Customer.Name,
-                SaleStaffName = customerRequest.SaleStaff?.Name,
-                ManagerName = customerRequest.Manager?.Name,
-                GoldType = customerRequest.Gold.GoldType
+                SaleStaffId = customerRequest.SaleStaffId,
+                SaleStaffName = customerRequest.SaleStaff?.Name ?? "Unknown",
+                ManagerId = customerRequest.ManagerId,
+                ManagerName = customerRequest.Manager?.Name ?? "Unknown",
+                GoldId = customerRequest.GoldId,
+                GoldType = customerRequest.Gold.GoldType,
+                GoldWeight = customerRequest.GoldWeight ?? 0,
+                Quantity = customerRequest.Quantity,
+                Size = customerRequest.Size,
+                Style = customerRequest.Style,
+                Type = customerRequest.Type,
+                Gemstones = customerRequest.Gemstones.ToList(),
+                quotation = customerRequest.quotation ?? 0,
+                quotationDes = customerRequest.quotationDes ?? "None" ,
+                Status = customerRequest.Status
             };
             return result;
         }
