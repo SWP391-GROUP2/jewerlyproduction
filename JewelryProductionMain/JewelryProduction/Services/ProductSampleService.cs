@@ -118,5 +118,15 @@ namespace JewelryProduction.Services
 
             return similarity;
         }
+
+        public async Task<string> AddSampleAsync(AddProductSampleDTO productSample)
+        {
+            await _productSampleRepository.AddSampleAsync(productSample);
+            return "Completed";
+        }
+
+        public async Task<List<GetProductSampleDTO>> GetSamples() => await _productSampleRepository.GetSamples();
+
+        public async Task<GetProductSampleDTO> GetSample(string id) => await _productSampleRepository.GetSample(id);
     }
 }
