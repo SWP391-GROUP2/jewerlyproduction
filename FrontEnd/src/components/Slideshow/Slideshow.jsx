@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import slider1 from "../../components/Assets/s1.png";
-import slider2 from "../../components/Assets/s2.png";
-import slider3 from "../../components/Assets/s3.png";
 import "./Slideshow.css";
 
-const images = [slider1, slider2, slider3];
+const images = [
+  "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721198229/s1_voavyx.png",
+  "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721198229/s2_kizyj3.png",
+  "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721198229/s3_i3ide4.png"
+];
 
 function Slideshow({ interval = 10000 }) {
   const [currentIndex, setCurrentIndex] = useState(0);

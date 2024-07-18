@@ -17,8 +17,6 @@ const CheckOutLast = () => {
   const [shouldCallVNPpayment, setShouldCallVNPpayment] = useState(false);
   const [selectedOrder, setSelectedRequest] = useState(null);
 
-  const [price, setPrice] = useState(0);
-
   //lấy list order
   useEffect(() => {
     const fetchOrder = async () => {

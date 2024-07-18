@@ -35,14 +35,14 @@ namespace JewelryProduction.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
+        public async Task<ActionResult<IEnumerable<_3ddesign>>> Get3dDesigns()
         {
             var result = await _designService.Get_3Ddesigns();
             return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(string id)
+        public async Task<ActionResult<_3ddesign>> Get3dDesign(string id)
         {
             var result = await _designService.Get_3Ddesign(id);
 

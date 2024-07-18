@@ -3,6 +3,7 @@ import axios from 'axios';
 import './AdminPage.css';
 import AdminSidebar from '../../components/AdminSidebar/AdminSidebar';
 import AdminHeader from '../../components/AdminHeader/AdminHeader';
+import Notify from '../../components/Alert/Alert';
 
 
 function AdminPage() {
@@ -20,7 +21,8 @@ function AdminPage() {
   const [loadingSimilarAccounts, setLoadingSimilarAccounts] = useState(false);
   const [errorSimilarAccounts, setErrorSimilarAccounts] = useState(null);
   const itemsPerPage = 8;
-  const [productData, setProductData] = useState({
+
+  const initialProductData = {
     name: '',
     description: '',
     type: '',
@@ -30,9 +32,8 @@ function AdminPage() {
     gold: '',
     goldweight: '',
     gemstoneList: '',
-    image: null,
-  });
-  const [showGemstonePopup, setShowGemstonePopup] = useState(false);
+  };
+
   const [gemstoneData, setGemstoneData] = useState({
     name: '',
     shape: '',
@@ -42,34 +43,13 @@ function AdminPage() {
     cut: '',
     clarity: '',
     price: '',
-    categoryID: '',
     image: null,
+    categoryID: '',
   });
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    name: '',
-    phoneNumber: '',
-    role: '',
-  });
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
-  useEffect(() => {
-    fetchGemstones();
-  }, []);
-
-  const fetchGemstones = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get('http://localhost:5266/api/Gemstones');
-      setGemstones(response.data);
-      setLoading(false);
-    } catch (error) {
-      setError('Error fetching gemstones');
-      setLoading(false);
-    }
-  };
-
+  const [productData, setProductData] = useState(initialProductData);
+  const [showGemstonePopup, setShowGemstonePopup] = useState(false); // State để quản lý hiển thị popup
+  
   const handleProductInputChange = (e) => {
     const { name, value } = e.target;
     setProductData({ ...productData, [name]: value });
@@ -148,6 +128,11 @@ function AdminPage() {
       categoryID: '',
       image: null,
     });
+
+    const fileInput = document.getElementById('image'); // Make sure this ID matches your input
+    if (fileInput) {
+        fileInput.value = null; // Clear the file input
+    }
   };
 
   const handleGemstoneInputChange = (e) => {
@@ -166,11 +151,15 @@ function AdminPage() {
     setGemstoneData({ ...gemstoneData, image: file });
   };
 
-  const handleGemstoneSubmit = (event) => {
-    event.preventDefault();
-    console.log(gemstoneData);
-  };
-
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    name: '',
+    phoneNumber: '',
+    role: '',
+  }); 
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+ 
   const handleViewChange = (view) => {
     setActiveView(view);
     setSelectedItem(null);
@@ -199,7 +188,6 @@ function AdminPage() {
     fetchGemstones();
   }, []); 
 
-
   // Fetch product samples data from API
   useEffect(() => {
     const fetchProductSamples = async () => {
@@ -216,6 +204,48 @@ function AdminPage() {
 
     fetchProductSamples();
   }, []);
+
+  const handleGemstoneSubmit = async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData();
+    formData.append("Name", gemstoneData.name);
+    formData.append("Shape", gemstoneData.shape);
+    formData.append("Size", gemstoneData.size);
+    formData.append("Color", gemstoneData.color);
+    formData.append("CaratWeight", gemstoneData.caratWeight);
+    formData.append("Cut", gemstoneData.cut);
+    formData.append("Clarity", gemstoneData.clarity);
+    formData.append("Price", gemstoneData.price);
+    formData.append("Image", gemstoneData.image);
+    formData.append("CategoryId", gemstoneData.categoryID);
+
+    console.log("Updating Gemstone with data:", Object.fromEntries(formData.entries()));
+
+    try {
+        setLoading(true);
+        const res = await axios.post(
+            `http://localhost:5266/api/Gemstones`,
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            }
+        );
+        console.log(res);
+        console.log("Upload successfully:", res.data);
+        setGemstoneData(res.data);
+        Notify.success("Gemstone added successfully");
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        setError(error);
+        Notify.error("Gemstone added unsuccessfully");
+    } finally {
+        handleGemstoneClear();
+        setLoading(false);
+    }
+  };
 
   // Paginate function for both gemstones and product samples
   const paginate = (pageNumber) => {
@@ -335,7 +365,7 @@ const fetchSimilarAccounts = async () => {
                     {currentItems.map((gemstone, index) => (
                       <div key={index} className='gemstone-item' onClick={() => handleItemClick(gemstone)}>
                         <img
-                          src={gemstone.image}
+                          src={gemstone.image || "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"}
                           alt={gemstone.name}
                           className="gemstone-product-image"
                         />
@@ -953,8 +983,6 @@ const fetchSimilarAccounts = async () => {
           <button className='closeclose' onClick={() => setShowGemstonePopup(false)}>Close</button>
         </div>
 )}
-
-
           </div>
           <div className='product-form-group'>
             <label className='product-label' htmlFor='image'>Image:</label>

@@ -12,6 +12,7 @@ import {
 } from "./authSlice";
 
 import axios from "axios";
+import Notify from "../components/Alert/Alert";
 
 export const loginUser = async (user, dispatch, navigate) => {
   dispatch(loginStart());
@@ -26,6 +27,7 @@ export const loginUser = async (user, dispatch, navigate) => {
     // Điều hướng dựa trên vai trò của người dùng
     const tokenrole = jwtDecode(res.data.token);
     const role = tokenrole.role.toLowerCase();
+    Notify.success("Login Successfully");
     switch (role) {
       case "admin":
         navigate("/admin/home");
@@ -60,6 +62,7 @@ export const registerUser = async (user, dispatch, navigate) => {
       user
     );
     dispatch(registerSuccess(res.data));
+    Notify.success("Registered Successfully");
     navigate("/register");
   } catch (err) {
     dispatch(registerFalsed());
@@ -71,6 +74,7 @@ export const logOut = async (dispatch, navigate) => {
   try {
     await axios.post("http://localhost:5266/api/Account/logout");
     dispatch(logOutSuccess());
+    Notify.success("Logout Successfully");
     navigate("/login");
   } catch (err) {
     dispatch(logOutFalsed());
@@ -96,6 +100,7 @@ export const loginWithGoogle = async (credential, dispatch, navigate) => {
     dispatch(loginSuccess(res.data));
     const tokenrole = jwtDecode(res.data.token);
     const role = tokenrole.role.toLowerCase();
+    Notify.success("Login Successfully");
     switch (role) {
       case "admin":
         navigate("/admin/home");
