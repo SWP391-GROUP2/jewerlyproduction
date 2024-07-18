@@ -51,6 +51,7 @@ export const loginUser = async (user, dispatch, navigate) => {
     }
   } catch (err) {
     dispatch(loginFalsed());
+    Notify.fail("This account does not exist. Please check your username.");
   }
 };
 
@@ -93,36 +94,35 @@ export const loginWithGoogle = async (credential, dispatch, navigate) => {
         },
       }
     );
-    if (!res.data.isPasswordSet){
+    if (!res.data.isPasswordSet) {
       navigate("/setpasswordaftergoogle", { state: { token: res.data.token } });
+    } else {
+      dispatch(loginSuccess(res.data));
+      const tokenrole = jwtDecode(res.data.token);
+      const role = tokenrole.role.toLowerCase();
+      Notify.success("Login Successfully");
+      switch (role) {
+        case "admin":
+          navigate("/admin/home");
+          break;
+        case "salestaff":
+          navigate("/salestaff/home");
+          break;
+        case "designstaff":
+          navigate("/designstaff/home");
+          break;
+        case "manager":
+          navigate("/manager/home");
+          break;
+        case "productionstaff":
+          navigate("/productionstaff/home");
+          break;
+        case "customer":
+        default:
+          navigate("/home");
+          break;
+      }
     }
-    else{
-    dispatch(loginSuccess(res.data));
-    const tokenrole = jwtDecode(res.data.token);
-    const role = tokenrole.role.toLowerCase();
-    Notify.success("Login Successfully");
-    switch (role) {
-      case "admin":
-        navigate("/admin/home");
-        break;
-      case "salestaff":
-        navigate("/salestaff/home");
-        break;
-      case "designstaff":
-        navigate("/designstaff/home");
-        break;
-      case "manager":
-        navigate("/manager/home");
-        break;
-      case "productionstaff":
-        navigate("/productionstaff/home");
-        break;
-      case "customer":
-      default:
-        navigate("/home");
-        break;
-    }
-  }
   } catch (err) {
     console.error("Google login Failed", err);
     dispatch(loginFalsed());
@@ -138,6 +138,7 @@ export const verifyOtp = async (otp, email) => {
     return response.data;
   } catch (error) {
     console.error("Failed to verify OTP", error);
+    Notify.fail("Incorrect OTP. Please try again.");
     throw error;
   }
 };
