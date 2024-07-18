@@ -47,12 +47,18 @@ namespace JewelryProduction.Repositories
                 CustomerName = o.CustomizeRequest.Customer.Name,
                 ManagerName = o.CustomizeRequest.Manager.Name,
                 SaleStaffName = o.CustomizeRequest.SaleStaff.Name,
+                CustomizeRequestId = o.CustomizeRequestId ?? "Unknown",
+                PaymentMethodId = o.PaymentMethodId,
                 GoldType = o.CustomizeRequest.Gold.GoldType,
                 GoldWeight = o.CustomizeRequest.GoldWeight ?? 0,
-                ProductionStaffName = o.ProductionStaff.Name,
-                DesignStaffName = o.DesignStaff.Name,
+                ProductionStaffName = o.ProductionStaff?.Name ?? "Unknown",
+                DesignStaffName = o.DesignStaff?.Name ?? "Unknown",
                 PaymentMethodName = o.PaymentMethod.PaymentMethodName,
                 Address = o.Address,
+                Status = o.Status,
+                quotation = o.CustomizeRequest.quotation ?? 0,
+                quotationDes = o.CustomizeRequest.quotationDes,
+                Deposit = o.DepositAmount,
                 TotalPrice = o.TotalPrice
             }).ToList();
 

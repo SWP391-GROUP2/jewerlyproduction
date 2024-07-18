@@ -29,8 +29,8 @@ public partial class Order
 
     public PaymentMethod PaymentMethod { get; set; } = null!;
 
-    public AppUser ProductionStaff { get; set; } = null!;
-    public AppUser DesignStaff { get; set; } = null!;
+    public AppUser? ProductionStaff { get; set; } 
+    public AppUser? DesignStaff { get; set; } 
     public ICollection<_3ddesign> _3ddesigns { get; set; } = new List<_3ddesign>();
     public ICollection<Inspection> Inspections { get; set; } = new List<Inspection>();
 }
