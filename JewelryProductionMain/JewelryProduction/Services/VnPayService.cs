@@ -71,6 +71,7 @@ namespace JewelryProduction.Services
             if (order.DepositAmount == null)
             {
                 order.DepositAmount = Decimal.Parse(vnPay.GetResponseData("vnp_Amount"));
+                order.TotalPrice = order.TotalPrice - (order.DepositAmount ?? 0);
                 order.Status = "Assigning Designer";
             }
             else
