@@ -31,7 +31,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
+    "start": "npm run start:frontend",
     "start:frontend": "react-scripts start",
     "start:backend": "cd ../JewelryProductionMain/JewelryProduction && dotnet watch run",
     "build": "react-scripts build",
