@@ -14,17 +14,13 @@ function AdminPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-
-  const [selectedUser, setSelectedUser] = useState(null); // State để lưu thông tin user được chọn
-
-  const [searchRole, setSearchRole] = useState(''); // State để lưu role từ input
-  const [similarAccounts, setSimilarAccounts] = useState([]); // State để lưu danh sách tài khoản tương tự
-  const [loadingSimilarAccounts, setLoadingSimilarAccounts] = useState(false); // State để xử lý trạng thái loading khi fetch API
-  const [errorSimilarAccounts, setErrorSimilarAccounts] = useState(null); // State để xử lý trạng thái lỗi khi fetch API
-
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [searchRole, setSearchRole] = useState('');
+  const [similarAccounts, setSimilarAccounts] = useState([]);
+  const [loadingSimilarAccounts, setLoadingSimilarAccounts] = useState(false);
+  const [errorSimilarAccounts, setErrorSimilarAccounts] = useState(null);
   const itemsPerPage = 8;
-
-  const initialProductData = {
+  const [productData, setProductData] = useState({
     name: '',
     description: '',
     type: '',
@@ -35,11 +31,45 @@ function AdminPage() {
     goldweight: '',
     gemstoneList: '',
     image: null,
+  });
+  const [showGemstonePopup, setShowGemstonePopup] = useState(false);
+  const [gemstoneData, setGemstoneData] = useState({
+    name: '',
+    shape: '',
+    size: '',
+    color: '',
+    caratWeight: '',
+    cut: '',
+    clarity: '',
+    price: '',
+    categoryID: '',
+    image: null,
+  });
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    name: '',
+    phoneNumber: '',
+    role: '',
+  });
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+
+  useEffect(() => {
+    fetchGemstones();
+  }, []);
+
+  const fetchGemstones = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get('http://localhost:5266/api/Gemstones');
+      setGemstones(response.data);
+      setLoading(false);
+    } catch (error) {
+      setError('Error fetching gemstones');
+      setLoading(false);
+    }
   };
 
-  const [productData, setProductData] = useState(initialProductData);
-  const [showGemstonePopup, setShowGemstonePopup] = useState(false); // State để quản lý hiển thị popup
-  
   const handleProductInputChange = (e) => {
     const { name, value } = e.target;
     setProductData({ ...productData, [name]: value });
@@ -51,23 +81,45 @@ function AdminPage() {
   };
 
   const handleProductClear = () => {
-    setProductData(initialProductData);
+    setProductData({
+      name: '',
+      description: '',
+      type: '',
+      style: '',
+      size: '',
+      price: '',
+      gold: '',
+      goldweight: '',
+      gemstoneList: '',
+      image: null,
+    });
   };
 
   const handleProductSubmit = (e) => {
     e.preventDefault();
-    // Add your logic to handle form submission (e.g., API call, etc.)
     console.log('Submitting product data:', productData);
-    // Reset form after submission if needed
-    setProductData(initialProductData);
-  };
-  const handleGemstoneSelection = (selectedGemstone) => {
-    // Add selected gemstone to the gemstoneList field
-    setProductData({ ...productData, gemstoneList: productData.gemstoneList + `, ${selectedGemstone}` });
-    setShowGemstonePopup(false); // Close the popup after selection
+    setProductData({
+      name: '',
+      description: '',
+      type: '',
+      style: '',
+      size: '',
+      price: '',
+      gold: '',
+      goldweight: '',
+      gemstoneList: '',
+      image: null,
+    });
   };
 
-  // Define options for style dropdown based on type selection
+  const handleGemstoneSelection = (selectedGemstone) => {
+    setProductData({
+      ...productData,
+      gemstoneList: productData.gemstoneList + `, ${selectedGemstone}`,
+    });
+    setShowGemstonePopup(false);
+  };
+
   const getStyleOptions = () => {
     switch (productData.type) {
       case 'Ring':
@@ -94,65 +146,31 @@ function AdminPage() {
       clarity: '',
       price: '',
       categoryID: '',
-      image: null  // If 'image' is a file input, reset to null or ''
+      image: null,
     });
   };
-  
-
-  const [gemstoneData, setGemstoneData] = useState({
-    name: '',
-    shape: '',
-    size: '',
-    color: '',
-    caratWeight: '',
-    cut: '',
-    clarity: '',
-    price: '',
-    categoryID: '',
-    image: null,
-  });
 
   const handleGemstoneInputChange = (e) => {
     const { name, value } = e.target;
-  
-    // Check if the field is caratWeight and validate the input
     if (name === 'caratWeight') {
-      // Validate that it's not negative and not greater than 10
       if (parseFloat(value) < 0 || parseFloat(value) > 10) {
-        // You may want to display an error message or handle the input differently
-        // For now, let's console log the error
         console.log('Carat Weight must be between 0 and 10.');
-        return; // Exit early without updating state
+        return;
       }
     }
-  
-    // Update the gemstoneData state with the new value
     setGemstoneData({ ...gemstoneData, [name]: value });
   };
 
   const handleGemstoneFileChange = (event) => {
     const file = event.target.files[0];
-    setGemstoneData({
-      ...gemstoneData,
-      image: file,
-    });
+    setGemstoneData({ ...gemstoneData, image: file });
   };
 
   const handleGemstoneSubmit = (event) => {
     event.preventDefault();
-    // Handle form submission, e.g., send gemstoneData to the server
     console.log(gemstoneData);
   };
 
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    name: '',
-    phoneNumber: '',
-    role: '',
-  }); 
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
- 
   const handleViewChange = (view) => {
     setActiveView(view);
     setSelectedItem(null);
@@ -161,6 +179,8 @@ function AdminPage() {
   const OpenSidebar = () => {
     setOpenSidebarToggle(!openSidebarToggle);
   };
+
+  
 
   // Fetch gemstones data from API
   useEffect(() => {
@@ -177,7 +197,7 @@ function AdminPage() {
     };
 
     fetchGemstones();
-  }, []);
+  }, []); 
 
 
   // Fetch product samples data from API
@@ -315,7 +335,7 @@ const fetchSimilarAccounts = async () => {
                     {currentItems.map((gemstone, index) => (
                       <div key={index} className='gemstone-item' onClick={() => handleItemClick(gemstone)}>
                         <img
-                          src={require(`../../components/Assets/${gemstone.image}.jpg`)}
+                          src={gemstone.image}
                           alt={gemstone.name}
                           className="gemstone-product-image"
                         />
@@ -760,7 +780,7 @@ const fetchSimilarAccounts = async () => {
             <option value='C002'>Emerald</option>
             <option value='C003'>Ruby</option>
             <option value='C004'>Sapphire</option>
-            <option value='C005'>Pearl</option>
+            <option value='C005'>Side Stone</option>
           </select>
         </div>
         <div className='gemstone-form-group'>
@@ -904,19 +924,37 @@ const fetchSimilarAccounts = async () => {
               <button className='selectgemstonebutton' type='button' onClick={() => setShowGemstonePopup(true)}>Select Gemstones</button>
             </div>
             {showGemstonePopup && (
-              <div className='gemstone-popup'>
-                {/* Nội dung popup chọn gemstone */}
-                <h3>Select Gemstones</h3>
-                <ul>
-                  {/* Các gemstone sẽ được render */}
-                  <li><button onClick={() => handleGemstoneSelection('Gemstone1')}>Gemstone1</button></li>
-                  <li><button onClick={() => handleGemstoneSelection('Gemstone2')}>Gemstone2</button></li>
-                  <li><button onClick={() => handleGemstoneSelection('Gemstone3')}>Gemstone3</button></li>
-                  {/* Thêm các gemstone option khác nếu cần */}
-                </ul>
-                <button className='closeclose' onClick={() => setShowGemstonePopup(false)}>Close</button>
-              </div>
-            )}
+        <div className='gemstone-popup'>
+          <h3>Select Gemstones</h3>
+          {loading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p>{error}</p>
+          ) : (
+            <table>
+              <thead>
+                <tr>
+                  <th>GemstoneID</th>
+                  <th>Gemstone Name</th>
+                  <th>Category Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                {gemstones.map((gemstone) => (
+                  <tr key={gemstone.gemstoneId} onClick={() => handleGemstoneSelection(gemstone.name)}>
+                    <td>{gemstone.gemstoneId}</td>
+                    <td>{gemstone.name}</td>
+                    <td>{gemstone.categoryId}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+          <button className='closeclose' onClick={() => setShowGemstonePopup(false)}>Close</button>
+        </div>
+)}
+
+
           </div>
           <div className='product-form-group'>
             <label className='product-label' htmlFor='image'>Image:</label>
