@@ -38,7 +38,7 @@ namespace JewelryProduction.Services
             return paymentUrl;
         }
 
-        public async Task<VnPaymentResponseModel> PaymentExecute(IQueryCollection collection) // chi moi tinh deposit amount.
+        public VnPaymentResponseModel PaymentExecute(IQueryCollection collection) // chi moi tinh deposit amount.
         {
             var vnPay = new VnPayLibrary();
 
@@ -71,11 +71,12 @@ namespace JewelryProduction.Services
             if (order.DepositAmount == null)
             {
                 order.DepositAmount = Decimal.Parse(vnPay.GetResponseData("vnp_Amount"));
+                order.TotalPrice = order.TotalPrice - (order.DepositAmount ?? 0);
                 order.Status = "Assigning Designer";
             }
             else
                 order.Status = "Shipping";
-            await _context.SaveChangesAsync();
+             _context.SaveChangesAsync();
 
             return new VnPaymentResponseModel()
             {
