@@ -1222,8 +1222,8 @@ function CustomizeForm() {
                   } // Chuyển hướng khi nhấp vào sản phẩm
                 >
                   <img
-                    src={require(`../Assets/${product.image}.jpg`)}
-                    alt={product.productName}
+                          src={product.image || "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"}
+                          alt={product.productName}
                     className="product-image"
                   />
                   <h3 className="product-name">{product.productName}</h3>
