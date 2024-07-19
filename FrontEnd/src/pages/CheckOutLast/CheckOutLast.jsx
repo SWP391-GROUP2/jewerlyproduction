@@ -35,7 +35,7 @@ const CheckOutLast = () => {
   //chọn selectedOrder để lấy thông tin
   useEffect(() => {
     if (OrderData.length > 0) {
-      const order = OrderData.find((order) => order.order.orderId === orderId);
+      const order = OrderData.find((order) => order.orderId === orderId);
       if (order) {
         setSelectedRequest(order);
       } else {
@@ -149,7 +149,7 @@ const CheckOutLast = () => {
   // Effect để gọi API VNPpayment khi shouldCallVNPpayment thay đổi
   useEffect(() => {
     if (shouldCallVNPpayment) {
-      VNPpayment(selectedOrder.order.totalPrice, selectedOrder.order.orderId);
+      VNPpayment(selectedOrder.totalPrice, selectedOrder.orderId);
       setShouldCallVNPpayment(false); // Đặt lại để không gọi lại API nữa
     }
   }, [shouldCallVNPpayment, selectedOrder]);
@@ -159,7 +159,7 @@ const CheckOutLast = () => {
     const callCashPayment = async () => {
       try {
         if (shouldCallCashPayment && selectedOrder) {
-          await CashPayment(selectedOrder.order.orderId);
+          await CashPayment(selectedOrder.orderId);
           console.log("Cash payment success.");
           // Thực hiện các xử lý cần thiết khi thanh toán bằng tiền mặt thành công
         }
@@ -195,22 +195,14 @@ const CheckOutLast = () => {
             <span>
               <strong>Customer</strong>
             </span>
-            <span>
-              {selectedOrder
-                ? selectedOrder.order.customizeRequest.customer.name
-                : "N/A"}
-            </span>
+            <span>{selectedOrder ? selectedOrder.customerName : "N/A"}</span>
           </div>
           <hr className="divider" />
           <div className="total-amount">
             <span>
               <strong>Sale Staff</strong>
             </span>
-            <span>
-              {selectedOrder
-                ? selectedOrder.order.customizeRequest.saleStaff.name
-                : "N/A"}
-            </span>
+            <span>{selectedOrder ? selectedOrder.saleStaffName : "N/A"}</span>
           </div>
           <hr className="divider" />
           <div className="total-amount">
@@ -218,7 +210,7 @@ const CheckOutLast = () => {
               <strong>Design Staff</strong>
             </span>
             <span>
-              {selectedOrder ? selectedOrder.order.designStaff?.name : "N/A"}
+              {selectedOrder ? selectedOrder?.designStaffName : "N/A"}
             </span>
           </div>
           <hr className="divider" />
@@ -227,9 +219,7 @@ const CheckOutLast = () => {
               <strong>Production Staff</strong>
             </span>
             <span>
-              {selectedOrder
-                ? selectedOrder.order.productionStaff?.name
-                : "N/A"}
+              {selectedOrder ? selectedOrder?.productionStaffName : "N/A"}
             </span>
           </div>
           <hr className="divider" />
@@ -237,16 +227,14 @@ const CheckOutLast = () => {
             <span>
               <strong>Total Price</strong>
             </span>
-            <span>
-              {selectedOrder ? selectedOrder.order.totalPrice : "N/A"}
-            </span>
+            <span>{selectedOrder ? selectedOrder.totalPrice : "N/A"}</span>
           </div>
           <hr className="divider" />
           <div className="total-amount">
             <span>
               <strong>Status</strong>
             </span>
-            <span>{selectedOrder ? selectedOrder.order.status : "N/A"}</span>
+            <span>{selectedOrder ? selectedOrder.status : "N/A"}</span>
           </div>
         </div>
         <div className="payment-method">

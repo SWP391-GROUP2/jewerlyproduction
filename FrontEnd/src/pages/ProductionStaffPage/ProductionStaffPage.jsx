@@ -14,7 +14,9 @@ function ProductionStaffPage() {
 
   const [orderData, setOrderData] = useState([]);
 
-  // Fetch orders from API
+  const [currentStage, setCurrentStage] = useState("Material Checking"); // Default stage
+
+  // In danh sách Order
   const fetchOrders = async () => {
     try {
       const response = await axios.get("http://localhost:5266/api/Orders");
@@ -24,13 +26,22 @@ function ProductionStaffPage() {
     }
   };
 
-  // Fetch inspection data for a specific order
+  // Lấy danh sách kiểm tra của đơn hàng với orderId
   const fetchOrderInspection = async (orderId) => {
     try {
       const response = await axios.get(
         `http://localhost:5266/api/Inspection/order/${orderId}`
       );
-      setInspectionData(response.data);
+      // Sắp xếp lại các giai đoạn trước khi set vào state
+      const sortedData = response.data.sort((a, b) => {
+        const order = [
+          "Material Checking",
+          "In Production Progress",
+          "Final Inspection",
+        ];
+        return order.indexOf(a.stage) - order.indexOf(b.stage);
+      });
+      setInspectionData(sortedData);
     } catch (error) {
       console.error("Error fetching inspection data:", error);
     }
@@ -40,15 +51,15 @@ function ProductionStaffPage() {
     fetchOrders();
   }, []);
 
-  // Handle input change in inspection data
+  // Xử lý thay đổi đầu vào trong dữ liệu kiểm tra
   const handleInputChange = (index, field, value) => {
     const newInspectionData = [...inspectionData];
     newInspectionData[index][field] = value;
     setInspectionData(newInspectionData);
   };
 
-  // Handle submission of inspection data
-  const handleSubmit = async (inspection) => {
+  // Xử lý gửi dữ liệu kiểm tra
+  const handleSubmitInspection = async (inspection) => {
     const { orderId, stage, result, comment } = inspection;
     try {
       await axios.put(
@@ -61,6 +72,13 @@ function ProductionStaffPage() {
         }
       );
       alert("Data submitted successfully");
+      if (stage === "Material Checking") {
+        setCurrentStage("In Production Progress");
+      } else if (stage === "In Production Progress") {
+        setCurrentStage("Final Inspection");
+      } else if (stage === "Final Inspection") {
+        setCurrentStage("Complete");
+      }
     } catch (error) {
       if (error.response && error.response.status === 404) {
         console.error("Order not found:", error.response.data);
@@ -72,26 +90,46 @@ function ProductionStaffPage() {
     }
   };
 
-  // Show details of an order
+  const handleUpdateStatus = async () => {
+    const orderId = selectedItem.orderId; // Thay thế bằng giá trị thực tế
+    try {
+      await axios.put(
+        `http://localhost:5266/api/ProductionStaff/updateStatus`,
+        null,
+        {
+          params: {
+            orderId,
+            stage: "Final Inspection",
+          },
+        }
+      );
+      alert("Order status updated successfully");
+    } catch (error) {
+      console.error("Error updating status:", error);
+      alert("Failed to update status. Please try again later.");
+    }
+  };
+
+  // Hiển thị chi tiết của một đơn hàng
   const showDetail = (item) => {
     setSelectedItem(item);
     setShowDetailPopup(true);
-    fetchOrderInspection(item.order.orderId); // Fetch inspection data for selected order
+    fetchOrderInspection(item.orderId); // Lấy dữ liệu kiểm tra cho đơn hàng được chọn
   };
 
-  // Hide order details popup
+  // Ẩn popup chi tiết đơn hàng
   const hideDetail = () => {
     setShowDetailPopup(false);
   };
 
-  // Handle view button click (e.g., to view inspection details)
+  // Xử lý nút xem chi tiết (ví dụ: để xem chi tiết kiểm tra)
   const handleViewButtonClick = async () => {
-    setShowDetailPopup(false); // Close the popup
-    setCurrentView("newView"); // Change current view to 'newView'
-    await fetchOrderInspection(selectedItem.order.orderId); // Fetch inspection data for selected order
+    setShowDetailPopup(false); // Đóng popup
+    setCurrentView("newView"); // Chuyển màn hình hiện tại sang 'newView'
+    await fetchOrderInspection(selectedItem.orderId); // Lấy dữ liệu kiểm tra cho đơn hàng được chọn
   };
   const inproduction = orderData.filter(
-    (data) => data.order.status === "In Production"
+    (data) => data.status === "In Production"
   );
 
   return (
@@ -105,7 +143,7 @@ function ProductionStaffPage() {
         <div className="productionstaff-container">
           <ProductionStaffHeader />
           <div className="productionstaff-main-container">
-            {/* Render order list view */}
+            {/* Hiển thị danh sách đơn hàng */}
             {currentView === "orderlist" && (
               <div className="productionstaff-table-container">
                 <h2 className="productionstaff-table-title">Order List</h2>
@@ -121,25 +159,22 @@ function ProductionStaffPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {/* Map through orders in production */}
+                    {/* Duyệt qua các đơn hàng trong quá trình sản xuất */}
                     {inproduction.map((item) => (
-                      <tr
-                        key={item.customizeRequestID}
-                        onClick={() => showDetail(item)}
-                      >
-                        <td>{item.order.orderId}</td>
-                        <td>{item.order.customizeRequest.customer.name}</td>
-                        <td>{item.order.designStaff?.name ?? "N/A"}</td>
-                        <td>{item.order.productionStaff?.name ?? "N/A"}</td>
-                        <td>{item.order.totalPrice}</td>
-                        <td>{item.order.status}</td>
+                      <tr key={item.orderId} onClick={() => showDetail(item)}>
+                        <td>{item.orderId}</td>
+                        <td>{item.customerName}</td>
+                        <td>{item?.designStaffName ?? "N/A"}</td>
+                        <td>{item?.productionStaffName ?? "N/A"}</td>
+                        <td>{item.totalPrice}</td>
+                        <td>{item.status}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
             )}
-            {/* Render detailed inspection view */}
+            {/* Hiển thị chi tiết kiểm tra */}
             {currentView === "newView" && (
               <div className="productionstaff-newview">
                 <table className="inspection-table">
@@ -154,7 +189,7 @@ function ProductionStaffPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {/* Map through inspection data */}
+                    {/* Duyệt qua dữ liệu kiểm tra  */}
                     {inspectionData &&
                       inspectionData.map((inspection, index) => (
                         <tr key={inspection.inspectionId}>
@@ -175,9 +210,10 @@ function ProductionStaffPage() {
                                   e.target.value === "true"
                                 )
                               }
+                              disabled={currentStage !== inspection.stage}
                             >
-                              <option value="true">True</option>
-                              <option value="false">False</option>
+                              <option value="true">Complete</option>
+                              <option value="false">Mistake</option>
                             </select>
                           </td>
                           <td>
@@ -191,10 +227,15 @@ function ProductionStaffPage() {
                                   e.target.value
                                 )
                               }
+                              disabled={currentStage !== inspection.stage}
                             />
                           </td>
                           <td>
-                            <button onClick={() => handleSubmit(inspection)}>
+                            <button
+                              className="detail-button-s"
+                              onClick={() => handleSubmitInspection(inspection)}
+                              disabled={currentStage !== inspection.stage}
+                            >
                               Submit
                             </button>
                           </td>
@@ -202,13 +243,21 @@ function ProductionStaffPage() {
                       ))}
                   </tbody>
                 </table>
+                {currentStage === "Complete" && (
+                  <button
+                    className="productionstaff-final-submit"
+                    onClick={handleUpdateStatus}
+                  >
+                    Complete
+                  </button>
+                )}
               </div>
             )}
           </div>
         </div>
       </div>
 
-      {/* Render detail popup */}
+      {/* Hiển thị popup chi tiết */}
       {showDetailPopup && (
         <div className="productionstaff-detail-popup">
           <div className="productionstaff-detail-popup-content">
@@ -217,31 +266,31 @@ function ProductionStaffPage() {
               <tbody>
                 <tr>
                   <td>Order ID:</td>
-                  <td>{selectedItem.order.orderId}</td>
+                  <td>{selectedItem.orderId}</td>
                 </tr>
                 <tr>
                   <td>Customer Name:</td>
-                  <td>{selectedItem.order.customizeRequest.customer.name}</td>
+                  <td>{selectedItem.customerName}</td>
                 </tr>
                 <tr>
                   <td>Design Staff Name:</td>
-                  <td>{selectedItem.order.designStaff?.name ?? "N/A"}</td>
+                  <td>{selectedItem?.designStaffName ?? "N/A"}</td>
                 </tr>
                 <tr>
                   <td>Production Staff Name:</td>
-                  <td>{selectedItem.order.productionStaff?.name ?? "N/A"}</td>
+                  <td>{selectedItem?.productionStaffName ?? "N/A"}</td>
                 </tr>
                 <tr>
                   <td>Total Price:</td>
-                  <td>{selectedItem.order.totalPrice}</td>
+                  <td>{selectedItem.totalPrice}</td>
                 </tr>
                 <tr>
                   <td>Order Date:</td>
-                  <td>{selectedItem.order.orderDate}</td>
+                  <td>{selectedItem.orderDate}</td>
                 </tr>
                 <tr>
                   <td>Status:</td>
-                  <td>{selectedItem.order.status}</td>
+                  <td>{selectedItem.status}</td>
                 </tr>
 
                 <tr>
