@@ -255,4 +255,191 @@
   display: inline-block;
   margin-right: 10px; /* Add spacing between buttons */
 }
+/* DesignStaffPage.css */
+.designstaff-data-entry-container {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
+.designstaff-data-entry-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+}
+
+.designstaff-data-entry-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.designstaff-input {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.designstaff-submit-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.designstaff-submit-button:hover {
+  background-color: #45a049;
+}
+
+.popup-productlist-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-productlist-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  width: 600px;  
+  height: 600px; 
+  overflow-y: auto; /* Add vertical scroll if content exceeds height */
+  text-align: center;
+}
+
+.popup-productlist-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.popup-productlist-content li {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #ccc;
+}
+
+.popup-productlist-content li:hover {
+  background: #f0f0f0;
+}
+
+.popup-productlist-content button {
+  margin-top: 10px;
+}
+
+.popup-productlist-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.popup-productlist-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.popup-productlist-table th,
+.popup-productlist-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.popup-productlist-table th {
+  background-color: #f4f4f4;
+}
+
+.popup-productlist-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.popup-productlist-content button {
+  display: block;
+  margin: 0 auto;
+}
+
+
+
+
+.closecloseclose {
+  --color: #ea1818;
+  font-family: inherit;
+  display: inline-block;
+  width: 8em;
+  height: 2.6em;
+  line-height: 2.5em;
+  margin: 20px;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid var(--color);
+  transition: color .5s;
+  z-index: 1;
+  font-size: 17px;
+  border-radius: 6px;
+  font-weight: 500;
+  color: var(--color);
+ }
+ 
+ .closecloseclose:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: var(--color);
+  height: 150px;
+  width: 200px;
+  border-radius: 50%;
+ }
+ 
+ .closecloseclose:hover {
+  color: #fff;
+ }
+ 
+ .closecloseclose:before {
+  top: 100%;
+  left: 100%;
+  transition: all .7s;
+ }
+ 
+ .closecloseclose:hover:before {
+  top: -30px;
+  left: -30px;
+ }
+ 
+ .closecloseclose:active:before {
+  background: #d20b0b;
+  transition: background 0s;
+ }
