@@ -5,6 +5,7 @@ import ManagerHeader from "../../components/ManagerHeader/ManagerHeader";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { useSelector } from "react-redux";
+import Notify from "../../components/Alert/Alert";
 
 function ManagerPage() {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
@@ -140,23 +141,23 @@ function ManagerPage() {
   }, []);
 
   const pendingRequests = requestData.filter(
-    (data) => data.customerRequest.status === "Pending"
+    (data) => data.status === "Pending"
   );
 
   const waitquotation = requestData.filter(
-    (data) => data.customerRequest.status === "Wait for Quotation"
+    (data) => data.status === "Wait for Quotation"
   );
 
   const waitapprove = requestData.filter(
-    (data) => data.customerRequest.status === "Wait For Approval"
+    (data) => data.status === "Wait For Approval"
   );
 
   const assigndesigner = OrderData.filter(
-    (data) => data.order.status === "Assigning Designer"
+    (data) => data.status === "Assigning Designer"
   );
 
   const assignproduction = OrderData.filter(
-    (data) => data.order.status === "Assigning Production"
+    (data) => data.status === "Assigning Production"
   );
 
   if (loading) return <div>Loading...</div>;
@@ -214,15 +215,17 @@ function ManagerPage() {
       );
 
       console.log("Response:", response.data);
+      Notify.success("Approve Request Successfully");
       return response.data;
     } catch (error) {
       console.error("Error sending quotation request:", error);
+      Notify.fail("Approve Request Failed !");
       throw error;
     }
   };
 
   const handleApproveClick = async () => {
-    const { customizeRequestId } = selectedRequest.customerRequest;
+    const { customizeRequestId } = selectedRequest;
     try {
       await ApproveRequest(customizeRequestId);
       await fetchRequests();
@@ -241,10 +244,12 @@ function ManagerPage() {
       );
 
       // Xử lý dữ liệu nhận được từ API (nếu cần)
+      Notify.success("Assign Sales Staff Successfully");
       return response.data;
     } catch (error) {
       // Xử lý lỗi (nếu cần)
       console.error("There was a problem with the fetch operation:", error);
+      Notify.fail("Assign Sales Staff Failed !");
       throw error;
     }
   };
@@ -276,10 +281,12 @@ function ManagerPage() {
       );
 
       // Xử lý dữ liệu nhận được từ API (nếu cần)
+      Notify.success("Assign Production Staff Successfully");
       return response.data;
     } catch (error) {
       // Xử lý lỗi (nếu cần)
       console.error("There was a problem with the fetch operation:", error);
+      Notify.fail("Assign Production Staff Failed !");
       throw error;
     }
   };
@@ -306,10 +313,12 @@ function ManagerPage() {
       );
 
       // Xử lý dữ liệu nhận được từ API (nếu cần)
+      Notify.success("Assign Design Staff Successfully");
       return response.data;
     } catch (error) {
       // Xử lý lỗi (nếu cần)
       console.error("There was a problem with the fetch operation:", error);
+      Notify.fail("Assign Design Staff Failed !");
       throw error;
     }
   };
@@ -326,17 +335,14 @@ function ManagerPage() {
 
   const handleRowClick = (customizeRequestId) => {
     const selectedRequest = requestData.find(
-      (request) =>
-        request.customerRequest.customizeRequestId === customizeRequestId
+      (request) => request.customizeRequestId === customizeRequestId
     );
     setSelectedRequest(selectedRequest);
     setDetailPopupOpen(true);
   };
 
   const handleRowOrderClick = (orderId) => {
-    const selectedOrder = OrderData.find(
-      (order) => order.order.orderId === orderId
-    );
+    const selectedOrder = OrderData.find((order) => order.orderId === orderId);
 
     setSelectedOrder(selectedOrder);
     setOrderDetailPopupOpen(true);
@@ -344,9 +350,7 @@ function ManagerPage() {
   };
 
   const handleDesignOrderClick = (orderId) => {
-    const selectedOrder = OrderData.find(
-      (order) => order.order.orderId === orderId
-    );
+    const selectedOrder = OrderData.find((order) => order.orderId === orderId);
 
     setSelectedOrder(selectedOrder);
     setOrderDesignPopupOpen(true);
@@ -354,9 +358,7 @@ function ManagerPage() {
   };
 
   const handleProductionOrderClick = (orderId) => {
-    const selectedOrder = OrderData.find(
-      (order) => order.order.orderId === orderId
-    );
+    const selectedOrder = OrderData.find((order) => order.orderId === orderId);
 
     setSelectedOrder(selectedOrder);
     setOrderProductionPopupOpen(true);
@@ -365,8 +367,7 @@ function ManagerPage() {
 
   const handleRowDetailClick = (customizeRequestId) => {
     const selectedRequest = requestData.find(
-      (request) =>
-        request.customerRequest.customizeRequestId === customizeRequestId
+      (request) => request.customizeRequestId === customizeRequestId
     );
     setSelectedRequest(selectedRequest);
     setPopupOpenDetail(true);
@@ -402,24 +403,18 @@ function ManagerPage() {
                 {pendingRequests.map((row, index) => (
                   <tr
                     key={index}
-                    onClick={() =>
-                      handleRowDetailClick(
-                        row.customerRequest.customizeRequestId
-                      )
-                    }
+                    onClick={() => handleRowDetailClick(row.customizeRequestId)}
                   >
-                    <td>{row.customerRequest.customizeRequestId}</td>
+                    <td>{row.customizeRequestId}</td>
                     <td>{row.customerName}</td>
                     <td>{row.saleStaffName}</td>
-                    <td>{row.customerRequest.status}</td>
+                    <td>{row.status}</td>
                     <td>
                       <button
                         className="detail-button-s"
                         onClick={(e) => {
                           e.stopPropagation(); // Ngăn chặn sự kiện click hàng
-                          handleAssignClick(
-                            row.customerRequest.customizeRequestId
-                          );
+                          handleAssignClick(row.customizeRequestId);
                         }}
                       >
                         Assign
@@ -457,12 +452,10 @@ function ManagerPage() {
                     <tr
                       key={index}
                       onClick={() =>
-                        handleRowDetailClick(
-                          row.customerRequest.customizeRequestId
-                        )
+                        handleRowDetailClick(row.customizeRequestId)
                       }
                     >
-                      <td>{row.customerRequest.customizeRequestId}</td>
+                      <td>{row.customizeRequestId}</td>
                       <td>{row.customerName}</td>
                       <td>{row.saleStaffName}</td>
                     </tr>
@@ -484,14 +477,12 @@ function ManagerPage() {
                   {waitapprove.map((row, index) => (
                     <tr
                       key={index}
-                      onClick={() =>
-                        handleRowClick(row.customerRequest.customizeRequestId)
-                      }
+                      onClick={() => handleRowClick(row.customizeRequestId)}
                     >
-                      <td>{row.customerRequest.customizeRequestId}</td>
+                      <td>{row.customizeRequestId}</td>
                       <td>{row.customerName}</td>
                       <td>{row.saleStaffName}</td>
-                      <td>{row.customerRequest.quotation}</td>
+                      <td>{row.quotation}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -517,14 +508,14 @@ function ManagerPage() {
                 {OrderData.map((row, index) => (
                   <tr
                     key={index}
-                    onClick={() => handleRowOrderClick(row.order.orderId)}
+                    onClick={() => handleRowOrderClick(row.orderId)}
                   >
-                    <td>{row.order.orderId}</td>
-                    <td>{row.order.customizeRequest.customer.name}</td>
-                    <td>{row.order.designStaff?.name ?? "N/A"}</td>
-                    <td>{row.order.productionStaff?.name ?? "N/A"}</td>
-                    <td>{row.order.totalPrice}</td>
-                    <td>{row.order.status}</td>
+                    <td>{row.orderId}</td>
+                    <td>{row.customerName}</td>
+                    <td>{row?.designStaffName ?? "N/A"}</td>
+                    <td>{row?.productionStaffName ?? "N/A"}</td>
+                    <td>{row.totalPrice}</td>
+                    <td>{row.status}</td>
                   </tr>
                 ))}
               </tbody>
@@ -550,14 +541,14 @@ function ManagerPage() {
                 {assigndesigner.map((row, index) => (
                   <tr
                     key={index}
-                    onClick={() => handleDesignOrderClick(row.order.orderId)}
+                    onClick={() => handleDesignOrderClick(row.orderId)}
                   >
-                    <td>{row.order.orderId}</td>
-                    <td>{row.order.customizeRequest.customer.name}</td>
-                    <td>{row.order.designStaff?.name ?? "N/A"}</td>
-                    <td>{row.order.productionStaff?.name ?? "N/A"}</td>
-                    <td>{row.order.totalPrice}</td>
-                    <td>{row.order.status}</td>
+                    <td>{row.orderId}</td>
+                    <td>{row.customerName}</td>
+                    <td>{row?.designStaffName ?? "N/A"}</td>
+                    <td>{row?.productionStaffName ?? "N/A"}</td>
+                    <td>{row.totalPrice}</td>
+                    <td>{row.status}</td>
                   </tr>
                 ))}
               </tbody>
@@ -584,16 +575,14 @@ function ManagerPage() {
                   {assignproduction.map((row, index) => (
                     <tr
                       key={index}
-                      onClick={() =>
-                        handleProductionOrderClick(row.order.orderId)
-                      }
+                      onClick={() => handleProductionOrderClick(row.orderId)}
                     >
-                      <td>{row.order.orderId}</td>
-                      <td>{row.order.customizeRequest.customer.name}</td>
-                      <td>{row.order.designStaff?.name ?? "N/A"}</td>
-                      <td>{row.order.productionStaff?.name ?? "N/A"}</td>
-                      <td>{row.order.totalPrice}</td>
-                      <td>{row.order.status}</td>
+                      <td>{row.orderId}</td>
+                      <td>{row.customerName}</td>
+                      <td>{row?.designStaffName ?? "N/A"}</td>
+                      <td>{row?.productionStaffName ?? "N/A"}</td>
+                      <td>{row.totalPrice}</td>
+                      <td>{row.status}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -782,7 +771,7 @@ function ManagerPage() {
                 <div className="details-container">
                   <div className="detail-box">
                     <strong>ID Customize Request:</strong>{" "}
-                    {selectedRequest.customerRequest.customizeRequestId}
+                    {selectedRequest.customizeRequestId}
                   </div>
                   <div className="detail-box">
                     <strong>Customer Name:</strong>{" "}
@@ -793,40 +782,32 @@ function ManagerPage() {
                     {selectedRequest.saleStaffName}
                   </div>
                   <div className="detail-box">
-                    <strong>Gold Type:</strong>{" "}
-                    {selectedRequest.customerRequest.gold.goldType}
+                    <strong>Gold Type:</strong> {selectedRequest.goldType}
                   </div>
                   <div className="detail-box">
-                    <strong>Gold Weight:</strong>{" "}
-                    {selectedRequest.customerRequest.goldWeight}
+                    <strong>Gold Weight:</strong> {selectedRequest.goldWeight}
                   </div>
                   <div className="detail-box">
-                    <strong>Type:</strong>{" "}
-                    {selectedRequest.customerRequest.type}
+                    <strong>Type:</strong> {selectedRequest.type}
                   </div>
                   <div className="detail-box">
-                    <strong>Style:</strong>{" "}
-                    {selectedRequest.customerRequest.style}
+                    <strong>Style:</strong> {selectedRequest.style}
                   </div>
                   <div className="detail-box">
-                    <strong>Size:</strong>{" "}
-                    {selectedRequest.customerRequest.size}
+                    <strong>Size:</strong> {selectedRequest.size}
                   </div>
                   <div className="detail-box">
-                    <strong>Quotation:</strong>{" "}
-                    {selectedRequest.customerRequest.quotation}
+                    <strong>Quotation:</strong> {selectedRequest.quotation}
                   </div>
                   <div className="detail-box">
                     <strong>Quotation Description:</strong>{" "}
-                    {selectedRequest.customerRequest.quotationDes}
+                    {selectedRequest.quotationDes}
                   </div>
                   <div className="detail-box">
-                    <strong>Quantity:</strong>{" "}
-                    {selectedRequest.customerRequest.quantity}
+                    <strong>Quantity:</strong> {selectedRequest.quantity}
                   </div>
                   <div className="detail-box">
-                    <strong>Status:</strong>{" "}
-                    {selectedRequest.customerRequest.status}
+                    <strong>Status:</strong> {selectedRequest.status}
                   </div>
                   {/* Thêm các thông tin chi tiết khác của yêu cầu nếu cần */}
                 </div>
@@ -869,7 +850,7 @@ function ManagerPage() {
                 <div className="details-container">
                   <div className="detail-box">
                     <strong>ID Customize Request:</strong>{" "}
-                    {selectedRequest.customerRequest.customizeRequestId}
+                    {selectedRequest.customizeRequestId}
                   </div>
                   <div className="detail-box">
                     <strong>Customer Name:</strong>{" "}
@@ -880,40 +861,32 @@ function ManagerPage() {
                     {selectedRequest.saleStaffName}
                   </div>
                   <div className="detail-box">
-                    <strong>Gold Type:</strong>{" "}
-                    {selectedRequest.customerRequest.gold.goldType}
+                    <strong>Gold Type:</strong> {selectedRequest.goldType}
                   </div>
                   <div className="detail-box">
-                    <strong>Gold Weight:</strong>{" "}
-                    {selectedRequest.customerRequest.goldWeight}
+                    <strong>Gold Weight:</strong> {selectedRequest.goldWeight}
                   </div>
                   <div className="detail-box">
-                    <strong>Type:</strong>{" "}
-                    {selectedRequest.customerRequest.type}
+                    <strong>Type:</strong> {selectedRequest.type}
                   </div>
                   <div className="detail-box">
-                    <strong>Style:</strong>{" "}
-                    {selectedRequest.customerRequest.style}
+                    <strong>Style:</strong> {selectedRequest.style}
                   </div>
                   <div className="detail-box">
-                    <strong>Size:</strong>{" "}
-                    {selectedRequest.customerRequest.size}
+                    <strong>Size:</strong> {selectedRequest.size}
                   </div>
                   <div className="detail-box">
-                    <strong>Quotation:</strong>{" "}
-                    {selectedRequest.customerRequest.quotation}
+                    <strong>Quotation:</strong> {selectedRequest.quotation}
                   </div>
                   <div className="detail-box">
                     <strong>Quotation Description:</strong>{" "}
-                    {selectedRequest.customerRequest.quotationDes}
+                    {selectedRequest.quotationDes}
                   </div>
                   <div className="detail-box">
-                    <strong>Quantity:</strong>{" "}
-                    {selectedRequest.customerRequest.quantity}
+                    <strong>Quantity:</strong> {selectedRequest.quantity}
                   </div>
                   <div className="detail-box">
-                    <strong>Status:</strong>{" "}
-                    {selectedRequest.customerRequest.status}
+                    <strong>Status:</strong> {selectedRequest.status}
                   </div>
                   {/* Thêm các thông tin chi tiết khác của yêu cầu nếu cần */}
                 </div>
@@ -940,33 +913,31 @@ function ManagerPage() {
               {selectedOrder && (
                 <div className="details-container">
                   <div className="detail-box">
-                    <strong>Order ID:</strong> {selectedOrder.order.orderId}
+                    <strong>Order ID:</strong> {selectedOrder.orderId}
                   </div>
                   <div className="detail-box">
-                    <strong>Customer Name:</strong>{" "}
-                    {selectedOrder.order.customizeRequest.customer.name}
+                    <strong>Customer Name:</strong> {selectedOrder.customerName}
                   </div>
                   <div className="detail-box">
                     <strong>Design Staff Name:</strong>{" "}
-                    {selectedOrder.order.designStaff?.name ?? "N/A"}
+                    {selectedOrder?.designStaffName ?? "N/A"}
                   </div>
                   <div className="detail-box">
                     <strong>Production Staff Name:</strong>{" "}
-                    {selectedOrder.order.productionStaff?.name ?? "N/A"}
+                    {selectedOrder?.productionStaffName ?? "N/A"}
                   </div>
                   <div className="detail-box">
-                    <strong>Total Price:</strong>{" "}
-                    {selectedOrder.order.totalPrice}
+                    <strong>Total Price:</strong> {selectedOrder.totalPrice}
                   </div>
                   <div className="detail-box">
                     <strong>Customize Request ID:</strong>{" "}
-                    {selectedOrder.order.customizeRequest.customizeRequestId}
+                    {selectedOrder.customizeRequestId}
                   </div>
                   <div className="detail-box">
-                    <strong>Status:</strong> {selectedOrder.order.status}
+                    <strong>Status:</strong> {selectedOrder.status}
                   </div>
                   <div className="detail-box">
-                    <strong>Order Date:</strong> {selectedOrder.order.orderDate}
+                    <strong>Order Date:</strong> {selectedOrder.orderDate}
                   </div>
 
                   {/* Thêm các thông tin chi tiết khác của yêu cầu nếu cần */}
@@ -994,33 +965,31 @@ function ManagerPage() {
               {selectedOrder && (
                 <div className="details-container">
                   <div className="detail-box">
-                    <strong>Order ID:</strong> {selectedOrder.order.orderId}
+                    <strong>Order ID:</strong> {selectedOrder.orderId}
                   </div>
                   <div className="detail-box">
-                    <strong>Customer Name:</strong>{" "}
-                    {selectedOrder.order.customizeRequest.customer.name}
+                    <strong>Customer Name:</strong> {selectedOrder.customerName}
                   </div>
                   <div className="detail-box">
                     <strong>Design Staff Name:</strong>{" "}
-                    {selectedOrder.order.designStaff?.name ?? "N/A"}
+                    {selectedOrder?.designStaffName ?? "N/A"}
                   </div>
                   <div className="detail-box">
                     <strong>Production Staff Name:</strong>{" "}
-                    {selectedOrder.order.productionStaff?.name ?? "N/A"}
+                    {selectedOrder?.productionStaffName ?? "N/A"}
                   </div>
                   <div className="detail-box">
-                    <strong>Total Price:</strong>{" "}
-                    {selectedOrder.order.totalPrice}
+                    <strong>Total Price:</strong> {selectedOrder.totalPrice}
                   </div>
                   <div className="detail-box">
                     <strong>Customize Request ID:</strong>{" "}
-                    {selectedOrder.order.customizeRequest.customizeRequestId}
+                    {selectedOrder.customizeRequestId}
                   </div>
                   <div className="detail-box">
-                    <strong>Status:</strong> {selectedOrder.order.status}
+                    <strong>Status:</strong> {selectedOrder.status}
                   </div>
                   <div className="detail-box">
-                    <strong>Order Date:</strong> {selectedOrder.order.orderDate}
+                    <strong>Order Date:</strong> {selectedOrder.orderDate}
                   </div>
 
                   {/* Thêm các thông tin chi tiết khác của yêu cầu nếu cần */}
@@ -1038,7 +1007,7 @@ function ManagerPage() {
                   <button
                     className="popup_button"
                     onClick={() =>
-                      handleAssignClickOrderDesign(selectedOrder.order.orderId)
+                      handleAssignClickOrderDesign(selectedOrder.orderId)
                     }
                   >
                     Assign Design Staff
@@ -1058,33 +1027,31 @@ function ManagerPage() {
               {selectedOrder && (
                 <div className="details-container">
                   <div className="detail-box">
-                    <strong>Order ID:</strong> {selectedOrder.order.orderId}
+                    <strong>Order ID:</strong> {selectedOrder.orderId}
                   </div>
                   <div className="detail-box">
-                    <strong>Customer Name:</strong>{" "}
-                    {selectedOrder.order.customizeRequest.customer.name}
+                    <strong>Customer Name:</strong> {selectedOrder.customerName}
                   </div>
                   <div className="detail-box">
                     <strong>Design Staff Name:</strong>{" "}
-                    {selectedOrder.order.designStaff?.name ?? "N/A"}
+                    {selectedOrder?.designStaffName ?? "N/A"}
                   </div>
                   <div className="detail-box">
                     <strong>Production Staff Name:</strong>{" "}
-                    {selectedOrder.order.productionStaff?.name ?? "N/A"}
+                    {selectedOrder?.productionStaffName ?? "N/A"}
                   </div>
                   <div className="detail-box">
-                    <strong>Total Price:</strong>{" "}
-                    {selectedOrder.order.totalPrice}
+                    <strong>Total Price:</strong> {selectedOrder.totalPrice}
                   </div>
                   <div className="detail-box">
                     <strong>Customize Request ID:</strong>{" "}
-                    {selectedOrder.order.customizeRequest.customizeRequestId}
+                    {selectedOrder.customizeRequestId}
                   </div>
                   <div className="detail-box">
-                    <strong>Status:</strong> {selectedOrder.order.status}
+                    <strong>Status:</strong> {selectedOrder.status}
                   </div>
                   <div className="detail-box">
-                    <strong>Order Date:</strong> {selectedOrder.order.orderDate}
+                    <strong>Order Date:</strong> {selectedOrder.orderDate}
                   </div>
 
                   {/* Thêm các thông tin chi tiết khác của yêu cầu nếu cần */}
@@ -1102,9 +1069,7 @@ function ManagerPage() {
                   <button
                     className="popup_button"
                     onClick={() =>
-                      handleAssignClickOrderProduction(
-                        selectedOrder.order.orderId
-                      )
+                      handleAssignClickOrderProduction(selectedOrder.orderId)
                     }
                   >
                     Assign Production Staff

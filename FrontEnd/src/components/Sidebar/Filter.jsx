@@ -6,7 +6,7 @@ import "./Filter.css";
 const Sidebar = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [sortOption, setSortOption] = useState("");
+  const [sortOption, setSortOption] = useState("asc");
   const [selectedFilters, setSelectedFilters] = useState({});
   const [products, setProducts] = useState([]);
   const navigate = useNavigate(); // Sử dụng hook useNavigate để chuyển hướng
@@ -173,8 +173,11 @@ const Sidebar = () => {
                 onClick={() => navigateToProductDetail(product.productSampleId)} // Chuyển hướng khi nhấp vào sản phẩm
               >
                 <img
-                          src={product.image || "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"}
-                          alt={product.productName}
+                  src={
+                    product.image ||
+                    "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"
+                  }
+                  alt={product.productName}
                   className="product-image"
                 />
                 <h3 className="product-name">{product.productName}</h3>

@@ -67,10 +67,10 @@ function DesignStaffPage() {
 
   const OrderOfCustomer = OrderData.filter((item) => {
     // Check if designStaffId matches
-    const hasDesignStaff = item.order.designStaffId === designStaffId;
+    const hasDesignStaff = item.designStaffId === designStaffId;
 
     // Check if status matches any of the specified values
-    const statusMatches = ["Design Pending"].includes(item.order.status);
+    const statusMatches = ["Design Pending"].includes(item.status);
 
     // Return true if both conditions are met
     return hasDesignStaff && statusMatches;
@@ -237,10 +237,8 @@ function DesignStaffPage() {
   };
 
   const _3ddesigns =
-    selectedItem && selectedItem.order
-      ? DesignData.filter(
-          (design) => design.orderId === selectedItem.order.orderId
-        )
+    selectedItem && selectedItem
+      ? DesignData.filter((design) => design.orderId === selectedItem.orderId)
       : [];
 
   return (
@@ -272,33 +270,29 @@ function DesignStaffPage() {
                   </thead>
                   <tbody>
                     {OrderOfCustomer.map((item) => (
-                      <tr key={item.order.orderId}>
+                      <tr key={item.orderId}>
+                        <td onClick={() => showDetail(item)}>{item.orderId}</td>
                         <td onClick={() => showDetail(item)}>
-                          {item.order.orderId}
+                          {item.customerName}
                         </td>
                         <td onClick={() => showDetail(item)}>
-                          {item.order.customizeRequest.customer.name}
+                          {item?.saleStaffName ?? "N/A"}
                         </td>
                         <td onClick={() => showDetail(item)}>
-                          {item.order.customizeRequest.saleStaff?.name ?? "N/A"}
+                          {item?.designStaffName ?? "N/A"}
                         </td>
                         <td onClick={() => showDetail(item)}>
-                          {item.order.designStaff?.name ?? "N/A"}
+                          {item?.productionStaffName ?? "N/A"}
                         </td>
                         <td onClick={() => showDetail(item)}>
-                          {item.order.productionStaff?.name ?? "N/A"}
+                          {item.totalPrice}
                         </td>
-                        <td onClick={() => showDetail(item)}>
-                          {item.order.totalPrice}
-                        </td>
-                        <td onClick={() => showDetail(item)}>
-                          {item.order.status}
-                        </td>
+                        <td onClick={() => showDetail(item)}>{item.status}</td>
                         <td>
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              handleToProduction(item.order.orderId);
+                              handleToProduction(item.orderId);
                             }}
                           >
                             Send
@@ -324,59 +318,35 @@ function DesignStaffPage() {
                   <tbody>
                     <tr>
                       <td>ID</td>
-                      <td>{selectedItem.order.orderId}</td>
+                      <td>{selectedItem.orderId}</td>
                     </tr>
                     <tr>
                       <td>Gold</td>
-                      <td>
-                        {selectedItem.order.customizeRequest.gold.goldType}
-                      </td>
+                      <td>{selectedItem.goldType}</td>
                     </tr>
                     <tr>
                       <td>Gold Weight</td>
-                      <td>{selectedItem.order.customizeRequest.goldWeight}</td>
+                      <td>{selectedItem.goldWeight}</td>
                     </tr>
                     <tr>
                       <td>Customer</td>
-                      <td>
-                        {selectedItem.order.customizeRequest.customer.name}
-                      </td>
+                      <td>{selectedItem.customerName}</td>
                     </tr>
                     <tr>
                       <td>Sales</td>
-                      <td>
-                        {selectedItem.order.customizeRequest.saleStaff?.name ??
-                          "N/A"}
-                      </td>
+                      <td>{selectedItem?.saleStaffName ?? "N/A"}</td>
                     </tr>
                     <tr>
                       <td>Designer</td>
-                      <td>{selectedItem.order.designStaff?.name ?? "N/A"}</td>
+                      <td>{selectedItem?.designStaffName ?? "N/A"}</td>
                     </tr>
                     <tr>
                       <td>Production</td>
-                      <td>
-                        {selectedItem.order.productionStaff?.name ?? "N/A"}
-                      </td>
+                      <td>{selectedItem?.productionStaffName ?? "N/A"}</td>
                     </tr>
                     <tr>
                       <td>Manager</td>
-                      <td>
-                        {selectedItem.order.customizeRequest.manager?.name ??
-                          "N/A"}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Type</td>
-                      <td>{selectedItem.order.customizeRequest.type}</td>
-                    </tr>
-                    <tr>
-                      <td>Style</td>
-                      <td>{selectedItem.order.customizeRequest.style}</td>
-                    </tr>
-                    <tr>
-                      <td>Size</td>
-                      <td>{selectedItem.order.customizeRequest.size}</td>
+                      <td>{selectedItem?.managerName ?? "N/A"}</td>
                     </tr>
 
                     {uploadedImage && (
@@ -429,7 +399,7 @@ function DesignStaffPage() {
                   className="designstaff-add-image-button"
                   onClick={() => {
                     handleImageUpload();
-                    handleSetOrder(selectedItem.order.orderId);
+                    handleSetOrder(selectedItem.orderId);
                   }}
                 >
                   Add Image
@@ -474,7 +444,7 @@ function DesignStaffPage() {
                   <button
                     type="submit"
                     className="designstaff-save-button"
-                    onClick={() => handle3dDesign(selectedItem.order.orderId)}
+                    onClick={() => handle3dDesign(selectedItem.orderId)}
                   >
                     Save
                   </button>
