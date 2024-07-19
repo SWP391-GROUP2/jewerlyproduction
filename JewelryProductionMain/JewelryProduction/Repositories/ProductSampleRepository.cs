@@ -92,6 +92,8 @@ namespace JewelryProduction.Repositories
         {
             var samples = await _context.ProductSamples
                 .Include(d => d.Gold)
+                .Include(d => d._3ddesigns)
+                .Include(d => d.Gemstones)
                 .ToListAsync();
 
             var result = samples.Select(samples => new GetProductSampleDTO
@@ -106,6 +108,8 @@ namespace JewelryProduction.Repositories
                 GoldId = samples.GoldId,
                 GoldType = samples.Gold.GoldType,
                 GoldWeight = samples.GoldWeight,
+                GemstoneId = samples.Gemstones?.Select(g => g.GemstoneId).ToList(),
+                _3dDesignId = samples._3ddesigns?.Select(ds => ds.ProductSampleId).ToList(),
             }).ToList();
 
             return result;
