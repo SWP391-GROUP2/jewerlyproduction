@@ -4,6 +4,8 @@ import SaleStaffSidebar from "../../components/SaleStaffSidebar/SaleStaffSidebar
 import SaleStaffHeader from "../../components/SaleStaffHeader/SaleStaffHeader";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { jwtDecode } from "jwt-decode";
+import Notify from "../../components/Alert/Alert";
 
 function SaleStaffPage() {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
@@ -82,15 +84,17 @@ function SaleStaffPage() {
       );
 
       console.log("Response:", response.data);
+      Notify.success("Send Quote Successfully");
       return response.data;
     } catch (error) {
       console.error("Error sending quotation request:", error);
+      Notify.fail("Send Quote Failed !");
       throw error;
     }
   };
 
   const handleSaveDetailPopup = async () => {
-    const { customizeRequestId } = detailPopupData.customerRequest;
+    const { customizeRequestId } = detailPopupData;
     try {
       await sendQuote(customizeRequestId, goldWeight);
       await fetchRequests();
@@ -150,19 +154,31 @@ function SaleStaffPage() {
     setGoldWeight("");
   };
 
+  const decodedToken = jwtDecode(user.token);
+  const salestaffId = decodedToken.sid;
+
   const waitForQuotationRequests = requestData.filter(
-    (data) => data.customerRequest.status === "Wait for Quotation"
+    (data) =>
+      data.status === "Wait for Quotation" && data.saleStaffId === salestaffId
   );
   const waitForApproveRequests = requestData.filter(
-    (data) => data.customerRequest.status === "Wait For Approval"
+    (data) =>
+      data.status === "Wait For Approval" && data.saleStaffId === salestaffId
   );
   const paymentpendingOrder = OrderData.filter(
     (OrderData) =>
-      OrderData.order.status === "Payment Pending" &&
-      OrderData.order.paymentMethodId === "P001"
+      OrderData.status === "Payment Pending" &&
+      OrderData.paymentMethodId === "P001" &&
+      OrderData.saleStaffId === salestaffId
   );
+
+  const YourOrder = OrderData.filter(
+    (OrderData) => OrderData.saleStaffId === salestaffId
+  );
+
   const rejectListData = requestData.filter(
-    (data) => data.customerRequest.status === "Quotation Rejected"
+    (data) =>
+      data.status === "Quotation Rejected" && data.saleStaffId === salestaffId
   );
 
   if (error) return <div>Error: {error.message}</div>;
@@ -199,15 +215,15 @@ function SaleStaffPage() {
                   <tbody>
                     {waitForQuotationRequests.map((row, index) => (
                       <tr key={index}>
-                        <td>{row.customerRequest.customizeRequestId}</td>
+                        <td>{row.customizeRequestId}</td>
                         <td>{row.customerName}</td>
                         <td>{row.saleStaffName}</td>
-                        <td>{row.customerRequest.gold.goldType}</td>
-                        <td>{row.customerRequest.type}</td>
-                        <td>{row.customerRequest.style}</td>
-                        <td>{row.customerRequest.size}</td>
-                        <td>{row.customerRequest.quantity}</td>
-                        <td>{row.customerRequest.status}</td>
+                        <td>{row.goldType}</td>
+                        <td>{row.type}</td>
+                        <td>{row.style}</td>
+                        <td>{row.size}</td>
+                        <td>{row.quantity}</td>
+                        <td>{row.status}</td>
                         <td>
                           <button
                             className="salestaff-detail-button"
@@ -245,16 +261,16 @@ function SaleStaffPage() {
                   <tbody>
                     {waitForApproveRequests.map((row, index) => (
                       <tr key={index}>
-                        <td>{row.customerRequest.customizeRequestId}</td>
+                        <td>{row.customizeRequestId}</td>
                         <td>{row.customerName}</td>
                         <td>{row.saleStaffName}</td>
-                        <td>{row.customerRequest.gold.goldType}</td>
-                        <td>{row.customerRequest.type}</td>
-                        <td>{row.customerRequest.style}</td>
-                        <td>{row.customerRequest.size}</td>
-                        <td>{row.customerRequest.quotation}</td>
-                        <td>{row.customerRequest.quantity}</td>
-                        <td>{row.customerRequest.status}</td>
+                        <td>{row.goldType}</td>
+                        <td>{row.type}</td>
+                        <td>{row.style}</td>
+                        <td>{row.size}</td>
+                        <td>{row.quotation}</td>
+                        <td>{row.quantity}</td>
+                        <td>{row.status}</td>
                         <td>
                           <button
                             className="salestaff-detail-button"
@@ -289,21 +305,18 @@ function SaleStaffPage() {
                   <tbody>
                     {paymentpendingOrder.map((row, index) => (
                       <tr key={index}>
-                        <td>{row.order.orderId}</td>
-                        <td>{row.order.customizeRequest.customer.name}</td>
-                        <td>{row.order.customizeRequest.saleStaff.name}</td>
-                        <td>{row.order.designStaff?.name || ""}</td>
-                        <td>{row.order.productionStaff?.name || ""}</td>
-                        <td>{row.order.totalPrice}</td>
-                        <td>{row.order.status}</td>
+                        <td>{row.orderId}</td>
+                        <td>{row.customerName}</td>
+                        <td>{row.saleStaffName}</td>
+                        <td>{row?.designStaffName || ""}</td>
+                        <td>{row?.productionStaffName || ""}</td>
+                        <td>{row.totalPrice}</td>
+                        <td>{row.status}</td>
                         <td>
                           <button
                             className="salestaff-detail-button"
                             onClick={() =>
-                              handleCheckPayment(
-                                row.order.orderId,
-                                row.order.customizeRequest.quotation
-                              )
+                              handleCheckPayment(row.orderId, row.quotation)
                             }
                           >
                             Already Paid
@@ -340,16 +353,16 @@ function SaleStaffPage() {
                   <tbody>
                     {rejectListData.map((row, index) => (
                       <tr key={index}>
-                        <td>{row.goldID}</td>
-                        <td>{row.goldweight}</td>
-                        <td>{row.customerID}</td>
-                        <td>{row.saleStaffID}</td>
-                        <td>{row.managerID}</td>
+                        <td>{row.goldId}</td>
+                        <td>{row.goldWeight}</td>
+                        <td>{row.customerId}</td>
+                        <td>{row.saleStaffId}</td>
+                        <td>{row.managerId}</td>
                         <td>{row.type}</td>
                         <td>{row.style}</td>
                         <td>{row.size}</td>
                         <td>{row.quotation}</td>
-                        <td>{row.quotationDescription}</td>
+                        <td>{row.quotationDes}</td>
                         <td>{row.quantity}</td>
                         <td>{row.status}</td>
                         <td>
@@ -360,6 +373,38 @@ function SaleStaffPage() {
                             Details
                           </button>
                         </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {currentView === "Order_list" && (
+              <div>
+                <h2 className="table-heading">Order List</h2>
+                <table className="custom-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Customer</th>
+                      <th>Sales Staff</th>
+                      <th>Design Staff</th>
+                      <th>Production Staff</th>
+                      <th>Price</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {YourOrder.map((row, index) => (
+                      <tr key={index}>
+                        <td>{row.orderId}</td>
+                        <td>{row.customerName}</td>
+                        <td>{row.saleStaffName}</td>
+                        <td>{row?.designStaffName || ""}</td>
+                        <td>{row?.productionStaffName || ""}</td>
+                        <td>{row.totalPrice}</td>
+                        <td>{row.status}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -378,7 +423,7 @@ function SaleStaffPage() {
               <tbody>
                 <tr>
                   <td>Customize Request ID:</td>
-                  <td>{detailPopupData.customerRequest.customizeRequestId}</td>
+                  <td>{detailPopupData.customizeRequestId}</td>
                 </tr>
                 <tr>
                   <td>Customer Name:</td>
@@ -386,7 +431,7 @@ function SaleStaffPage() {
                 </tr>
                 <tr>
                   <td>Gold Type:</td>
-                  <td>{detailPopupData.customerRequest.gold.goldType}</td>
+                  <td>{detailPopupData.goldType}</td>
                 </tr>
                 <tr>
                   <td>Gold Weight:</td>
@@ -399,39 +444,39 @@ function SaleStaffPage() {
                         className="detail-input"
                       />
                     ) : (
-                      detailPopupData.customerRequest.goldWeight
+                      detailPopupData.goldWeight
                     )}
                   </td>
                 </tr>
 
                 <tr>
                   <td>Type:</td>
-                  <td>{detailPopupData.customerRequest.type}</td>
+                  <td>{detailPopupData.type}</td>
                 </tr>
                 <tr>
                   <td>Style:</td>
-                  <td>{detailPopupData.customerRequest.style}</td>
+                  <td>{detailPopupData.style}</td>
                 </tr>
                 <tr>
                   <td>Size:</td>
-                  <td>{detailPopupData.customerRequest.size}</td>
+                  <td>{detailPopupData.size}</td>
                 </tr>
                 <tr>
                   <td>Quotation:</td>
-                  <td>{detailPopupData.customerRequest.quotation}</td>
+                  <td>{detailPopupData.quotation}</td>
                 </tr>
 
                 <tr>
                   <td>Quotation Description:</td>
-                  <td>{detailPopupData.customerRequest.quotationDes}</td>
+                  <td>{detailPopupData.quotationDes}</td>
                 </tr>
                 <tr>
                   <td>Quantity:</td>
-                  <td>{detailPopupData.customerRequest.quantity}</td>
+                  <td>{detailPopupData.quantity}</td>
                 </tr>
                 <tr>
                   <td>Status:</td>
-                  <td>{detailPopupData.customerRequest.status}</td>
+                  <td>{detailPopupData.status}</td>
                 </tr>
               </tbody>
             </table>
