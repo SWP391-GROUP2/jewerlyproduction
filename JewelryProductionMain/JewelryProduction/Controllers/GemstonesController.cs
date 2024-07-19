@@ -1,6 +1,7 @@
 ﻿using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
 using JewelryProduction.Interface.GemstoneF;
+using JewelryProduction.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -150,6 +151,15 @@ namespace JewelryProduction.Controllers
             var result = await query.ToListAsync();
             return Ok(result);
 
+        }
+
+        [HttpPut("gemstone/{gemstoneId}/sample/{sampleId}")]
+        public async Task<IActionResult> UpdateProductSample(string gemstoneId, string sampleId)
+        {
+            var result = await _service.UpdateProductSample(gemstoneId, sampleId);
+            if (result == null)
+                return NotFound();
+            return Ok(result);
         }
 
         private bool GemstoneExists(string id)

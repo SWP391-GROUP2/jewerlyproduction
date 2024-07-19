@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
 import './Alert.css';
+import { createRoot } from 'react-dom/client';
 
 const Notify = {
     success: (message) => showNotification("https://www.svgrepo.com/show/111210/success.svg", "Success", message, 'success', 'green'),
@@ -19,26 +19,28 @@ const showNotification = (icon, title, message, type, color) => {
         useEffect(() => {
             const timeoutId = setTimeout(() => {
                 setClosing(true);
-                setTimeout(() => closeNotification(notificationContainer), 1000); // Matches the animation duration
+                setTimeout(() => closeNotification(), 1000); // Matches the animation duration
             }, 3000);
 
             const progressBar = document.querySelector('.progress-bar');
-            progressBar.style.animation = 'progress 3s linear forwards';
-            progressBar.style.backgroundColor = color;
+            if (progressBar) {
+                progressBar.style.animation = 'progress 3s linear forwards';
+                progressBar.style.backgroundColor = color;
+            }
 
             return () => {
                 clearTimeout(timeoutId);
             };
         }, []);
 
-        const closeNotification = (container) => {
-            ReactDOM.unmountComponentAtNode(container);
-            container.remove();
+        const closeNotification = () => {
+            root.unmount();
+            notificationContainer.remove();
         };
 
         const handleClose = () => {
             setClosing(true);
-            setTimeout(() => closeNotification(notificationContainer), 1000); // Matches the animation duration
+            setTimeout(() => closeNotification(), 1000); // Matches the animation duration
         };
 
         return (
@@ -55,7 +57,8 @@ const showNotification = (icon, title, message, type, color) => {
         );
     };
 
-    ReactDOM.render(<Notification />, notificationContainer);
+    const root = createRoot(notificationContainer);
+    root.render(<Notification />);
 };
 
 export default Notify;
