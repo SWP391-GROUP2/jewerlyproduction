@@ -30,7 +30,7 @@ function Header() {
           <>
             <Link to="/login">
               <button className="button" onClick={handleLogout}>
-                <span class="button-content">Log Out</span>
+                <span classname="button-content">Log Out</span>
               </button>
             </Link>
           </>
@@ -38,7 +38,7 @@ function Header() {
           <>
             <Link to="/login">
               <button className="button">
-                <span class="button-content">Log In</span>
+                <span classname="button-content">Log In</span>
               </button>
             </Link>
           </>
