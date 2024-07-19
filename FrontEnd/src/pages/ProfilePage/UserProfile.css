@@ -135,3 +135,94 @@
   background-position: center;
   padding-bottom: 0px;
 }
+
+.popup-buttons-ship {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  max-width: 600px;
+  margin-top: 10px;
+}
+
+.submit-button-ship {
+  transition: all 0.3s ease-in-out;
+  font-family: "Dosis", sans-serif;
+}
+.submit-button-ship {
+  width: 130px;
+  height: 50px;
+  border-radius: 50px;
+  background-image: linear-gradient(135deg, #a4fe92 0%, #61ea54 100%);
+  box-shadow: 0 20px 30px -6px rgba(196, 238, 97, 0.5);
+  outline: none;
+  cursor: pointer;
+  border: none;
+  font-size: 24px;
+  color: white;
+}
+.submit-button-ship:hover {
+  transform: translateY(3px);
+  box-shadow: none;
+}
+
+.submit-button-ship:active {
+  opacity: 0.5;
+}
+
+.close-button-ship {
+  transition: all 0.3s ease-in-out;
+  font-family: "Dosis", sans-serif;
+}
+.close-button-ship {
+  width: 130px;
+  height: 50px;
+  border-radius: 50px;
+  background-image: linear-gradient(135deg, #feb692 0%, #ea5455 100%);
+  box-shadow: 0 20px 30px -6px rgba(238, 103, 97, 0.5);
+  outline: none;
+  cursor: pointer;
+  border: none;
+  font-size: 24px;
+  color: white;
+}
+.close-button-ship:hover {
+  transform: translateY(3px);
+  box-shadow: none;
+}
+
+.close-button-ship:active {
+  opacity: 0.5;
+}
+
+.detail-button-shipping {
+  cursor: pointer;
+  font-weight: 700;
+  font-family: Helvetica, "sans-serif";
+  transition: all 0.2s;
+  padding: 10px 20px;
+  border-radius: 100px;
+  background-image: linear-gradient(135deg, #a4fe92 0%, #61ea54 100%);
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  margin-right: -78px;
+}
+
+.detail-button-shipping:hover {
+  background: #75e740;
+}
+
+.detail-button-shipping > svg {
+  width: 34px;
+  margin-left: 10px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.detail-button-shipping:hover svg {
+  transform: translateX(5px);
+}
+
+.detail-button-shipping:active {
+  transform: scale(0.95);
+}
