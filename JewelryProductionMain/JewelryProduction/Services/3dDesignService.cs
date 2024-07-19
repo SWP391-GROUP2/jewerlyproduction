@@ -45,5 +45,11 @@ namespace JewelryProduction.Services
             await _repository.AddDesignAsync(designEntity);
             return "Design uploaded successfully";
         }
+
+        public async Task<string> UpdateProductSample(string designId, string sampleId)
+        {
+            await _repository.UpdateProductSample(designId, sampleId);
+            return "Set To Sample Successfully";
+        }
     }
 }

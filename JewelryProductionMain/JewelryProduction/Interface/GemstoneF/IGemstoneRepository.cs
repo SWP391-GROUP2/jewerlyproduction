@@ -12,5 +12,6 @@ namespace JewelryProduction.Interface
         Task AddGemstoneAsync(Gemstone gemstone);
         Task<List<GetGemstoneDTO>> GetGemstones();
         Task<GetGemstoneDTO> GetGemstone(string id);
+        Task<string> UpdateProductSample(string gemstoneId, string sampleId);
     }
 }

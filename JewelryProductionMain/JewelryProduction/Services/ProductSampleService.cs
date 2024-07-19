@@ -118,10 +118,10 @@ namespace JewelryProduction.Services
             return similarity;
         }
 
-        public async Task<string> AddSampleAsync(AddProductSampleDTO productSample)
+        public async Task<ProductSample> AddSampleAsync(AddProductSampleDTO productSample)
         {
-            await _productSampleRepository.AddSampleAsync(productSample);
-            return "Completed";
+            var result = await _productSampleRepository.AddSampleAsync(productSample);
+            return result;
         }
 
         public async Task<List<GetProductSampleDTO>> GetSamples() => await _productSampleRepository.GetSamples();

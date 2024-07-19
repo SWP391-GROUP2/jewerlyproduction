@@ -24,7 +24,7 @@
         {
             Random random = new Random();
             int randomNumber = random.Next(10000, 99999);
-            return $"GS{randomNumber}";
+            return $"PS{randomNumber}";
         }
     }
 }
