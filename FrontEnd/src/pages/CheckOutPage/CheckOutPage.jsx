@@ -5,6 +5,7 @@ import Footer from "../../components/Footer/Footer";
 import "./CheckOutPage.css";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import Notify from "../../components/Alert/Alert";
 
 const CheckOutPage = () => {
   const { customizeRequestId } = useParams();
@@ -63,8 +64,7 @@ const CheckOutPage = () => {
   }, [customizeRequestId]);
 
   const RequestsCurrent = RequestData.filter(
-    (RequestData) =>
-      RequestData.customerRequest.customizeRequestId === customizeRequestId
+    (RequestData) => RequestData.customizeRequestId === customizeRequestId
   );
 
   const GemstoneCurrent = GemstoneData.filter(
@@ -76,8 +76,8 @@ const CheckOutPage = () => {
 
   // Kiểm tra nếu mảng RequestsCurrent có phần tử và `customerRequest` tồn tại
   useEffect(() => {
-    if (RequestsCurrent.length > 0 && RequestsCurrent[0].customerRequest) {
-      const quotation = RequestsCurrent[0].customerRequest.quotation;
+    if (RequestsCurrent.length > 0 && RequestsCurrent[0]) {
+      const quotation = RequestsCurrent[0].quotation;
       const percentage = (quotation * 0.3).toFixed(2);
       const totalafter = (quotation - percentage).toFixed(2);
 
@@ -86,13 +86,13 @@ const CheckOutPage = () => {
       setPrice(percentage);
       setQuotationPercentage(percentage);
       console.log("Quotation 30%:", percentage);
-      const GT = RequestsCurrent[0].customerRequest.gold.goldType;
-      setgoldWeight(RequestsCurrent[0].customerRequest.goldWeight);
-      settype(RequestsCurrent[0].customerRequest.type);
-      setstyle(RequestsCurrent[0].customerRequest.style);
-      setsize(RequestsCurrent[0].customerRequest.size);
-      setquantity(RequestsCurrent[0].customerRequest.quantity);
-      setQuotationDes(RequestsCurrent[0].customerRequest.quotationDes);
+      const GT = RequestsCurrent[0].goldType;
+      setgoldWeight(RequestsCurrent[0].goldWeight);
+      settype(RequestsCurrent[0].type);
+      setstyle(RequestsCurrent[0].style);
+      setsize(RequestsCurrent[0].size);
+      setquantity(RequestsCurrent[0].quantity);
+      setQuotationDes(RequestsCurrent[0].quotationDes);
       setgoldType(GT);
     } else {
       console.log(
@@ -119,13 +119,12 @@ const CheckOutPage = () => {
   useEffect(() => {
     if (dataFetched) {
       const foundOrder = OrderData.find(
-        (order) =>
-          order.order.customizeRequest.customizeRequestId === customizeRequestId
+        (order) => order.customizeRequestId === customizeRequestId
       );
 
       if (foundOrder) {
-        console.log(`Found orderId: ${foundOrder.order.orderId}`);
-        setorderID(foundOrder.order.orderId);
+        console.log(`Found orderId: ${foundOrder.orderId}`);
+        setorderID(foundOrder.orderId);
       } else {
         console.log("OrderId not found for the given CustomizerequestId.");
       }
@@ -149,7 +148,7 @@ const CheckOutPage = () => {
       );
       if (response) {
         console.log("Response:", response.data);
-        alert("Choose payment successful!");
+        Notify.success("Choose payment successful!");
       } else {
         alert("Choose payment failed!");
       }

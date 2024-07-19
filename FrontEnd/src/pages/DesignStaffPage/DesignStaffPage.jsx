@@ -26,6 +26,69 @@ function DesignStaffPage() {
 
   const [showFormPopup, setShowFormPopup] = useState(false);
 
+  const [name, setName] = useState('');
+const [productSampleList, setProductSampleList] = useState('');
+const [isPopupVisible, setIsPopupVisible] = useState(false);
+
+  const [selectedProductSample, setSelectedProductSample] = useState('');
+
+  const [productSamples, setProductSamples] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+
+  useEffect(() => {
+    // Fetch product samples from API
+    const fetchProductSamples = async () => {
+      try {
+        const response = await axios.get('http://localhost:5266/api/ProductSamples');
+        setProductSamples(response.data);
+      } catch (error) {
+        console.error('Error fetching product samples:', error);
+      }
+    };
+
+    fetchProductSamples();
+  }, []);
+
+  const handleSubmit = () => {
+    // Handle form submission
+  };
+
+  const handleProductSampleClick = () => {
+    setIsPopupVisible(true);
+  };
+
+  const handleProductSampleSelect = (sample) => {
+    setSelectedProductSample(sample);
+    setProductSampleList(sample.productName); // Display product name
+    setIsPopupVisible(false);
+  };
+
+  const handleImageChange = (e) => {
+    setSelectedImage(e.target.files[0]);
+  };
+
+  const handleUploadImage = () => {
+    if (selectedProductSample && selectedImage) {
+      const formData = new FormData();
+      formData.append('image', selectedImage);
+      formData.append('productSampleId', selectedProductSample.productSampleId);
+
+      // Replace with your actual upload API endpoint
+      axios.post('http://localhost:5266/api/UploadProductImage', formData)
+        .then(response => {
+          console.log('Image uploaded successfully:', response.data);
+          // Handle success (e.g., show a success message)
+        })
+        .catch(error => {
+          console.error('Error uploading image:', error);
+          // Handle error (e.g., show an error message)
+        });
+    } else {
+      // Handle the case where no image or product is selected
+      console.log('Please select a product and image.');
+    }
+  };
   function chunkArray(array, size) {
     return array.reduce(
       (acc, _, index) =>
@@ -67,10 +130,10 @@ function DesignStaffPage() {
 
   const OrderOfCustomer = OrderData.filter((item) => {
     // Check if designStaffId matches
-    const hasDesignStaff = item.order.designStaffId === designStaffId;
+    const hasDesignStaff = item.designStaffId === designStaffId;
 
     // Check if status matches any of the specified values
-    const statusMatches = ["Design Pending"].includes(item.order.status);
+    const statusMatches = ["Design Pending"].includes(item.status);
 
     // Return true if both conditions are met
     return hasDesignStaff && statusMatches;
@@ -237,10 +300,8 @@ function DesignStaffPage() {
   };
 
   const _3ddesigns =
-    selectedItem && selectedItem.order
-      ? DesignData.filter(
-          (design) => design.orderId === selectedItem.order.orderId
-        )
+    selectedItem && selectedItem
+      ? DesignData.filter((design) => design.orderId === selectedItem.orderId)
       : [];
 
   return (
@@ -272,33 +333,29 @@ function DesignStaffPage() {
                   </thead>
                   <tbody>
                     {OrderOfCustomer.map((item) => (
-                      <tr key={item.order.orderId}>
+                      <tr key={item.orderId}>
+                        <td onClick={() => showDetail(item)}>{item.orderId}</td>
                         <td onClick={() => showDetail(item)}>
-                          {item.order.orderId}
+                          {item.customerName}
                         </td>
                         <td onClick={() => showDetail(item)}>
-                          {item.order.customizeRequest.customer.name}
+                          {item?.saleStaffName ?? "N/A"}
                         </td>
                         <td onClick={() => showDetail(item)}>
-                          {item.order.customizeRequest.saleStaff?.name ?? "N/A"}
+                          {item?.designStaffName ?? "N/A"}
                         </td>
                         <td onClick={() => showDetail(item)}>
-                          {item.order.designStaff?.name ?? "N/A"}
+                          {item?.productionStaffName ?? "N/A"}
                         </td>
                         <td onClick={() => showDetail(item)}>
-                          {item.order.productionStaff?.name ?? "N/A"}
+                          {item.totalPrice}
                         </td>
-                        <td onClick={() => showDetail(item)}>
-                          {item.order.totalPrice}
-                        </td>
-                        <td onClick={() => showDetail(item)}>
-                          {item.order.status}
-                        </td>
+                        <td onClick={() => showDetail(item)}>{item.status}</td>
                         <td>
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              handleToProduction(item.order.orderId);
+                              handleToProduction(item.orderId);
                             }}
                           >
                             Send
@@ -310,6 +367,76 @@ function DesignStaffPage() {
                 </table>
               </div>
             )}
+            {currentView === "upload3Ddeisgn" && (
+        <div className="designstaff-data-entry-container">
+          <h2 className="designstaff-data-entry-title">Enter Data</h2>
+          <form className="designstaff-data-entry-form">
+            <div className="form-group">
+              <label htmlFor="name">Name</label>
+              <input
+                type="text"
+                id="name"
+                className="designstaff-input"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="productSampleList">ProductSample List</label>
+              <input
+                type="text"
+                id="productSampleList"
+                className="designstaff-input"
+                value={productSampleList}
+                onClick={handleProductSampleClick}
+                readOnly
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="imageUpload">Upload Image</label>
+              <input
+                type="file"
+                id="imageUpload"
+                className="designstaff-input"
+                onChange={handleImageChange}
+              />
+            </div>
+            <button
+              type="button"
+              className="designstaff-submit-button"
+              onClick={handleUploadImage}
+            >
+              Upload Image
+            </button>
+          </form>
+        </div>
+      )}
+
+      {isPopupVisible && (
+        <div className="popup-productlist-overlay">
+          <div className="popup-productlist-content">
+            <h3>Select a Product Sample</h3>
+            <table className="popup-productlist-table">
+              <thead>
+                <tr>
+                  <th>Product Sample ID</th>
+                  <th>Product Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                {productSamples.map((sample) => (
+                  <tr key={sample.productSampleId} onClick={() => handleProductSampleSelect(sample)}>
+                    <td>{sample.productSampleId}</td>
+                    <td>{sample.productName}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <button className="closecloseclose" onClick={() => setIsPopupVisible(false)}>Close</button>
+          </div>
+        </div>
+      )}
+
           </div>
         </div>
       </div>
@@ -324,59 +451,35 @@ function DesignStaffPage() {
                   <tbody>
                     <tr>
                       <td>ID</td>
-                      <td>{selectedItem.order.orderId}</td>
+                      <td>{selectedItem.orderId}</td>
                     </tr>
                     <tr>
                       <td>Gold</td>
-                      <td>
-                        {selectedItem.order.customizeRequest.gold.goldType}
-                      </td>
+                      <td>{selectedItem.goldType}</td>
                     </tr>
                     <tr>
                       <td>Gold Weight</td>
-                      <td>{selectedItem.order.customizeRequest.goldWeight}</td>
+                      <td>{selectedItem.goldWeight}</td>
                     </tr>
                     <tr>
                       <td>Customer</td>
-                      <td>
-                        {selectedItem.order.customizeRequest.customer.name}
-                      </td>
+                      <td>{selectedItem.customerName}</td>
                     </tr>
                     <tr>
                       <td>Sales</td>
-                      <td>
-                        {selectedItem.order.customizeRequest.saleStaff?.name ??
-                          "N/A"}
-                      </td>
+                      <td>{selectedItem?.saleStaffName ?? "N/A"}</td>
                     </tr>
                     <tr>
                       <td>Designer</td>
-                      <td>{selectedItem.order.designStaff?.name ?? "N/A"}</td>
+                      <td>{selectedItem?.designStaffName ?? "N/A"}</td>
                     </tr>
                     <tr>
                       <td>Production</td>
-                      <td>
-                        {selectedItem.order.productionStaff?.name ?? "N/A"}
-                      </td>
+                      <td>{selectedItem?.productionStaffName ?? "N/A"}</td>
                     </tr>
                     <tr>
                       <td>Manager</td>
-                      <td>
-                        {selectedItem.order.customizeRequest.manager?.name ??
-                          "N/A"}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Type</td>
-                      <td>{selectedItem.order.customizeRequest.type}</td>
-                    </tr>
-                    <tr>
-                      <td>Style</td>
-                      <td>{selectedItem.order.customizeRequest.style}</td>
-                    </tr>
-                    <tr>
-                      <td>Size</td>
-                      <td>{selectedItem.order.customizeRequest.size}</td>
+                      <td>{selectedItem?.managerName ?? "N/A"}</td>
                     </tr>
 
                     {uploadedImage && (
@@ -429,7 +532,7 @@ function DesignStaffPage() {
                   className="designstaff-add-image-button"
                   onClick={() => {
                     handleImageUpload();
-                    handleSetOrder(selectedItem.order.orderId);
+                    handleSetOrder(selectedItem.orderId);
                   }}
                 >
                   Add Image
@@ -439,6 +542,7 @@ function DesignStaffPage() {
           </div>
         </div>
       )}
+      
       {showFormPopup && (
         <div className="designstaff-form-popup">
           <div className="designstaff-form-popup-content">
@@ -474,7 +578,7 @@ function DesignStaffPage() {
                   <button
                     type="submit"
                     className="designstaff-save-button"
-                    onClick={() => handle3dDesign(selectedItem.order.orderId)}
+                    onClick={() => handle3dDesign(selectedItem.orderId)}
                   >
                     Save
                   </button>
@@ -491,6 +595,7 @@ function DesignStaffPage() {
           </div>
         </div>
       )}
+      
     </div>
   );
 }

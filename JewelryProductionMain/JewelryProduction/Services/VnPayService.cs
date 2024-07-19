@@ -70,7 +70,7 @@ namespace JewelryProduction.Services
             var order = _orderRepository.GetOrderOnly(vnp_OrderInfo);
             if (order.DepositAmount == null)
             {
-                order.DepositAmount = Decimal.Parse(vnPay.GetResponseData("vnp_Amount"));
+                order.DepositAmount = Decimal.Parse(vnPay.GetResponseData("vnp_Amount"))/100;
                 order.TotalPrice = order.TotalPrice - (order.DepositAmount ?? 0);
                 order.Status = "Assigning Designer";
             }

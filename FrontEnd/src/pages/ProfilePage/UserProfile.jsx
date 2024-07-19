@@ -55,8 +55,7 @@ function UserProfile() {
 
   const handleRowClick = (customizeRequestId) => {
     const selectedRequest = requestData.find(
-      (request) =>
-        request.customerRequest.customizeRequestId === customizeRequestId
+      (request) => request.customizeRequestId === customizeRequestId
     );
     setSelectedRequest(selectedRequest);
     setDetailPopupOpen(true);
@@ -79,8 +78,7 @@ function UserProfile() {
 
   const handleApproveClick = (customizeRequestId) => {
     const approveSelectedRequest = requestData.find(
-      (request) =>
-        request.customerRequest.customizeRequestId === customizeRequestId
+      (request) => request.customizeRequestId === customizeRequestId
     );
     setapproveSelectedRequest(approveSelectedRequest);
     setApprovePopupOpen(true);
@@ -122,7 +120,7 @@ function UserProfile() {
   const customerId = decodedToken.sid;
 
   const RequestsOfCustomer = requestData.filter(
-    (requestData) => requestData.customerRequest.customerId === customerId
+    (requestData) => requestData.customerId === customerId
   );
 
   console.log("Filtered Requests:", customerId); // Kiểm tra kết quả lọc
@@ -149,7 +147,7 @@ function UserProfile() {
   }, [fetchDataFlag, OrderData]);
 
   const OrderOfCustomer = OrderData.filter(
-    (OrderData) => OrderData.order.customizeRequest.customerId === customerId
+    (OrderData) => OrderData.customerId === customerId
   );
   const showDetail = (item) => {
     setSelectedItem(item);
@@ -258,9 +256,7 @@ function UserProfile() {
 
   const _3ddesigns =
     selectedItem && selectedItem.order
-      ? DesignData.filter(
-          (design) => design.orderId === selectedItem.order.orderId
-        )
+      ? DesignData.filter((design) => design.orderId === selectedItem.orderId)
       : [];
 
   if (loading) return <div>Loading...</div>;
@@ -398,25 +394,21 @@ function UserProfile() {
                   {RequestsOfCustomer.map((row, index) => (
                     <tr
                       key={index}
-                      onClick={() =>
-                        handleRowClick(row.customerRequest.customizeRequestId)
-                      }
+                      onClick={() => handleRowClick(row.customizeRequestId)}
                     >
-                      <td>{row.customerRequest.customizeRequestId}</td>
+                      <td>{row.customizeRequestId}</td>
                       <td>{row.customerName}</td>
                       <td>{row.saleStaffName}</td>
-                      <td>{row.customerRequest.quotation}</td>
-                      <td>{row.customerRequest.status}</td>
-                      {row.customerRequest.status === "Quotation Approved" ? (
+                      <td>{row.quotation}</td>
+                      <td>{row.status}</td>
+                      {row.status === "Quotation Approved" ? (
                         <>
                           <td>
                             <button
                               className="detail-button-s"
                               onClick={(e) => {
                                 e.stopPropagation(); // Ngăn chặn sự kiện click hàng
-                                handleApproveClick(
-                                  row.customerRequest.customizeRequestId
-                                );
+                                handleApproveClick(row.customizeRequestId);
                               }}
                             >
                               Approve
@@ -472,33 +464,28 @@ function UserProfile() {
                 </thead>
                 <tbody>
                   {OrderOfCustomer.map((item) => (
-                    <tr
-                      key={item.order.orderId}
-                      onClick={() => showDetail(item)}
-                    >
-                      <td>{item.order.orderId}</td>
-                      <td>{item.order.customizeRequest.customer.name}</td>
+                    <tr key={item.orderId} onClick={() => showDetail(item)}>
+                      <td>{item.orderId}</td>
+                      <td>{item.customerName}</td>
+                      <td>{item?.saleStaffName ?? "N/A"}</td>
+                      <td>{item?.designStaffName ?? "N/A"}</td>
+                      <td>{item?.productionStaffName ?? "N/A"}</td>
+                      <td>{item.totalPrice}</td>
                       <td>
-                        {item.order.customizeRequest.saleStaff?.name ?? "N/A"}
-                      </td>
-                      <td>{item.order.designStaff?.name ?? "N/A"}</td>
-                      <td>{item.order.productionStaff?.name ?? "N/A"}</td>
-                      <td>{item.order.totalPrice}</td>
-                      <td>
-                        {item.order.designStaff || item.order.productionStaff
-                          ? item.order.status
+                        {item.designStaffName || item.productionStaffName
+                          ? item.status
                           : "In Process"}
                       </td>
-                      {item.order.status === "Choosing Payment" &&
-                      item.order.designStaff &&
-                      item.order.productionStaff ? (
+                      {item.status === "Choosing Payment" &&
+                      item.designStaffName &&
+                      item.productionStaffName ? (
                         <>
                           <td>
                             <button
                               className="detail-button-s"
                               onClick={(e) => {
                                 e.stopPropagation(); // Ngăn chặn sự kiện click hàng
-                                navigateToOrdeDetail(item.order.orderId);
+                                navigateToOrdeDetail(item.orderId);
                               }}
                             >
                               Approve
@@ -525,7 +512,7 @@ function UserProfile() {
                 className="confirmation-popup_button"
                 onClick={() =>
                   navigateToProductDetail(
-                    approveSelectedRequest.customerRequest.customizeRequestId
+                    approveSelectedRequest.customizeRequestId
                   )
                 }
               >
@@ -571,7 +558,7 @@ function UserProfile() {
                   <div className="details-container">
                     <div className="detail-box">
                       <strong>ID Customize Request:</strong>{" "}
-                      {selectedRequest.customerRequest.customizeRequestId}
+                      {selectedRequest.customizeRequestId}
                     </div>
                     <div className="detail-box">
                       <strong>Customer Name:</strong>{" "}
@@ -582,40 +569,32 @@ function UserProfile() {
                       {selectedRequest.saleStaffName}
                     </div>
                     <div className="detail-box">
-                      <strong>Gold Type:</strong>{" "}
-                      {selectedRequest.customerRequest.gold.goldType}
+                      <strong>Gold Type:</strong> {selectedRequest.goldType}
                     </div>
                     <div className="detail-box">
-                      <strong>Gold Weight:</strong>{" "}
-                      {selectedRequest.customerRequest.goldWeight}
+                      <strong>Gold Weight:</strong> {selectedRequest.goldWeight}
                     </div>
                     <div className="detail-box">
-                      <strong>Type:</strong>{" "}
-                      {selectedRequest.customerRequest.type}
+                      <strong>Type:</strong> {selectedRequest.type}
                     </div>
                     <div className="detail-box">
-                      <strong>Style:</strong>{" "}
-                      {selectedRequest.customerRequest.style}
+                      <strong>Style:</strong> {selectedRequest.style}
                     </div>
                     <div className="detail-box">
-                      <strong>Size:</strong>{" "}
-                      {selectedRequest.customerRequest.size}
+                      <strong>Size:</strong> {selectedRequest.size}
                     </div>
                     <div className="detail-box">
-                      <strong>Quotation:</strong>{" "}
-                      {selectedRequest.customerRequest.quotation}
+                      <strong>Quotation:</strong> {selectedRequest.quotation}
                     </div>
                     <div className="detail-box">
                       <strong>Quotation Description:</strong>{" "}
-                      {selectedRequest.customerRequest.quotationDes}
+                      {selectedRequest.quotationDes}
                     </div>
                     <div className="detail-box">
-                      <strong>Quantity:</strong>{" "}
-                      {selectedRequest.customerRequest.quantity}
+                      <strong>Quantity:</strong> {selectedRequest.quantity}
                     </div>
                     <div className="detail-box">
-                      <strong>Status:</strong>{" "}
-                      {selectedRequest.customerRequest.status}
+                      <strong>Status:</strong> {selectedRequest.status}
                     </div>
                     {/* Thêm các thông tin chi tiết khác của yêu cầu nếu cần */}
                   </div>
@@ -640,61 +619,35 @@ function UserProfile() {
                     <tbody>
                       <tr>
                         <strong>ID :</strong>
-                        <td>{selectedItem.order.orderId}</td>
+                        <td>{selectedItem.orderId}</td>
                       </tr>
                       <tr>
                         <strong>Gold :</strong>
-                        <td>
-                          {selectedItem.order.customizeRequest.gold.goldType}
-                        </td>
+                        <td>{selectedItem.goldType}</td>
                       </tr>
                       <tr>
                         <strong>Gold Weight :</strong>
-                        <td>
-                          {selectedItem.order.customizeRequest.goldWeight}
-                        </td>
+                        <td>{selectedItem.goldWeight}</td>
                       </tr>
                       <tr>
                         <strong>Customer :</strong>
-                        <td>
-                          {selectedItem.order.customizeRequest.customer.name}
-                        </td>
+                        <td>{selectedItem.customerName}</td>
                       </tr>
                       <tr>
                         <strong>Sales :</strong>
-                        <td>
-                          {selectedItem.order.customizeRequest.saleStaff
-                            ?.name ?? "N/A"}
-                        </td>
+                        <td>{selectedItem?.saleStaffName ?? "N/A"}</td>
                       </tr>
                       <tr>
                         <strong>Designer :</strong>
-                        <td>{selectedItem.order.designStaff?.name ?? "N/A"}</td>
+                        <td>{selectedItem?.designStaffName ?? "N/A"}</td>
                       </tr>
                       <tr>
                         <strong>Production :</strong>
-                        <td>
-                          {selectedItem.order.productionStaff?.name ?? "N/A"}
-                        </td>
+                        <td>{selectedItem?.productionStaffName ?? "N/A"}</td>
                       </tr>
                       <tr>
                         <strong>Manager :</strong>
-                        <td>
-                          {selectedItem.order.customizeRequest.manager?.name ??
-                            "N/A"}
-                        </td>
-                      </tr>
-                      <tr>
-                        <strong>Type :</strong>
-                        <td>{selectedItem.order.customizeRequest.type}</td>
-                      </tr>
-                      <tr>
-                        <strong>Style :</strong>
-                        <td>{selectedItem.order.customizeRequest.style}</td>
-                      </tr>
-                      <tr>
-                        <strong>Size :</strong>
-                        <td>{selectedItem.order.customizeRequest.size}</td>
+                        <td>{selectedItem?.managerName ?? "N/A"}</td>
                       </tr>
 
                       {uploadedImage && (
