@@ -69,7 +69,7 @@ namespace JewelryProduction.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task AddSampleAsync(AddProductSampleDTO productSample)
+        public async Task<ProductSample> AddSampleAsync(AddProductSampleDTO productSample)
         {
             var sampleEntity = new ProductSample()
             {
@@ -85,6 +85,7 @@ namespace JewelryProduction.Repositories
             };
             _context.ProductSamples.Add(sampleEntity);
             await _context.SaveChangesAsync();
+            return sampleEntity;
         }
 
         public async Task<List<GetProductSampleDTO>> GetSamples()

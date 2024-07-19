@@ -45,5 +45,11 @@ namespace JewelryProduction.Services
             await _repository.AddGemstoneAsync(gemstoneEntity);
             return "Gemstone uploaded successfully";
         }
+
+        public async Task<string> UpdateProductSample(string gemstoneId, string sampleId)
+        {
+            await _repository.UpdateProductSample(gemstoneId, sampleId);
+            return "Set To Sample Successfully";
+        }
     }
 }

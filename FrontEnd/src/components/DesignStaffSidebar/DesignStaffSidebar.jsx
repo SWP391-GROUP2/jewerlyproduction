@@ -47,6 +47,14 @@ function DesignStaffSidebar({ openSidebarToggle, handleViewChange }) {
             <BsGrid1X2Fill className="designstaff-icon" /> Product Sample List
           </button>
         </li>
+        <li className="designstaff-sidebar-list-item">
+          <button
+            className="salestaff-sidebar-button"
+            onClick={() => handleViewChange("upload3Ddeisgn")}
+          >
+            <BsGrid1X2Fill className="designstaff-icon" /> Upload 3D Design
+          </button>
+        </li>
       </ul>
     </aside>
   );
