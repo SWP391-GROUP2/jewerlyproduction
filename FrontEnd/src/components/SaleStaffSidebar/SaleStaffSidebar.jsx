@@ -1,8 +1,6 @@
 import React from "react";
 import { BsGrid1X2Fill, BsFillArchiveFill } from "react-icons/bs";
 import "./SaleStaffSidebar.css";
-import avatarImage from "../../components/Assets/icon-128x128.png";
-import logoImage from "../../components/Assets/Logoqueen.png";
 
 function SaleStaffSidebar({ openSidebarToggle, setCurrentView }) {
   const userName = "USER NAME";
@@ -15,7 +13,11 @@ function SaleStaffSidebar({ openSidebarToggle, setCurrentView }) {
     >
       <div className="salestaff-sidebar-avatar">
         <div className="salestaff-logo-container">
-          <img src="https://res.cloudinary.com/dfvplhyjj/image/upload/v1721198532/Logoqueen_obg194.png" alt="Logo" className="salestaff-logo-image" />
+          <img
+            src="https://res.cloudinary.com/dfvplhyjj/image/upload/v1721198532/Logoqueen_obg194.png"
+            alt="Logo"
+            className="salestaff-logo-image"
+          />
         </div>
         <img
           src="https://res.cloudinary.com/dfvplhyjj/image/upload/v1721198614/icon-128x128_nfr77b.png"

@@ -8,5 +8,6 @@ namespace JewelryProduction.Interface
         Task<List<Get3dDesignDTO>> Get_3Ddesigns();
         Task<Get3dDesignDTO> Get_3Ddesign(string id);
         Task DeleteDesignAsync(string id);
+        Task<string> UpdateProductSample(string designId, string sampleId);
     }
 }

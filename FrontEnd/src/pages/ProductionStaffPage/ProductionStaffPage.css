@@ -194,3 +194,19 @@
 .inspection-table tr:hover {
   background-color: #f1f1f1;
 }
+
+/* CSS cho nút submit cuối cùng */
+.productionstaff-final-submit {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  background-color: #4caf50;
+  color: white;
+  border-radius: 4px;
+  float: right;
+}
+
+.productionstaff-final-submit:hover {
+  background-color: #45a049;
+}

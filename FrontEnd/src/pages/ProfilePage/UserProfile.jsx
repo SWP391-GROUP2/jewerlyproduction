@@ -45,6 +45,11 @@ function UserProfile() {
 
   const [DesignData, setDesignData] = useState([]);
 
+  const [isPopupShipping, setIsPopupShipping] = useState(false);
+  const [shippingAddress, setShippingAddress] = useState("");
+
+  const [OrderAddress, setOrderAddress] = useState(null);
+
   const navigate = useNavigate();
 
   const user = useSelector((State) => State.auth.Login.currentUser);
@@ -55,8 +60,7 @@ function UserProfile() {
 
   const handleRowClick = (customizeRequestId) => {
     const selectedRequest = requestData.find(
-      (request) =>
-        request.customerRequest.customizeRequestId === customizeRequestId
+      (request) => request.customizeRequestId === customizeRequestId
     );
     setSelectedRequest(selectedRequest);
     setDetailPopupOpen(true);
@@ -79,14 +83,51 @@ function UserProfile() {
 
   const handleApproveClick = (customizeRequestId) => {
     const approveSelectedRequest = requestData.find(
-      (request) =>
-        request.customerRequest.customizeRequestId === customizeRequestId
+      (request) => request.customizeRequestId === customizeRequestId
     );
     setapproveSelectedRequest(approveSelectedRequest);
     setApprovePopupOpen(true);
   };
   const hideDetail = () => {
     setShowDetailPopup(false);
+  };
+
+  const ShippingPopupOpen = (orderId) => {
+    setOrderAddress(orderId);
+    setIsPopupShipping(true);
+  };
+
+  const ShippingPopupClose = () => {
+    fetchOrder();
+    setIsPopupShipping(false);
+  };
+
+  const handleAddressChange = (e) => {
+    setShippingAddress(e.target.value);
+  };
+
+  const handleSubmitAddress = () => {
+    // Xử lý việc gửi địa chỉ nhận hàng
+    handleUpdateAddress(OrderAddress, shippingAddress);
+    ShippingPopupClose();
+  };
+
+  const handleUpdateAddress = async (OrderAddress, shippingAddress) => {
+    try {
+      const res = await axios.put(
+        `http://localhost:5266/api/Orders/Update address`,
+        null,
+        {
+          params: {
+            orderID: OrderAddress,
+            address: shippingAddress,
+          },
+        }
+      );
+      console.log("Response Data:", res.data);
+    } catch (error) {
+      console.error("Error updating address:", error);
+    }
   };
 
   const fetchRequests = async () => {
@@ -122,7 +163,7 @@ function UserProfile() {
   const customerId = decodedToken.sid;
 
   const RequestsOfCustomer = requestData.filter(
-    (requestData) => requestData.customerRequest.customerId === customerId
+    (requestData) => requestData.customerId === customerId
   );
 
   console.log("Filtered Requests:", customerId); // Kiểm tra kết quả lọc
@@ -149,7 +190,7 @@ function UserProfile() {
   }, [fetchDataFlag, OrderData]);
 
   const OrderOfCustomer = OrderData.filter(
-    (OrderData) => OrderData.order.customizeRequest.customerId === customerId
+    (OrderData) => OrderData.customerId === customerId
   );
   const showDetail = (item) => {
     setSelectedItem(item);
@@ -258,9 +299,7 @@ function UserProfile() {
 
   const _3ddesigns =
     selectedItem && selectedItem.order
-      ? DesignData.filter(
-          (design) => design.orderId === selectedItem.order.orderId
-        )
+      ? DesignData.filter((design) => design.orderId === selectedItem.orderId)
       : [];
 
   if (loading) return <div>Loading...</div>;
@@ -398,25 +437,21 @@ function UserProfile() {
                   {RequestsOfCustomer.map((row, index) => (
                     <tr
                       key={index}
-                      onClick={() =>
-                        handleRowClick(row.customerRequest.customizeRequestId)
-                      }
+                      onClick={() => handleRowClick(row.customizeRequestId)}
                     >
-                      <td>{row.customerRequest.customizeRequestId}</td>
+                      <td>{row.customizeRequestId}</td>
                       <td>{row.customerName}</td>
                       <td>{row.saleStaffName}</td>
-                      <td>{row.customerRequest.quotation}</td>
-                      <td>{row.customerRequest.status}</td>
-                      {row.customerRequest.status === "Quotation Approved" ? (
+                      <td>{row.quotation}</td>
+                      <td>{row.status}</td>
+                      {row.status === "Quotation Approved" ? (
                         <>
                           <td>
                             <button
                               className="detail-button-s"
                               onClick={(e) => {
                                 e.stopPropagation(); // Ngăn chặn sự kiện click hàng
-                                handleApproveClick(
-                                  row.customerRequest.customizeRequestId
-                                );
+                                handleApproveClick(row.customizeRequestId);
                               }}
                             >
                               Approve
@@ -472,36 +507,64 @@ function UserProfile() {
                 </thead>
                 <tbody>
                   {OrderOfCustomer.map((item) => (
-                    <tr
-                      key={item.order.orderId}
-                      onClick={() => showDetail(item)}
-                    >
-                      <td>{item.order.orderId}</td>
-                      <td>{item.order.customizeRequest.customer.name}</td>
+                    <tr key={item.orderId} onClick={() => showDetail(item)}>
+                      <td>{item.orderId}</td>
+                      <td>{item.customerName}</td>
+                      <td>{item?.saleStaffName ?? "N/A"}</td>
+                      <td>{item?.designStaffName ?? "N/A"}</td>
+                      <td>{item?.productionStaffName ?? "N/A"}</td>
+                      <td>{item.totalPrice}</td>
                       <td>
-                        {item.order.customizeRequest.saleStaff?.name ?? "N/A"}
-                      </td>
-                      <td>{item.order.designStaff?.name ?? "N/A"}</td>
-                      <td>{item.order.productionStaff?.name ?? "N/A"}</td>
-                      <td>{item.order.totalPrice}</td>
-                      <td>
-                        {item.order.designStaff || item.order.productionStaff
-                          ? item.order.status
+                        {item.designStaffName || item.productionStaffName
+                          ? item.status
                           : "In Process"}
                       </td>
-                      {item.order.status === "Choosing Payment" &&
-                      item.order.designStaff &&
-                      item.order.productionStaff ? (
+                      {item.status === "Choosing Payment" &&
+                      item.designStaffName &&
+                      item.productionStaffName ? (
                         <>
                           <td>
                             <button
                               className="detail-button-s"
                               onClick={(e) => {
                                 e.stopPropagation(); // Ngăn chặn sự kiện click hàng
-                                navigateToOrdeDetail(item.order.orderId);
+                                navigateToOrdeDetail(item.orderId);
                               }}
                             >
                               Approve
+                            </button>
+                          </td>
+                        </>
+                      ) : item.status === "Shipping" ? (
+                        <>
+                          <td>
+                            <button
+                              className="detail-button-shipping"
+                              onClick={(e) => {
+                                e.stopPropagation(); // Ngăn chặn sự kiện click hàng
+                                ShippingPopupOpen(item.orderId);
+                              }}
+                            >
+                              <span>Enter Shipping Address</span>
+                              <svg
+                                width="34"
+                                height="34"
+                                viewBox="0 0 74 74"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <circle
+                                  cx="37"
+                                  cy="37"
+                                  r="35.5"
+                                  stroke="black"
+                                  stroke-width="3"
+                                ></circle>
+                                <path
+                                  d="M25 35.5C24.1716 35.5 23.5 36.1716 23.5 37C23.5 37.8284 24.1716 38.5 25 38.5V35.5ZM49.0607 38.0607C49.6464 37.4749 49.6464 36.5251 49.0607 35.9393L39.5147 26.3934C38.9289 25.8076 37.9792 25.8076 37.3934 26.3934C36.8076 26.9792 36.8076 27.9289 37.3934 28.5147L45.8787 37L37.3934 45.4853C36.8076 46.0711 36.8076 47.0208 37.3934 47.6066C37.9792 48.1924 38.9289 48.1924 39.5147 47.6066L49.0607 38.0607ZM25 38.5L48 38.5V35.5L25 35.5V38.5Z"
+                                  fill="black"
+                                ></path>
+                              </svg>
                             </button>
                           </td>
                         </>
@@ -525,7 +588,7 @@ function UserProfile() {
                 className="confirmation-popup_button"
                 onClick={() =>
                   navigateToProductDetail(
-                    approveSelectedRequest.customerRequest.customizeRequestId
+                    approveSelectedRequest.customizeRequestId
                   )
                 }
               >
@@ -571,7 +634,7 @@ function UserProfile() {
                   <div className="details-container">
                     <div className="detail-box">
                       <strong>ID Customize Request:</strong>{" "}
-                      {selectedRequest.customerRequest.customizeRequestId}
+                      {selectedRequest.customizeRequestId}
                     </div>
                     <div className="detail-box">
                       <strong>Customer Name:</strong>{" "}
@@ -582,40 +645,32 @@ function UserProfile() {
                       {selectedRequest.saleStaffName}
                     </div>
                     <div className="detail-box">
-                      <strong>Gold Type:</strong>{" "}
-                      {selectedRequest.customerRequest.gold.goldType}
+                      <strong>Gold Type:</strong> {selectedRequest.goldType}
                     </div>
                     <div className="detail-box">
-                      <strong>Gold Weight:</strong>{" "}
-                      {selectedRequest.customerRequest.goldWeight}
+                      <strong>Gold Weight:</strong> {selectedRequest.goldWeight}
                     </div>
                     <div className="detail-box">
-                      <strong>Type:</strong>{" "}
-                      {selectedRequest.customerRequest.type}
+                      <strong>Type:</strong> {selectedRequest.type}
                     </div>
                     <div className="detail-box">
-                      <strong>Style:</strong>{" "}
-                      {selectedRequest.customerRequest.style}
+                      <strong>Style:</strong> {selectedRequest.style}
                     </div>
                     <div className="detail-box">
-                      <strong>Size:</strong>{" "}
-                      {selectedRequest.customerRequest.size}
+                      <strong>Size:</strong> {selectedRequest.size}
                     </div>
                     <div className="detail-box">
-                      <strong>Quotation:</strong>{" "}
-                      {selectedRequest.customerRequest.quotation}
+                      <strong>Quotation:</strong> {selectedRequest.quotation}
                     </div>
                     <div className="detail-box">
                       <strong>Quotation Description:</strong>{" "}
-                      {selectedRequest.customerRequest.quotationDes}
+                      {selectedRequest.quotationDes}
                     </div>
                     <div className="detail-box">
-                      <strong>Quantity:</strong>{" "}
-                      {selectedRequest.customerRequest.quantity}
+                      <strong>Quantity:</strong> {selectedRequest.quantity}
                     </div>
                     <div className="detail-box">
-                      <strong>Status:</strong>{" "}
-                      {selectedRequest.customerRequest.status}
+                      <strong>Status:</strong> {selectedRequest.status}
                     </div>
                     {/* Thêm các thông tin chi tiết khác của yêu cầu nếu cần */}
                   </div>
@@ -640,61 +695,35 @@ function UserProfile() {
                     <tbody>
                       <tr>
                         <strong>ID :</strong>
-                        <td>{selectedItem.order.orderId}</td>
+                        <td>{selectedItem.orderId}</td>
                       </tr>
                       <tr>
                         <strong>Gold :</strong>
-                        <td>
-                          {selectedItem.order.customizeRequest.gold.goldType}
-                        </td>
+                        <td>{selectedItem.goldType}</td>
                       </tr>
                       <tr>
                         <strong>Gold Weight :</strong>
-                        <td>
-                          {selectedItem.order.customizeRequest.goldWeight}
-                        </td>
+                        <td>{selectedItem.goldWeight}</td>
                       </tr>
                       <tr>
                         <strong>Customer :</strong>
-                        <td>
-                          {selectedItem.order.customizeRequest.customer.name}
-                        </td>
+                        <td>{selectedItem.customerName}</td>
                       </tr>
                       <tr>
                         <strong>Sales :</strong>
-                        <td>
-                          {selectedItem.order.customizeRequest.saleStaff
-                            ?.name ?? "N/A"}
-                        </td>
+                        <td>{selectedItem?.saleStaffName ?? "N/A"}</td>
                       </tr>
                       <tr>
                         <strong>Designer :</strong>
-                        <td>{selectedItem.order.designStaff?.name ?? "N/A"}</td>
+                        <td>{selectedItem?.designStaffName ?? "N/A"}</td>
                       </tr>
                       <tr>
                         <strong>Production :</strong>
-                        <td>
-                          {selectedItem.order.productionStaff?.name ?? "N/A"}
-                        </td>
+                        <td>{selectedItem?.productionStaffName ?? "N/A"}</td>
                       </tr>
                       <tr>
                         <strong>Manager :</strong>
-                        <td>
-                          {selectedItem.order.customizeRequest.manager?.name ??
-                            "N/A"}
-                        </td>
-                      </tr>
-                      <tr>
-                        <strong>Type :</strong>
-                        <td>{selectedItem.order.customizeRequest.type}</td>
-                      </tr>
-                      <tr>
-                        <strong>Style :</strong>
-                        <td>{selectedItem.order.customizeRequest.style}</td>
-                      </tr>
-                      <tr>
-                        <strong>Size :</strong>
-                        <td>{selectedItem.order.customizeRequest.size}</td>
+                        <td>{selectedItem?.managerName ?? "N/A"}</td>
                       </tr>
 
                       {uploadedImage && (
@@ -737,6 +766,32 @@ function UserProfile() {
                   </button>
                 </div>
               </div>
+            </div>
+          </div>
+        )}
+
+        {isPopupShipping && (
+          <div className="popup">
+            <h2>Enter Shipping Address</h2>
+            <textarea
+              value={shippingAddress}
+              onChange={handleAddressChange}
+              placeholder="Enter the shipping address here..."
+            ></textarea>
+
+            <div className="popup-buttons-ship">
+              <button
+                className="submit-button-ship"
+                onClick={handleSubmitAddress}
+              >
+                Submit
+              </button>
+              <button
+                className="close-button-ship"
+                onClick={ShippingPopupClose}
+              >
+                Close
+              </button>
             </div>
           </div>
         )}
