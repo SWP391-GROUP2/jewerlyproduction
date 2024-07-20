@@ -21,5 +21,7 @@
         public string GoldType { get; set; } = null!;
 
         public double? GoldWeight { get; set; }
+        public ICollection<string> _3dDesignId { get; set; } = null!;
+        public ICollection<string> GemstoneId { get; set; } = null!;
     }
 }

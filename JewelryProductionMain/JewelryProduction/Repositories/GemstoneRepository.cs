@@ -1,6 +1,7 @@
 ﻿using JewelryProduction.DbContext;
 using JewelryProduction.DTO;
 using JewelryProduction.Interface;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace JewelryProduction.Repositories
@@ -134,5 +135,40 @@ namespace JewelryProduction.Repositories
 
             return result;
         }
+
+        public async Task<string> UpdateProductSample(string gemstoneId, string sampleId)
+        {
+            if (string.IsNullOrWhiteSpace(gemstoneId) || string.IsNullOrWhiteSpace(sampleId))
+            {
+                return "GemstoneId and SampleId cannot be null or empty.";
+            }
+
+            var gemstone = await _context.Gemstones.FindAsync(gemstoneId);
+
+            if (gemstone == null)
+            {
+                return "Gemstone not found.";
+            }
+
+            if (gemstone.ProductSampleId != null)
+            {
+                return "The gemstone is already associated with another sample.";
+            }
+
+            gemstone.ProductSampleId = sampleId;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                // Handle concurrency issues here
+                return "An error occurred while updating the gemstone.";
+            }
+
+            return "Product sample updated successfully.";
+        }
+
     }
 }

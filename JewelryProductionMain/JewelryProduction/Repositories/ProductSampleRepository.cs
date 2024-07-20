@@ -69,7 +69,7 @@ namespace JewelryProduction.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task AddSampleAsync(AddProductSampleDTO productSample)
+        public async Task<ProductSample> AddSampleAsync(AddProductSampleDTO productSample)
         {
             var sampleEntity = new ProductSample()
             {
@@ -85,12 +85,15 @@ namespace JewelryProduction.Repositories
             };
             _context.ProductSamples.Add(sampleEntity);
             await _context.SaveChangesAsync();
+            return sampleEntity;
         }
 
         public async Task<List<GetProductSampleDTO>> GetSamples()
         {
             var samples = await _context.ProductSamples
                 .Include(d => d.Gold)
+                .Include(d => d._3ddesigns)
+                .Include(d => d.Gemstones)
                 .ToListAsync();
 
             var result = samples.Select(samples => new GetProductSampleDTO
@@ -105,6 +108,8 @@ namespace JewelryProduction.Repositories
                 GoldId = samples.GoldId,
                 GoldType = samples.Gold.GoldType,
                 GoldWeight = samples.GoldWeight,
+                GemstoneId = samples.Gemstones?.Select(g => g.GemstoneId).ToList(),
+                _3dDesignId = samples._3ddesigns?.Select(ds => ds.ProductSampleId).ToList(),
             }).ToList();
 
             return result;
@@ -115,6 +120,8 @@ namespace JewelryProduction.Repositories
             var sample = await _context.ProductSamples
                 .Where(d => d.ProductSampleId == id)
                 .Include(d => d.Gold)
+                .Include(d => d._3ddesigns)
+                .Include(d => d.Gemstones)
                 .FirstOrDefaultAsync();
 
             if (sample == null)
@@ -132,6 +139,8 @@ namespace JewelryProduction.Repositories
                 GoldId = sample.GoldId,
                 GoldType = sample.Gold.GoldType,
                 GoldWeight = sample.GoldWeight,
+                GemstoneId = sample.Gemstones?.Select(g => g.GemstoneId).ToList(),
+                _3dDesignId = sample._3ddesigns?.Select(ds => ds.ProductSampleId).ToList(),
             };
 
             return result;

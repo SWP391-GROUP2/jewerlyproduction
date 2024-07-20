@@ -58,5 +58,14 @@ namespace JewelryProduction.Controllers
             await _designService.DeleteDesignAsync(id);
             return NoContent();
         }
+
+        [HttpPut("designs/{designId}/samples/{sampleId}")]
+        public async Task<IActionResult> UpdateProductSample(string designId, string sampleId)
+        {
+            var result = await _designService.UpdateProductSample(designId, sampleId);
+            if (result == null)
+                return NotFound();
+            return Ok(result);
+        }
     }
 }

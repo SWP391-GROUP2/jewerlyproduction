@@ -89,5 +89,14 @@ namespace JewelryProduction.Repositories
             _context._3ddesigns.Remove(design);
             await _context.SaveChangesAsync();  
         }
+
+        public async Task UpdateProductSample(string designId, string sampleId)
+        {
+            var design = await _context._3ddesigns.FindAsync(designId);
+            if (design.ProductSampleId != null)
+                throw new Exception($"The design is already implemented into another sample");
+            design.ProductSampleId= sampleId;
+            await _context.SaveChangesAsync();
+        }
     }
 }
