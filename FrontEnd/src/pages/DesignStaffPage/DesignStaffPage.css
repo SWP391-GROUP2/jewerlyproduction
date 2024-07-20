@@ -443,3 +443,8 @@
   background: #d20b0b;
   transition: background 0s;
  }
+
+ .image-preview img {
+  max-height: 300px;
+  max-width: fit-content;
+ }

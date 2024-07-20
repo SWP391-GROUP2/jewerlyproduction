@@ -297,10 +297,21 @@ function UserProfile() {
     }
   };
 
-  const _3ddesigns =
-    selectedItem && selectedItem.order
-      ? DesignData.filter((design) => design.orderId === selectedItem.orderId)
-      : [];
+  const [filteredDesigns, setFilteredDesigns] = useState([]);
+  useEffect(() => {
+    if (selectedItem && selectedItem.orderId) {
+      console.log("Selected Order ID:", selectedItem.orderId);
+      console.log("DesignData:", DesignData);
+      
+      const filtered = DesignData.filter(design => design.orderId === selectedItem.orderId);
+      
+      console.log("Filtered Designs:", filtered);
+      setFilteredDesigns(filtered);
+    } else {
+      console.log("selectedItem or selectedItem.orderId is null");
+      setFilteredDesigns([]);
+    }
+  }, [selectedItem, DesignData]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -742,7 +753,7 @@ function UserProfile() {
 
                   <table className="designstaff-detail-table2">
                     <tbody className="_3dDesign">
-                      {chunkArray(_3ddesigns, 2).map((row, rowIndex) => (
+                      {chunkArray(filteredDesigns, 2).map((row, rowIndex) => (
                         <tr key={rowIndex}>
                           {row.map((_3ddesign) => (
                             <td

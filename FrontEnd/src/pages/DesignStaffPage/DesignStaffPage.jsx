@@ -5,6 +5,7 @@ import DesignStaffHeader from "../../components/DesignStaffHeader/DesignStaffHea
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import Notify from "../../components/Alert/Alert";
 
 function DesignStaffPage() {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
@@ -27,8 +28,8 @@ function DesignStaffPage() {
   const [showFormPopup, setShowFormPopup] = useState(false);
 
   const [name, setName] = useState('');
-const [productSampleList, setProductSampleList] = useState('');
-const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [productSampleList, setProductSampleList] = useState('');
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
 
   const [selectedProductSample, setSelectedProductSample] = useState('');
 
@@ -65,30 +66,50 @@ const [isPopupVisible, setIsPopupVisible] = useState(false);
   };
 
   const handleImageChange = (e) => {
-    setSelectedImage(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(URL.createObjectURL(file));
+    }
   };
 
-  const handleUploadImage = () => {
+  const handleUploadImage = async () => {
     if (selectedProductSample && selectedImage) {
       const formData = new FormData();
-      formData.append('image', selectedImage);
-      formData.append('productSampleId', selectedProductSample.productSampleId);
+      formData.append('DesignName', name);
+      formData.append('Image', selectedImage);
+      formData.append('ProductSampleId', selectedProductSample.productSampleId);
+      formData.append('DesignStaffId', designStaffId);
 
-      // Replace with your actual upload API endpoint
-      axios.post('http://localhost:5266/api/UploadProductImage', formData)
-        .then(response => {
-          console.log('Image uploaded successfully:', response.data);
-          // Handle success (e.g., show a success message)
-        })
-        .catch(error => {
-          console.error('Error uploading image:', error);
-          // Handle error (e.g., show an error message)
-        });
+      console.log(
+        "Uploading 3dDesign with data:",
+        Object.fromEntries(formData.entries())
+      );
+      await upload3dDesignForSample(formData);
     } else {
       // Handle the case where no image or product is selected
       console.log('Please select a product and image.');
     }
   };
+
+  const upload3dDesignForSample = async (formData) => {
+    try {
+      const res = await axios.post(
+        `http://localhost:5266/api/_3ddesign/Upload`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(res);
+      console.log(res.data);
+      Notify.success("Design uploaded successfully");
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   function chunkArray(array, size) {
     return array.reduce(
       (acc, _, index) =>
@@ -400,6 +421,11 @@ const [isPopupVisible, setIsPopupVisible] = useState(false);
                 className="designstaff-input"
                 onChange={handleImageChange}
               />
+              {selectedImage && (
+                <div className="image-preview">
+                  <img src={selectedImage} alt="Uploaded Preview" />
+                </div>
+              )}
             </div>
             <button
               type="button"
