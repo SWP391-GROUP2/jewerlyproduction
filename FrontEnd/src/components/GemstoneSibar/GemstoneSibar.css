@@ -14,6 +14,10 @@
   transition: width 0.3s;
 }
 
+.gemstone-sidebar.open {
+  margin-bottom: -50px;
+}
+
 .gemstone-sidebar.closed {
   width: 50px; /* Smaller width when closed */
   padding: 10px; /* Adjusted padding */

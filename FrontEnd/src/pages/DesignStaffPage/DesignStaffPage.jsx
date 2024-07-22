@@ -26,33 +26,30 @@ function DesignStaffPage() {
 
   const [showFormPopup, setShowFormPopup] = useState(false);
 
-  const [name, setName] = useState('');
-const [productSampleList, setProductSampleList] = useState('');
-const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [name, setName] = useState("");
+  const [productSampleList, setProductSampleList] = useState("");
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
 
-  const [selectedProductSample, setSelectedProductSample] = useState('');
+  const [selectedProductSample, setSelectedProductSample] = useState("");
 
   const [productSamples, setProductSamples] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
-
 
   useEffect(() => {
     // Fetch product samples from API
     const fetchProductSamples = async () => {
       try {
-        const response = await axios.get('http://localhost:5266/api/ProductSamples');
+        const response = await axios.get(
+          "http://localhost:5266/api/ProductSamples"
+        );
         setProductSamples(response.data);
       } catch (error) {
-        console.error('Error fetching product samples:', error);
+        console.error("Error fetching product samples:", error);
       }
     };
 
     fetchProductSamples();
   }, []);
-
-  const handleSubmit = () => {
-    // Handle form submission
-  };
 
   const handleProductSampleClick = () => {
     setIsPopupVisible(true);
@@ -71,22 +68,23 @@ const [isPopupVisible, setIsPopupVisible] = useState(false);
   const handleUploadImage = () => {
     if (selectedProductSample && selectedImage) {
       const formData = new FormData();
-      formData.append('image', selectedImage);
-      formData.append('productSampleId', selectedProductSample.productSampleId);
+      formData.append("image", selectedImage);
+      formData.append("productSampleId", selectedProductSample.productSampleId);
 
       // Replace with your actual upload API endpoint
-      axios.post('http://localhost:5266/api/UploadProductImage', formData)
-        .then(response => {
-          console.log('Image uploaded successfully:', response.data);
+      axios
+        .post("http://localhost:5266/api/UploadProductImage", formData)
+        .then((response) => {
+          console.log("Image uploaded successfully:", response.data);
           // Handle success (e.g., show a success message)
         })
-        .catch(error => {
-          console.error('Error uploading image:', error);
+        .catch((error) => {
+          console.error("Error uploading image:", error);
           // Handle error (e.g., show an error message)
         });
     } else {
       // Handle the case where no image or product is selected
-      console.log('Please select a product and image.');
+      console.log("Please select a product and image.");
     }
   };
   function chunkArray(array, size) {
@@ -368,75 +366,84 @@ const [isPopupVisible, setIsPopupVisible] = useState(false);
               </div>
             )}
             {currentView === "upload3Ddeisgn" && (
-        <div className="designstaff-data-entry-container">
-          <h2 className="designstaff-data-entry-title">Enter Data</h2>
-          <form className="designstaff-data-entry-form">
-            <div className="form-group">
-              <label htmlFor="name">Name</label>
-              <input
-                type="text"
-                id="name"
-                className="designstaff-input"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="productSampleList">ProductSample List</label>
-              <input
-                type="text"
-                id="productSampleList"
-                className="designstaff-input"
-                value={productSampleList}
-                onClick={handleProductSampleClick}
-                readOnly
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="imageUpload">Upload Image</label>
-              <input
-                type="file"
-                id="imageUpload"
-                className="designstaff-input"
-                onChange={handleImageChange}
-              />
-            </div>
-            <button
-              type="button"
-              className="designstaff-submit-button"
-              onClick={handleUploadImage}
-            >
-              Upload Image
-            </button>
-          </form>
-        </div>
-      )}
+              <div className="designstaff-data-entry-container">
+                <h2 className="designstaff-data-entry-title">Enter Data</h2>
+                <form className="designstaff-data-entry-form">
+                  <div className="form-group">
+                    <label htmlFor="name">Name</label>
+                    <input
+                      type="text"
+                      id="name"
+                      className="designstaff-input"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="productSampleList">
+                      ProductSample List
+                    </label>
+                    <input
+                      type="text"
+                      id="productSampleList"
+                      className="designstaff-input"
+                      value={productSampleList}
+                      onClick={handleProductSampleClick}
+                      readOnly
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="imageUpload">Upload Image</label>
+                    <input
+                      type="file"
+                      id="imageUpload"
+                      className="designstaff-input"
+                      onChange={handleImageChange}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    className="designstaff-submit-button"
+                    onClick={handleUploadImage}
+                  >
+                    Upload Image
+                  </button>
+                </form>
+              </div>
+            )}
 
-      {isPopupVisible && (
-        <div className="popup-productlist-overlay">
-          <div className="popup-productlist-content">
-            <h3>Select a Product Sample</h3>
-            <table className="popup-productlist-table">
-              <thead>
-                <tr>
-                  <th>Product Sample ID</th>
-                  <th>Product Name</th>
-                </tr>
-              </thead>
-              <tbody>
-                {productSamples.map((sample) => (
-                  <tr key={sample.productSampleId} onClick={() => handleProductSampleSelect(sample)}>
-                    <td>{sample.productSampleId}</td>
-                    <td>{sample.productName}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <button className="closecloseclose" onClick={() => setIsPopupVisible(false)}>Close</button>
-          </div>
-        </div>
-      )}
-
+            {isPopupVisible && (
+              <div className="popup-productlist-overlay">
+                <div className="popup-productlist-content">
+                  <h3>Select a Product Sample</h3>
+                  <table className="popup-productlist-table">
+                    <thead>
+                      <tr>
+                        <th>Product Sample ID</th>
+                        <th>Product Name</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {productSamples.map((sample) => (
+                        <tr
+                          key={sample.productSampleId}
+                          onClick={() => handleProductSampleSelect(sample)}
+                        >
+                          <td>{sample.productSampleId}</td>
+                          <td>{sample.productName}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <button
+                    className="closecloseclose"
+                    onClick={() => setIsPopupVisible(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -542,7 +549,7 @@ const [isPopupVisible, setIsPopupVisible] = useState(false);
           </div>
         </div>
       )}
-      
+
       {showFormPopup && (
         <div className="designstaff-form-popup">
           <div className="designstaff-form-popup-content">
@@ -595,7 +602,6 @@ const [isPopupVisible, setIsPopupVisible] = useState(false);
           </div>
         </div>
       )}
-      
     </div>
   );
 }

@@ -10,6 +10,8 @@ function ProductDetails() {
   const myRef = useRef();
   const navigate = useNavigate();
 
+  const [images, setImages] = useState([]); // Khai báo state cho danh sách hình ảnh
+
   useEffect(() => {
     fetchProduct();
   }, [productId]); // Theo dõi thay đổi của productId để fetch dữ liệu mới khi productId thay đổi
@@ -31,6 +33,21 @@ function ProductDetails() {
     }
   }, [index]);
 
+  // Hàm fetch3dDesigns để lấy dữ liệu từ API 3dDesign
+  const fetch3dDesigns = async () => {
+    try {
+      const response = await fetch(`http://localhost:5266/api/_3ddesign`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch 3dDesigns");
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching 3dDesigns:", error);
+      return [];
+    }
+  };
+
+  // Hàm fetchProduct để lấy dữ liệu sản phẩm từ API
   const fetchProduct = async () => {
     try {
       const response = await fetch(
@@ -40,7 +57,22 @@ function ProductDetails() {
         throw new Error("Failed to fetch product");
       }
       const data = await response.json();
+      console.log("data Images :", data);
       setProduct(data);
+
+      const designs = await fetch3dDesigns(); // Lấy dữ liệu 3dDesigns từ API
+
+      // Lấy _3dDesignIds từ dữ liệu sản phẩm
+      const designIds = data._3dDesignId || [];
+
+      // Lọc và lấy ảnh tương ứng với _3dDesignIds
+      const productImages = designs
+        .filter((design) => designIds.includes(design._3dDesignId))
+        .map((design) => design.image);
+
+      setImages(productImages); // Cập nhật state images
+
+      console.log("Product Images :", productImages);
     } catch (error) {
       console.error("Error fetching product:", error);
     }
@@ -53,52 +85,74 @@ function ProductDetails() {
   return (
     <div className="ProductDetails">
       {product && (
-        <div className="details" key={product.productSample.productSampleId}>
+        <div className="details" key={product.productSampleId}>
+          <div></div>
           <div className="big-img">
             {/* Hiển thị hình ảnh sản phẩm */}
             <img
-                          src={product.productSample.image || "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"}
-                          alt={product.productSample.productName}
+              src={
+                images[index] ||
+                "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"
+              }
+              alt={product.productName}
             />
-          </div>
-
-          <div className="box">
-            <div className="row">
-              <h2>{product.productSample.productName}</h2>
-              <span>
-                {parseInt(product.productSample.price).toLocaleString()} VND
-              </span>
-            </div>
-
-            <p>{product.productSample.description}</p>
-            <p>Type: {product.productSample.type}</p>
-            <p>Style: {product.productSample.style}</p>
-            <p>Size: {product.productSample.size}</p>
-            <p>Gold Type: {product.productSample.goldType}</p>
-
-            {product.gemstones.map((gemstone) => (
-              <p>Gemstone: {gemstone.name}</p>
-            ))}
-
             {/* Nếu có nhiều hình ảnh, sử dụng DetailsThumb */}
-            {product.images && (
-              <DetailsThumb
-                images={product.images}
-                tab={handleTab}
-                myRef={myRef}
-              />
+            {images.length > 0 && (
+              <DetailsThumb images={images} tab={handleTab} myRef={myRef} />
             )}
+          </div>
+          <div className="product-details">
+            <h2>{product.productName}</h2>
+            <span>{parseInt(product.price).toLocaleString()} VND</span>
+            <p>Product Sample Id: {product.productSampleId}</p>
+            <p>
+              The selling price may vary depending on the actual size and weight
+              of the product
+            </p>
 
             <button
               className="cart"
-              onClick={() =>
-                navigateToProductDetail(product.productSample.productSampleId)
-              }
+              onClick={() => navigateToProductDetail(product.productSampleId)}
             >
               Add to customize
             </button>
           </div>
         </div>
+      )}
+      <div className="index-title-box">
+        <span className="index-title">Product Sample Detail</span>
+      </div>
+      {product && (
+        <table className="product-info-table">
+          <tbody>
+            <tr>
+              <td>Description</td>
+              <td>{product.description}</td>
+            </tr>
+            <tr>
+              <td>Type</td>
+              <td>{product.type}</td>
+            </tr>
+            <tr>
+              <td>Style</td>
+              <td>{product.style}</td>
+            </tr>
+            <tr>
+              <td>Size</td>
+              <td>{product.size}</td>
+            </tr>
+            <tr>
+              <td>Gold Type</td>
+              <td>{product.goldType}</td>
+            </tr>
+            {/* {product.gemstones.map((gemstone) => (
+        <tr key={gemstone.id}>
+          <td>Gemstone</td>
+          <td>{gemstone.name}</td>
+        </tr>
+      ))} */}
+          </tbody>
+        </table>
       )}
     </div>
   );

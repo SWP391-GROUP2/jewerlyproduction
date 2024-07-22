@@ -39,14 +39,14 @@ function DesignStaffSidebar({ openSidebarToggle, handleViewChange }) {
             <BsGrid1X2Fill className="designstaff-icon" /> Order List
           </button>
         </li>
-        <li className="designstaff-sidebar-list-item">
+        {/* <li className="designstaff-sidebar-list-item">
           <button
             className="salestaff-sidebar-button"
             onClick={() => handleViewChange("orderlist")}
           >
             <BsGrid1X2Fill className="designstaff-icon" /> Product Sample List
           </button>
-        </li>
+        </li> */}
         <li className="designstaff-sidebar-list-item">
           <button
             className="salestaff-sidebar-button"

@@ -132,17 +132,17 @@ function CustomizeForm() {
 
   useEffect(() => {
     if (ProductSample) {
-      if (ProductSample.productSample.type) {
-        setselectedType(ProductSample.productSample.type);
+      if (ProductSample.type) {
+        setselectedType(ProductSample.type);
       }
-      if (ProductSample.productSample.style) {
-        setselectedStyle(ProductSample.productSample.style);
+      if (ProductSample.style) {
+        setselectedStyle(ProductSample.style);
       }
-      if (ProductSample.productSample.goldType) {
-        setselectedGold(ProductSample.productSample.goldType);
+      if (ProductSample.goldType) {
+        setselectedGold(ProductSample.goldType);
       }
-      if (ProductSample.productSample.size) {
-        setselectedSize(ProductSample.productSample.size);
+      if (ProductSample.size) {
+        setselectedSize(ProductSample.size);
       }
     }
   }, [ProductSample]);
@@ -537,6 +537,9 @@ function CustomizeForm() {
                       }}
                       disabled={!type}
                     >
+                      <option value="" disabled selected>
+                        -- Chọn kiểu --
+                      </option>
                       {styles.map((styleOption) => {
                         return (
                           <option key={styleOption} value={styleOption}>
@@ -554,6 +557,9 @@ function CustomizeForm() {
                       value={goldType}
                       onChange={(e) => setselectedGold(e.target.value)}
                     >
+                      <option value="" disabled selected>
+                        -- Chọn kiểu --
+                      </option>
                       {gold.map((gold) => (
                         <option key={gold.value} value={gold.value}>
                           {gold.label}
@@ -571,6 +577,9 @@ function CustomizeForm() {
                       value={size}
                       onChange={(e) => setselectedSize(e.target.value)}
                     >
+                      <option value="" disabled selected>
+                        -- Chọn kiểu --
+                      </option>
                       {Size.map((Size) => (
                         <option key={Size.value} value={Size.value}>
                           {Size.label}
@@ -584,10 +593,12 @@ function CustomizeForm() {
                   <div className="options-grid">
                     <input
                       className="input-quantity"
-                      type="number"
+                      type="text"
                       value={quantitys}
                       onChange={(e) => setselectedQuantity(e.target.value)}
-                    ></input>
+                      required
+                      readOnly
+                    />
                   </div>
                 </div>
               </div>
@@ -606,20 +617,7 @@ function CustomizeForm() {
                     >
                       <img src="//theme.hstatic.net/200000567741/1000979581/14/hinh-danh-1.png?v=5351" />
                     </div>
-                    <div
-                      id="emerald"
-                      className={getClassNamesShape("emerald")}
-                      onClick={onClickSelectedShape}
-                    >
-                      <img src="//theme.hstatic.net/200000567741/1000979581/14/hinh-dang-5.png?v=5351" />
-                    </div>
-                    <div
-                      id="marquise"
-                      className={getClassNamesShape("marquise")}
-                      onClick={onClickSelectedShape}
-                    >
-                      <img src="//theme.hstatic.net/200000567741/1000979581/14/hinh-dang-8.png?v=5351" />
-                    </div>
+
                     <div
                       id="princess"
                       className={getClassNamesShape("princess")}
@@ -655,13 +653,7 @@ function CustomizeForm() {
                     >
                       <img src="//theme.hstatic.net/200000567741/1000979581/14/hinh-dang-3.png?v=5351" />
                     </div>
-                    <div
-                      id="trillion"
-                      className={getClassNamesShape("trillion")}
-                      onClick={onClickSelectedShape}
-                    >
-                      <img src="//theme.hstatic.net/200000567741/1000979581/14/hinh-dang-9.png?v=5351" />
-                    </div>
+
                     <div
                       id="oval"
                       className={getClassNamesShape("oval")}
@@ -705,7 +697,7 @@ function CustomizeForm() {
                     </div>
                     <div
                       id="6.0"
-                      className={getClassNames(".0")}
+                      className={getClassNames("6.0")}
                       onClick={() => onClickSelectedGemstoneSize("6.0")}
                     >
                       6.0
@@ -788,13 +780,6 @@ function CustomizeForm() {
                     >
                       Sapphire
                     </div>
-                    <div
-                      id="pearl"
-                      className={getClassNamesType("pearl")}
-                      onClick={() => onClickSelectedGemstoneType("pearl")}
-                    >
-                      Pearl
-                    </div>
                   </div>
                 </div>
 
@@ -850,20 +835,7 @@ function CustomizeForm() {
                     >
                       Green
                     </div>
-                    <div
-                      id="black"
-                      className={getClassNamesColor("black")}
-                      onClick={() => onClickSelectedGemstoneColor("black")}
-                    >
-                      Black
-                    </div>
-                    <div
-                      id="cream"
-                      className={getClassNamesColor("cream")}
-                      onClick={() => onClickSelectedGemstoneColor("cream")}
-                    >
-                      Cream
-                    </div>
+
                     <div
                       id="orange"
                       className={getClassNamesColor("orange")}
@@ -877,13 +849,6 @@ function CustomizeForm() {
                       onClick={() => onClickSelectedGemstoneColor("purple")}
                     >
                       Purple
-                    </div>
-                    <div
-                      id="colorless"
-                      className={getClassNamesColor("colorless")}
-                      onClick={() => onClickSelectedGemstoneColor("colorless")}
-                    >
-                      Colorless
                     </div>
                   </div>
                 </div>
@@ -941,20 +906,6 @@ function CustomizeForm() {
                     >
                       VS2
                     </div>
-                    <div
-                      id="SI1"
-                      className={getClassNamesClarity("SI1")}
-                      onClick={() => onClickSelectedClarity("SI1")}
-                    >
-                      SI1
-                    </div>
-                    <div
-                      id="SI2"
-                      className={getClassNamesClarity("SI2")}
-                      onClick={() => onClickSelectedClarity("SI2")}
-                    >
-                      SI2
-                    </div>
                   </div>
                 </div>
                 <div className="carat-selector">
@@ -1001,13 +952,6 @@ function CustomizeForm() {
                       onClick={() => onClickSelectedCarat("2.0-3.0")}
                     >
                       2.0 - 3.0
-                    </div>
-                    <div
-                      id="more-than-3.0"
-                      className={getClassNamesCarat("more-than-3.0")}
-                      onClick={() => onClickSelectedCarat("more-than-3.0")}
-                    >
-                      More than 3.0
                     </div>
                   </div>
                 </div>
