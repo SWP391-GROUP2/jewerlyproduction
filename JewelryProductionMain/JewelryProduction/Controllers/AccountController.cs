@@ -173,7 +173,8 @@ namespace JewelryProduction.Controllers
                 isPasswordSet = isPasswordSet,
                 Email = user.Email,
                 Token = await _tokenService.CreateAccessToken(user),
-                RefreshToken = refreshToken
+                RefreshToken = refreshToken,
+                EmailVerify = user.EmailConfirmed
             }
             );
         }
