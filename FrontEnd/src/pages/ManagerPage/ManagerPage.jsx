@@ -224,10 +224,38 @@ function ManagerPage() {
     }
   };
 
+  const RejectRequest = async (customizeRequestId) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:5266/api/CustomerRequests/reject/${customizeRequestId}`
+      );
+
+      console.log("Response:", response.data);
+      Notify.success("Reject Request Successfully");
+      return response.data;
+    } catch (error) {
+      console.error("Error sending quotation request:", error);
+      Notify.fail("Reject Request Failed !");
+      throw error;
+    }
+  };
+
   const handleApproveClick = async () => {
     const { customizeRequestId } = selectedRequest;
     try {
       await ApproveRequest(customizeRequestId);
+      await fetchRequests();
+    } catch (error) {
+      console.error("Error updating request:", error);
+    }
+
+    setDetailPopupOpen(false);
+  };
+
+  const handleRejectClick = async () => {
+    const { customizeRequestId } = selectedRequest;
+    try {
+      await RejectRequest(customizeRequestId);
       await fetchRequests();
     } catch (error) {
       console.error("Error updating request:", error);
@@ -824,7 +852,12 @@ function ManagerPage() {
                   >
                     Approve
                   </button>
-                  
+                  <button
+                    className="popup_button_reject"
+                    onClick={handleRejectClick}
+                  >
+                    Reject
+                  </button>
                 </div>
 
                 <div>

@@ -73,11 +73,16 @@ function UserProfile() {
     navigate(`/customer/checkoutlast/${orderId}`); // Chuyển hướng đến trang chi tiết sản phẩm
   };
 
-  const handleRejectClick = (index) => {
+  const handleRejectClick = (customizeRequestId) => {
+    const approveSelectedRequest = requestData.find(
+      (request) => request.customizeRequestId === customizeRequestId
+    );
+    setapproveSelectedRequest(approveSelectedRequest);
     setRejectPopupOpen(true);
   };
 
-  const handleYesReject = () => {
+  const handleYesReject = (Id) => {
+    CancelRequest(Id);
     setRejectPopupOpen(false);
   };
 
@@ -132,6 +137,19 @@ function UserProfile() {
       console.log("Response Data:", res.data);
     } catch (error) {
       console.error("Error updating address:", error);
+    }
+  };
+
+  const CancelRequest = async (customizeRequestId) => {
+    try {
+      const res = await axios.put(
+        `http://localhost:5266/api/CustomerRequests/cancel/${customizeRequestId}`
+      );
+      console.log("Response Data:", res.data);
+      Notify.success("Reject Request Successfully");
+    } catch (error) {
+      console.error("Error updating address:", error);
+      Notify.fail("Reject Request Failed !");
     }
   };
 
@@ -467,7 +485,7 @@ function UserProfile() {
                               className="reject-button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleRejectClick(index);
+                                handleRejectClick(row.customizeRequestId);
                               }}
                             >
                               Reject
@@ -614,7 +632,9 @@ function UserProfile() {
               <h2>Are you sure for reject ?</h2>
               <button
                 className="confirmation-popup_button"
-                onClick={handleYesReject}
+                onClick={() =>
+                  handleYesReject(approveSelectedRequest.customizeRequestId)
+                }
               >
                 Yes
               </button>
