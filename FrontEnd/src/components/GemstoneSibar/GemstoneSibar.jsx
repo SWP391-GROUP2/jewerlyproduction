@@ -6,15 +6,19 @@ import "./GemstoneSibar.css";
 const Sidebar = () => {
   const [selectedGemstone, setSelectedGemstone] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [selectedFilters, setSelectedFilters] = useState({});
-  const [products, setProducts] = useState([]);
-  const navigate = useNavigate(); // Sử dụng hook useNavigate để chuyển hướng
+  const [selectedFilters, setSelectedFilters] = useState({
+    shape: "",
+    gemstoneType: "",
+    gemstoneColor: "",
+    gemstoneClarity: "",
+  });
 
-  const gemstones = ["Diamond", "Ruby", "Sapphire", "Emerald", "Pearl"];
+  const [gemstones, setGemstones] = useState([]);
+  const navigate = useNavigate(); // Sử dụng hook useNavigate để chuyển hướng
 
   const attributes = {
     Diamond: {
-      color: ["Colorless", "Yellow", "Blue", "Pink", "Red", "Green"],
+      color: ["White", "Yellow", "Blue", "Pink", "Red", "Green"],
     },
     Emerald: {
       color: ["Green"],
@@ -23,60 +27,61 @@ const Sidebar = () => {
       color: ["Red"],
     },
     Sapphire: {
-      color: [
-        "Blue",
-        "Yellow",
-        "Pink",
-        "Green",
-        "Colorless",
-        "Orange",
-        "Purple",
-      ],
+      color: ["Blue", "Yellow", "Pink", "Green", "Orange", "Purple"],
     },
-    Pearl: {
-      color: ["White", "Pink", "Cream", "Black"],
+    SideStone: {
+      color: ["White", "Pink"],
     },
-    clarity: ["FL", "IF", "VVS1", "VVS2", "VS1", "VS2", "SI1", "SI2"],
-    shape: [
-      "Round",
-      "Princess",
-      "Emerald",
-      "Oval",
-      "Marquise",
-      "Pear",
-      "Cushion",
-      "Radiant",
-      "Trillion",
-    ],
+    clarity: ["FL", "IF", "VVS1", "VVS2", "VS1", "VS2"],
+    shape: ["Round", "Princess", "Heart", "Oval", "Pear", "Radiant", "Cushion"],
   };
 
-  const fetchProducts = async () => {
-    let query = "";
-    if (selectedGemstone) {
-      query += `gemstone=${selectedGemstone}`;
-      Object.keys(selectedFilters).forEach((attribute) => {
-        query += `&${attribute}=${selectedFilters[attribute]}`;
-      });
+  const fetchGemstones = async () => {
+    let query = [];
+
+    if (selectedFilters.shape) {
+      query.push(`shape=${selectedFilters.shape}`);
     }
 
+    if (selectedFilters.gemstoneType) {
+      query.push(`categoryName=${selectedFilters.gemstoneType}`);
+    }
+
+    if (selectedFilters.gemstoneColor) {
+      query.push(`colors=${selectedFilters.gemstoneColor}`);
+    }
+
+    if (selectedFilters.gemstoneClarity) {
+      query.push(`clarity=${selectedFilters.gemstoneClarity}`);
+    }
+
+    const queryString = query.length ? `?${query.join("&")}` : "";
+
     try {
-      const url = query
-        ? `http://localhost:5266/api/Gemstones?${query}`
-        : `http://localhost:5266/api/Gemstones`;
+      const url = `http://localhost:5266/api/Gemstones${
+        queryString ? "/Filter Gemstone" + queryString : ""
+      }`;
       const response = await axios.get(url);
-      setProducts(response.data);
+
+      setGemstones(response.data);
     } catch (error) {
-      console.error("Error fetching gemstone:", error);
+      console.error("Error fetching gemstones:", error);
     }
   };
 
   useEffect(() => {
-    fetchProducts();
-  }, [selectedGemstone, selectedFilters]);
+    fetchGemstones();
+  }, [selectedFilters]);
 
   const handleGemstoneClick = (gemstone) => {
     setSelectedGemstone(gemstone);
-    setSelectedFilters({});
+    setSelectedFilters((prevFilters) => ({
+      ...prevFilters,
+      gemstoneType: gemstone,
+      gemstoneColor: "",
+      gemstoneClarity: "",
+      shape: "",
+    }));
   };
 
   const toggleSidebar = () => {
@@ -84,10 +89,10 @@ const Sidebar = () => {
   };
 
   const handleFilterChange = (attribute, value) => {
-    setSelectedFilters({
-      ...selectedFilters,
+    setSelectedFilters((prevFilters) => ({
+      ...prevFilters,
       [attribute]: value,
-    });
+    }));
   };
 
   const navigateToProductDetail = (gemstoneId) => {
@@ -97,83 +102,80 @@ const Sidebar = () => {
   return (
     <div className="gemstone-container">
       <div className={`gemstone-sidebar ${isSidebarOpen ? "open" : "closed"}`}>
-        <button onClick={toggleSidebar} className="sidebar-toggle-button">
+        <button onClick={toggleSidebar} className="toggle-button">
           {isSidebarOpen ? "<<" : ">>"}
         </button>
         {isSidebarOpen && (
           <>
             <h2 className="sidebar-title">Gemstone</h2>
             <ul className="gemstone-list">
-              {gemstones.map((gemstone) => (
-                <li
-                  key={gemstone}
-                  onClick={() => handleGemstoneClick(gemstone)}
-                  className={selectedGemstone === gemstone ? "active" : ""}
-                >
-                  {gemstone}
-                </li>
-              ))}
+              {Object.keys(attributes)
+                .filter((key) => key !== "clarity" && key !== "shape")
+                .map((gemstone) => (
+                  <li
+                    key={gemstone}
+                    onClick={() => handleGemstoneClick(gemstone)}
+                    className={selectedGemstone === gemstone ? "active" : ""}
+                  >
+                    {gemstone}
+                  </li>
+                ))}
             </ul>
             {selectedGemstone && (
               <>
                 <div className="gemstone-filters">
                   <h3>Color</h3>
-                  <ul className="gemstone-filter-list">
+                  <select
+                    value={selectedFilters.color || ""}
+                    onChange={(e) =>
+                      handleFilterChange("gemstoneColor", e.target.value)
+                    }
+                  >
+                    <option value="" disabled selected>
+                      Select Color
+                    </option>
                     {attributes[selectedGemstone].color.map((color) => (
-                      <li key={color}>
-                        <label>
-                          <input
-                            type="radio"
-                            name="color"
-                            value={color}
-                            checked={selectedFilters.color === color}
-                            onChange={() => handleFilterChange("color", color)}
-                          />
-                          {color}
-                        </label>
-                      </li>
+                      <option key={color} value={color}>
+                        {color}
+                      </option>
                     ))}
-                  </ul>
+                  </select>
                 </div>
                 <div className="gemstone-filters">
                   <h3>Clarity</h3>
-                  <ul className="gemstone-filter-list">
+                  <select
+                    value={selectedFilters.clarity || ""}
+                    onChange={(e) =>
+                      handleFilterChange("gemstoneClarity", e.target.value)
+                    }
+                  >
+                    <option value="" disabled selected>
+                      Select Clarity
+                    </option>
                     {attributes.clarity.map((clarity) => (
-                      <li key={clarity}>
-                        <label>
-                          <input
-                            type="radio"
-                            name="clarity"
-                            value={clarity}
-                            checked={selectedFilters.clarity === clarity}
-                            onChange={() =>
-                              handleFilterChange("clarity", clarity)
-                            }
-                          />
-                          {clarity}
-                        </label>
-                      </li>
+                      <option key={clarity} value={clarity}>
+                        {clarity}
+                      </option>
                     ))}
-                  </ul>
+                  </select>
                 </div>
                 <div className="gemstone-filters">
                   <h3>Shape</h3>
-                  <ul className="gemstone-filter-list">
+                  <select
+                    value={selectedFilters.shape || ""}
+                    onChange={(e) =>
+                      handleFilterChange("shape", e.target.value)
+                    }
+                  >
+                    <option value="" disabled selected>
+                      Select Shape
+                    </option>
                     {attributes.shape.map((shape) => (
-                      <li key={shape}>
-                        <label>
-                          <input
-                            type="radio"
-                            name="shape"
-                            value={shape}
-                            checked={selectedFilters.cut === shape}
-                            onChange={() => handleFilterChange("cut", shape)}
-                          />
-                          {shape}
-                        </label>
-                      </li>
+                      <option key={shape} value={shape}>
+                        {shape}
+                      </option>
                     ))}
-                  </ul>
+                  </select>
                 </div>
               </>
             )}
@@ -181,26 +183,26 @@ const Sidebar = () => {
         )}
       </div>
       <div className="gemstone-products">
-        {products.length === 0 ? (
+        {gemstones.length === 0 ? (
           <p>No products found</p>
         ) : (
           <ul>
-            {products.map((product) => (
+            {gemstones.map((gemstones) => (
               <div
                 className="gemstone-product-card"
-                key={product.id}
-                onClick={() => navigateToProductDetail(product.gemstoneId)}
+                key={gemstones.id}
+                onClick={() => navigateToProductDetail(gemstones.gemstoneId)}
               >
                 <img
                   src={
-                    product.image ||
+                    gemstones.image ||
                     "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"
                   }
-                  alt={product.name}
+                  alt={gemstones.name}
                   className="gemstone-product-image"
                 />
-                <h3 className="gemstone-product-name">{product.name}</h3>
-                <p className="gemstone-product-price">${product.price}</p>
+                <h3 className="gemstone-product-name">{gemstones.name}</h3>
+                <p className="gemstone-product-price">${gemstones.price}</p>
               </div>
             ))}
           </ul>

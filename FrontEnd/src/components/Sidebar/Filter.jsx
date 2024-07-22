@@ -31,8 +31,8 @@ const Sidebar = () => {
 
   const filters = {
     Ring: ["Solitaire", "Three Stone", "Pave"],
-    Bracelet: ["Chain", "Pearl", "Bar"],
-    Necklace: ["Chain", "Pearl", "Station", "Initial"],
+    Bracelet: ["Chain", "Charm", "Bar"],
+    Necklace: ["Chain", "Station", "Initial"],
     Earrings: ["Stud", "Jacket", "Ear Spike"],
   };
 
@@ -54,7 +54,7 @@ const Sidebar = () => {
     const queryString = query.length ? `?${query.join("&")}` : "";
 
     try {
-      const url = `http://localhost:5266/api/ProductSamples${
+      const url = `https://jewelryproductionbe.azurewebsites.net/api/ProductSamples${
         queryString ? "/FilterInSearch" + queryString : ""
       }`;
       const response = await axios.get(url);
