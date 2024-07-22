@@ -100,7 +100,6 @@
   transition: background 0s;
 }
 
-
 /* CSS cho lớp mờ */
 .overlay {
   position: fixed;
@@ -364,4 +363,3 @@
   background: #14c32f;
   transition: background 0s;
 }
-
