@@ -820,12 +820,7 @@ function ManagerPage() {
                   >
                     Approve
                   </button>
-                  <button
-                    className="popup_button_reject"
-                    onClick={() => setDetailPopupOpen(false)}
-                  >
-                    Reject
-                  </button>
+                  
                 </div>
 
                 <div>
