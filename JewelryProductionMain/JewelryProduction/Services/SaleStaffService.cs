@@ -12,16 +12,16 @@ namespace JewelryProduction.Services
     {
         private readonly JewelryProductionContext _context;
         private readonly ISaleStaffRepository _repository;
-        private readonly INotificationService _notificationService;
+        private readonly IEmailService _emailService;
         private readonly ICustomerRequestRepository _customerRequestRepository;
         private readonly IGoldRepository _goldRepository;
         private readonly IGemstoneRepository _gemstoneRepository;
 
-        public SaleStaffService(JewelryProductionContext context, ISaleStaffRepository repository, INotificationService notificationService, ICustomerRequestRepository customerRequestRepository, IGoldRepository goldRepository, IGemstoneRepository gemstoneRepository)
+        public SaleStaffService(JewelryProductionContext context, ISaleStaffRepository repository, IEmailService emailService, ICustomerRequestRepository customerRequestRepository, IGoldRepository goldRepository, IGemstoneRepository gemstoneRepository)
         {
             _context = context;
             _repository = repository;
-            _notificationService = notificationService;
+            _emailService = emailService;
             _customerRequestRepository = customerRequestRepository;
             _goldRepository = goldRepository;
             _gemstoneRepository = gemstoneRepository;
@@ -54,7 +54,7 @@ VAT:                        10%";
             await _customerRequestRepository.SaveChangesAsync();
 
             // Send email or notification to manager
-            await _notificationService.SendNotificationToUserfAsync(customerRequest.ManagerId, senderId, $"There is a new request with ID: {customizeRequestId} that needs to be approved.");
+            await _emailService.SendEmail(customerRequest.ManagerId, "New Request", $"There is a new request with ID: {customizeRequestId} that needs to be approved.");
 
             return true;
         }
@@ -94,7 +94,7 @@ VAT:                        10%";
             {
                 _context.Update(customerRequest);
                 await _context.SaveChangesAsync();
-                await _notificationService.SendNotificationToUserfAsync(customerRequest.ManagerId, senderId, $"{customerRequest.CustomizeRequestId} quotation has been updated.");
+                await _emailService.SendEmail(customerRequest.ManagerId, senderId, $"{customerRequest.CustomizeRequestId} quotation has been updated.");
                 return true;
             }
             catch (DbUpdateException)

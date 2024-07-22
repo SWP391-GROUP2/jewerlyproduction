@@ -75,6 +75,20 @@ namespace JewelryProduction.Controllers
             _emailService.SendEmail(message);
             return Ok("OTP sent");
         }
+        [HttpGet("SendEmail")]
+        public async Task<IActionResult> SendEmail(string userId, string senderId, string content)
+        {
+
+            try
+            {
+                await _emailService.SendEmail(userId, senderId, content);
+                return Ok("OTP sent");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         [HttpPost("VerifyOTP")]
         public async Task<IActionResult> VerifyOTP([FromBody] OTPVerificationRequest request)

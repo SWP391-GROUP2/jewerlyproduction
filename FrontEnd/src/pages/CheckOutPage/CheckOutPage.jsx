@@ -4,7 +4,7 @@ import Navbar from "../../components/Navbar/navbar";
 import Footer from "../../components/Footer/Footer";
 import "./CheckOutPage.css";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Notify from "../../components/Alert/Alert";
 
 const CheckOutPage = () => {
@@ -412,7 +412,9 @@ const CheckOutPage = () => {
                   <button onClick={handleSubmitMethodChoose}>Submit</button>
                 </div>
                 <div>
-                  <button onClick={closePopup}>Close</button>
+                  <Link to="/customer/profile">
+                    <button onClick={closePopup}>Close</button>
+                  </Link>
                 </div>
               </div>
             </div>
