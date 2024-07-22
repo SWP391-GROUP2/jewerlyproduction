@@ -121,7 +121,8 @@
   margin-top: 20px;
 }
 
-.user-account-table th, .user-account-table td {
+.user-account-table th,
+.user-account-table td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: left;
@@ -149,19 +150,18 @@
 .DElete_button_but:hover {
   background-color: #eb2323; /* Màu đỏ sậm khi đưa chuột vào */
 }
-  .Confirm_button_but {
-    background-color: #5fe030; /* Màu đỏ */
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .Confirm_button_but:hover {
-    background-color: #21cf41; /* Màu đỏ sậm khi đưa chuột vào */
-  
+.Confirm_button_but {
+  background-color: #5fe030; /* Màu đỏ */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.Confirm_button_but:hover {
+  background-color: #21cf41; /* Màu đỏ sậm khi đưa chuột vào */
 }
 .popup-container {
   position: fixed;
@@ -246,10 +246,8 @@
 }
 
 .gemstone-label {
-  
   width: 120px; /* Độ rộng của nhãn */
   text-align: left; /* Căn chỉnh văn bản sang trái */
-  
 }
 
 .product-upload-form {
@@ -265,10 +263,8 @@
 }
 
 .product-label {
-  
   width: 120px; /* Độ rộng của nhãn */
   text-align: left; /* Căn chỉnh văn bản sang trái */
-  
 }
 .gemstone-upload-button {
   float: left; /* Đẩy button Upload về bên trái */
@@ -278,7 +274,6 @@
 .gemstone-clear-button {
   float: right; /* Đẩy button Clear về bên phải */
 }
-
 
 /* */
 
@@ -293,15 +288,15 @@
   position: relative;
   overflow: hidden;
   border: 2px solid var(--color);
-  transition: color .5s;
+  transition: color 0.5s;
   z-index: 1;
   font-size: 17px;
   border-radius: 6px;
   font-weight: 500;
   color: var(--color);
- }
- 
- .gemstone-upload-button:before {
+}
+
+.gemstone-upload-button:before {
   content: "";
   position: absolute;
   z-index: -1;
@@ -309,31 +304,31 @@
   height: 150px;
   width: 200px;
   border-radius: 50%;
- }
- 
- .gemstone-upload-button:hover {
+}
+
+.gemstone-upload-button:hover {
   color: #fff;
- }
- 
- .gemstone-upload-button:before {
+}
+
+.gemstone-upload-button:before {
   top: 100%;
   left: 100%;
-  transition: all .7s;
- }
- 
- .gemstone-upload-button:hover:before {
+  transition: all 0.7s;
+}
+
+.gemstone-upload-button:hover:before {
   top: -30px;
   left: -30px;
- }
- 
- .gemstone-upload-button:active:before {
+}
+
+.gemstone-upload-button:active:before {
   background: #0f63b1;
   transition: background 0s;
- }
+}
 
- /* */
+/* */
 
- .gemstone-clear-button {
+.gemstone-clear-button {
   --color: #cb1717;
   font-family: inherit;
   display: inline-block;
@@ -344,15 +339,15 @@
   position: relative;
   overflow: hidden;
   border: 2px solid var(--color);
-  transition: color .5s;
+  transition: color 0.5s;
   z-index: 1;
   font-size: 17px;
   border-radius: 6px;
   font-weight: 500;
   color: var(--color);
- }
- 
- .gemstone-clear-button:before {
+}
+
+.gemstone-clear-button:before {
   content: "";
   position: absolute;
   z-index: -1;
@@ -360,29 +355,29 @@
   height: 150px;
   width: 200px;
   border-radius: 50%;
- }
- 
- .gemstone-clear-button:hover {
+}
+
+.gemstone-clear-button:hover {
   color: #fff;
- }
- 
- .gemstone-clear-button:before {
+}
+
+.gemstone-clear-button:before {
   top: 100%;
   left: 100%;
-  transition: all .7s;
- }
- 
- .gemstone-clear-button:hover:before {
+  transition: all 0.7s;
+}
+
+.gemstone-clear-button:hover:before {
   top: -30px;
   left: -30px;
- }
- 
- .gemstone-clear-button:active:before {
+}
+
+.gemstone-clear-button:active:before {
   background: #c31414;
   transition: background 0s;
- }
+}
 
- /* */
+/* */
 
 .selectgemstonebutton {
   --color: #1bcd27;
@@ -395,15 +390,15 @@
   position: relative;
   overflow: hidden;
   border: 2px solid var(--color);
-  transition: color .5s;
+  transition: color 0.5s;
   z-index: 1;
   font-size: 17px;
   border-radius: 6px;
   font-weight: 500;
   color: var(--color);
- }
- 
- .selectgemstonebutton:before {
+}
+
+.selectgemstonebutton:before {
   content: "";
   position: absolute;
   z-index: -1;
@@ -411,29 +406,29 @@
   height: 150px;
   width: 200px;
   border-radius: 50%;
- }
- 
- .selectgemstonebutton:hover {
+}
+
+.selectgemstonebutton:hover {
   color: #fff;
- }
- 
- .selectgemstonebutton:before {
+}
+
+.selectgemstonebutton:before {
   top: 100%;
   left: 100%;
-  transition: all .7s;
- }
- 
- .selectgemstonebutton:hover:before {
+  transition: all 0.7s;
+}
+
+.selectgemstonebutton:hover:before {
   top: -30px;
   left: -30px;
- }
- 
- .selectgemstonebutton:active:before {
+}
+
+.selectgemstonebutton:active:before {
   background: #14c32f;
   transition: background 0s;
- }
+}
 
- .gemstone-popup {
+.gemstone-popup {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -510,7 +505,7 @@
 }
 
 .gemstone-popup button {
-  background-color: rgb(237, 61, 61); 
+  background-color: rgb(237, 61, 61);
   border: none;
   color: white;
   padding: 10px 20px;
@@ -574,7 +569,6 @@
   background-color: #b30000;
 }
 
-
 .choose-button {
   --color: #1bcd27;
   font-family: inherit;
@@ -586,15 +580,15 @@
   position: relative;
   overflow: hidden;
   border: 2px solid var(--color);
-  transition: color .5s;
+  transition: color 0.5s;
   z-index: 1;
   font-size: 17px;
   border-radius: 6px;
   font-weight: 500;
   color: var(--color);
- }
- 
- .choose-button:before {
+}
+
+.choose-button:before {
   content: "";
   position: absolute;
   z-index: -1;
@@ -602,29 +596,29 @@
   height: 150px;
   width: 200px;
   border-radius: 50%;
- }
- 
- .choose-button:hover {
+}
+
+.choose-button:hover {
   color: #fff;
- }
- 
- .choose-button:before {
+}
+
+.choose-button:before {
   top: 100%;
   left: 100%;
-  transition: all .7s;
- }
- 
- .choose-button:hover:before {
+  transition: all 0.7s;
+}
+
+.choose-button:hover:before {
   top: -30px;
   left: -30px;
- }
- 
- .choose-button:active:before {
+}
+
+.choose-button:active:before {
   background: #14c32f;
   transition: background 0s;
- }
+}
 
- .notification {
+.notification {
   position: fixed;
   top: 20px;
   right: 20px;
@@ -654,4 +648,11 @@
   max-width: 500px;
   margin-right: auto;
   left: 0;
+}
+.pr-detail-box {
+  background: #f9f9f9;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-top: 10px;
 }

@@ -69,10 +69,6 @@ function Navbar() {
           </ul>
         </>
       )}
-      <div className="search-box">
-        <input type="text" placeholder="Search" />
-        <img src="https://res.cloudinary.com/dfvplhyjj/image/upload/v1721208176/search-b_va9gst.png" alt="" />
-      </div>
     </div>
   );
 }

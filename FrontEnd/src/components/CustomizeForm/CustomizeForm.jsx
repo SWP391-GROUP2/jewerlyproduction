@@ -538,7 +538,7 @@ function CustomizeForm() {
                       disabled={!type}
                     >
                       <option value="" disabled selected>
-                        -- Chọn kiểu --
+                        -- Choose a Style --
                       </option>
                       {styles.map((styleOption) => {
                         return (
@@ -558,7 +558,7 @@ function CustomizeForm() {
                       onChange={(e) => setselectedGold(e.target.value)}
                     >
                       <option value="" disabled selected>
-                        -- Chọn kiểu --
+                        -- Choose a Gold Type --
                       </option>
                       {gold.map((gold) => (
                         <option key={gold.value} value={gold.value}>
@@ -578,7 +578,7 @@ function CustomizeForm() {
                       onChange={(e) => setselectedSize(e.target.value)}
                     >
                       <option value="" disabled selected>
-                        -- Chọn kiểu --
+                        -- Choose Size --
                       </option>
                       {Size.map((Size) => (
                         <option key={Size.value} value={Size.value}>
