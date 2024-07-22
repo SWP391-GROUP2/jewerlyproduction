@@ -136,7 +136,7 @@
   padding-bottom: 0px;
 }
 
-.popup-buttons-ship {
+.submit-button-ship {
   display: flex;
   justify-content: space-around;
   width: 100%;
@@ -145,84 +145,148 @@
 }
 
 .submit-button-ship {
-  transition: all 0.3s ease-in-out;
-  font-family: "Dosis", sans-serif;
-}
-.submit-button-ship {
-  width: 130px;
-  height: 50px;
-  border-radius: 50px;
-  background-image: linear-gradient(135deg, #a4fe92 0%, #61ea54 100%);
-  box-shadow: 0 20px 30px -6px rgba(196, 238, 97, 0.5);
-  outline: none;
-  cursor: pointer;
-  border: none;
-  font-size: 24px;
-  color: white;
-}
-.submit-button-ship:hover {
-  transform: translateY(3px);
-  box-shadow: none;
-}
-
-.submit-button-ship:active {
-  opacity: 0.5;
-}
+  --color: #16bf10;
+  font-family: inherit;
+  display: inline-block;
+  width: 8em;
+  height: 2.6em;
+  line-height: 2.5em;
+  margin: 20px;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid var(--color);
+  transition: color .5s;
+  z-index: 1;
+  font-size: 17px;
+  border-radius: 6px;
+  font-weight: 500;
+  color: var(--color);
+ }
+ 
+ .submit-button-ship:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: var(--color);
+  height: 150px;
+  width: 200px;
+  border-radius: 50%;
+ }
+ 
+ .submit-button-ship:hover {
+  color: #fff;
+ }
+ 
+ .submit-button-ship:before {
+  top: 100%;
+  left: 100%;
+  transition: all .7s;
+ }
+ 
+ .submit-button-ship:hover:before {
+  top: -30px;
+  left: -30px;
+ }
+ 
+ .submit-button-ship:active:before {
+  background: #4ebe2e;
+  transition: background 0s;
+ }
 
 .close-button-ship {
-  transition: all 0.3s ease-in-out;
-  font-family: "Dosis", sans-serif;
-}
-.close-button-ship {
-  width: 130px;
-  height: 50px;
-  border-radius: 50px;
-  background-image: linear-gradient(135deg, #feb692 0%, #ea5455 100%);
-  box-shadow: 0 20px 30px -6px rgba(238, 103, 97, 0.5);
-  outline: none;
-  cursor: pointer;
-  border: none;
-  font-size: 24px;
-  color: white;
-}
-.close-button-ship:hover {
-  transform: translateY(3px);
-  box-shadow: none;
-}
+  --color: #cb1717;
+  font-family: inherit;
+  display: inline-block;
+  width: 8em;
+  height: 2.6em;
+  line-height: 2.5em;
+  margin: 20px;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid var(--color);
+  transition: color .5s;
+  z-index: 1;
+  font-size: 17px;
+  border-radius: 6px;
+  font-weight: 500;
+  color: var(--color);
+ }
+ 
+ .close-button-ship:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: var(--color);
+  height: 150px;
+  width: 200px;
+  border-radius: 50%;
+ }
+ 
+ .close-button-ship:hover {
+  color: #fff;
+ }
+ 
+ .close-button-ship:before {
+  top: 100%;
+  left: 100%;
+  transition: all .7s;
+ }
+ 
+ .close-button-ship:hover:before {
+  top: -30px;
+  left: -30px;
+ }
+ 
+ .close-button-ship:active:before {
+  background: #c31414;
+  transition: background 0s;
+ }
 
-.close-button-ship:active {
-  opacity: 0.5;
-}
-
-.detail-button-shipping {
-  cursor: pointer;
-  font-weight: 700;
-  font-family: Helvetica, "sans-serif";
-  transition: all 0.2s;
-  padding: 10px 20px;
-  border-radius: 100px;
-  background-image: linear-gradient(135deg, #a4fe92 0%, #61ea54 100%);
-  border: 1px solid transparent;
-  display: flex;
-  align-items: center;
-  font-size: 12px;
-  margin-right: -78px;
-}
-
-.detail-button-shipping:hover {
-  background: #75e740;
-}
-
-.detail-button-shipping > svg {
-  width: 34px;
-  margin-left: 10px;
-  transition: transform 0.3s ease-in-out;
-}
-
-.detail-button-shipping:hover svg {
-  transform: translateX(5px);
-}
-
-.detail-button-shipping:active {
-  transform: scale(0.95);
-}
+ .detail-button-shipping {
+  --color: #10b534;
+  font-family: inherit;
+  display: inline-block;
+  width: 8em;
+  height: 2.6em;
+  line-height: 2.5em;
+  margin: 20px;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid var(--color);
+  transition: color .5s;
+  z-index: 1;
+  font-size: 17px;
+  border-radius: 6px;
+  font-weight: 500;
+  color: var(--color);
+ }
+ 
+ .detail-button-shipping:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: var(--color);
+  height: 150px;
+  width: 200px;
+  border-radius: 50%;
+ }
+ 
+ .detail-button-shipping:hover {
+  color: #fff;
+ }
+ 
+ .detail-button-shipping:before {
+  top: 100%;
+  left: 100%;
+  transition: all .7s;
+ }
+ 
+ .detail-button-shipping:hover:before {
+  top: -30px;
+  left: -30px;
+ }
+ 
+ .detail-button-shipping:active:before {
+  background: #48ca11;
+  transition: background 0s;
+ }
