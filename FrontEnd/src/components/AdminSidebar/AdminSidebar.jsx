@@ -30,7 +30,7 @@ function AdminSidebar({ openSidebarToggle, OpenSidebar, handleViewChange }) {
         <li className="admin-sidebar-list-item">
           <button
             className="admin-sidebar-button"
-            onClick={() => handleViewChange("orderlist")}
+            onClick={() => handleViewChange("gemstonelist")}
           >
             <BsGrid1X2Fill className="admin-icon" /> GemstoneList
           </button>
