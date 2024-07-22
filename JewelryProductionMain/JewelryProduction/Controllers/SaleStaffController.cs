@@ -52,6 +52,18 @@ namespace JewelryProduction.Controllers
             return BadRequest("Failed to send approval request.");
         }
 
+        [HttpPut("update-approved")]
+        public async Task<IActionResult> UpdateSendForApproval(string customizeRequestId, double goldWeight)
+        {
+            var senderId = GetCurrentUserId();
+            var result = await _service.SendForApprovalAsync(customizeRequestId, goldWeight, senderId);
+            if (result)
+            {
+                return Ok("Approval request sent to the manager.");
+            }
+            return BadRequest("Failed to send approval request.");
+        }
+
         [HttpPost("updateCustomerRequestQuotation")]
         public async Task<IActionResult> UpdateCustomerRequestQuotation([FromBody] UpdateQuotationDTO updateQuotationDTO)
         {

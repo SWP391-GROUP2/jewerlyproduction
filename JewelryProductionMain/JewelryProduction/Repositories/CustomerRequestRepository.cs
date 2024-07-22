@@ -127,5 +127,13 @@ namespace JewelryProduction.Repositories
             _context.CustomerRequests.Update(customerRequest);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<bool> CloseRequest(string customerRequestId){
+            var request = await _context.CustomerRequests.FindAsync(customerRequestId);
+            if (request == null) return false;
+            request.Status = "Canceled";
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

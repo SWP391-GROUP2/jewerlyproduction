@@ -102,6 +102,11 @@ namespace JewelryProduction.Controllers
                     PhoneNumber = registerDTO.PhoneNumber
 
                 };
+
+                if (await _userManager.FindByEmailAsync(registerDTO.Email) is not null){
+                    return StatusCode(412, new { message = "Account already exists." });
+                }
+
                 var result = await _userManager.CreateAsync(user, registerDTO.Password);
                 if (result.Succeeded)
                 {
@@ -143,7 +148,14 @@ namespace JewelryProduction.Controllers
 
             if (!await _userManager.IsEmailConfirmedAsync(user))
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = "Email not confirmed" });
+                return Ok(new NewUserDTO
+                {
+                    isPasswordSet = true,
+                    Email = user.Email,
+                    Token = await _tokenService.CreateAccessToken(user),
+                    RefreshToken = _tokenService.CreateRefreshToken(),
+                    EmailVerify = user.EmailConfirmed
+                });
             }
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDTO.Password, false);
@@ -378,7 +390,5 @@ namespace JewelryProduction.Controllers
             }
             return Ok(new { UserId = userId });
         }
-
-
     }
 }

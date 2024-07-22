@@ -6,6 +6,6 @@
         public string Email { get; set; }
         public string Token { get; set; }
         public string RefreshToken { get; set; }
-        public string EmailVerify { get; set; }
+        public bool EmailVerify { get; set; }
     }
 }

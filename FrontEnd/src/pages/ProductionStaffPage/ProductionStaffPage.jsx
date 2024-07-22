@@ -16,6 +16,15 @@ function ProductionStaffPage() {
   const [orderData, setOrderData] = useState([]);
 
   const [currentStage, setCurrentStage] = useState("Material Checking"); // Default stage
+  const [DesignData, setDesignData] = useState([]);
+  const [designItem, set3ddesignItem] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
+  const [gemstones, setGemstones] = useState([]);
+  const [productSamples, setProductSamples] = useState([]);
+  const url = "http://localhost:5266";
 
   // In danh sách Order
   const fetchOrders = async () => {
@@ -26,6 +35,71 @@ function ProductionStaffPage() {
       console.error("Error fetching orders:", error);
     }
   };
+
+  // Paginate function for both gemstones and product samples
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // Handle item click
+  const handleItemClick = (item) => {
+    setSelectedItem(item);
+  };
+
+  // Handle popup close
+  const handleClosePopup = () => {
+    setSelectedItem(null);
+  };
+
+  // Calculate current items to display based on pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+  const currentItems =
+    currentView === "gemstonelist"
+      ? gemstones.slice(indexOfFirstItem, indexOfLastItem)
+      : productSamples.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Total number of pages
+  const totalItems =
+    currentView === "gemstonelist" ? gemstones.length : productSamples.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  // Fetch gemstones data from API
+  useEffect(() => {
+    const fetchGemstones = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(`${url}/api/Gemstones`);
+        setGemstones(response.data);
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
+
+    fetchGemstones();
+  }, []);
+
+  // Fetch product samples data from API
+  useEffect(() => {
+    const fetchProductSamples = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(
+          `${url}/api/ProductSamples/FilterInsearch`
+        );
+        setProductSamples(response.data);
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
+
+    fetchProductSamples();
+  }, []);
 
   // Lấy danh sách kiểm tra của đơn hàng với orderId
   const fetchOrderInspection = async (orderId) => {
@@ -52,6 +126,20 @@ function ProductionStaffPage() {
     fetchOrders();
   }, []);
 
+  const fetch3dDesign = async () => {
+    try {
+      const response = await axios.get("http://localhost:5266/api/_3ddesign");
+      console.log("Response Data:", response.data); // Kiểm tra dữ liệu phản hồi
+      setDesignData(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error); // Kiểm tra lỗi
+    }
+  };
+
+  useEffect(() => {
+    fetch3dDesign();
+  }, []);
+
   // Xử lý thay đổi đầu vào trong dữ liệu kiểm tra
   const handleInputChange = (index, field, value) => {
     const newInspectionData = [...inspectionData];
@@ -72,13 +160,20 @@ function ProductionStaffPage() {
           comment,
         }
       );
-      Notify.success("Data submitted successfully");
-      if (stage === "Material Checking") {
-        setCurrentStage("In Production Progress");
-      } else if (stage === "In Production Progress") {
-        setCurrentStage("Final Inspection");
-      } else if (stage === "Final Inspection") {
-        setCurrentStage("Complete");
+
+      if (result) {
+        if (stage === "Material Checking") {
+          setCurrentStage("In Production Progress");
+          Notify.success("Data submitted successfully");
+        } else if (stage === "In Production Progress") {
+          setCurrentStage("Final Inspection");
+          Notify.success("Data submitted successfully");
+        } else if (stage === "Final Inspection") {
+          setCurrentStage("Complete");
+          Notify.success("Data submitted successfully");
+        }
+      } else {
+        Notify.warning("Process submitted have mistake");
       }
     } catch (error) {
       if (error.response && error.response.status === 404) {
@@ -105,6 +200,7 @@ function ProductionStaffPage() {
         }
       );
       Notify.success("Order status updated successfully");
+      setCurrentView("orderlist");
     } catch (error) {
       console.error("Error updating status:", error);
       Notify.fail("Failed to update status. Please try again later.");
@@ -113,6 +209,11 @@ function ProductionStaffPage() {
 
   // Hiển thị chi tiết của một đơn hàng
   const showDetail = (item) => {
+    const designItem = DesignData.find(
+      (design) => design.orderId === item.orderId
+    );
+    console.log("designItem:", designItem);
+    set3ddesignItem(designItem);
     setSelectedItem(item);
     setShowDetailPopup(true);
     fetchOrderInspection(item.orderId); // Lấy dữ liệu kiểm tra cho đơn hàng được chọn
@@ -213,6 +314,9 @@ function ProductionStaffPage() {
                               }
                               disabled={currentStage !== inspection.stage}
                             >
+                              <option value="" disabled selected>
+                                -- Choose Result --
+                              </option>
                               <option value="true">Complete</option>
                               <option value="false">Mistake</option>
                             </select>
@@ -254,6 +358,208 @@ function ProductionStaffPage() {
                 )}
               </div>
             )}
+            {currentView === "gemstonelist" && (
+              <div className="gemstone-list">
+                <h2>Gemstone List</h2>
+                {loading ? (
+                  <p>Loading...</p>
+                ) : error ? (
+                  <p>Error: {error.message}</p>
+                ) : (
+                  <>
+                    <div className="gemstone-grid">
+                      {currentItems.map((gemstone, index) => (
+                        <div
+                          key={index}
+                          className="gemstone-item"
+                          onClick={() => handleItemClick(gemstone)}
+                        >
+                          <img
+                            src={
+                              gemstone.image ||
+                              "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"
+                            }
+                            alt={gemstone.name}
+                            className="gemstone-product-image"
+                          />
+                          <div className="details-container">
+                            <div className="detail-box">
+                              <strong>{gemstone.name}</strong>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    {/* Pagination */}
+                    <ul className="pagination">
+                      {Array.from({ length: totalPages }, (_, i) => (
+                        <li
+                          key={i}
+                          className={`page-item ${
+                            currentPage === i + 1 ? "active" : ""
+                          }`}
+                        >
+                          <button
+                            onClick={() => paginate(i + 1)}
+                            className={`page-link ${
+                              currentPage === i + 1 ? "active" : ""
+                            }`}
+                          >
+                            {i + 1}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </div>
+            )}
+            {currentView === "productlist" && (
+              <div className="product-sample-list">
+                <h2>Product Sample List</h2>
+                {loading ? (
+                  <p>Loading...</p>
+                ) : error ? (
+                  <p>Error: {error.message}</p>
+                ) : (
+                  <>
+                    <div className="gemstone-grid">
+                      {currentItems.map((product, index) => (
+                        <div
+                          key={index}
+                          className="gemstone-item"
+                          onClick={() => handleItemClick(product)}
+                        >
+                          <img
+                            src={
+                              product.image ||
+                              "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"
+                            }
+                            alt={product.productName}
+                            className="gemstone-product-image"
+                          />
+                          <div className="details-container">
+                            <div className="pr-detail-box">
+                              <strong>{product.productName}</strong>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    {/* Pagination */}
+                    <ul className="pagination">
+                      {Array.from({ length: totalPages }, (_, i) => (
+                        <li
+                          key={i}
+                          className={`page-item ${
+                            currentPage === i + 1 ? "active" : ""
+                          }`}
+                        >
+                          <button
+                            onClick={() => paginate(i + 1)}
+                            className={`page-link ${
+                              currentPage === i + 1 ? "active" : ""
+                            }`}
+                          >
+                            {i + 1}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </div>
+            )}
+
+            {selectedItem && currentView === "gemstonelist" && (
+              <div className="item-popup">
+                <div className="item-popup-content">
+                  <button
+                    className="close-popup-button"
+                    onClick={handleClosePopup}
+                  >
+                    Close
+                  </button>
+                  <div className="popup-details">
+                    <h3>{selectedItem.name}</h3>
+                    <img
+                      src={
+                        selectedItem.image ||
+                        "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"
+                      }
+                      alt={selectedItem.name}
+                      className="popup-product-image"
+                    />
+                    <div className="details-container">
+                      <div className="detail-box">
+                        <strong>ID: {selectedItem.gemstoneId}</strong>
+                      </div>
+                      <div className="detail-box">
+                        <strong>Size: {selectedItem.size}</strong>
+                      </div>
+                      <div className="detail-box">
+                        <strong>Color: {selectedItem.color}</strong>
+                      </div>
+                      <div className="detail-box">
+                        <strong>
+                          Carat Weight: {selectedItem.caratWeight}
+                        </strong>
+                      </div>
+                      <div className="detail-box">
+                        <strong>Price: {selectedItem.price}</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Popup for selected product */}
+            {selectedItem && currentView === "productlist" && (
+              <div className="item-popup">
+                <div className="item-popup-content">
+                  <button
+                    className="close-popup-button"
+                    onClick={handleClosePopup}
+                  >
+                    Close
+                  </button>
+                  <div className="popup-details">
+                    <h3>{selectedItem.productName}</h3>
+                    <img
+                      src={
+                        selectedItem.image ||
+                        "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"
+                      }
+                      alt={selectedItem.productName}
+                      className="popup-product-image"
+                    />
+                    <div className="details-container">
+                      <div className="detail-box">
+                        <strong>
+                          Product Sample ID: {selectedItem.productSampleId}
+                        </strong>
+                      </div>
+                      <div className="detail-box">
+                        <strong>Type: {selectedItem.type}</strong>
+                      </div>
+                      <div className="detail-box">
+                        <strong>Style: {selectedItem.style}</strong>
+                      </div>
+                      <div className="detail-box">
+                        <strong>Size: {selectedItem.size}</strong>
+                      </div>
+                      <div className="detail-box">
+                        <strong>GoldType: {selectedItem.goldType}</strong>
+                      </div>
+                      <div className="detail-box">
+                        <strong>Price: {selectedItem.price}</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -263,55 +569,68 @@ function ProductionStaffPage() {
         <div className="productionstaff-detail-popup">
           <div className="productionstaff-detail-popup-content">
             <h2>Order Detail</h2>
-            <table className="productionstaff-detail-table">
-              <tbody>
-                <tr>
-                  <td>Order ID:</td>
-                  <td>{selectedItem.orderId}</td>
-                </tr>
-                <tr>
-                  <td>Customer Name:</td>
-                  <td>{selectedItem.customerName}</td>
-                </tr>
-                <tr>
-                  <td>Design Staff Name:</td>
-                  <td>{selectedItem?.designStaffName ?? "N/A"}</td>
-                </tr>
-                <tr>
-                  <td>Production Staff Name:</td>
-                  <td>{selectedItem?.productionStaffName ?? "N/A"}</td>
-                </tr>
-                <tr>
-                  <td>Total Price:</td>
-                  <td>{selectedItem.totalPrice}</td>
-                </tr>
-                <tr>
-                  <td>Order Date:</td>
-                  <td>{selectedItem.orderDate}</td>
-                </tr>
-                <tr>
-                  <td>Status:</td>
-                  <td>{selectedItem.status}</td>
-                </tr>
+            <div className="productionstaff-detail-container">
+              <table className="productionstaff-detail-table">
+                <tbody>
+                  <tr>
+                    <td>Order ID:</td>
+                    <td>{selectedItem.orderId}</td>
+                  </tr>
+                  <tr>
+                    <td>Customer Name:</td>
+                    <td>{selectedItem.customerName}</td>
+                  </tr>
+                  <tr>
+                    <td>Design Staff Name:</td>
+                    <td>{selectedItem?.designStaffName ?? "N/A"}</td>
+                  </tr>
+                  <tr>
+                    <td>Production Staff Name:</td>
+                    <td>{selectedItem?.productionStaffName ?? "N/A"}</td>
+                  </tr>
+                  <tr>
+                    <td>Total Price:</td>
+                    <td>{selectedItem.totalPrice}</td>
+                  </tr>
+                  <tr>
+                    <td>Order Date:</td>
+                    <td>{selectedItem.orderDate}</td>
+                  </tr>
+                  <tr>
+                    <td>Status:</td>
+                    <td>{selectedItem.status}</td>
+                  </tr>
+                  {designItem.image && (
+                    <tr>
+                      <td colSpan="2">
+                        <img
+                          src={designItem.image}
+                          alt="Order Ig"
+                          style={{ width: "50%", height: "50%" }}
+                        />
+                      </td>
+                    </tr>
+                  )}
 
-                <tr>
-                  <td colSpan="2">
-                    <button
-                      className="productionstaff-close-button"
-                      onClick={hideDetail}
-                    >
-                      Close
-                    </button>
-                    <button
-                      className="productionstaff-add-image-button"
-                      onClick={handleViewButtonClick}
-                    >
-                      View
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                  <tr>
+                    <td colSpan="2">
+                      <button
+                        className="productionstaff-close-button"
+                        onClick={hideDetail}
+                      >
+                        Close
+                      </button>
+                      <button
+                        className="productionstaff-add-image-button"
+                        onClick={handleViewButtonClick}
+                      >
+                        View
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}

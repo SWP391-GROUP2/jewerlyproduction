@@ -11,5 +11,6 @@ namespace JewelryProduction.Interface
         Task<List<CustomerRequestGetDTO>> GetCustomerRequests();
         Task<CustomerRequestGetDTO> GetCustomerRequest(string id);
         Task<bool> ExistsAsync(string customizeRequestId);
+        Task<bool> CloseRequest(string customerRequestId);
     }
 }

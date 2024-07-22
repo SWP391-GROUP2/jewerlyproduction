@@ -78,6 +78,15 @@ namespace JewelryProduction.Repositories
 
             return managerId;
         }
+        public string GetCustomerIdByOrderId(string orderId)
+        {
+            var customerId = _context.Orders
+                .Where(o => o.OrderId == orderId)
+                .Select(o => o.CustomizeRequest.CustomerId)
+                .FirstOrDefault();
+
+            return customerId;
+        }
         public async Task<OrderGetDTO> GetOrder(string id)
         {
             var order = await _context.Orders

@@ -2,16 +2,20 @@
 using MimeKit;
 using MailKit.Net.Smtp;
 using JewelryProduction.DTO.Account;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace JewelryProduction.Services
 {
     public class EmailService : IEmailService
     {
         private readonly EmailConfiguration _emainConfig;
-
-        public EmailService(EmailConfiguration emailConfig)
+        private readonly UserManager<AppUser> _userManager;
+        public EmailService(EmailConfiguration emailConfig, UserManager<AppUser> userManager)
         {
             _emainConfig = emailConfig;
+            _userManager = userManager;
         }
 
         public void SendEmail(MessageOTP message)
@@ -57,6 +61,17 @@ namespace JewelryProduction.Services
         void IEmailService.Send(MimeMessage mailMessage)
         {
             throw new NotImplementedException();
+        }
+        public async Task SendEmail(string userId, string senderId, string content)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            var sender = await _userManager.Users.FirstOrDefaultAsync(s => s.Id == senderId);
+            var email = user.Email;
+
+            var message = new MessageOTP(
+            new string[] { email }, senderId, content);
+
+            SendEmail(message);
         }
     }
 }
