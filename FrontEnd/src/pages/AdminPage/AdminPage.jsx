@@ -166,9 +166,9 @@ function AdminPage() {
       case "Ring":
         return ["Solitaire", "Three Stone", "Pave"];
       case "Bracelet":
-        return ["Chain", "Pearl", "Bar"];
+        return ["Chain", "Charm", "Bar"];
       case "Necklace":
-        return ["Chain", "Pearl", "Station", "Initial"];
+        return ["Chain", "Station", "Initial"];
       case "Earrings":
         return ["Stud", "Jacket", "Ear Spike"];
       default:

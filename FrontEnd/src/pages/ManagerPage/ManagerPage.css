@@ -51,22 +51,56 @@
   cursor: pointer;
 }
 
-.detail-button-s,
-.reject-button {
-  padding: 5px 10px;
-  border: none;
-  cursor: pointer;
-}
-
 .detail-button-s {
-  background-color: #4caf50; /* Green */
-  color: white;
+  --color: #1bcd27;
+  font-family: inherit;
+  display: inline-block;
+  width: 8em;
+  height: 2.6em;
+  line-height: 2.5em;
+  margin: 20px;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid var(--color);
+  transition: color 0.5s;
+  z-index: 1;
+  font-size: 17px;
+  border-radius: 6px;
+  font-weight: 500;
+  color: var(--color);
 }
 
-.reject-button {
-  background-color: #f44336; /* Red */
-  color: white;
+.detail-button-s:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: var(--color);
+  height: 150px;
+  width: 200px;
+  border-radius: 50%;
 }
+
+.detail-button-s:hover {
+  color: #fff;
+}
+
+.detail-button-s:before {
+  top: 100%;
+  left: 100%;
+  transition: all 0.7s;
+}
+
+.detail-button-s:hover:before {
+  top: -30px;
+  left: -30px;
+}
+
+.detail-button-s:active:before {
+  background: #14c32f;
+  transition: background 0s;
+}
+
+
 /* CSS cho lớp mờ */
 .overlay {
   position: fixed;
@@ -258,16 +292,7 @@
   display: flex;
   justify-content: space-between;
 }
-.popup_button_approve {
-  margin: 10px 5px;
-  padding: 10px 15px;
-  border: none;
-  background-color: #2a9c13;
-  color: white;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 16px;
-}
+
 .popup_button_reject {
   margin: 10px 5px;
   padding: 10px 15px;
@@ -290,3 +315,53 @@
 .assign-buttons button {
   margin-left: 10px; /* Để tạo khoảng cách giữa các nút */
 }
+
+.popup_button_approve {
+  --color: #1bcd27;
+  font-family: inherit;
+  display: inline-block;
+  width: 8em;
+  height: 2.6em;
+  line-height: 2.5em;
+  margin: 20px;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid var(--color);
+  transition: color 0.5s;
+  z-index: 1;
+  font-size: 17px;
+  border-radius: 6px;
+  font-weight: 500;
+  color: var(--color);
+}
+
+.popup_button_approve:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: var(--color);
+  height: 150px;
+  width: 200px;
+  border-radius: 50%;
+}
+
+.popup_button_approve:hover {
+  color: #fff;
+}
+
+.popup_button_approve:before {
+  top: 100%;
+  left: 100%;
+  transition: all 0.7s;
+}
+
+.popup_button_approve:hover:before {
+  top: -30px;
+  left: -30px;
+}
+
+.popup_button_approve:active:before {
+  background: #14c32f;
+  transition: background 0s;
+}
+
