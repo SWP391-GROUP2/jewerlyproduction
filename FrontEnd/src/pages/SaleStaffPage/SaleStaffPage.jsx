@@ -482,14 +482,14 @@ function SaleStaffPage() {
             </table>
             <div>
               <button
-                className="detail-button"
+                className="detail-button-cl"
                 onClick={handleCloseDetailPopup}
               >
                 Close
               </button>
               {currentView === "wait_for_quotation" && (
                 <button
-                  className="detail-button"
+                  className="detail-button-sa"
                   onClick={handleSaveDetailPopup}
                 >
                   Save
