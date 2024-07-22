@@ -21,7 +21,6 @@ function CustomizeForm() {
   const [shape, setShape] = useState("");
   const [gemstoneSize, setGemstoneSize] = useState("all");
   const [gemstoneType, setGemstoneType] = useState("");
-  const [gemstoneColor, setGemstoneColor] = useState("all");
   const [gemstoneClarity, setGemstoneClarity] = useState("all");
   const [gemstoneCaratMin, setGemstoneCaratMin] = useState("all");
   const [gemstoneCaratMax, setGemstoneCaratMax] = useState("all");
@@ -183,12 +182,6 @@ function CustomizeForm() {
     }`;
   };
 
-  const getClassNamesColor = (color) => {
-    return `grid-size-item ${
-      gemstoneColor === color ? "col-size-selected" : ""
-    }`;
-  };
-
   const onClickSelectedClarity = (clarity) => {
     setGemstoneClarity(clarity);
   };
@@ -229,10 +222,6 @@ function CustomizeForm() {
       query.push(`categoryName=${gemstoneType}`);
     }
 
-    if (gemstoneColor !== "all") {
-      query.push(`colors=${gemstoneColor}`);
-    }
-
     if (gemstoneClarity !== "all") {
       query.push(`clarity=${gemstoneClarity}`);
     }
@@ -262,7 +251,6 @@ function CustomizeForm() {
     shape,
     gemstoneSize,
     gemstoneType,
-    gemstoneColor,
     gemstoneClarity,
     gemstoneCaratMin,
     gemstoneCaratMax,
@@ -316,8 +304,8 @@ function CustomizeForm() {
 
   const typeStyles = {
     Ring: ["solitaire", "three stone", "pave"],
-    Bracelet: ["chain", "pearl", "bar"],
-    Necklace: ["chain", "pearl", "station", "initial"],
+    Bracelet: ["chain", "Charm", "bar"],
+    Necklace: ["chain", "station", "initial"],
     Earrings: ["stud", "jacket", "ear spike"],
   };
   const typeQuantitys = {
@@ -334,7 +322,6 @@ function CustomizeForm() {
     return (
       gemstone.gemstoneId !==
         (PrimaryGemstone ? PrimaryGemstone.gemstoneId : null) &&
-      gemstone.categoryId === "C005" &&
       gemstone.productSampleId === null &&
       gemstone.customizeRequestId === null
     );
@@ -343,7 +330,9 @@ function CustomizeForm() {
   const filteredMainGemstones = gemstones.filter((gemstone) => {
     // Filter out the primary gemstone and gemstones with non-null productSampleID or customizeRequestID
     return (
-      gemstone.productSampleId === null && gemstone.customizeRequestId === null
+      gemstone.productSampleId === null &&
+      gemstone.customizeRequestId === null &&
+      gemstone.categoryId !== "C005"
     );
   });
 
@@ -352,6 +341,7 @@ function CustomizeForm() {
     return (
       gemstone.gemstoneId !==
         (PrimaryGemstone ? PrimaryGemstone.gemstoneId : null) &&
+      gemstone.categoryId === "C005" &&
       gemstone.productSampleId === null &&
       gemstone.customizeRequestId === null
     );
@@ -697,7 +687,7 @@ function CustomizeForm() {
               </div>
 
               <div className="option-section">
-              <div className="quantity">
+                <div className="quantity">
                   <h3 className="left-aligned-heading">SIZE</h3>
                   <div className="grid-size-carat">
                     <div
@@ -1012,7 +1002,7 @@ function CustomizeForm() {
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredGemstones.map((gemstone) => (
+                      {currentSideGemstones.map((gemstone) => (
                         <tr
                           key={gemstone.gemstoneId}
                           onClick={() => selectSideStone(gemstone)}

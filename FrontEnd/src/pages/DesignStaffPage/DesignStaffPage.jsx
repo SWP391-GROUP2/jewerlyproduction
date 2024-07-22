@@ -9,7 +9,7 @@ import Notify from "../../components/Alert/Alert";
 
 function DesignStaffPage() {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
-  const [currentView, setCurrentView] = useState("");
+  const [currentView, setCurrentView] = useState("orderlist");
   const [selectedItem, setSelectedItem] = useState(null);
   const [showDetailPopup, setShowDetailPopup] = useState(false);
   const [uploadedImage, setUploadedImage] = useState(null);
@@ -75,31 +75,35 @@ function DesignStaffPage() {
     setImageFiles((prevFiles) => [...prevFiles, ...files]);
   };
 
-
   const handleUploadImage = async () => {
-    if(name == "") Notify.warning("Please provide design name");
-    else{
+    if (name === "") Notify.warning("Please provide design name");
+    else {
       if (selectedProductSample && imageFiles.length > 0) {
         const uploadPromises = imageFiles.map(async (file) => {
           const formData = new FormData();
-          formData.append('Image', file);
-          formData.append('DesignName', name);
-          formData.append('ProductSampleId', selectedProductSample.productSampleId);
-          formData.append('DesignStaffId', designStaffId);
-    
-          console.log("Uploading 3dDesign with data:", Object.fromEntries(formData.entries()));
-    
+          formData.append("Image", file);
+          formData.append("DesignName", name);
+          formData.append(
+            "ProductSampleId",
+            selectedProductSample.productSampleId
+          );
+          formData.append("DesignStaffId", designStaffId);
+
+          console.log(
+            "Uploading 3dDesign with data:",
+            Object.fromEntries(formData.entries())
+          );
+
           await upload3dDesign(formData);
         });
-    
+
         await Promise.all(uploadPromises);
       } else {
-        console.log('Please select a Design');
+        console.log("Please select a Design");
         Notify.warning("Please select a Design");
       }
     }
   };
-  
 
   const handleDeleteImage = (index) => {
     setSelectedImages((prevImages) => prevImages.filter((_, i) => i !== index));
@@ -254,7 +258,7 @@ function DesignStaffPage() {
         prevDesigns.filter((design) => design._3dDesignId !== selectedDesignId)
       );
       console.log("All images have been uploaded.");
-      Notify.success("Designs uploaded successfully")
+      Notify.success("Designs uploaded successfully");
     } catch (error) {
       console.error("Error fetching data:", error);
     }

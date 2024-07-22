@@ -17,7 +17,11 @@ function ProductionStaffSidebar({
     >
       <div className="productionstaff-sidebar-avatar">
         <div className="productionstaff-logo-container">
-          <img src="https://res.cloudinary.com/dfvplhyjj/image/upload/v1721198532/Logoqueen_obg194.png" alt="Logo" className="productionstaff-logo-image" />
+          <img
+            src="https://res.cloudinary.com/dfvplhyjj/image/upload/v1721198532/Logoqueen_obg194.png"
+            alt="Logo"
+            className="productionstaff-logo-image"
+          />
         </div>
         <img
           src="https://res.cloudinary.com/dfvplhyjj/image/upload/v1721198614/icon-128x128_nfr77b.png"
@@ -42,10 +46,18 @@ function ProductionStaffSidebar({
         <li className="designstaff-sidebar-list-item">
           <button
             className="salestaff-sidebar-button"
-            onClick={() => handleViewChange("orderlist")}
+            onClick={() => handleViewChange("productlist")}
           >
             <BsGrid1X2Fill className="productionstaff-icon" /> Product Sample
             List
+          </button>
+        </li>
+        <li className="designstaff-sidebar-list-item">
+          <button
+            className="salestaff-sidebar-button"
+            onClick={() => handleViewChange("gemstonelist")}
+          >
+            <BsGrid1X2Fill className="productionstaff-icon" /> Gemstone List
           </button>
         </li>
       </ul>
