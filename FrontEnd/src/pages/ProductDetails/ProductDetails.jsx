@@ -96,10 +96,6 @@ function ProductDetails() {
               }
               alt={product.productName}
             />
-            {/* Nếu có nhiều hình ảnh, sử dụng DetailsThumb */}
-            {images.length > 0 && (
-              <DetailsThumb images={images} tab={handleTab} myRef={myRef} />
-            )}
           </div>
           <div className="product-details">
             <h2>{product.productName}</h2>
@@ -109,7 +105,10 @@ function ProductDetails() {
               The selling price may vary depending on the actual size and weight
               of the product
             </p>
-
+            {/* Nếu có nhiều hình ảnh, sử dụng DetailsThumb */}
+            {images.length > 0 && (
+              <DetailsThumb images={images} tab={handleTab} myRef={myRef} />
+            )}
             <button
               className="cart"
               onClick={() => navigateToProductDetail(product.productSampleId)}
