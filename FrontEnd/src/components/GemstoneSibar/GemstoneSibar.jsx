@@ -27,7 +27,7 @@ const Sidebar = () => {
       color: ["Red"],
     },
     Sapphire: {
-      color: ["Blue", "Yellow", "Pink", "Green", "Orange", "Purple"],
+      color: ["Blue"],
     },
     SideStone: {
       color: ["White", "Pink"],

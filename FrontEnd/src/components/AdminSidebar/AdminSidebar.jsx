@@ -13,7 +13,11 @@ function AdminSidebar({ openSidebarToggle, OpenSidebar, handleViewChange }) {
     >
       <div className="admin-sidebar-avatar">
         <div className="admin-logo-container">
-          <img src="https://res.cloudinary.com/dfvplhyjj/image/upload/v1721198532/Logoqueen_obg194.png" alt="Logo" className="admin-logo-image" />
+          <img
+            src="https://res.cloudinary.com/dfvplhyjj/image/upload/v1721198532/Logoqueen_obg194.png"
+            alt="Logo"
+            className="admin-logo-image"
+          />
         </div>
         <img
           src="https://res.cloudinary.com/dfvplhyjj/image/upload/v1721198614/icon-128x128_nfr77b.png"
@@ -65,7 +69,7 @@ function AdminSidebar({ openSidebarToggle, OpenSidebar, handleViewChange }) {
             className="admin-sidebar-button"
             onClick={() => handleViewChange("uploadgemstone")}
           >
-            <BsGrid1X2Fill className="admin-icon" /> Upload Gemstone 
+            <BsGrid1X2Fill className="admin-icon" /> Upload Gemstone
           </button>
         </li>
         <li className="admin-sidebar-list-item">
@@ -73,7 +77,7 @@ function AdminSidebar({ openSidebarToggle, OpenSidebar, handleViewChange }) {
             className="admin-sidebar-button"
             onClick={() => handleViewChange("uploadproduct")}
           >
-            <BsGrid1X2Fill className="admin-icon" /> Upload Product 
+            <BsGrid1X2Fill className="admin-icon" /> Upload Product
           </button>
         </li>
       </ul>
