@@ -33,7 +33,13 @@ function DesignStaffPage() {
   const [selectedProductSample, setSelectedProductSample] = useState("");
 
   const [productSamples, setProductSamples] = useState([]);
-  const [selectedImage, setSelectedImage] = useState(null);
+
+
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [imageFiles, setImageFiles] = useState([]);
+
+
+
 
   useEffect(() => {
     // Fetch product samples from API
@@ -62,31 +68,43 @@ function DesignStaffPage() {
   };
 
   const handleImageChange = (e) => {
-    setSelectedImage(e.target.files[0]);
+    const files = Array.from(e.target.files);
+    if (files.length + selectedImages.length > 3) {
+      alert('You can only upload up to 3 images.');
+      return;
+    }
+    const newImages = files.map((file) => URL.createObjectURL(file));
+    setSelectedImages((prevImages) => [...prevImages, ...newImages]);
+    setImageFiles((prevFiles) => [...prevFiles, ...files]);
   };
 
   const handleUploadImage = () => {
-    if (selectedProductSample && selectedImage) {
+    if (selectedProductSample && imageFiles.length > 0) {
       const formData = new FormData();
-      formData.append("image", selectedImage);
-      formData.append("productSampleId", selectedProductSample.productSampleId);
 
-      // Replace with your actual upload API endpoint
-      axios
-        .post("http://localhost:5266/api/UploadProductImage", formData)
-        .then((response) => {
-          console.log("Image uploaded successfully:", response.data);
-          // Handle success (e.g., show a success message)
+      imageFiles.forEach((file) => {
+        formData.append('images', file);
+      });
+      formData.append('productSampleId', selectedProductSample.productSampleId);
+
+      axios.post('http://localhost:5266/api/UploadProductImage', formData)
+        .then(response => {
+          console.log('Image uploaded successfully:', response.data);
         })
-        .catch((error) => {
-          console.error("Error uploading image:", error);
-          // Handle error (e.g., show an error message)
+        .catch(error => {
+          console.error('Error uploading image:', error);
         });
     } else {
-      // Handle the case where no image or product is selected
-      console.log("Please select a product and image.");
+      console.log('Please select a product and image.');
+
     }
   };
+
+  const handleDeleteImage = (index) => {
+    setSelectedImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    setImageFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+  };
+
   function chunkArray(array, size) {
     return array.reduce(
       (acc, _, index) =>
@@ -366,51 +384,60 @@ function DesignStaffPage() {
               </div>
             )}
             {currentView === "upload3Ddeisgn" && (
-              <div className="designstaff-data-entry-container">
-                <h2 className="designstaff-data-entry-title">Enter Data</h2>
-                <form className="designstaff-data-entry-form">
-                  <div className="form-group">
-                    <label htmlFor="name">Name</label>
-                    <input
-                      type="text"
-                      id="name"
-                      className="designstaff-input"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="productSampleList">
-                      ProductSample List
-                    </label>
-                    <input
-                      type="text"
-                      id="productSampleList"
-                      className="designstaff-input"
-                      value={productSampleList}
-                      onClick={handleProductSampleClick}
-                      readOnly
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="imageUpload">Upload Image</label>
-                    <input
-                      type="file"
-                      id="imageUpload"
-                      className="designstaff-input"
-                      onChange={handleImageChange}
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    className="designstaff-submit-button"
-                    onClick={handleUploadImage}
-                  >
-                    Upload Image
-                  </button>
-                </form>
-              </div>
-            )}
+
+        <div className="designstaff-data-entry-container">
+          <h2 className="designstaff-data-entry-title">Enter Data</h2>
+          <form className="designstaff-data-entry-form">
+            <div className="form-group">
+              <label htmlFor="name">Name</label>
+              <input
+                type="text"
+                id="name"
+                className="designstaff-input"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="productSampleList">ProductSample List</label>
+              <input
+                type="text"
+                id="productSampleList"
+                className="designstaff-input"
+                value={productSampleList}
+                onClick={handleProductSampleClick}
+                readOnly
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="imageUpload">Upload Image</label>
+              <input
+                type="file"
+                id="imageUpload"
+                className="designstaff-input"
+                onChange={handleImageChange}
+                multiple
+              />
+            </div>
+            <div className="uploaded-images">
+              {selectedImages.map((image, index) => (
+                <div key={index} className="uploaded-image">
+                  <img src={image} alt={`Uploaded ${index}`} />
+                  <button type="button" onClick={() => handleDeleteImage(index)}>X</button>
+                </div>
+              ))}
+            </div>
+            <button 
+              type="button"
+              className="designstaff-submit-button"
+              onClick={handleUploadImage}
+            >
+              Upload Image
+            </button>
+          </form>
+        </div>
+      )}
+
 
             {isPopupVisible && (
               <div className="popup-productlist-overlay">
