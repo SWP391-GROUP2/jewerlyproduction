@@ -54,7 +54,7 @@ const Sidebar = () => {
     const queryString = query.length ? `?${query.join("&")}` : "";
 
     try {
-      const url = `https://jewelryproductionfe.azurewebsites.net/api/ProductSamples${
+      const url = `https://nbjewelrybe.azurewebsites.net/api/ProductSamples${
         queryString ? "/FilterInSearch" + queryString : ""
       }`;
       const response = await axios.get(url);
