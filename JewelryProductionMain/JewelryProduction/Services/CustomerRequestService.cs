@@ -12,16 +12,16 @@ namespace JewelryProduction.Services
     public class CustomerRequestService : ICustomerRequestService
     {
         private readonly JewelryProductionContext _context;
-        private readonly INotificationService _notificationService;
+        private readonly IEmailService _emailService;
         private readonly ICustomerRequestRepository _customerRequestRepository;
         private readonly IGoldRepository _goldRepository;
         private readonly IGemstoneRepository _gemstoneRepository;
         private readonly IOrderRepository _orderRepository;
 
-        public CustomerRequestService(JewelryProductionContext context, INotificationService notificationService, ICustomerRequestRepository customerRequestRepository, IGoldRepository goldRepository, IGemstoneRepository gemstoneRepository, IOrderRepository orderRepository)
+        public CustomerRequestService(JewelryProductionContext context, IEmailService emailService, ICustomerRequestRepository customerRequestRepository, IGoldRepository goldRepository, IGemstoneRepository gemstoneRepository, IOrderRepository orderRepository)
         {
             _context = context;
-            _notificationService = notificationService;
+            _emailService = emailService;
             _customerRequestRepository = customerRequestRepository;
             _goldRepository = goldRepository;
             _gemstoneRepository = gemstoneRepository;
@@ -84,7 +84,7 @@ namespace JewelryProduction.Services
                 await _context.SaveChangesAsync();
 
                 // Send notification to SaleStaff
-                await _notificationService.SendNotificationToUserfAsync(customerRequest.SaleStaffId, managerId, "Your request has been approved.");
+                await _emailService.SendEmail(customerRequest.SaleStaffId, "Approve Request", @$"Your request {customerRequestId} has been approved.");
                 return true;
             }
             catch (DbUpdateException)
@@ -109,7 +109,7 @@ namespace JewelryProduction.Services
 
                 // Send notification to Customer
                 var message = $"Your quotation has been approved. Quotation: {customerRequest.quotation:C}. Description: {customerRequest.quotation}. Please deposit 30% of the quotation amount: {depositAmount:C}.";
-                await _notificationService.SendNotificationToUserfAsync(customerRequest.CustomerId,staffId, message);
+                await _emailService.SendEmail(customerRequest.CustomerId,"Quotation Information", message);
 
                 return true;
             }
@@ -134,7 +134,7 @@ namespace JewelryProduction.Services
             {
                 _context.Update(customerRequest);
                 await _context.SaveChangesAsync();
-                await _notificationService.SendNotificationToUserfAsync(customerRequest.SaleStaffId,customerRequest.ManagerId, message);
+                await _emailService.SendEmail(customerRequest.SaleStaffId,"Reject Quotation", message);
 
                 return true;
             }
@@ -160,7 +160,7 @@ namespace JewelryProduction.Services
             {
                 _context.Update(customerRequest);
                 await _context.SaveChangesAsync();
-                await _notificationService.SendNotificationToUserfAsync(customerRequest.SaleStaffId, customerRequest.ManagerId, $"{customerRequest.CustomizeRequestId} quotation has been updated.");
+                await _emailService.SendEmail(customerRequest.SaleStaffId, "Quotation Updated", $"{customerRequest.CustomizeRequestId} quotation has been updated.");
                 return true;
             }
             catch (DbUpdateException)
@@ -293,5 +293,7 @@ namespace JewelryProduction.Services
         {
             return await _customerRequestRepository.GetCustomerRequest(id);
         }
+
+        public async Task<bool> CloseRequest(string customerRequestId) => await _customerRequestRepository.CloseRequest(customerRequestId);
     }
 }

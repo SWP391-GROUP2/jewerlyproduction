@@ -63,7 +63,7 @@ function LoginForm() {
         </Link>
         <div className="wrapper">
           <form onSubmit={handleLogin}>
-            <h1>LOG IN</h1>
+            <h1>Log in</h1>
             <div className="register-link">
               <p>Enter your email & password to log in</p>
             </div>

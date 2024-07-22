@@ -13,6 +13,7 @@ import {
 
 import axios from "axios";
 import Notify from "../components/Alert/Alert";
+import { useState } from "react";
 
 export const loginUser = async (user, dispatch, navigate) => {
   dispatch(loginStart());
@@ -24,34 +25,39 @@ export const loginUser = async (user, dispatch, navigate) => {
     dispatch(loginSuccess(res.data));
     console.log();
 
-    // Điều hướng dựa trên vai trò của người dùng
-    const tokenrole = jwtDecode(res.data.token);
-    const role = tokenrole.role.toLowerCase();
-    Notify.success("Login Successfully");
-    switch (role) {
-      case "admin":
-        navigate("/admin/home");
-        break;
-      case "salestaff":
-        navigate("/salestaff/home");
-        break;
-      case "designstaff":
-        navigate("/designstaff/home");
-        break;
-      case "manager":
-        navigate("/manager/home");
-        break;
-      case "productionstaff":
-        navigate("/productionstaff/home");
-        break;
-      case "customer":
-      default:
-        navigate("/home");
-        break;
+    if(!res.data.emailVerify){
+      navigate("/register", { state: { user: res.data } });
     }
+
+    else{
+    // Điều hướng dựa trên vai trò của người dùng
+      const tokenrole = jwtDecode(res.data.token);
+      const role = tokenrole.role.toLowerCase();
+      Notify.success("Login Successfully");
+      switch (role) {
+        case "admin":
+          navigate("/admin/home");
+          break;
+        case "salestaff":
+          navigate("/salestaff/home");
+          break;
+        case "designstaff":
+          navigate("/designstaff/home");
+          break;
+        case "manager":
+          navigate("/manager/home");
+          break;
+        case "productionstaff":
+          navigate("/productionstaff/home");
+          break;
+        case "customer":
+        default:
+          navigate("/home");
+          break;
+    }}
   } catch (err) {
+    Notify.fail("Incorrect account or Password, please retry");
     dispatch(loginFalsed());
-    Notify.fail("This account does not exist. Please check your username.");
   }
 };
 
@@ -63,10 +69,16 @@ export const registerUser = async (user, dispatch, navigate) => {
       user
     );
     dispatch(registerSuccess(res.data));
-    Notify.success("Registered Successfully");
+    Notify.success("OTP verification sent");
     navigate("/register");
   } catch (err) {
+    if (err.response && err.response.status === 412) {
+      Notify.fail("Account already exists.");
+    } else {
+      Notify.fail("Register Failed");
+    }
     dispatch(registerFalsed());
+    navigate("/register");
   }
 };
 
