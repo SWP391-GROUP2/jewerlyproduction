@@ -35,6 +35,10 @@ const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [productSamples, setProductSamples] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
 
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [imageFiles, setImageFiles] = useState([]);
+
+
 
   useEffect(() => {
     // Fetch product samples from API
@@ -65,30 +69,41 @@ const [isPopupVisible, setIsPopupVisible] = useState(false);
   };
 
   const handleImageChange = (e) => {
-    setSelectedImage(e.target.files[0]);
+    const files = Array.from(e.target.files);
+    if (files.length + selectedImages.length > 3) {
+      alert('You can only upload up to 3 images.');
+      return;
+    }
+    const newImages = files.map((file) => URL.createObjectURL(file));
+    setSelectedImages((prevImages) => [...prevImages, ...newImages]);
+    setImageFiles((prevFiles) => [...prevFiles, ...files]);
   };
 
   const handleUploadImage = () => {
-    if (selectedProductSample && selectedImage) {
+    if (selectedProductSample && imageFiles.length > 0) {
       const formData = new FormData();
-      formData.append('image', selectedImage);
+      imageFiles.forEach((file) => {
+        formData.append('images', file);
+      });
       formData.append('productSampleId', selectedProductSample.productSampleId);
 
-      // Replace with your actual upload API endpoint
       axios.post('http://localhost:5266/api/UploadProductImage', formData)
         .then(response => {
           console.log('Image uploaded successfully:', response.data);
-          // Handle success (e.g., show a success message)
         })
         .catch(error => {
           console.error('Error uploading image:', error);
-          // Handle error (e.g., show an error message)
         });
     } else {
-      // Handle the case where no image or product is selected
       console.log('Please select a product and image.');
     }
   };
+
+  const handleDeleteImage = (index) => {
+    setSelectedImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    setImageFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+  };
+
   function chunkArray(array, size) {
     return array.reduce(
       (acc, _, index) =>
@@ -399,9 +414,18 @@ const [isPopupVisible, setIsPopupVisible] = useState(false);
                 id="imageUpload"
                 className="designstaff-input"
                 onChange={handleImageChange}
+                multiple
               />
             </div>
-            <button
+            <div className="uploaded-images">
+              {selectedImages.map((image, index) => (
+                <div key={index} className="uploaded-image">
+                  <img src={image} alt={`Uploaded ${index}`} />
+                  <button type="button" onClick={() => handleDeleteImage(index)}>X</button>
+                </div>
+              ))}
+            </div>
+            <button 
               type="button"
               className="designstaff-submit-button"
               onClick={handleUploadImage}
@@ -413,29 +437,29 @@ const [isPopupVisible, setIsPopupVisible] = useState(false);
       )}
 
       {isPopupVisible && (
-        <div className="popup-productlist-overlay">
-          <div className="popup-productlist-content">
-            <h3>Select a Product Sample</h3>
-            <table className="popup-productlist-table">
-              <thead>
-                <tr>
-                  <th>Product Sample ID</th>
-                  <th>Product Name</th>
-                </tr>
-              </thead>
-              <tbody>
-                {productSamples.map((sample) => (
-                  <tr key={sample.productSampleId} onClick={() => handleProductSampleSelect(sample)}>
-                    <td>{sample.productSampleId}</td>
-                    <td>{sample.productName}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <button className="closecloseclose" onClick={() => setIsPopupVisible(false)}>Close</button>
-          </div>
-        </div>
-      )}
+  <div className="popup-productlist-overlay">
+    <div className="popup-productlist-content">
+      <h3>Select a Product Sample</h3>
+      <table className="popup-productlist-table">
+        <thead>
+          <tr>
+            <th>Product Sample ID</th>
+            <th>Product Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          {productSamples.map((sample) => (
+            <tr key={sample.productSampleId} onClick={() => handleProductSampleSelect(sample)}>
+              <td>{sample.productSampleId}</td>
+              <td>{sample.productName}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <button className="closecloseclose" onClick={() => setIsPopupVisible(false)}>Close</button>
+    </div>
+  </div>
+)}
 
           </div>
         </div>

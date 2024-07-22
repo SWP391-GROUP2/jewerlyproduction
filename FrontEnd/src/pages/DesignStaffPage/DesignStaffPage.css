@@ -12,7 +12,6 @@
   flex-direction: column;
 }
 
-
 .designstaff-container {
   flex: 1;
   display: flex;
@@ -33,10 +32,9 @@
   background-color: #f5f2f2;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  
 }
 
-.designstaff-tail-container table{
+.designstaff-tail-container table {
   display: flex;
 }
 
@@ -74,33 +72,27 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 1001;
 }
 
-.designstaff-detail-popup-content2{
-  background-color: #ffffff;
-  width: 100%;
-  padding: 20px;
-  overflow-y: auto;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  position: relative;
-}
-
-.designstaff-detail-popup-content1 {
+.designstaff-detail-popup-content1,
+.designstaff-detail-popup-content2 {
   background-color: #ffffff;
   width: 80%;
   padding: 20px;
-  max-width: 80%;
   overflow-y: auto;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   position: relative;
 }
 
-.designstaff-detail-table1{
+.designstaff-detail-popup-content2 {
+  width: 100%;
+}
+
+.designstaff-detail-table1 {
   width: 25%;
-  border-collapse: collapse
+  border-collapse: collapse;
 }
 
 .designstaff-detail-table1 td {
@@ -108,9 +100,9 @@
   padding: 8px;
 }
 
-.designstaff-detail-table2{
+.designstaff-detail-table2 {
   width: 75%;
-  border-collapse: collapse
+  border-collapse: collapse;
 }
 
 .designstaff-detail-table2 td {
@@ -118,8 +110,7 @@
   padding: 8px;
 }
 
-._3dDesign img{
-  
+._3dDesign img {
   border-radius: 10px;
 }
 
@@ -132,38 +123,34 @@
   border: 1px solid #dddddd;
   padding: 8px;
 }
-.designstaff-table tr:hover { /* Add this block to style rows on hover */
-  background-color: rgb(237, 225, 225); /* Add the background color you want on hover */
-  transition: background-color 0.3s; /* Add a transition for a smoother effect */
-}
-.designstaff-save-button {
-  margin-top: 10px; 
-  padding: 8px 16px;
-  border: none;
-  cursor: pointer;
-  background-color: #4caf50;
-  color: white;
-  border-radius: 4px;
-  float: left; /* Add this line to float the save button to the left */
+
+.designstaff-table tr:hover {
+  background-color: rgb(237, 225, 225);
+  transition: background-color 0.3s;
 }
 
+.designstaff-save-button,
 .designstaff-close-button {
   margin-top: 10px;
   padding: 8px 16px;
   border: none;
   cursor: pointer;
-  background-color: #f44336;
-  color: white;
   border-radius: 4px;
-  float: left; /* Add this line to float the close button to the left */
-  margin-left: 10px; /* Add this line to provide some spacing between the buttons */
+  float: left;
+}
+
+.designstaff-save-button {
+  background-color: #4caf50;
 }
 
 .designstaff-save-button:hover {
   background-color: #45a049;
 }
 
-
+.designstaff-close-button {
+  background-color: #f44336;
+  margin-left: 10px;
+}
 
 .designstaff-close-button:hover {
   background-color: #d32f2f;
@@ -179,6 +166,7 @@
 .blur {
   filter: blur(2px);
 }
+
 .designstaff-add-image-button {
   margin-top: 10px;
   padding: 8px 16px;
@@ -187,15 +175,14 @@
   background-color: #2196f3;
   color: white;
   border-radius: 4px;
-  float: right; /* Di chuyển nút sang phải */
-  margin-left: 10px; /* Để cách nút Save và Close một khoảng */
+  float: right;
+  margin-left: 10px;
 }
 
 .designstaff-add-image-button:hover {
   background-color: #0b7dda;
 }
 
-/* Center the form popup */
 .designstaff-form-popup {
   position: fixed;
   top: 50%;
@@ -207,8 +194,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1001;
- 
+  z-index: 1002;
 }
 
 .designstaff-form-popup-content {
@@ -249,13 +235,6 @@
   border-radius: 8px;
 }
 
-.designstaff-save-button,
-.designstaff-close-button {
-  float: none; /* Reset the float */
-  display: inline-block;
-  margin-right: 10px; /* Add spacing between buttons */
-}
-/* DesignStaffPage.css */
 .designstaff-data-entry-container {
   background-color: #f9f9f9;
   border: 1px solid #ddd;
@@ -305,6 +284,8 @@
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  width: 200px;
+  margin-top: 20px;
 }
 
 .designstaff-submit-button:hover {
@@ -321,50 +302,23 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1003;
 }
 
 .popup-productlist-content {
   background: #fff;
   padding: 20px;
   border-radius: 5px;
-  width: 600px;  
-  height: 600px; 
-  overflow-y: auto; /* Add vertical scroll if content exceeds height */
-  text-align: center;
-}
-
-.popup-productlist-content ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.popup-productlist-content li {
-  padding: 10px;
-  cursor: pointer;
-  border-bottom: 1px solid #ccc;
-}
-
-.popup-productlist-content li:hover {
-  background: #f0f0f0;
-}
-
-.popup-productlist-content button {
-  margin-top: 10px;
-}
-
-.popup-productlist-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  width: 600px;
+  height: 600px;
+  overflow-y: auto;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
 }
 
+.popup-productlist-content h3 {
+  margin-bottom: 20px;
+}
 
 .popup-productlist-table {
   width: 100%;
@@ -376,7 +330,7 @@
 .popup-productlist-table td {
   padding: 10px;
   text-align: left;
-  border-bottom: 1px solid #ddd;
+  border: 1px solid #ddd;
 }
 
 .popup-productlist-table th {
@@ -385,61 +339,55 @@
 
 .popup-productlist-table tr:hover {
   background-color: #f1f1f1;
+  cursor: pointer;
 }
-
-.popup-productlist-content button {
-  display: block;
-  margin: 0 auto;
-}
-
-
-
 
 .closecloseclose {
-  --color: #ea1818;
-  font-family: inherit;
-  display: inline-block;
-  width: 8em;
-  height: 2.6em;
-  line-height: 2.5em;
-  margin: 20px;
+  background-color: #ff5f5f;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  align-self: flex-end;
+}
+
+.closecloseclose:hover {
+  background-color: #ff4040;
+}
+
+.uploaded-images {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.uploaded-image {
   position: relative;
-  overflow: hidden;
-  border: 2px solid var(--color);
-  transition: color .5s;
-  z-index: 1;
-  font-size: 17px;
-  border-radius: 6px;
-  font-weight: 500;
-  color: var(--color);
- }
- 
- .closecloseclose:before {
-  content: "";
+  width: calc(33.33% - 10px);
+  height: auto;
+}
+
+.uploaded-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.uploaded-image button {
   position: absolute;
-  z-index: -1;
-  background: var(--color);
-  height: 150px;
-  width: 200px;
-  border-radius: 50%;
- }
- 
- .closecloseclose:hover {
-  color: #fff;
- }
- 
- .closecloseclose:before {
-  top: 100%;
-  left: 100%;
-  transition: all .7s;
- }
- 
- .closecloseclose:hover:before {
-  top: -30px;
-  left: -30px;
- }
- 
- .closecloseclose:active:before {
-  background: #d20b0b;
-  transition: background 0s;
- }
+  top: 5px;
+  right: 5px;
+  background-color: #ff5f5f;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.uploaded-image button:hover {
+  background-color: #ff4040;
+}
