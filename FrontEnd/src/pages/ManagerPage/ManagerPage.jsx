@@ -301,6 +301,8 @@ function ManagerPage() {
       await fetchAssignProduction(assignProductionStaff);
       await fetchOrder(); // Cập nhật lại requestData sau khi assign thành công
       setPopupOpen(false);
+      setOrderProductionPopupOpen(false);
+      setAssignProductionPopupOpen(false);
     } catch (error) {
       console.error("Error assigning staff:", error);
     }
@@ -328,6 +330,8 @@ function ManagerPage() {
       await fetchAssignDesign(orderId, designStaffId);
       await fetchOrder(); // Cập nhật lại orderData sau khi assign thành công
       setPopupOpen(false);
+      setOrderDesignPopupOpen(false);
+      setAssignDesignPopupOpen(false);
     } catch (error) {
       console.error("Error assigning staff:", error);
     }
