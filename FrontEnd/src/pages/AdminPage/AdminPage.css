@@ -11,6 +11,7 @@
   padding-bottom: 50px;
 }
 
+
 .admin-container {
   flex: 1;
 }
@@ -650,8 +651,50 @@
   margin-right: 50px;
 }
 
+
+
+
+.chosen-gemstones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px; /* Adjust gap as needed */
+}
+
+.chosen-gemstone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
 .chosen-gemstone img {
-  max-width: 500px;
-  margin-right: auto;
-  left: 0;
+  width: 200px; /* Set width to 33% of the container */
+  height: 200px; /* Maintain aspect ratio */
+  border-radius: 20px;
+  object-fit: cover;
+}
+
+
+.chosen-gemstone .deselect-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: rgb(207, 203, 203);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.chosen-gemstone p {
+  margin-top: 8px;
+}
+.chosen-gemstone .deselect-button:hover {
+  background-color: rgb(89, 87, 87); /* Change to the desired hover color */
 }

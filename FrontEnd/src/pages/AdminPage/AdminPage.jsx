@@ -259,7 +259,7 @@ function AdminPage() {
     const fetchProductSamples = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${url}/api/ProductSamples`);
+        const response = await axios.get(`${url}/api/ProductSamples/FilterInsearch`);
         setProductSamples(response.data);
         setLoading(false);
       } catch (error) {
@@ -408,10 +408,10 @@ function AdminPage() {
   // Calculate current items to display based on pagination
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = activeView === 'orderlist' ? gemstones.slice(indexOfFirstItem, indexOfLastItem) : productSamples.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = activeView === 'gemstonelist' ? gemstones.slice(indexOfFirstItem, indexOfLastItem) : productSamples.slice(indexOfFirstItem, indexOfLastItem);
 
   // Total number of pages
-  const totalItems = activeView === 'orderlist' ? gemstones.length : productSamples.length;
+  const totalItems = activeView === 'gemstonelist' ? gemstones.length : productSamples.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   // Handle item click
@@ -502,10 +502,11 @@ const fetchSimilarAccounts = async () => {
     <div className='admin-page'>
       <AdminSidebar openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar} handleViewChange={handleViewChange} />
       <div className='admin-container'>
-        <AdminHeader />
+        <AdminHeader  />
+        
         <div className='additional-content'>
           {/* Conditionally render based on active view */}
-          {activeView === 'orderlist' && (
+          {activeView === 'gemstonelist' && (
             <div className='gemstone-list'>
               <h2>Gemstone List</h2>
               {loading ? (
@@ -591,7 +592,7 @@ const fetchSimilarAccounts = async () => {
           )}
 
 
-          {selectedItem && activeView === 'orderlist' && (
+          {selectedItem && activeView === 'gemstonelist' && (
             <div className='item-popup'>
               <div className='item-popup-content'>
                 <button className='close-popup-button' onClick={handleClosePopup}>Close</button>
@@ -844,7 +845,8 @@ const fetchSimilarAccounts = async () => {
             <option value='Heart'>Heart</option>
             <option value='Pear'>Pear</option>
             <option value='Princess'>Princess</option>
-            <option value='Square'>Square</option>
+            <option value='Cushion'>Cushion</option>
+            <option value='Radiant'>Radiant</option>
           </select>
         </div>
         <div className='gemstone-form-group'>
@@ -1108,15 +1110,16 @@ const fetchSimilarAccounts = async () => {
             </div>
 
             <div className='chosen-gemstones'>
-              {productData.gemstoneList.map((gemstone, index) => (
-                <div key={index} className='chosen-gemstone'>
-                  <img src={gemstone.image || "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"} 
-                    alt={gemstone.name} />
-                  <p>{gemstone.name}</p>
-                  <button className='deselect-button' onClick={() => handleDeselectGemstone(index)}>Deselect</button>
-                </div>
-              ))}
-            </div>
+  {productData.gemstoneList.map((gemstone, index) => (
+    <div key={index} className='chosen-gemstone'>
+      <button className='deselect-button' onClick={() => handleDeselectGemstone(index)}>X</button>
+      <img src={gemstone.image || "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"} 
+        alt={gemstone.name} />
+      <p>{gemstone.name}</p>
+    </div>
+  ))}
+</div>
+
 
             {showGemstonePopup && (
         <div className='gemstone-popup'>
@@ -1179,6 +1182,8 @@ const fetchSimilarAccounts = async () => {
       </div>
     </div>
   )}
+
+  
 
 
 

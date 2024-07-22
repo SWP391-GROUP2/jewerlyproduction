@@ -7,11 +7,12 @@
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 1000;
+    z-index: 0;
     height: 70px;
     position: relative;
     border-radius: 10px;
     margin: 20px;
+
 }
 
 
