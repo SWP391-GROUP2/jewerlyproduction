@@ -124,24 +124,6 @@ const Sidebar = () => {
             {selectedGemstone && (
               <>
                 <div className="gemstone-filters">
-                  <h3>Color</h3>
-                  <select
-                    value={selectedFilters.color || ""}
-                    onChange={(e) =>
-                      handleFilterChange("gemstoneColor", e.target.value)
-                    }
-                  >
-                    <option value="" disabled selected>
-                      Select Color
-                    </option>
-                    {attributes[selectedGemstone].color.map((color) => (
-                      <option key={color} value={color}>
-                        {color}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="gemstone-filters">
                   <h3>Clarity</h3>
                   <select
                     value={selectedFilters.clarity || ""}

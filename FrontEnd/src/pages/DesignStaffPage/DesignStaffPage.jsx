@@ -5,6 +5,7 @@ import DesignStaffHeader from "../../components/DesignStaffHeader/DesignStaffHea
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import Notify from "../../components/Alert/Alert";
 
 function DesignStaffPage() {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
@@ -74,27 +75,31 @@ function DesignStaffPage() {
     setImageFiles((prevFiles) => [...prevFiles, ...files]);
   };
 
-  const handleUploadImage = () => {
-    if (selectedProductSample && imageFiles.length > 0) {
-      const formData = new FormData();
 
-      imageFiles.forEach((file) => {
-        formData.append("images", file);
-      });
-      formData.append("productSampleId", selectedProductSample.productSampleId);
-
-      axios
-        .post("http://localhost:5266/api/UploadProductImage", formData)
-        .then((response) => {
-          console.log("Image uploaded successfully:", response.data);
-        })
-        .catch((error) => {
-          console.error("Error uploading image:", error);
+  const handleUploadImage = async () => {
+    if(name == "") Notify.warning("Please provide design name");
+    else{
+      if (selectedProductSample && imageFiles.length > 0) {
+        const uploadPromises = imageFiles.map(async (file) => {
+          const formData = new FormData();
+          formData.append('Image', file);
+          formData.append('DesignName', name);
+          formData.append('ProductSampleId', selectedProductSample.productSampleId);
+          formData.append('DesignStaffId', designStaffId);
+    
+          console.log("Uploading 3dDesign with data:", Object.fromEntries(formData.entries()));
+    
+          await upload3dDesign(formData);
         });
-    } else {
-      console.log("Please select a product and image.");
+    
+        await Promise.all(uploadPromises);
+      } else {
+        console.log('Please select a Design');
+        Notify.warning("Please select a Design");
+      }
     }
   };
+  
 
   const handleDeleteImage = (index) => {
     setSelectedImages((prevImages) => prevImages.filter((_, i) => i !== index));
@@ -248,6 +253,8 @@ function DesignStaffPage() {
       setDesignData((prevDesigns) =>
         prevDesigns.filter((design) => design._3dDesignId !== selectedDesignId)
       );
+      console.log("All images have been uploaded.");
+      Notify.success("Designs uploaded successfully")
     } catch (error) {
       console.error("Error fetching data:", error);
     }

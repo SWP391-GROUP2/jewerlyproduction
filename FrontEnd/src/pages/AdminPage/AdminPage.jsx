@@ -264,9 +264,7 @@ function AdminPage() {
     const fetchProductSamples = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(
-          `${url}/api/ProductSamples/FilterInSearch`
-        );
+        const response = await axios.get(`${url}/api/ProductSamples/FilterInsearch`);
         setProductSamples(response.data);
         setLoading(false);
       } catch (error) {
@@ -416,14 +414,11 @@ function AdminPage() {
   // Calculate current items to display based on pagination
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems =
-    activeView === "orderlist"
-      ? gemstones.slice(indexOfFirstItem, indexOfLastItem)
-      : productSamples.slice(indexOfFirstItem, indexOfLastItem);
+
+  const currentItems = activeView === 'gemstonelist' ? gemstones.slice(indexOfFirstItem, indexOfLastItem) : productSamples.slice(indexOfFirstItem, indexOfLastItem);
 
   // Total number of pages
-  const totalItems =
-    activeView === "orderlist" ? gemstones.length : productSamples.length;
+  const totalItems = activeView === 'gemstonelist' ? gemstones.length : productSamples.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   // Handle item click
@@ -511,18 +506,15 @@ function AdminPage() {
   };
 
   return (
-    <div className="admin-page">
-      <AdminSidebar
-        openSidebarToggle={openSidebarToggle}
-        OpenSidebar={OpenSidebar}
-        handleViewChange={handleViewChange}
-      />
-      <div className="admin-container">
-        <AdminHeader />
-        <div className="additional-content">
+    <div className='admin-page'>
+      <AdminSidebar openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar} handleViewChange={handleViewChange} />
+      <div className='admin-container'>
+        <AdminHeader  />
+        
+        <div className='additional-content'>
           {/* Conditionally render based on active view */}
-          {activeView === "orderlist" && (
-            <div className="gemstone-list">
+          {activeView === 'gemstonelist' && (
+            <div className='gemstone-list'>
               <h2>Gemstone List</h2>
               {loading ? (
                 <p>Loading...</p>
@@ -634,16 +626,11 @@ function AdminPage() {
             </div>
           )}
 
-          {selectedItem && activeView === "orderlist" && (
-            <div className="item-popup">
-              <div className="item-popup-content">
-                <button
-                  className="close-popup-button"
-                  onClick={handleClosePopup}
-                >
-                  Close
-                </button>
-                <div className="popup-details">
+          {selectedItem && activeView === 'gemstonelist' && (
+            <div className='item-popup'>
+              <div className='item-popup-content'>
+                <button className='close-popup-button' onClick={handleClosePopup}>Close</button>
+                <div className='popup-details'>
                   <h3>{selectedItem.name}</h3>
                   <img
                     src={
@@ -907,470 +894,376 @@ function AdminPage() {
                 <p>The new account has been successfully created.</p>
               </div>
             </div>
-          )}
-          {activeView === "uploadgemstone" && (
-            <div className="gemstonediv">
-              <div className="gemstone-upload-form">
-                <h2>Upload Gemstone</h2>
-                <form onSubmit={handleGemstoneSubmit}>
-                  <div className="gemstone-form-group">
-                    <label className="gemstone-label" htmlFor="name">
-                      Name:
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={gemstoneData.name}
-                      onChange={handleGemstoneInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="gemstone-form-group">
-                    <label className="gemstone-label" htmlFor="shape">
-                      Shape:
-                    </label>
-                    <select
-                      id="shape"
-                      name="shape"
-                      value={gemstoneData.shape}
-                      onChange={handleGemstoneInputChange}
-                      required
-                    >
-                      <option value="">Select shape</option>
-                      <option value="Round">Round</option>
-                      <option value="Oval">Oval</option>
-                      <option value="Heart">Heart</option>
-                      <option value="Pear">Pear</option>
-                      <option value="Princess">Princess</option>
-                      <option value="Square">Square</option>
-                    </select>
-                  </div>
-                  <div className="gemstone-form-group">
-                    <label className="gemstone-label" htmlFor="size">
-                      Size:
-                    </label>
-                    <select
-                      id="size"
-                      name="size"
-                      value={gemstoneData.size}
-                      onChange={handleGemstoneInputChange}
-                      required
-                    >
-                      <option value="">Select size</option>
-                      <option value="4.5">4.5</option>
-                      <option value="5.0">5.0</option>
-                      <option value="5.4">5.4</option>
-                      <option value="6.0">6.0</option>
-                      <option value="6.3">6.3</option>
-                      <option value="6.5">6.5</option>
-                      <option value="6.8">6.8</option>
-                      <option value="7.2">7.2</option>
-                      <option value="8.1">8.1</option>
-                      <option value="9.0">9.0</option>
-                    </select>
-                  </div>
-                  <div className="gemstone-form-group">
-                    <label className="gemstone-label" htmlFor="color">
-                      Color:
-                    </label>
-                    <select
-                      id="color"
-                      name="color"
-                      value={gemstoneData.color}
-                      onChange={handleGemstoneInputChange}
-                      required
-                    >
-                      <option value="">Select color</option>
-                      <option value="white">White</option>
-                      <option value="yellow">Yellow</option>
-                      <option value="blue">Blue</option>
-                      <option value="pink">Pink</option>
-                      <option value="red">Red</option>
-                      <option value="green">Green</option>
-                      <option value="black">Black</option>
-                      <option value="cream">Cream</option>
-                      <option value="orange">Orange</option>
-                      <option value="purple">Purple</option>
-                      <option value="colorless">Colorless</option>
-                    </select>
-                  </div>
-                  <div className="gemstone-form-group">
-                    <label className="gemstone-label" htmlFor="caratWeight">
-                      Carat Weight:
-                    </label>
-                    <input
-                      type="number"
-                      id="caratWeight"
-                      name="caratWeight"
-                      value={gemstoneData.caratWeight}
-                      onChange={handleGemstoneInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="gemstone-form-group">
-                    <label className="gemstone-label" htmlFor="cut">
-                      Cut:
-                    </label>
-                    <select
-                      id="cut"
-                      name="cut"
-                      value={gemstoneData.cut}
-                      onChange={handleGemstoneInputChange}
-                      required
-                    >
-                      <option value="">Select cut</option>
-                      <option value="good">Good</option>
-                      <option value="very good">Very Good</option>
-                      <option value="excellent">Excellent</option>
-                    </select>
-                  </div>
-                  <div className="gemstone-form-group">
-                    <label className="gemstone-label" htmlFor="clarity">
-                      Clarity:
-                    </label>
-                    <select
-                      id="clarity"
-                      name="clarity"
-                      value={gemstoneData.clarity}
-                      onChange={handleGemstoneInputChange}
-                      required
-                    >
-                      <option value="">Select clarity</option>
-                      <option value="FL">FL</option>
-                      <option value="IF">IF</option>
-                      <option value="VVS1">VVS1</option>
-                      <option value="VVS2">VVS2</option>
-                      <option value="VS1">VS1</option>
-                      <option value="VS2">VS2</option>
-                      <option value="SI1">SI1</option>
-                      <option value="SI2">SI2</option>
-                    </select>
-                  </div>
-                  <div className="gemstone-form-group">
-                    <label className="gemstone-label" htmlFor="price">
-                      Price:
-                    </label>
-                    <input
-                      type="text"
-                      id="price"
-                      name="price"
-                      value={gemstoneData.price}
-                      onChange={handleGemstoneInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="gemstone-form-group">
-                    <label className="gemstone-label" htmlFor="categoryID">
-                      Category:
-                    </label>
-                    <select
-                      id="categoryID"
-                      name="categoryID"
-                      value={gemstoneData.categoryID}
-                      onChange={handleGemstoneInputChange}
-                      required
-                    >
-                      <option value="">Select a category</option>
-                      <option value="C001">Diamond</option>
-                      <option value="C002">Emerald</option>
-                      <option value="C003">Ruby</option>
-                      <option value="C004">Sapphire</option>
-                      <option value="C005">Side Stone</option>
-                    </select>
-                  </div>
-                  <div className="gemstone-form-group">
-                    <label className="gemstone-label" htmlFor="image">
-                      Image:
-                    </label>
-                    <input
-                      type="file"
-                      id="image"
-                      name="image"
-                      onChange={handleGemstoneFileChange}
-                      required
-                    />
-                  </div>
-                  <div className="gemstone-form-group">
-                    <button type="submit" className="gemstone-upload-button">
-                      Upload
-                    </button>
-                    <button
-                      type="button"
-                      className="gemstone-clear-button"
-                      onClick={handleGemstoneClear}
-                    >
-                      Clear
-                    </button>
-                  </div>
-                </form>
-              </div>
+              )}
+              {activeView === 'uploadgemstone' && (
+  <div className='gemstonediv'>
+    <div className='gemstone-upload-form'>
+      <h2>Upload Gemstone</h2>
+      <form onSubmit={handleGemstoneSubmit}>
+        <div className='gemstone-form-group'>
+          <label className='gemstone-label' htmlFor='name'>Name:</label>
+          <input
+            type='text'
+            id='name'
+            name='name'
+            value={gemstoneData.name}
+            onChange={handleGemstoneInputChange}
+            required
+          />
+        </div>
+        <div className='gemstone-form-group'>
+          <label className='gemstone-label' htmlFor='shape'>Shape:</label>
+          <select
+            id='shape'
+            name='shape'
+            value={gemstoneData.shape}
+            onChange={handleGemstoneInputChange}
+            required
+          >
+            <option value=''>Select shape</option>
+            <option value='Round'>Round</option>
+            <option value='Oval'>Oval</option>
+            <option value='Heart'>Heart</option>
+            <option value='Pear'>Pear</option>
+            <option value='Princess'>Princess</option>
+            <option value='Cushion'>Cushion</option>
+            <option value='Radiant'>Radiant</option>
+          </select>
+        </div>
+        <div className='gemstone-form-group'>
+          <label className='gemstone-label' htmlFor='size'>Size:</label>
+          <select
+            id='size'
+            name='size'
+            value={gemstoneData.size}
+            onChange={handleGemstoneInputChange}
+            required
+          >
+            <option value=''>Select size</option>
+            <option value='4.5'>4.5</option>
+            <option value='5.0'>5.0</option>
+            <option value='5.4'>5.4</option>
+            <option value='6.0'>6.0</option>
+            <option value='6.3'>6.3</option>
+            <option value='6.5'>6.5</option>
+            <option value='6.8'>6.8</option>
+            <option value='7.2'>7.2</option>
+            <option value='8.1'>8.1</option>
+            <option value='9.0'>9.0</option>
+          </select>
+        </div>
+        <div className='gemstone-form-group'>
+          <label className='gemstone-label' htmlFor='color'>Color:</label>
+          <select
+            id='color'
+            name='color'
+            value={gemstoneData.color}
+            onChange={handleGemstoneInputChange}
+            required
+          >
+            <option value=''>Select color</option>
+            <option value='white'>White</option>
+            <option value='yellow'>Yellow</option>
+            <option value='blue'>Blue</option>
+            <option value='pink'>Pink</option>
+            <option value='red'>Red</option>
+            <option value='green'>Green</option>
+            <option value='black'>Black</option>
+            <option value='cream'>Cream</option>
+            <option value='orange'>Orange</option>
+            <option value='purple'>Purple</option>
+            <option value='colorless'>Colorless</option>
+          </select>
+        </div>
+        <div className='gemstone-form-group'>
+          <label className='gemstone-label' htmlFor='caratWeight'>Carat Weight:</label>
+          <input
+            type='text'
+            id='caratWeight'
+            name='caratWeight'
+            value={gemstoneData.caratWeight}
+            onChange={handleGemstoneInputChange}
+            required
+          />
+        </div>
+        <div className='gemstone-form-group'>
+          <label className='gemstone-label' htmlFor='cut'>Cut:</label>
+          <select
+            id='cut'
+            name='cut'
+            value={gemstoneData.cut}
+            onChange={handleGemstoneInputChange}
+            required
+          >
+            <option value=''>Select cut</option>
+            <option value='good'>Good</option>
+            <option value='very good'>Very Good</option>
+            <option value='excellent'>Excellent</option>
+          </select>
+        </div>
+        <div className='gemstone-form-group'>
+          <label className='gemstone-label' htmlFor='clarity'>Clarity:</label>
+          <select
+            id='clarity'
+            name='clarity'
+            value={gemstoneData.clarity}
+            onChange={handleGemstoneInputChange}
+            required
+          >
+            <option value=''>Select clarity</option>
+            <option value='FL'>FL</option>
+            <option value='IF'>IF</option>
+            <option value='VVS1'>VVS1</option>
+            <option value='VVS2'>VVS2</option>
+            <option value='VS1'>VS1</option>
+            <option value='VS2'>VS2</option>
+            <option value='SI1'>SI1</option>
+            <option value='SI2'>SI2</option>
+          </select>
+        </div>
+        <div className='gemstone-form-group'>
+          <label className='gemstone-label' htmlFor='price'>Price:</label>
+          <input
+            type='text'
+            id='price'
+            name='price'
+            value={gemstoneData.price}
+            onChange={handleGemstoneInputChange}
+            required
+          />
+        </div>
+        <div className='gemstone-form-group'>
+          <label className='gemstone-label' htmlFor='categoryID'>Category:</label>
+          <select
+            id='categoryID'
+            name='categoryID'
+            value={gemstoneData.categoryID}
+            onChange={handleGemstoneInputChange}
+            required
+          >
+            <option value=''>Select a category</option>
+            <option value='C001'>Diamond</option>
+            <option value='C002'>Emerald</option>
+            <option value='C003'>Ruby</option>
+            <option value='C004'>Sapphire</option>
+            <option value='C005'>Side Stone</option>
+          </select>
+        </div>
+        <div className='gemstone-form-group'>
+          <label className='gemstone-label' htmlFor='image'>Image:</label>
+          <input
+            type='file'
+            id='image'
+            name='image'
+            onChange={handleGemstoneFileChange}
+            required
+          />
+        </div>
+        <div className='gemstone-form-group'>
+          <button type='submit' className='gemstone-upload-button'>
+            Upload
+          </button>
+          <button type='button' className='gemstone-clear-button' onClick={handleGemstoneClear}>
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
+{activeView === 'uploadproduct' && (
+  <div className='productdiv'>
+      <div className='product-upload-form'>
+        <h2>Upload Product</h2>
+        <form onSubmit={handleProductSubmit}>
+          <div className='product-form-group'>
+            <label className='product-label' htmlFor='name'>Name:</label>
+            <input
+              type='text'
+              id='name'
+              name='name'
+              value={productData.name}
+              onChange={handleProductInputChange}
+              required
+            />
+          </div>
+          <div className='product-form-group'>
+            <label className='product-label' htmlFor='description'>Description:</label>
+            <textarea
+              id='description'
+              name='description'
+              value={productData.description}
+              onChange={handleProductInputChange}
+              required
+            ></textarea>
+          </div>
+          <div className='product-form-group'>
+            <label className='product-label' htmlFor='type'>Type:</label>
+            <select
+              id='type'
+              name='type'
+              value={productData.type}
+              onChange={handleProductInputChange}
+              required
+            >
+              <option value=''>Select type</option>
+              <option value='Ring'>Ring</option>
+              <option value='Necklace'>Necklace</option>
+              <option value='Bracelet'>Bracelet</option>
+              <option value='Earrings'>Earrings</option>
+            </select>
+          </div>
+          <div className='product-form-group'>
+            <label className='product-label' htmlFor='style'>Style:</label>
+            <select
+              id='style'
+              name='style'
+              value={productData.style}
+              onChange={handleProductInputChange}
+              required
+            >
+              <option value=''>Select style</option>
+              {/* Options sẽ được thêm dựa vào loại sản phẩm (Ring, Necklace, Bracelet, Earrings) */}
+              {getStyleOptions(productData.type).map((styleOption, index) => (
+                <option key={index} value={styleOption}>
+                  {styleOption}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className='product-form-group'>
+            <label className='product-label' htmlFor='size'>Size:</label>
+            <input
+              type='text'
+              id='size'
+              name='size'
+              value={productData.size}
+              onChange={handleProductInputChange}
+              required
+            />
+          </div>
+          <div className='product-form-group'>
+            <label className='product-label' htmlFor='price'>Price:</label>
+            <input
+              type='text'
+              id='price'
+              name='price'
+              value={productData.price}
+              onChange={handleProductInputChange}
+              required
+            />
+          </div>
+          <div className='product-form-group'>
+            <label className='product-label' htmlFor='gold'>Gold:</label>
+            <select
+              id='gold'
+              name='gold'
+              value={productData.gold}
+              onChange={handleProductInputChange}
+              required
+            >
+              <option value=''>Select gold</option>
+              <option value='Gold 9999'>Gold 9999</option>
+              <option value='Gold 999.9'>Gold 999.9</option>
+              <option value='Gold 24k'>Gold 24k</option>
+              <option value='Gold 99'>Gold 99</option>
+              <option value='Gold 18k'>Gold 18k</option>
+              <option value='White 16k'>White 16k</option>
+              <option value='Gold 15k'>Gold 15k</option>
+              <option value='Italy 10k'>Italy 10k</option>
+            </select>
+          </div>
+          <div className='product-form-group'>
+            <label className='product-label' htmlFor='goldweight'>Gold Weight:</label>
+            <input
+              type='text'
+              id='goldweight'
+              name='goldweight'
+              value={productData.goldweight}
+              onChange={handleProductInputChange}
+              required
+            />
+          </div>
+          <div className='product-form-group'>
+            <label className='product-label' htmlFor='gemstoneList'></label>
+            <div>
+              <button className='selectgemstonebutton' type='button' onClick={() => { fetchGemstones(); setShowGemstonePopup(true); }}>Select Gemstones</button>
             </div>
+
+            <div className='chosen-gemstones'>
+  {productData.gemstoneList.map((gemstone, index) => (
+    <div key={index} className='chosen-gemstone'>
+      <button className='deselect-button' onClick={() => handleDeselectGemstone(index)}>X</button>
+      <img src={gemstone.image || "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"} 
+        alt={gemstone.name} />
+      <p>{gemstone.name}</p>
+    </div>
+  ))}
+</div>
+
+
+            {showGemstonePopup && (
+        <div className='gemstone-popup'>
+          <h3>Select Gemstones</h3>
+          {loading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p>{error}</p>
+          ) : (
+            <table>
+              <thead>
+                <tr>
+                  <th>GemstoneID</th>
+                  <th>Gemstone Name</th>
+                  <th>Category Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                {handleFilterGemstone.map((gemstone) => (
+                  <tr key={gemstone.gemstoneId} onClick={() => handleGemstoneDetailSelection(gemstone)}>
+                    <td>{gemstone.gemstoneId}</td>
+                    <td>{gemstone.name}</td>
+                    <td>{gemstone.categoryId}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           )}
-          {activeView === "uploadproduct" && (
-            <div className="productdiv">
-              <div className="product-upload-form">
-                <h2>Upload Product</h2>
-                <form onSubmit={handleProductSubmit}>
-                  <div className="product-form-group">
-                    <label className="product-label" htmlFor="name">
-                      Name:
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={productData.name}
-                      onChange={handleProductInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="product-form-group">
-                    <label className="product-label" htmlFor="description">
-                      Description:
-                    </label>
-                    <textarea
-                      id="description"
-                      name="description"
-                      value={productData.description}
-                      onChange={handleProductInputChange}
-                      required
-                    ></textarea>
-                  </div>
-                  <div className="product-form-group">
-                    <label className="product-label" htmlFor="type">
-                      Type:
-                    </label>
-                    <select
-                      id="type"
-                      name="type"
-                      value={productData.type}
-                      onChange={handleProductInputChange}
-                      required
-                    >
-                      <option value="">Select type</option>
-                      <option value="Ring">Ring</option>
-                      <option value="Necklace">Necklace</option>
-                      <option value="Bracelet">Bracelet</option>
-                      <option value="Earrings">Earrings</option>
-                    </select>
-                  </div>
-                  <div className="product-form-group">
-                    <label className="product-label" htmlFor="style">
-                      Style:
-                    </label>
-                    <select
-                      id="style"
-                      name="style"
-                      value={productData.style}
-                      onChange={handleProductInputChange}
-                      required
-                    >
-                      <option value="">Select style</option>
-                      {/* Options sẽ được thêm dựa vào loại sản phẩm (Ring, Necklace, Bracelet, Earrings) */}
-                      {getStyleOptions(productData.type).map(
-                        (styleOption, index) => (
-                          <option key={index} value={styleOption}>
-                            {styleOption}
-                          </option>
-                        )
-                      )}
-                    </select>
-                  </div>
-                  <div className="product-form-group">
-                    <label className="product-label" htmlFor="size">
-                      Size:
-                    </label>
-                    <input
-                      type="text"
-                      id="size"
-                      name="size"
-                      value={productData.size}
-                      onChange={handleProductInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="product-form-group">
-                    <label className="product-label" htmlFor="price">
-                      Price:
-                    </label>
-                    <input
-                      type="text"
-                      id="price"
-                      name="price"
-                      value={productData.price}
-                      onChange={handleProductInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="product-form-group">
-                    <label className="product-label" htmlFor="gold">
-                      Gold:
-                    </label>
-                    <select
-                      id="gold"
-                      name="gold"
-                      value={productData.gold}
-                      onChange={handleProductInputChange}
-                      required
-                    >
-                      <option value="">Select gold</option>
-                      <option value="Gold 9999">Gold 9999</option>
-                      <option value="Gold 999.9">Gold 999.9</option>
-                      <option value="Gold 24k">Gold 24k</option>
-                      <option value="Gold 99">Gold 99</option>
-                      <option value="Gold 18k">Gold 18k</option>
-                      <option value="White 16k">White 16k</option>
-                      <option value="Gold 15k">Gold 15k</option>
-                      <option value="Italy 10k">Italy 10k</option>
-                    </select>
-                  </div>
-                  <div className="product-form-group">
-                    <label className="product-label" htmlFor="goldweight">
-                      Gold Weight:
-                    </label>
-                    <input
-                      type="text"
-                      id="goldweight"
-                      name="goldweight"
-                      value={productData.goldweight}
-                      onChange={handleProductInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="product-form-group">
-                    <label
-                      className="product-label"
-                      htmlFor="gemstoneList"
-                    ></label>
-                    <div>
-                      <button
-                        className="selectgemstonebutton"
-                        type="button"
-                        onClick={() => {
-                          fetchGemstones();
-                          setShowGemstonePopup(true);
-                        }}
-                      >
-                        Select Gemstones
-                      </button>
-                    </div>
+          <button className='closeclose' onClick={() => setShowGemstonePopup(false)}>X</button>
+        </div>
+      )}
 
-                    <div className="chosen-gemstones">
-                      {productData.gemstoneList.map((gemstone, index) => (
-                        <div key={index} className="chosen-gemstone">
-                          <img
-                            src={
-                              gemstone.image ||
-                              "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"
-                            }
-                            alt={gemstone.name}
-                          />
-                          <p>{gemstone.name}</p>
-                          <button
-                            className="deselect-button"
-                            onClick={() => handleDeselectGemstone(index)}
-                          >
-                            Deselect
-                          </button>
-                        </div>
-                      ))}
-                    </div>
+      {showGemstoneDetailPopup && selectedGemstone && (
+        <div className='gemstone-detail-popup'>
+          <h3>Gemstone Details</h3>
+          <p>ID: {selectedGemstone.gemstoneId}</p>
+          <p>Name: {selectedGemstone.name}</p>
+          <p>Category: {selectedGemstone.categoryId}</p>
+          <img src={selectedGemstone.image || "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"} 
+          alt={selectedGemstone.name} />
+          <button className='choose-button' onClick={handleChooseGemstone}>Choose</button>
+          <button className='closeclose' onClick={() => setShowGemstoneDetailPopup(false)}>X</button>
+        </div>
+      )}
+      {notification.message && (
+        <div className={`notification ${notification.type}`}>
+          {notification.message}
+        </div>
+      )}
+          </div>
+          <div className='product-form-group'>
+            <button type='submit' className='gemstone-upload-button' onClick={handleProductUploadfinal}>
+              Upload
+            </button>
+            <button type='button' className='gemstone-clear-button' onClick={handleProductClear}>
+              Clear
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )}
 
-                    {showGemstonePopup && (
-                      <div className="gemstone-popup">
-                        <h3>Select Gemstones</h3>
-                        {loading ? (
-                          <p>Loading...</p>
-                        ) : error ? (
-                          <p>{error}</p>
-                        ) : (
-                          <table>
-                            <thead>
-                              <tr>
-                                <th>GemstoneID</th>
-                                <th>Gemstone Name</th>
-                                <th>Category Name</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {handleFilterGemstone.map((gemstone) => (
-                                <tr
-                                  key={gemstone.gemstoneId}
-                                  onClick={() =>
-                                    handleGemstoneDetailSelection(gemstone)
-                                  }
-                                >
-                                  <td>{gemstone.gemstoneId}</td>
-                                  <td>{gemstone.name}</td>
-                                  <td>{gemstone.categoryId}</td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        )}
-                        <button
-                          className="closeclose"
-                          onClick={() => setShowGemstonePopup(false)}
-                        >
-                          X
-                        </button>
-                      </div>
-                    )}
-
-                    {showGemstoneDetailPopup && selectedGemstone && (
-                      <div className="gemstone-detail-popup">
-                        <h3>Gemstone Details</h3>
-                        <p>ID: {selectedGemstone.gemstoneId}</p>
-                        <p>Name: {selectedGemstone.name}</p>
-                        <p>Category: {selectedGemstone.categoryId}</p>
-                        <img
-                          src={
-                            selectedGemstone.image ||
-                            "https://res.cloudinary.com/dfvplhyjj/image/upload/v1721234991/no-image-icon-15_kbk0ah.png"
-                          }
-                          alt={selectedGemstone.name}
-                        />
-                        <button
-                          className="choose-button"
-                          onClick={handleChooseGemstone}
-                        >
-                          Choose
-                        </button>
-                        <button
-                          className="closeclose"
-                          onClick={() => setShowGemstoneDetailPopup(false)}
-                        >
-                          X
-                        </button>
-                      </div>
-                    )}
-                    {notification.message && (
-                      <div className={`notification ${notification.type}`}>
-                        {notification.message}
-                      </div>
-                    )}
-                  </div>
-                  <div className="product-form-group">
-                    <button
-                      type="submit"
-                      className="gemstone-upload-button"
-                      onClick={handleProductUploadfinal}
-                    >
-                      Upload
-                    </button>
-                    <button
-                      type="button"
-                      className="gemstone-clear-button"
-                      onClick={handleProductClear}
-                    >
-                      Clear
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
