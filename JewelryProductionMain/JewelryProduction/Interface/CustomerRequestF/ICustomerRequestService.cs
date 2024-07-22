@@ -17,5 +17,6 @@ namespace JewelryProduction.Interface
         Task<bool> SendQuotation(string customerRequestId, string staffId);
         Task<List<CustomerRequestGetDTO>> GetCustomerRequests();
         Task<CustomerRequestGetDTO> GetCustomerRequest(string id);
+        Task<bool> CloseRequest(string customerRequestId);
     }
 }
