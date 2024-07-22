@@ -26,17 +26,18 @@ function DesignStaffPage() {
 
   const [showFormPopup, setShowFormPopup] = useState(false);
 
-  const [name, setName] = useState('');
-const [productSampleList, setProductSampleList] = useState('');
-const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [name, setName] = useState("");
+  const [productSampleList, setProductSampleList] = useState("");
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
 
-  const [selectedProductSample, setSelectedProductSample] = useState('');
+  const [selectedProductSample, setSelectedProductSample] = useState("");
 
   const [productSamples, setProductSamples] = useState([]);
-  const [selectedImage, setSelectedImage] = useState(null);
+
 
   const [selectedImages, setSelectedImages] = useState([]);
   const [imageFiles, setImageFiles] = useState([]);
+
 
 
 
@@ -44,19 +45,17 @@ const [isPopupVisible, setIsPopupVisible] = useState(false);
     // Fetch product samples from API
     const fetchProductSamples = async () => {
       try {
-        const response = await axios.get('http://localhost:5266/api/ProductSamples');
+        const response = await axios.get(
+          "http://localhost:5266/api/ProductSamples"
+        );
         setProductSamples(response.data);
       } catch (error) {
-        console.error('Error fetching product samples:', error);
+        console.error("Error fetching product samples:", error);
       }
     };
 
     fetchProductSamples();
   }, []);
-
-  const handleSubmit = () => {
-    // Handle form submission
-  };
 
   const handleProductSampleClick = () => {
     setIsPopupVisible(true);
@@ -82,6 +81,7 @@ const [isPopupVisible, setIsPopupVisible] = useState(false);
   const handleUploadImage = () => {
     if (selectedProductSample && imageFiles.length > 0) {
       const formData = new FormData();
+
       imageFiles.forEach((file) => {
         formData.append('images', file);
       });
@@ -96,6 +96,7 @@ const [isPopupVisible, setIsPopupVisible] = useState(false);
         });
     } else {
       console.log('Please select a product and image.');
+
     }
   };
 
@@ -383,6 +384,7 @@ const [isPopupVisible, setIsPopupVisible] = useState(false);
               </div>
             )}
             {currentView === "upload3Ddeisgn" && (
+
         <div className="designstaff-data-entry-container">
           <h2 className="designstaff-data-entry-title">Enter Data</h2>
           <form className="designstaff-data-entry-form">
@@ -436,31 +438,39 @@ const [isPopupVisible, setIsPopupVisible] = useState(false);
         </div>
       )}
 
-      {isPopupVisible && (
-  <div className="popup-productlist-overlay">
-    <div className="popup-productlist-content">
-      <h3>Select a Product Sample</h3>
-      <table className="popup-productlist-table">
-        <thead>
-          <tr>
-            <th>Product Sample ID</th>
-            <th>Product Name</th>
-          </tr>
-        </thead>
-        <tbody>
-          {productSamples.map((sample) => (
-            <tr key={sample.productSampleId} onClick={() => handleProductSampleSelect(sample)}>
-              <td>{sample.productSampleId}</td>
-              <td>{sample.productName}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <button className="closecloseclose" onClick={() => setIsPopupVisible(false)}>Close</button>
-    </div>
-  </div>
-)}
 
+            {isPopupVisible && (
+              <div className="popup-productlist-overlay">
+                <div className="popup-productlist-content">
+                  <h3>Select a Product Sample</h3>
+                  <table className="popup-productlist-table">
+                    <thead>
+                      <tr>
+                        <th>Product Sample ID</th>
+                        <th>Product Name</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {productSamples.map((sample) => (
+                        <tr
+                          key={sample.productSampleId}
+                          onClick={() => handleProductSampleSelect(sample)}
+                        >
+                          <td>{sample.productSampleId}</td>
+                          <td>{sample.productName}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <button
+                    className="closecloseclose"
+                    onClick={() => setIsPopupVisible(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -566,7 +576,7 @@ const [isPopupVisible, setIsPopupVisible] = useState(false);
           </div>
         </div>
       )}
-      
+
       {showFormPopup && (
         <div className="designstaff-form-popup">
           <div className="designstaff-form-popup-content">
@@ -619,7 +629,6 @@ const [isPopupVisible, setIsPopupVisible] = useState(false);
           </div>
         </div>
       )}
-      
     </div>
   );
 }

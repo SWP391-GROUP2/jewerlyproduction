@@ -30,36 +30,45 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Soft shadow for image */
 }
 
-.box {
-  flex: 1 1 45%; /* Flex to ensure better responsiveness */
-  max-width: 600px;
-  min-width: 300px;
-  margin: 25px;
+.product-details {
+  flex: 1;
+  padding-left: 20px;
 }
 
-.box .row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.product-details h2 {
+  font-size: 24px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #333;
   margin-bottom: 20px;
 }
 
-.box .row h2 {
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  font-size: 24px;
-  color: #333;
-}
-
-.box .row span {
+.product-details span {
+  display: block;
+  font-size: 22px;
   color: crimson;
-  font-size: 20px;
+  margin: 20px 0;
 }
 
-.box p {
-  line-height: 1.6;
-  margin: 15px 0;
+.product-details p {
+  margin: 20px 0;
   color: #555;
+  text-align: left;
+}
+
+.product-details button.cart {
+  background: crimson;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 18px;
+  transition: background 0.3s ease-in-out;
+}
+
+.product-details button.cart:hover {
+  background: #d40d0d;
 }
 
 .thumb {
@@ -84,22 +93,42 @@
   border: 2px solid lightseagreen; /* More prominent border */
 }
 
-.box .cart {
-  background: #333;
-  color: white;
-  outline: none;
-  border: none;
-  cursor: pointer;
-  padding: 15px 30px; /* Increased padding for better appearance */
-  margin-top: 20px; /* Adjusted margin for spacing */
-  border-radius: 15px; /* More rounded corners */
-  transition: background 0.3s ease-in-out; /* Smooth transition */
-}
-
-.box .cart:hover {
-  background: #555; /* Slightly lighter on hover */
-}
-
 button {
   border-radius: 10px;
+}
+
+.product-info-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.product-info-table td {
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+}
+
+.product-info-table td:first-child {
+  font-weight: bold;
+  text-align: left;
+  background-color: #f9f9f9;
+}
+.index-title-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.index-title {
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #f00;
+  position: relative;
+  z-index: 2;
 }

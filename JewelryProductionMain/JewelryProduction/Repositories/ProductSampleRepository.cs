@@ -109,7 +109,7 @@ namespace JewelryProduction.Repositories
                 GoldType = samples.Gold.GoldType,
                 GoldWeight = samples.GoldWeight,
                 GemstoneId = samples.Gemstones?.Select(g => g.GemstoneId).ToList(),
-                _3dDesignId = samples._3ddesigns?.Select(ds => ds.ProductSampleId).ToList(),
+                _3dDesignId = samples._3ddesigns?.Select(ds => ds._3dDesignId).ToList(),
             }).ToList();
 
             return result;
@@ -140,7 +140,7 @@ namespace JewelryProduction.Repositories
                 GoldType = sample.Gold.GoldType,
                 GoldWeight = sample.GoldWeight,
                 GemstoneId = sample.Gemstones?.Select(g => g.GemstoneId).ToList(),
-                _3dDesignId = sample._3ddesigns?.Select(ds => ds.ProductSampleId).ToList(),
+                _3dDesignId = sample._3ddesigns?.Select(ds => ds._3dDesignId).ToList(),
             };
 
             return result;

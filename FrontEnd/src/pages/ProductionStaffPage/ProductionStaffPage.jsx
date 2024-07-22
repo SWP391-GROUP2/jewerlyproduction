@@ -3,6 +3,7 @@ import "./ProductionStaffPage.css";
 import ProductionStaffSidebar from "../../components/ProductionStaffSidebar/ProductionStaffSidebar";
 import ProductionStaffHeader from "../../components/ProductionStaffHeader/ProductionStaffHeader";
 import axios from "axios";
+import Notify from "../../components/Alert/Alert";
 
 function ProductionStaffPage() {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
@@ -71,7 +72,7 @@ function ProductionStaffPage() {
           comment,
         }
       );
-      alert("Data submitted successfully");
+      Notify.success("Data submitted successfully");
       if (stage === "Material Checking") {
         setCurrentStage("In Production Progress");
       } else if (stage === "In Production Progress") {
@@ -82,10 +83,10 @@ function ProductionStaffPage() {
     } catch (error) {
       if (error.response && error.response.status === 404) {
         console.error("Order not found:", error.response.data);
-        alert("Order not found. Please check the orderId and stage.");
+        Notify.fail("Order not found. Please check the orderId and stage.");
       } else {
         console.error("Error submitting data:", error);
-        alert("Failed to submit data. Please try again later.");
+        Notify.fail("Failed to submit data. Please try again later.");
       }
     }
   };
@@ -103,10 +104,10 @@ function ProductionStaffPage() {
           },
         }
       );
-      alert("Order status updated successfully");
+      Notify.success("Order status updated successfully");
     } catch (error) {
       console.error("Error updating status:", error);
-      alert("Failed to update status. Please try again later.");
+      Notify.fail("Failed to update status. Please try again later.");
     }
   };
 

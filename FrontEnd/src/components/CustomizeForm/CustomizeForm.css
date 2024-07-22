@@ -120,7 +120,7 @@
 
 .grid-cols-5 {
   display: grid; /* Sử dụng CSS Grid để tạo bố cục lưới */
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr; /* Định nghĩa 5 cột, mỗi cột chiếm một phần bằng nhau của không gian có sẵn */
+  grid-template-columns: 1fr 1fr 1fr 1fr; /* Định nghĩa 5 cột, mỗi cột chiếm một phần bằng nhau của không gian có sẵn */
   gap: 8px; /* Khoảng cách giữa các cột và hàng trong lưới là 8px */
 }
 .grid-size-carat {
@@ -153,13 +153,13 @@
 
 .grid-color-carat {
   display: grid;
-  grid-template-columns: auto auto auto auto auto auto;
+  grid-template-columns: auto auto auto auto auto;
   gap: 6px;
 }
 
 .grid-clarity-carat {
   display: grid;
-  grid-template-columns: auto auto auto auto auto auto;
+  grid-template-columns: auto auto auto auto;
   gap: 6px;
 }
 
