@@ -35,12 +35,8 @@ function DesignStaffPage() {
 
   const [productSamples, setProductSamples] = useState([]);
 
-
   const [selectedImages, setSelectedImages] = useState([]);
   const [imageFiles, setImageFiles] = useState([]);
-
-
-
 
   useEffect(() => {
     // Fetch product samples from API
@@ -71,13 +67,14 @@ function DesignStaffPage() {
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
     if (files.length + selectedImages.length > 3) {
-      alert('You can only upload up to 3 images.');
+      alert("You can only upload up to 3 images.");
       return;
     }
     const newImages = files.map((file) => URL.createObjectURL(file));
     setSelectedImages((prevImages) => [...prevImages, ...newImages]);
     setImageFiles((prevFiles) => [...prevFiles, ...files]);
   };
+
 
   const handleUploadImage = async () => {
     if(name == "") Notify.warning("Please provide design name");
@@ -375,6 +372,7 @@ function DesignStaffPage() {
                         <td onClick={() => showDetail(item)}>{item.status}</td>
                         <td>
                           <button
+                            className="salestaff-detail-button"
                             onClick={(e) => {
                               e.stopPropagation();
                               handleToProduction(item.orderId);
@@ -390,60 +388,65 @@ function DesignStaffPage() {
               </div>
             )}
             {currentView === "upload3Ddeisgn" && (
-
-        <div className="designstaff-data-entry-container">
-          <h2 className="designstaff-data-entry-title">Enter Data</h2>
-          <form className="designstaff-data-entry-form">
-            <div className="form-group">
-              <label htmlFor="name">Name</label>
-              <input
-                type="text"
-                id="name"
-                className="designstaff-input"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="productSampleList">ProductSample List</label>
-              <input
-                type="text"
-                id="productSampleList"
-                className="designstaff-input"
-                value={productSampleList}
-                onClick={handleProductSampleClick}
-                readOnly
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="imageUpload">Upload Image</label>
-              <input
-                type="file"
-                id="imageUpload"
-                className="designstaff-input"
-                onChange={handleImageChange}
-                multiple
-              />
-            </div>
-            <div className="uploaded-images">
-              {selectedImages.map((image, index) => (
-                <div key={index} className="uploaded-image">
-                  <img src={image} alt={`Uploaded ${index}`} />
-                  <button type="button" onClick={() => handleDeleteImage(index)}>X</button>
-                </div>
-              ))}
-            </div>
-            <button 
-              type="button"
-              className="designstaff-submit-button"
-              onClick={handleUploadImage}
-            >
-              Upload Image
-            </button>
-          </form>
-        </div>
-      )}
-
+              <div className="designstaff-data-entry-container">
+                <h2 className="designstaff-data-entry-title">Enter Data</h2>
+                <form className="designstaff-data-entry-form">
+                  <div className="form-group">
+                    <label htmlFor="name">Name</label>
+                    <input
+                      type="text"
+                      id="name"
+                      className="designstaff-input"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="productSampleList">
+                      ProductSample List
+                    </label>
+                    <input
+                      type="text"
+                      id="productSampleList"
+                      className="designstaff-input"
+                      value={productSampleList}
+                      onClick={handleProductSampleClick}
+                      readOnly
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="imageUpload">Upload Image</label>
+                    <input
+                      type="file"
+                      id="imageUpload"
+                      className="designstaff-input"
+                      onChange={handleImageChange}
+                      multiple
+                    />
+                  </div>
+                  <div className="uploaded-images">
+                    {selectedImages.map((image, index) => (
+                      <div key={index} className="uploaded-image">
+                        <img src={image} alt={`Uploaded ${index}`} />
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteImage(index)}
+                        >
+                          X
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    className="designstaff-submit-button"
+                    onClick={handleUploadImage}
+                  >
+                    Upload Image
+                  </button>
+                </form>
+              </div>
+            )}
 
             {isPopupVisible && (
               <div className="popup-productlist-overlay">
@@ -610,7 +613,7 @@ function DesignStaffPage() {
                     <img
                       src={formImage}
                       alt="Form Preview"
-                      className="uploaded-image-preview"
+                      className="uploaded-image-preview-design"
                     />
                   </div>
                 )}
