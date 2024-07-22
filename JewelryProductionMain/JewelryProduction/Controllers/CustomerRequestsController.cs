@@ -231,6 +231,14 @@ namespace JewelryProduction.Controllers
 
             return Ok(response);
         }
+
+        [HttpPut("cancel/{customerRequestId}")]
+        public async Task<IActionResult> CloseRequest (string customerRequestId){
+            var check = await _requestService.CloseRequest(customerRequestId);
+            if (check) return Ok("Customize Request Closed");
+            return BadRequest();
+        }
+
         private string GetCurrentUserId()
         {
             var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sid);

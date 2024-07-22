@@ -293,5 +293,7 @@ namespace JewelryProduction.Services
         {
             return await _customerRequestRepository.GetCustomerRequest(id);
         }
+
+        public async Task<bool> CloseRequest(string customerRequestId) => await _customerRequestRepository.CloseRequest(customerRequestId);
     }
 }
