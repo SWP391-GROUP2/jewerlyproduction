@@ -16,13 +16,13 @@ namespace JewelryProduction.Controllers
     public class ProductionStaffController : ControllerBase
     {
         private readonly JewelryProductionContext _context;
-        private readonly INotificationService _notificationService;
+        private readonly IEmailService _emailService;
         private readonly IOrderService _orderService;
-        public ProductionStaffController(JewelryProductionContext context, INotificationService notificationService, IOrderService orderService, ICustomerRequestService customerRequestService)
+        public ProductionStaffController(JewelryProductionContext context,IEmailService emailService ,IOrderService orderService, ICustomerRequestService customerRequestService)
         {
             _context = context;
-            _notificationService = notificationService;
             _orderService = orderService;
+            _emailService = emailService;
         }
         [HttpPut("record-inspection")]
         public async Task<IActionResult> RecordInspection(string orderId, string stage, [FromBody] InspectionDTO inspectionDto)
@@ -30,14 +30,15 @@ namespace JewelryProduction.Controllers
             if (inspectionDto.Result == false)
             {
                 var userId = _orderService.GetManagerIdByOrderId(orderId);
-                var senderId = GetCurrentUserId();
-                await _notificationService.SendNotificationToUserfAsync(userId, senderId, inspectionDto.Comment);
+                await _emailService.SendEmail(userId, "Production Error", inspectionDto.Comment);
             }
             return await _orderService.RecordInspection(orderId, stage, inspectionDto);
         }
         [HttpPut("updateStatus")]
-        public async Task<IActionResult> UpdateOrderStatus([FromQuery] string orderId, [FromQuery] string stage)
+        public async Task<IActionResult> UpdateOrderStatus([FromQuery] string orderId, string stage) 
         {
+            var userId = _orderService.GetCustomerIdByOrderId(orderId);
+            await _emailService.SendEmail(userId, "Order notification", $@"Your Order {orderId} has been completed");
             return await _orderService.UpdateFinalInspection(orderId, stage);
         }
         [HttpGet("quality-checklist/{stage}")]

@@ -6,6 +6,7 @@ namespace JewelryProduction.Interface
 {
     public interface IOrderService
     {
+        string GetCustomerIdByOrderId(string orderId);
         string GetManagerIdByOrderId(string orderId);
         Task<OrderStatDTO> GetOrderStats(DateTime? startDate, DateTime? endDate, string groupBy);
         Task<OrderComparisonDTO> CompareOrderStats(int year);

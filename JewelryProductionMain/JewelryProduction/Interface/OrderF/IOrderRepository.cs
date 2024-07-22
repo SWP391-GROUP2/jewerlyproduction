@@ -5,6 +5,7 @@ namespace JewelryProduction.Interface
 {
     public interface IOrderRepository : IRepository<Order>
     {
+        string GetCustomerIdByOrderId(string orderId);
         string GetManagerIdByOrderId(string orderId);
         Task<List<Order>> GetOrdersWithinDateRange(DateTime? startDate, DateTime? endDate);
         Task<List<Order>> SearchOrders(string searchTerm);
