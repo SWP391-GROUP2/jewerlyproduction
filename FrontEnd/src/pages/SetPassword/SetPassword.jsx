@@ -21,7 +21,7 @@ function SetPassword(){
     const SetPassword = async (newPass) => {
         try {
           const res = await axios.post(
-            "http://localhost:5266/api/GoogleAuth/google-setPassword",
+            "https://nbjewelrybe.azurewebsites.net/api/GoogleAuth/google-setPassword",
             newPass,
             {
               headers: {

@@ -125,7 +125,7 @@ function UserProfile() {
   const handleUpdateAddress = async (OrderAddress, shippingAddress) => {
     try {
       const res = await axios.put(
-        `http://localhost:5266/api/Orders/Update address`,
+        `https://nbjewelrybe.azurewebsites.net/api/Orders/Update address`,
         null,
         {
           params: {
@@ -143,7 +143,7 @@ function UserProfile() {
   const CancelRequest = async (customizeRequestId) => {
     try {
       const res = await axios.put(
-        `http://localhost:5266/api/CustomerRequests/cancel/${customizeRequestId}`
+        `https://nbjewelrybe.azurewebsites.net/api/CustomerRequests/cancel/${customizeRequestId}`
       );
       console.log("Response Data:", res.data);
       Notify.success("Reject Request Successfully");
@@ -156,7 +156,7 @@ function UserProfile() {
   const fetchRequests = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5266/api/CustomerRequests"
+        "https://nbjewelrybe.azurewebsites.net/api/CustomerRequests"
       );
       console.log("Response Data:", response.data); // Kiểm tra dữ liệu phản hồi
       setRequestData(response.data);
@@ -193,7 +193,7 @@ function UserProfile() {
 
   const fetchOrder = async () => {
     try {
-      const response = await axios.get("http://localhost:5266/api/Orders");
+      const response = await axios.get("https://nbjewelrybe.azurewebsites.net/api/Orders");
       console.log("Response Data:", response.data); // Kiểm tra dữ liệu phản hồi
       setOrderData(response.data);
     } catch (error) {
@@ -223,7 +223,7 @@ function UserProfile() {
 
   const fetch3dDesign = async () => {
     try {
-      const response = await axios.get("http://localhost:5266/api/_3ddesign");
+      const response = await axios.get("https://nbjewelrybe.azurewebsites.net/api/_3ddesign");
       console.log("Response Data:", response.data); // Kiểm tra dữ liệu phản hồi
       setDesignData(response.data);
     } catch (error) {
@@ -251,7 +251,7 @@ function UserProfile() {
   const getProfile = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:5266/api/Account/Get-Profile",
+        "https://nbjewelrybe.azurewebsites.net/api/Account/Get-Profile",
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -272,7 +272,7 @@ function UserProfile() {
   const updateUser = async (newUserPro) => {
     try {
       const res = await axios.put(
-        "http://localhost:5266/api/Account/Update-Profile",
+        "https://nbjewelrybe.azurewebsites.net/api/Account/Update-Profile",
         newUserPro,
         {
           headers: {

@@ -24,7 +24,7 @@ const OtpInput = ({ length = 6, onOtpSubmit = () => {} }) => {
   const handleLogout = async () => {
     dispatch(logOutStart());
     try {
-      await axios.post("http://localhost:5266/api/Account/logout");
+      await axios.post("https://nbjewelrybe.azurewebsites.net/api/Account/logout");
       dispatch(logOutSuccess());
       navigate("/login");
     } catch (err) {
@@ -84,7 +84,7 @@ const OtpInput = ({ length = 6, onOtpSubmit = () => {} }) => {
   const verifyOtp = async (otp, email) => {
     try {
       const response = await axios.post(
-        "http://localhost:5266/api/Email/VerifyOTP",
+        "https://nbjewelrybe.azurewebsites.net/api/Email/VerifyOTP",
         { otp, email }
       );
       console.log(response.data);

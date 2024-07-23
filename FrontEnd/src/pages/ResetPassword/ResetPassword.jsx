@@ -16,7 +16,7 @@ function ResetPassword() {
   const ResetPass = async (newPass) => {
     try {
       const response = await axios.post(
-        "http://localhost:5266/api/Account/change-password",
+        "https://nbjewelrybe.azurewebsites.net/api/Account/change-password",
         newPass,
         {
           headers: {

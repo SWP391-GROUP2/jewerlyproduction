@@ -113,7 +113,7 @@ function CustomizeForm() {
       }
       try {
         const response = await fetch(
-          `http://localhost:5266/api/ProductSamples/${productId}`
+          `https://nbjewelrybe.azurewebsites.net/api/ProductSamples/${productId}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch product");
@@ -234,7 +234,7 @@ function CustomizeForm() {
     const queryString = query.length ? `?${query.join("&")}` : "";
 
     try {
-      const url = `http://localhost:5266/api/Gemstones${
+      const url = `https://nbjewelrybe.azurewebsites.net/api/Gemstones${
         queryString ? "/Filter Gemstone" + queryString : ""
       }`;
       const response = await axios.get(url);
@@ -405,7 +405,7 @@ function CustomizeForm() {
   const createCustomizeRequest = async (customize) => {
     try {
       const response = await axios.post(
-        "http://localhost:5266/api/CustomerRequests",
+        "https://nbjewelrybe.azurewebsites.net/api/CustomerRequests",
         customize
       );
 
@@ -469,7 +469,7 @@ function CustomizeForm() {
 
       // Xây dựng URL với query parameters
       const url = new URL(
-        "http://localhost:5266/api/ProductSamples/getrecommend"
+        "https://nbjewelrybe.azurewebsites.net/api/ProductSamples/getrecommend"
       );
       Object.keys(params).forEach(
         (key) =>

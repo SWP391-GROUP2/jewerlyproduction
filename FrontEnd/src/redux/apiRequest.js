@@ -19,7 +19,7 @@ export const loginUser = async (user, dispatch, navigate) => {
   dispatch(loginStart());
   try {
     const res = await axios.post(
-      "http://localhost:5266/api/Account/login",
+      "https://nbjewelrybe.azurewebsites.net/api/Account/login",
       user
     );
     dispatch(loginSuccess(res.data));
@@ -65,7 +65,7 @@ export const registerUser = async (user, dispatch, navigate) => {
   dispatch(registerStart());
   try {
     const res = await axios.post(
-      "http://localhost:5266/api/Account/register/customer",
+      "https://nbjewelrybe.azurewebsites.net/api/Account/register/customer",
       user
     );
     dispatch(registerSuccess(res.data));
@@ -85,7 +85,7 @@ export const registerUser = async (user, dispatch, navigate) => {
 export const logOut = async (dispatch, navigate) => {
   dispatch(logOutStart());
   try {
-    await axios.post("http://localhost:5266/api/Account/logout");
+    await axios.post("https://nbjewelrybe.azurewebsites.net/api/Account/logout");
     dispatch(logOutSuccess());
     Notify.success("Logout Successfully");
     navigate("/login");
@@ -98,7 +98,7 @@ export const loginWithGoogle = async (credential, dispatch, navigate) => {
   dispatch(loginStart());
   try {
     const res = await axios.post(
-      "http://localhost:5266/api/GoogleAuth/google-login",
+      "https://nbjewelrybe.azurewebsites.net/api/GoogleAuth/google-login",
       { Token: credential },
       {
         headers: {
@@ -144,7 +144,7 @@ export const loginWithGoogle = async (credential, dispatch, navigate) => {
 export const verifyOtp = async (otp, email) => {
   try {
     const response = await axios.post(
-      "http://localhost:5266/api/Email/VerifyOTP",
+      "https://nbjewelrybe.azurewebsites.net/api/Email/VerifyOTP",
       { otp, email }
     );
     return response.data;

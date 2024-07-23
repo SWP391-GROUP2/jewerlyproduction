@@ -39,7 +39,7 @@ const CheckOutPage = () => {
   const fetchRequests = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5266/api/CustomerRequests"
+        "https://nbjewelrybe.azurewebsites.net/api/CustomerRequests"
       );
       console.log("Response Data:", response.data);
       setRequestData(response.data);
@@ -50,7 +50,7 @@ const CheckOutPage = () => {
 
   const fetchGemstone = async () => {
     try {
-      const response = await axios.get("http://localhost:5266/api/Gemstones");
+      const response = await axios.get("https://nbjewelrybe.azurewebsites.net/api/Gemstones");
       console.log("Gemstone Data:", response.data);
       setGemstoneData(response.data);
     } catch (error) {
@@ -107,7 +107,7 @@ const CheckOutPage = () => {
 
   const fetchOrder = async () => {
     try {
-      const response = await axios.get("http://localhost:5266/api/Orders");
+      const response = await axios.get("https://nbjewelrybe.azurewebsites.net/api/Orders");
       console.log("Response Data:", response.data); // Kiểm tra dữ liệu phản hồi
       setOrderData(response.data);
       setDataFetched(true); // Đánh dấu rằng dữ liệu đã được tải
@@ -138,7 +138,7 @@ const CheckOutPage = () => {
   const approveRequest = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:5266/api/CustomerRequests/approve/${customizeRequestId}`,
+        `https://nbjewelrybe.azurewebsites.net/api/CustomerRequests/approve/${customizeRequestId}`,
         null,
         {
           params: {
@@ -169,7 +169,7 @@ const CheckOutPage = () => {
       console.log("OrderID:", orderID);
 
       const response = await axios.put(
-        "http://localhost:5266/api/Orders/change-status to PaymendPending",
+        "https://nbjewelrybe.azurewebsites.net/api/Orders/change-status to PaymendPending",
         null,
         {
           params: { orderID },
@@ -206,7 +206,7 @@ const CheckOutPage = () => {
       console.log("OrderID:", orderID);
 
       const response = await axios.post(
-        `http://localhost:5266/api/Payment/CreatePaymentUrl`,
+        `https://nbjewelrybe.azurewebsites.net/api/Payment/CreatePaymentUrl`,
         null,
         {
           params: {

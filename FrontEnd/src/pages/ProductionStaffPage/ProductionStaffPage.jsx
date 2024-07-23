@@ -24,12 +24,12 @@ function ProductionStaffPage() {
   const itemsPerPage = 8;
   const [gemstones, setGemstones] = useState([]);
   const [productSamples, setProductSamples] = useState([]);
-  const url = "http://localhost:5266";
+  const url = "https://nbjewelrybe.azurewebsites.net";
 
   // In danh sách Order
   const fetchOrders = async () => {
     try {
-      const response = await axios.get("http://localhost:5266/api/Orders");
+      const response = await axios.get("https://nbjewelrybe.azurewebsites.net/api/Orders");
       setOrderData(response.data);
     } catch (error) {
       console.error("Error fetching orders:", error);
@@ -105,7 +105,7 @@ function ProductionStaffPage() {
   const fetchOrderInspection = async (orderId) => {
     try {
       const response = await axios.get(
-        `http://localhost:5266/api/Inspection/order/${orderId}`
+        `https://nbjewelrybe.azurewebsites.net/api/Inspection/order/${orderId}`
       );
       // Sắp xếp lại các giai đoạn trước khi set vào state
       const sortedData = response.data.sort((a, b) => {
@@ -128,7 +128,7 @@ function ProductionStaffPage() {
 
   const fetch3dDesign = async () => {
     try {
-      const response = await axios.get("http://localhost:5266/api/_3ddesign");
+      const response = await axios.get("https://nbjewelrybe.azurewebsites.net/api/_3ddesign");
       console.log("Response Data:", response.data); // Kiểm tra dữ liệu phản hồi
       setDesignData(response.data);
     } catch (error) {
@@ -152,7 +152,7 @@ function ProductionStaffPage() {
     const { orderId, stage, result, comment } = inspection;
     try {
       await axios.put(
-        `http://localhost:5266/api/ProductionStaff/record-inspection?orderId=${orderId}&stage=${encodeURIComponent(
+        `https://nbjewelrybe.azurewebsites.net/api/ProductionStaff/record-inspection?orderId=${orderId}&stage=${encodeURIComponent(
           stage
         )}`,
         {
@@ -190,7 +190,7 @@ function ProductionStaffPage() {
     const orderId = selectedItem.orderId; // Thay thế bằng giá trị thực tế
     try {
       await axios.put(
-        `http://localhost:5266/api/ProductionStaff/updateStatus`,
+        `https://nbjewelrybe.azurewebsites.net/api/ProductionStaff/updateStatus`,
         null,
         {
           params: {

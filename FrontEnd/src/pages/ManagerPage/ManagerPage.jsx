@@ -50,7 +50,7 @@ function ManagerPage() {
   const fetchRequests = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5266/api/CustomerRequests"
+        "https://nbjewelrybe.azurewebsites.net/api/CustomerRequests"
       );
       console.log("Response Data:", response.data); // Kiểm tra dữ liệu phản hồi
       setRequestData(response.data);
@@ -72,7 +72,7 @@ function ManagerPage() {
 
   const fetchOrder = async () => {
     try {
-      const response = await axios.get("http://localhost:5266/api/Orders");
+      const response = await axios.get("https://nbjewelrybe.azurewebsites.net/api/Orders");
       setOrderData(response.data);
     } catch (error) {
       setError(error);
@@ -90,7 +90,7 @@ function ManagerPage() {
     const fetchSaleStaff = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5266/api/Manager/Staff/Sales/List"
+          "https://nbjewelrybe.azurewebsites.net/api/Manager/Staff/Sales/List"
         );
         setSaleStaff(response.data);
       } catch (error) {
@@ -108,7 +108,7 @@ function ManagerPage() {
     const fetchDesignStaff = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5266/api/Manager/Staff/Design/List"
+          "https://nbjewelrybe.azurewebsites.net/api/Manager/Staff/Design/List"
         );
         setDesignStaff(response.data);
       } catch (error) {
@@ -126,7 +126,7 @@ function ManagerPage() {
     const fetchProductionStaff = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5266/api/Manager/Staff/Production/List"
+          "https://nbjewelrybe.azurewebsites.net/api/Manager/Staff/Production/List"
         );
         setProductionStaff(response.data);
       } catch (error) {
@@ -209,7 +209,7 @@ function ManagerPage() {
       };
 
       const response = await axios.post(
-        `http://localhost:5266/api/Manager/approveQuotation/${customizeRequestId}`,
+        `https://nbjewelrybe.azurewebsites.net/api/Manager/approveQuotation/${customizeRequestId}`,
         {}, // Sử dụng một object rỗng nếu không có body
         { headers: headers } // Thêm headers vào đây
       );
@@ -227,7 +227,7 @@ function ManagerPage() {
   const RejectRequest = async (customizeRequestId) => {
     try {
       const response = await axios.post(
-        `http://localhost:5266/api/CustomerRequests/reject/${customizeRequestId}`
+        `https://nbjewelrybe.azurewebsites.net/api/CustomerRequests/reject/${customizeRequestId}`
       );
 
       console.log("Response:", response.data);
@@ -267,7 +267,7 @@ function ManagerPage() {
   const fetchAssignSales = async (assignsalestaff) => {
     try {
       const response = await axios.post(
-        "http://localhost:5266/api/Manager/assignSaleStaff",
+        "https://nbjewelrybe.azurewebsites.net/api/Manager/assignSaleStaff",
         assignsalestaff
       );
 
@@ -304,7 +304,7 @@ function ManagerPage() {
   const fetchAssignProduction = async (assignProductionStaff) => {
     try {
       const response = await axios.post(
-        "http://localhost:5266/api/Manager/assignProductionStaff",
+        "https://nbjewelrybe.azurewebsites.net/api/Manager/assignProductionStaff",
         assignProductionStaff
       );
 
@@ -339,7 +339,7 @@ function ManagerPage() {
   const fetchAssignDesign = async (orderId, designStaffId) => {
     try {
       const response = await axios.post(
-        `http://localhost:5266/api/Manager/assignDesignStaff?orderID=${orderId}&designstaffID=${designStaffId}`
+        `https://nbjewelrybe.azurewebsites.net/api/Manager/assignDesignStaff?orderID=${orderId}&designstaffID=${designStaffId}`
       );
 
       // Xử lý dữ liệu nhận được từ API (nếu cần)

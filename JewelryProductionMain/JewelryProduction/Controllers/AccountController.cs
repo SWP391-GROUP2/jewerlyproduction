@@ -355,7 +355,7 @@ namespace JewelryProduction.Controllers
                 <h1>Reset Password</h1>
                 <p>Dear {email},</p>
                 <p>Click the link below to reset your password:</p>
-                <p><a href='http://localhost:3000/forgetpasswordverify?email={email}&token={encodedToken}'>Reset Password</a></p>
+                <p><a href='https://nbjewelryfe.azurewebsites.net/forgetpasswordverify?email={email}&token={encodedToken}'>Reset Password</a></p>
                 <p>If you did not request this code, please ignore this email.</p>
                 <p>Best regards,</p>
                 <p>Jewelry Production </p>

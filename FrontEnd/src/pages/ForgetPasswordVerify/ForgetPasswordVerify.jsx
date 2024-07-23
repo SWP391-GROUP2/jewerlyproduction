@@ -26,7 +26,7 @@ function ForgetPasswordVerify() {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        "http://localhost:5266/api/Account/Forget-password-change",
+        "https://nbjewelrybe.azurewebsites.net/api/Account/Forget-password-change",
         input
       );
       return response.data;

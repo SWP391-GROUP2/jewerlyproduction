@@ -27,7 +27,7 @@ function Register() {
   const handleLogout = async () => {
     dispatch(logOutStart());
     try {
-      await axios.post("http://localhost:5266/api/Account/logout");
+      await axios.post("https://nbjewelrybe.azurewebsites.net/api/Account/logout");
       dispatch(logOutSuccess());
       navigate("/login");
     } catch (err) {
@@ -41,7 +41,7 @@ function Register() {
 
       // Gửi yêu cầu OTP với token đã lấy được
       const response = await axios.get(
-        "http://localhost:5266/api/Email/SendOTP",
+        "https://nbjewelrybe.azurewebsites.net/api/Email/SendOTP",
         {
           headers: {
             Authorization: `Bearer ${user.token}`, // Gắn token vào header Authorization

@@ -16,7 +16,7 @@ function CallBack() {
       try {
         // Gọi API với phương thức GET và gửi query params trong phần body
         const response = await axios.get(
-          `http://localhost:5266/api/Payment/Check${location.search}`
+          `https://nbjewelrybe.azurewebsites.net/api/Payment/Check${location.search}`
         );
 
         setResponse(response.data); // Cập nhật state với dữ liệu phản hồi từ API

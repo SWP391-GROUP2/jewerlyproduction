@@ -25,7 +25,7 @@ function SaleStaffPage() {
   const fetchRequests = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5266/api/CustomerRequests"
+        "https://nbjewelrybe.azurewebsites.net/api/CustomerRequests"
       );
       console.log("Response Data:", response.data); // Kiểm tra dữ liệu phản hồi
       setRequestData(response.data);
@@ -45,7 +45,7 @@ function SaleStaffPage() {
 
   const fetchOrder = async () => {
     try {
-      const response = await axios.get("http://localhost:5266/api/Orders");
+      const response = await axios.get("https://nbjewelrybe.azurewebsites.net/api/Orders");
       console.log("Response Data:", response.data); // Kiểm tra dữ liệu phản hồi
       setOrderData(response.data);
     } catch (error) {
@@ -79,7 +79,7 @@ function SaleStaffPage() {
       });
 
       const response = await axios.post(
-        `http://localhost:5266/api/SaleStaff/send-approved?${params.toString()}`,
+        `https://nbjewelrybe.azurewebsites.net/api/SaleStaff/send-approved?${params.toString()}`,
         null,
         { headers: headers }
       );
@@ -107,7 +107,7 @@ function SaleStaffPage() {
       });
 
       const response = await axios.put(
-        `http://localhost:5266/api/SaleStaff/update-approved?${params.toString()}`,
+        `https://nbjewelrybe.azurewebsites.net/api/SaleStaff/update-approved?${params.toString()}`,
         null,
         { headers: headers }
       );
@@ -177,7 +177,7 @@ function SaleStaffPage() {
   const changeStatusToDesigner = async (orderid, price) => {
     try {
       const response = await axios.put(
-        `http://localhost:5266/api/Orders/change-status%20To%20Designer?orderID=${orderid}&price=${price}`
+        `https://nbjewelrybe.azurewebsites.net/api/Orders/change-status%20To%20Designer?orderID=${orderid}&price=${price}`
       );
       console.log("Order status changed successfully:", response.data);
 

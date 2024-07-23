@@ -36,7 +36,7 @@ function ProductDetails() {
   // Hàm fetch3dDesigns để lấy dữ liệu từ API 3dDesign
   const fetch3dDesigns = async () => {
     try {
-      const response = await fetch(`http://localhost:5266/api/_3ddesign`);
+      const response = await fetch(`https://nbjewelrybe.azurewebsites.net/api/_3ddesign`);
       if (!response.ok) {
         throw new Error("Failed to fetch 3dDesigns");
       }
@@ -51,7 +51,7 @@ function ProductDetails() {
   const fetchProduct = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5266/api/ProductSamples/${productId}`
+        `https://nbjewelrybe.azurewebsites.net/api/ProductSamples/${productId}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch product");

@@ -43,7 +43,7 @@ function DesignStaffPage() {
     const fetchProductSamples = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5266/api/ProductSamples"
+          "https://nbjewelrybe.azurewebsites.net/api/ProductSamples"
         );
         setProductSamples(response.data);
       } catch (error) {
@@ -133,7 +133,7 @@ function DesignStaffPage() {
 
   const fetchOrder = async () => {
     try {
-      const response = await axios.get("http://localhost:5266/api/Orders");
+      const response = await axios.get("https://nbjewelrybe.azurewebsites.net/api/Orders");
       console.log("Response Data:", response.data); // Kiểm tra dữ liệu phản hồi
       setOrderData(response.data);
     } catch (error) {
@@ -162,7 +162,7 @@ function DesignStaffPage() {
 
   const fetch3dDesign = async () => {
     try {
-      const response = await axios.get("http://localhost:5266/api/_3ddesign");
+      const response = await axios.get("https://nbjewelrybe.azurewebsites.net/api/_3ddesign");
       console.log("Response Data:", response.data); // Kiểm tra dữ liệu phản hồi
       setDesignData(response.data);
     } catch (error) {
@@ -190,7 +190,7 @@ function DesignStaffPage() {
 
   const delete3dDesign = async () => {
     try {
-      await axios.delete("http://localhost:5266/api/_3ddesign", {
+      await axios.delete("https://nbjewelrybe.azurewebsites.net/api/_3ddesign", {
         params: {
           id: selectedDesignId,
         },
@@ -244,7 +244,7 @@ function DesignStaffPage() {
   const upload3dDesign = async (formData) => {
     try {
       const res = await axios.post(
-        `http://localhost:5266/api/_3ddesign/Upload`,
+        `https://nbjewelrybe.azurewebsites.net/api/_3ddesign/Upload`,
         formData,
         {
           headers: {
@@ -267,7 +267,7 @@ function DesignStaffPage() {
   const desginCompleted = async () => {
     try {
       const res = await axios.put(
-        `http://localhost:5266/api/Orders/change-status To Production?orderId=${orderId}`
+        `https://nbjewelrybe.azurewebsites.net/api/Orders/change-status To Production?orderId=${orderId}`
       );
       console.log(res);
       console.log("Upload successfully:", res.data);

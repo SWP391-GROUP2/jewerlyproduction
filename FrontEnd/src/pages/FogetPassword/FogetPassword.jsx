@@ -15,7 +15,7 @@ function FogetPassword() {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        "http://localhost:5266/api/Account/Forgot-password-email",
+        "https://nbjewelrybe.azurewebsites.net/api/Account/Forgot-password-email",
         email,
         {
           headers: {

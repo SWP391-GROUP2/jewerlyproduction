@@ -58,7 +58,7 @@ const Sidebar = () => {
     const queryString = query.length ? `?${query.join("&")}` : "";
 
     try {
-      const url = `http://localhost:5266/api/Gemstones${
+      const url = `https://nbjewelrybe.azurewebsites.net/api/Gemstones${
         queryString ? "/Filter Gemstone" + queryString : ""
       }`;
       const response = await axios.get(url);

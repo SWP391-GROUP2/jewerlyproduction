@@ -25,7 +25,7 @@ function AdminPage() {
   const [showGemstoneDetailPopup, setShowGemstoneDetailPopup] = useState(false);
   const [selectedGemstone, setSelectedGemstone] = useState(null);
   const [notification, setNotification] = useState({ message: "", type: "" });
-  const url = "http://localhost:5266";
+  const url = "https://nbjewelrybe.azurewebsites.net";
 
   const handleGemstoneDetailSelection = (gemstone) => {
     setSelectedGemstone(gemstone);
